@@ -31,29 +31,41 @@ function PortalContent() {
         ${isPowered ? 'shadow-[0_0_60px_rgba(250,204,21,0.15)]' : 'shadow-[0_0_40px_rgba(255,255,255,0.05)]'}`}>
         
         {/* Header Protocol */}
-        <header className={`border-b ${isPowered ? 'border-yellow-500/20' : 'border-white/10'} pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6`}>
-          <div>
-            <h1 className={`text-4xl font-light uppercase tracking-tighter leading-none transition-all duration-1000 ${isPowered ? 'drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]' : 'drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'}`}>
-              Genesis Soul Contract
-            </h1>
-            <p className="text-[9px] opacity-40 tracking-[0.6em] mt-4 uppercase">
-              {isPowered ? "SOUL_DETECTED // POWER_LEVEL_110%" : "Awaiting Vital Connection // v4.1"}
-            </p>
-          </div>
-          
-          <ConnectButton 
-            client={client} 
-            chain={baseSepolia}
-            theme={"dark"}
-            connectButton={{
-              label: "INITIATE AUTH",
-              className: `!rounded-none !font-mono !text-[11px] !px-6 !py-3 !font-bold !transition-all
-                ${isPowered 
-                  ? "!bg-yellow-400 !text-black !shadow-[0_0_20px_rgba(250,204,21,0.4)]" 
-                  : "!bg-white !text-black !shadow-[0_0_15px_rgba(255,255,255,0.2)]"}`
-            }}
-          />
-        </header>
+        {/* Header Protocol */}
+<header className={`border-b ${isPowered ? 'border-yellow-500/20' : 'border-white/10'} pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6`}>
+  <div className="flex-1">
+    <h1 className={`text-4xl font-light uppercase tracking-tighter leading-none transition-all duration-1000 ${isPowered ? 'drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]' : 'drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'}`}>
+      Genesis Soul Contract
+    </h1>
+    <div className="flex items-center gap-6 mt-4">
+      <p className="text-[9px] opacity-40 tracking-[0.6em] uppercase">
+        {isPowered ? "SOUL_DETECTED // POWER_LEVEL_110%" : "Awaiting Vital Connection // v4.1"}
+      </p>
+      
+      {/* New Litepaper Link */}
+      <Link 
+        href="/litepaper" 
+        className={`text-[9px] tracking-[0.4em] uppercase transition-all duration-300 hover:opacity-100 underline underline-offset-4 decoration-white/20 hover:decoration-current
+          ${isPowered ? 'text-yellow-500 opacity-60' : 'text-white opacity-30'}`}
+      >
+        [ READ_LITEPAPER ]
+      </Link>
+    </div>
+  </div>
+  
+  <ConnectButton 
+    client={client} 
+    chain={baseSepolia}
+    theme={"dark"}
+    connectButton={{
+      label: "INITIATE AUTH",
+      className: `!rounded-none !font-mono !text-[11px] !px-6 !py-3 !font-bold !transition-all
+        ${isPowered 
+          ? "!bg-yellow-400 !text-black !shadow-[0_0_20px_rgba(250,204,21,0.4)]" 
+          : "!bg-white !text-black !shadow-[0_0_15px_rgba(255,255,255,0.2)]"}`
+    }}
+  />
+</header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           {/* Litepaper Column */}
