@@ -4,7 +4,6 @@ import { createThirdwebClient } from "thirdweb";
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 import { baseSepolia } from "thirdweb/chains";
 
-// Client ID integrated for Vercel prerendering
 const client = createThirdwebClient({
   clientId: "b75d635aa9a6d9ea968f3478eb5cc970",
 });
@@ -12,88 +11,78 @@ const client = createThirdwebClient({
 export default function SoulContractPage() {
   return (
     <ThirdwebProvider> 
-      <main className="min-h-screen bg-[#020202] text-green-500 font-mono p-4 md:p-12 selection:bg-green-500 selection:text-black relative">
-        {/* CRT Scanline Overlay */}
-        <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.02),rgba(0,255,0,0.01),rgba(0,0,255,0.02))] bg-[length:100%_2px,3px_100%] z-50"></div>
+      <main className="min-h-screen bg-[#000000] text-white font-mono p-4 md:p-12 selection:bg-white selection:text-black relative overflow-hidden">
+        
+        {/* White Ambient Glow Orbs */}
+        <div className="fixed -top-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="fixed -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <div className="max-w-4xl mx-auto border border-green-900 bg-black p-6 md:p-10 shadow-[0_0_25px_rgba(0,255,0,0.15)] relative z-10">
+        <div className="max-w-4xl mx-auto border border-white/20 bg-black/40 backdrop-blur-md p-6 md:p-10 shadow-[0_0_50px_rgba(255,255,255,0.05)] relative z-10">
           
           {/* Header Protocol */}
-          <header className="border-b border-green-900 pb-6 mb-10 flex flex-col md:flex-row justify-between items-start gap-4">
+          <header className="border-b border-white/10 pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
             <div>
-              <h1 className="text-3xl font-black uppercase tracking-tighter italic leading-none">Genesis Soul Contract</h1>
-              <p className="text-[10px] opacity-50 tracking-[0.4em] mt-2">DECENTRALIZED SPIRITUAL LEDGER // V.4.1</p>
+              <h1 className="text-4xl font-light uppercase tracking-tighter leading-none drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+                Genesis Soul Contract
+              </h1>
+              <p className="text-[9px] opacity-40 tracking-[0.6em] mt-4 uppercase">Bureaucratic Portal // Identity Gate v4.1</p>
             </div>
-            <div className="border border-green-500/20 p-1">
+            
+            <div className="group">
               <ConnectButton 
                 client={client} 
                 chain={baseSepolia}
                 theme={"dark"}
                 connectButton={{
                   label: "INITIATE AUTH",
-                  className: "!bg-transparent !border !border-green-500 !text-green-500 !rounded-none !font-mono !text-[10px] !px-4 !py-2 hover:!bg-green-500 hover:!text-black !transition-all"
+                  className: "!bg-white !text-black !border !border-white !rounded-none !font-mono !text-[11px] !px-6 !py-3 !font-bold hover:!bg-black hover:!text-white !transition-all !shadow-[0_0_15px_rgba(255,255,255,0.2)]"
                 }}
               />
             </div>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             
-            {/* Left Column: Litepaper Section */}
-            <section className="space-y-6">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-green-500 animate-pulse"></span>
-                <h2 className="text-xs font-bold uppercase tracking-widest">Protocol: Litepaper</h2>
+            {/* Left Column: Litepaper */}
+            <section className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="h-[1px] w-8 bg-white/50"></div>
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] opacity-80">The Indenture</h2>
               </div>
               
-              <div className="text-[12px] leading-relaxed opacity-80 h-80 overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-green-900 text-justify">
-                <p className="mb-4 text-green-400 font-bold underline">SECTION 1.1: THE DIGITAL ANCHOR</p>
-                <p className="mb-4">The Genesis Soul Contract is not merely code; it is a permanent indenture bound to the Base Sepolia testnet. It codifies the transition of metaphysical assets into immutable data blocks.</p>
+              <div className="text-[13px] leading-relaxed opacity-60 h-80 overflow-y-auto pr-6 scrollbar-hide text-justify font-light">
+                <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE I: CONVEYANCE</span> 
+                The Genesis Soul Contract represents an immutable ledger entry on the Base Sepolia network. By interacting with this portal, the entity acknowledges the digital capture of metaphysical signatures.</p>
                 
-                <p className="mb-4 text-green-400 font-bold underline">SECTION 1.2: INFRASTRUCTURE</p>
-                <p className="mb-4">Utilizing the Thirdweb v5 SDK, this portal manages the connection between temporal wallets and the Genesis engine[cite: 4, 5]. Every interaction is logged within the bureaucratic void of the blockchain.</p>
+                <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE II: PROTOCOL</span> 
+                Powered by Thirdweb v5, our architecture ensures absolute synchronization between the user's temporal wallet and the blockchain's eternal state.</p>
                 
-                <p className="mb-4 text-green-400 font-bold underline">SECTION 1.3: FUTURE ENFORCEMENT</p>
-                <p className="mb-4">"One Human, One Soul." While currently in aesthetic mode, future iterations will implement Coinbase EAS to verify biological uniqueness[cite: 7, 8].</p>
+                <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE III: SOVEREIGNTY</span> 
+                Future gates will mandate Coinbase EAS verification to ensure "One Human, One Soul" integrity. This is a cold, clinical record of existence.</p>
               </div>
             </section>
 
-            {/* Right Column: Form Placeholder */}
-            <section className="border border-green-900/50 p-6 bg-green-950/5 flex flex-col justify-between">
+            {/* Right Column: High-Glow Form */}
+            <section className="border border-white/10 p-8 bg-white/[0.02] flex flex-col justify-between shadow-inner">
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xs font-bold uppercase underline decoration-double">Deed of Conveyance</h2>
-                  <span className="text-[8px] opacity-40">FORM_REF: GSC-001</span>
+                <div className="flex justify-between items-center mb-10">
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest opacity-90 underline underline-offset-8 decoration-white/20">Deed of Conveyance</h2>
+                  <span className="text-[8px] opacity-30 font-bold">REF: GSC-001</span>
                 </div>
                 
-                <div className="space-y-6 opacity-40 select-none">
-                  <div className="border-b border-green-900/50 py-1">
-                    <label className="text-[9px] uppercase tracking-tighter block mb-1">Mortal First Name</label>
-                    <div className="text-sm italic">Awaiting verification...</div>
+                <div className="space-y-8 opacity-20 select-none">
+                  <div className="border-b border-white/10 py-2">
+                    <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Forename</label>
+                    <div className="text-sm tracking-widest italic">AWAITING_AUTH...</div>
                   </div>
-                  <div className="border-b border-green-900/50 py-1">
-                    <label className="text-[9px] uppercase tracking-tighter block mb-1">Mortal Last Name</label>
-                    <div className="text-sm italic">Awaiting verification...</div>
+                  <div className="border-b border-white/10 py-2">
+                    <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Surname</label>
+                    <div className="text-sm tracking-widest italic">AWAITING_AUTH...</div>
                   </div>
                 </div>
               </div>
 
               <button 
                 disabled 
-                className="w-full border border-green-900 text-green-900 py-4 mt-8 uppercase text-[10px] tracking-[0.3em] font-bold cursor-not-allowed"
-              >
-                Execute Indenture
-              </button>
-            </section>
-          </div>
-
-          <footer className="mt-12 pt-4 border-t border-green-900 text-[9px] uppercase opacity-40 flex flex-wrap justify-between gap-4">
-            <span>Status: Operational</span>
-            <span>Network: Base Sepolia [cite: 6]</span>
-            <span>© 2026 Sovereign Portal Labs</span>
-          </footer>
-        </div>
-      </main>
-    </ThirdwebProvider>
-  );
-}
+                className="w-full bg-transparent border border-white/10 text-white/20 py-5 mt-12 uppercase text-[10px] tracking-[0.4em] font-black cursor-not-allowed transition-all"
+              ></button>
