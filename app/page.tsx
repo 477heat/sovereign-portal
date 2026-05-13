@@ -23,7 +23,7 @@ export default function SoulContractPage() {
           <header className="border-b border-white/10 pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
             <div>
               <h1 className="text-4xl font-light uppercase tracking-tighter leading-none drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-                Genesis Soul Contract
+                Sovereign Engine Portal
               </h1>
               <p className="text-[9px] opacity-40 tracking-[0.6em] mt-4 uppercase">Bureaucratic Portal // Identity Gate v4.1</p>
             </div>
@@ -52,10 +52,10 @@ export default function SoulContractPage() {
               
               <div className="text-[13px] leading-relaxed opacity-60 h-80 overflow-y-auto pr-6 scrollbar-hide text-justify font-light">
                 <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE I: CONVEYANCE</span> 
-                The Genesis Soul Contract represents an immutable ledger entry on the Base Sepolia network. By interacting with this portal, the entity acknowledges the digital capture of metaphysical signatures.</p>
+                The Genesis Soul Contract represents an immutable ledger entry on the Base Sepolia network.</p>
                 
                 <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE II: PROTOCOL</span> 
-                Powered by Thirdweb v5, our architecture ensures absolute synchronization between the user's temporal wallet and the blockchain's eternal state.</p>
+                Powered by Thirdweb v5, our architecture ensures absolute synchronization between the user's temporal wallet and the blockchain.</p>
                 
                 <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE III: SOVEREIGNTY</span> 
                 Future gates will mandate Coinbase EAS verification to ensure "One Human, One Soul" integrity. This is a cold, clinical record of existence.</p>
@@ -85,4 +85,22 @@ export default function SoulContractPage() {
               <button 
                 disabled 
                 className="w-full bg-transparent border border-white/10 text-white/20 py-5 mt-12 uppercase text-[10px] tracking-[0.4em] font-black cursor-not-allowed transition-all"
-              ></button>
+              >
+                Execute Indenture
+              </button>
+            </section>
+          </div>
+
+          {/* Footer Metadata */}
+          <footer className="mt-16 pt-6 border-t border-white/5 text-[8px] uppercase opacity-30 flex flex-wrap justify-between items-center tracking-[0.2em]">
+            <div className="flex gap-8">
+              <span>Status: <span className="text-white">Active</span></span>
+              <span>Encrypted: <span className="text-white">True</span></span>
+            </div>
+            <span>© 2026 Sovereign Portal Labs</span>
+          </footer>
+        </div>
+      </main>
+    </ThirdwebProvider>
+  );
+}
