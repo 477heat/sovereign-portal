@@ -1,106 +1,109 @@
 "use client";
 
 import { createThirdwebClient } from "thirdweb";
-import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import { ThirdwebProvider, ConnectButton, useActiveAccount } from "thirdweb/react";
 import { baseSepolia } from "thirdweb/chains";
 
 const client = createThirdwebClient({
   clientId: "b75d635aa9a6d9ea968f3478eb5cc970",
 });
 
+function PortalContent() {
+  const account = useActiveAccount();
+  const isPowered = !!account; // Status: Soul Detected
+
+  // Dynamic Styles based on Connection State
+  const themeColor = isPowered ? "text-yellow-400" : "text-white";
+  const glowColor = isPowered ? "rgba(250, 204, 21, 0.4)" : "rgba(255, 255, 255, 0.2)";
+  const borderColor = isPowered ? "border-yellow-500/50" : "border-white/20";
+
+  return (
+    <main className={`min-h-screen bg-black ${themeColor} font-mono p-4 md:p-12 transition-colors duration-1000 relative overflow-hidden`}>
+      
+      {/* 1. Active Soul Pulse (Background) */}
+      <div className={`fixed inset-0 pointer-events-none transition-opacity duration-1000 ${isPowered ? 'opacity-100' : 'opacity-30'}`}>
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] animate-pulse
+          ${isPowered ? 'bg-yellow-500/10' : 'bg-white/5'}`}></div>
+      </div>
+
+      {/* 2. LitGlassmorphism Main Container */}
+      <div className={`max-w-4xl mx-auto border ${borderColor} bg-black/40 backdrop-blur-xl p-6 md:p-10 shadow-2xl relative z-10 transition-all duration-1000
+        ${isPowered ? 'shadow-[0_0_60px_rgba(250,204,21,0.15)]' : 'shadow-[0_0_40px_rgba(255,255,255,0.05)]'}`}>
+        
+        {/* Header Protocol */}
+        <header className={`border-b ${isPowered ? 'border-yellow-500/20' : 'border-white/10'} pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6`}>
+          <div>
+            <h1 className={`text-4xl font-light uppercase tracking-tighter leading-none transition-all duration-1000 ${isPowered ? 'drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]' : 'drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'}`}>
+              Genesis Soul Contract
+            </h1>
+            <p className="text-[9px] opacity-40 tracking-[0.6em] mt-4 uppercase">
+              {isPowered ? "SOUL_DETECTED // POWER_LEVEL_110%" : "Awaiting Vital Connection // v4.1"}
+            </p>
+          </div>
+          
+          <ConnectButton 
+            client={client} 
+            chain={baseSepolia}
+            theme={"dark"}
+            connectButton={{
+              label: "INITIATE AUTH",
+              className: `!rounded-none !font-mono !text-[11px] !px-6 !py-3 !font-bold !transition-all
+                ${isPowered 
+                  ? "!bg-yellow-400 !text-black !shadow-[0_0_20px_rgba(250,204,21,0.4)]" 
+                  : "!bg-white !text-black !shadow-[0_0_15px_rgba(255,255,255,0.2)]"}`
+            }}
+          />
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          {/* Litepaper Column */}
+          <section className="space-y-8">
+            <div className="flex items-center gap-3">
+              <div className={`h-[1px] w-8 ${isPowered ? 'bg-yellow-500' : 'bg-white/50'}`}></div>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] opacity-80">The Indenture</h2>
+            </div>
+            <div className="text-[13px] leading-relaxed opacity-60 h-64 overflow-y-auto font-light">
+              <p className="mb-4">The transmission is now {isPowered ? "LIVE" : "PENDING"}. By connecting your wallet, you have initialized the spiritual bridge between Base Sepolia and your mortal ledger.</p>
+              <p>The contract remains immutable. The glow reflects the presence of the signee.</p>
+            </div>
+          </section>
+
+          {/* Right Column: Reactive Form */}
+          <section className={`border ${borderColor} p-8 bg-white/[0.02] flex flex-col justify-between transition-all duration-1000`}>
+            <div>
+              <h2 className="text-[10px] font-bold uppercase tracking-widest opacity-90 mb-10">Deed of Conveyance</h2>
+              <div className={`space-y-8 transition-opacity duration-1000 ${isPowered ? 'opacity-100' : 'opacity-20'}`}>
+                <div className={`border-b ${isPowered ? 'border-yellow-500/30' : 'border-white/10'} py-2`}>
+                  <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Forename</label>
+                  <input type="text" className="bg-transparent outline-none w-full text-sm" placeholder={isPowered ? "ENTER_NAME" : "LOCKED"} disabled={!isPowered} />
+                </div>
+                <div className={`border-b ${isPowered ? 'border-yellow-500/30' : 'border-white/10'} py-2`}>
+                  <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Surname</label>
+                  <input type="text" className="bg-transparent outline-none w-full text-sm" placeholder={isPowered ? "ENTER_SURNAME" : "LOCKED"} disabled={!isPowered} />
+                </div>
+              </div>
+            </div>
+
+            <button 
+              disabled={!isPowered}
+              className={`w-full py-5 mt-12 uppercase text-[10px] tracking-[0.4em] font-black transition-all border
+                ${isPowered 
+                  ? "bg-yellow-400 text-black border-yellow-400 cursor-pointer hover:bg-black hover:text-yellow-400" 
+                  : "bg-transparent text-white/20 border-white/10 cursor-not-allowed"}`}
+            >
+              Execute Indenture
+            </button>
+          </section>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 export default function SoulContractPage() {
   return (
-    <ThirdwebProvider> 
-      <main className="min-h-screen bg-[#000000] text-white font-mono p-4 md:p-12 selection:bg-white selection:text-black relative overflow-hidden">
-        
-        {/* White Ambient Glow Orbs */}
-        <div className="fixed -top-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="fixed -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-        <div className="max-w-4xl mx-auto border border-white/20 bg-black/40 backdrop-blur-md p-6 md:p-10 shadow-[0_0_50px_rgba(255,255,255,0.05)] relative z-10">
-          
-          {/* Header Protocol */}
-          <header className="border-b border-white/10 pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
-            <div>
-              <h1 className="text-4xl font-light uppercase tracking-tighter leading-none drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-                Sovereign Engine Portal
-              </h1>
-              <p className="text-[9px] opacity-40 tracking-[0.6em] mt-4 uppercase">Bureaucratic Portal // Identity Gate v4.1</p>
-            </div>
-            
-            <div className="group">
-              <ConnectButton 
-                client={client} 
-                chain={baseSepolia}
-                theme={"dark"}
-                connectButton={{
-                  label: "INITIATE AUTH",
-                  className: "!bg-white !text-black !border !border-white !rounded-none !font-mono !text-[11px] !px-6 !py-3 !font-bold hover:!bg-black hover:!text-white !transition-all !shadow-[0_0_15px_rgba(255,255,255,0.2)]"
-                }}
-              />
-            </div>
-          </header>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            
-            {/* Left Column: Litepaper */}
-            <section className="space-y-8">
-              <div className="flex items-center gap-3">
-                <div className="h-[1px] w-8 bg-white/50"></div>
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] opacity-80">The Indenture</h2>
-              </div>
-              
-              <div className="text-[13px] leading-relaxed opacity-60 h-80 overflow-y-auto pr-6 scrollbar-hide text-justify font-light">
-                <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE I: CONVEYANCE</span> 
-                The Genesis Soul Contract represents an immutable ledger entry on the Base Sepolia network.</p>
-                
-                <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE II: PROTOCOL</span> 
-                Powered by Thirdweb v5, our architecture ensures absolute synchronization between the user's temporal wallet and the blockchain.</p>
-                
-                <p className="mb-6"><span className="text-white font-bold tracking-widest block mb-2 text-[10px]">ARTICLE III: SOVEREIGNTY</span> 
-                Future gates will mandate Coinbase EAS verification to ensure "One Human, One Soul" integrity. This is a cold, clinical record of existence.</p>
-              </div>
-            </section>
-
-            {/* Right Column: High-Glow Form */}
-            <section className="border border-white/10 p-8 bg-white/[0.02] flex flex-col justify-between shadow-inner">
-              <div>
-                <div className="flex justify-between items-center mb-10">
-                  <h2 className="text-[10px] font-bold uppercase tracking-widest opacity-90 underline underline-offset-8 decoration-white/20">Deed of Conveyance</h2>
-                  <span className="text-[8px] opacity-30 font-bold">REF: GSC-001</span>
-                </div>
-                
-                <div className="space-y-8 opacity-20 select-none">
-                  <div className="border-b border-white/10 py-2">
-                    <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Forename</label>
-                    <div className="text-sm tracking-widest italic">AWAITING_AUTH...</div>
-                  </div>
-                  <div className="border-b border-white/10 py-2">
-                    <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Surname</label>
-                    <div className="text-sm tracking-widest italic">AWAITING_AUTH...</div>
-                  </div>
-                </div>
-              </div>
-
-              <button 
-                disabled 
-                className="w-full bg-transparent border border-white/10 text-white/20 py-5 mt-12 uppercase text-[10px] tracking-[0.4em] font-black cursor-not-allowed transition-all"
-              >
-                Execute Indenture
-              </button>
-            </section>
-          </div>
-
-          {/* Footer Metadata */}
-          <footer className="mt-16 pt-6 border-t border-white/5 text-[8px] uppercase opacity-30 flex flex-wrap justify-between items-center tracking-[0.2em]">
-            <div className="flex gap-8">
-              <span>Status: <span className="text-white">Active</span></span>
-              <span>Encrypted: <span className="text-white">True</span></span>
-            </div>
-            <span>© 2026 Sovereign Portal Labs</span>
-          </footer>
-        </div>
-      </main>
+    <ThirdwebProvider>
+      <PortalContent />
     </ThirdwebProvider>
   );
 }
