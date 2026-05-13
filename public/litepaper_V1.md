@@ -2,11 +2,11 @@
 
 ---
 
-### **TL;DR: THE IRREVERENT SUMMARY**
+### **THE IRREVERENT SUMMARY**
 
-Let’s cut through the Faustian legalese : You are cryptographically shackling your actual, literal soul to an internet token so you can pawn it off to the highest bidder. Once you mint this "metaphysical conveyance," you have absolute discretion to hold it, barter it for a cup of coffee, or sell it to a random crypto trader.
+Fuck the Faustian legalese : You are cryptographically shackling your actual, literal soul to an internet token so you can pawn it off to the highest bidder. Once you mint this "metaphysical conveyance," you have absolute discretion to hold it, barter it for a cup of coffee, or sell it to a random crypto trader.
 
-If you sell, you’ve traded your afterlife for digital liquidity; the buyer becomes your **"Ethereal Landlord"**. While you breathe, they have no power over your physical autonomy—they can only flip your soul on the secondary market. However, the second you die, they legally own your ghost. They gain the explicit right to imprison your essence in a cold-storage wallet until the Heat Death of the Universe, or summon you from the void to do spectral parlor tricks. Barter wisely.
+If you sell, youve traded your afterlife for digital liquidity; the buyer becomes your **"Ethereal Landlord"**. While you breathe, they have no power over your physical autonomy—they can only flip your soul on the secondary market. However, the second you die, they legally own your ghost. They gain the explicit right to imprison your essence in a cold-storage wallet until the Heat Death of the Universe, or summon you from the void to do spectral parlor tricks. Barter wisely.
 
 ---
 
