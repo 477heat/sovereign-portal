@@ -1,71 +1,38 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
 import Link from "next/link";
-import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 
-function LitepaperContent() {
-  const account = useActiveAccount();
-  const isPowered = !!account;
-  const [content, setContent] = useState("");
-
-  // Fetch the markdown from the public folder
-  useEffect(() => {
-    fetch("/litepaper_v1.md")
-      .then((res) => res.text())
-      .then((text) => setContent(text))
-      .catch((err) => setContent("# ERROR: Protocol Transmission Interrupted"));
-  }, []);
-
+export default function LandingPage() {
   return (
-    <main className={`min-h-screen bg-black font-mono p-6 md:p-24 transition-colors duration-1000 relative overflow-hidden ${isPowered ? 'text-yellow-400' : 'text-white'}`}>
-      
-      {/* Background Pulse */}
-      <div className={`fixed inset-0 pointer-events-none transition-opacity duration-1000 ${isPowered ? 'opacity-40' : 'opacity-10'}`}>
-        <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] ${isPowered ? 'bg-yellow-500/20' : 'bg-white/10'}`}></div>
-      </div>
+    <main className="min-h-screen bg-black text-white font-sans flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Background Spectral Glow */}
+      <div className="absolute w-[800px] h-[800px] bg-white/5 rounded-full blur-[160px] animate-pulse"></div>
 
-      <div className="max-w-3xl mx-auto relative z-10">
-        {/* Navigation Bridge */}
-        <nav className="mb-16">
-          <Link href="/" className={`text-[10px] tracking-[0.4em] border px-4 py-2 transition-all ${isPowered ? 'border-yellow-500/40 hover:bg-yellow-500 hover:text-black shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'border-white/20 hover:bg-white hover:text-black'}`}>
-            RETURN_TO_PORTAL
+      <div className="relative z-10 text-center space-y-12">
+        <header className="space-y-4">
+          <h1 className="text-7xl font-extralight uppercase tracking-[0.8em] drop-shadow-2xl">
+            Genesis
+          </h1>
+          <p className="text-[10px] tracking-[0.6em] opacity-30 uppercase font-light">
+            Sovereign Spiritual Protocol // v4.1
+          </p>
+        </header>
+
+        <nav className="flex flex-col items-center gap-8 mt-24">
+          <Link href="/portal" className="group relative px-12 py-4 border border-white/20 transition-all duration-700 hover:border-white hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+            <span className="text-[11px] tracking-[0.4em] font-black group-hover:tracking-[0.6em] transition-all">
+              INITIALIZE_CONVEYANCE
+            </span>
+          </Link>
+          
+          <Link href="/litepaper" className="text-[9px] tracking-[0.3em] opacity-30 hover:opacity-100 transition-opacity">
+            [ VIEW_MANIFESTO ]
           </Link>
         </nav>
-
-        {/* LitGlassmorphism Paper Shell */}
-        <article className={`p-8 md:p-16 border bg-black/40 backdrop-blur-xl transition-all duration-1000 ${isPowered ? 'border-yellow-500/30 shadow-[0_0_50px_rgba(250,204,21,0.1)]' : 'border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]'}`}>
-          <div className="prose prose-invert max-w-none 
-            prose-headings:uppercase prose-headings:tracking-widest 
-            prose-p:text-[14px] prose-p:leading-relaxed prose-p:opacity-70 
-            prose-strong:text-white prose-strong:font-bold">
-            
-            <ReactMarkdown
-              components={{
-                h1: ({node, ...props}) => <h1 className="text-3xl mb-12 border-b border-current pb-4 font-light italic" {...props} />,
-                h2: ({node, ...props}) => <h2 className="text-lg mt-12 mb-6 underline decoration-double underline-offset-8" {...props} />,
-                p: ({node, ...props}) => <p className="mb-6" {...props} />,
-              }}
-            >
-              {content}
-            </ReactMarkdown>
-          </div>
-        </article>
-
-        <footer className="mt-20 text-[9px] opacity-30 tracking-[0.3em] uppercase flex justify-between">
-          <span>Document: litepaper_v1.md</span>
-          <span>Genesis Soul Protocol</span>
-        </footer>
       </div>
-    </main>
-  );
-}
 
-export default function LitepaperPage() {
-  return (
-    <ThirdwebProvider>
-      <LitepaperContent />
-    </ThirdwebProvider>
+      <footer className="absolute bottom-12 w-full text-center text-[8px] tracking-[0.5em] opacity-20 uppercase">
+        Immutable // Eternal // Sovereign
+      </footer>
+    </main>
   );
 }
