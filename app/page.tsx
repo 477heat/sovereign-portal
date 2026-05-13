@@ -3,6 +3,7 @@
 import { createThirdwebClient } from "thirdweb";
 import { ThirdwebProvider, ConnectButton, useActiveAccount } from "thirdweb/react";
 import { baseSepolia } from "thirdweb/chains";
+import Link from "next/link";
 
 const client = createThirdwebClient({
   clientId: "b75d635aa9a6d9ea968f3478eb5cc970",
