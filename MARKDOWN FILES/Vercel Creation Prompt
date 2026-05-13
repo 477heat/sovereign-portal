@@ -1,0 +1,40 @@
+# Handoff Protocol 4.1: The Bureaucratic Portal (Web3 Integration)
+**Project:** Genesis Soul Contract
+**Classification:** Frontend Web3 Development (Next.js / Thirdweb v5)
+
+## 1. Current Project State
+We have successfully deployed the static frontend shell of the "Genesis Soul Contract" to Vercel using Next.js (App Router) and Tailwind CSS. The site features a dark, hyper-legal, terminal-like aesthetic. 
+
+We now need to replace the static placeholder buttons with actual Web3 functionality to bridge the gap between the user, the blockchain, and our backend Python engine (AWS Lambda).
+
+## 2. Technical Specifications
+* **Framework:** Next.js (App Router, TypeScript)
+* **Web3 SDK:** Thirdweb v5 (React UI components & Hooks)
+* **Network:** Base Sepolia (Testnet)
+* **Identity Verification:** Coinbase EAS (Ethereum Attestation Service)
+
+## 3. Core Development Requirements
+
+**A. The Wallet Connection (Thirdweb v5)**
+* Wrap the application in the required `ThirdwebProvider`.
+* Replace the current "Initiate Mint" button with the Thirdweb v5 `<ConnectButton />`.
+* Configure the button to strictly request connection to the **Base Sepolia** network.
+
+**B. The Proof of Personhood Gate (Coinbase EAS)**
+* We must enforce the "One Human, One Soul" rule.
+* Write a function that takes the user's connected wallet address and checks the Coinbase EAS registry to verify they have a valid "Verified Account" attestation.
+* **The UX Bottleneck:** If the user connects a wallet but fails the EAS check, they must see a red/grayed-out terminal warning: *"Identity Attestation Failed. Mortal verification required via Coinbase EAS."* The minting form must remain hidden or disabled.
+
+**C. The Intake Form & API Bridge**
+* If the user passes the EAS check, reveal the "Deed of Spiritual Conveyance" form.
+* The form requires three inputs: `First Name` (text), `Last Name` (text), and `Date of Birth` (date picker).
+* Upon clicking the final "Execute Indenture" submit button, the frontend must package this data and send a `POST` request to our AWS Lambda endpoint.
+
+**The Payload Structure:**
+```json
+{
+  "dob": "1990-05-20",
+  "mortal_wallet": "0xUserConnectedWalletAddress...",
+  "first_name": "UserFirstName",
+  "last_name": "UserLastName"
+}
