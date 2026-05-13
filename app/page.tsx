@@ -36,8 +36,8 @@ function PortalContent() {
 <header className={`border-b ${isPowered ? 'border-yellow-500/20' : 'border-white/10'} pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-6`}>
   <div className="flex-1">
     <h1 className={`text-4xl font-light uppercase tracking-tighter leading-none transition-all duration-1000 ${isPowered ? 'drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]' : 'drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'}`}>
-      Genesis Soul Contract
-    </h1>
+      Sovereign Engine Portal 
+          </h1>
     <div className="flex items-center gap-6 mt-4">
       <p className="text-[9px] opacity-40 tracking-[0.6em] uppercase">
         {isPowered ? "SOUL_DETECTED // POWER_LEVEL_110%" : "Awaiting Vital Connection // v4.1"}
