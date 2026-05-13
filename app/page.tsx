@@ -43,80 +43,41 @@ function PortalContent() {
         {isPowered ? "SOUL_DETECTED // POWER_LEVEL_110%" : "Awaiting Vital Connection // v4.1"}
       </p>
       
-      {/* New Litepaper Link */}
-      <Link 
-        href="/litepaper" 
-        className={`text-[9px] tracking-[0.4em] uppercase transition-all duration-300 hover:opacity-100 underline underline-offset-4 decoration-white/20 hover:decoration-current
-          ${isPowered ? 'text-yellow-500 opacity-60' : 'text-white opacity-30'}`}
-      >
-        [ READ_LITEPAPER ]
-      </Link>
-    </div>
-  </div>
-  
-  <ConnectButton 
-    client={client} 
-    chain={baseSepolia}
-    theme={"dark"}
-    connectButton={{
-      label: "INITIATE AUTH",
-      className: `!rounded-none !font-mono !text-[11px] !px-6 !py-3 !font-bold !transition-all
-        ${isPowered 
-          ? "!bg-yellow-400 !text-black !shadow-[0_0_20px_rgba(250,204,21,0.4)]" 
-          : "!bg-white !text-black !shadow-[0_0_15px_rgba(255,255,255,0.2)]"}`
-    }}
-  />
-</header>
+"use client";
+import Link from "next/link";
+import SnippetBlock from "@/components/SnippetBlock"; // Using the '@' alias
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-          {/* Litepaper Column */}
-          <section className="space-y-8">
-            <div className="flex items-center gap-3">
-              <div className={`h-[1px] w-8 ${isPowered ? 'bg-yellow-500' : 'bg-white/50'}`}></div>
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.3em] opacity-80">The Indenture</h2>
-            </div>
-            <div className="text-[13px] leading-relaxed opacity-60 h-64 overflow-y-auto font-light">
-              <p className="mb-4">The transmission is now {isPowered ? "LIVE" : "PENDING"}. By connecting your wallet, you have initialized the spiritual bridge between Base Sepolia and your mortal ledger.</p>
-              <p>The contract remains immutable. The glow reflects the presence of the signee.</p>
-            </div>
-          </section>
+export default function LandingPage() {
+  return (
+    <main className="min-h-screen bg-black text-white font-sans p-8 md:p-24 overflow-hidden relative">
+      {/* 1. Header Section */}
+      <header className="mb-24">
+        <h1 className="text-6xl font-extralight uppercase tracking-[0.8em]">Genesis</h1>
+      </header>
 
-          {/* Right Column: Reactive Form */}
-          <section className={`border ${borderColor} p-8 bg-white/[0.02] flex flex-col justify-between transition-all duration-1000`}>
-            <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-widest opacity-90 mb-10">Deed of Conveyance</h2>
-              <div className={`space-y-8 transition-opacity duration-1000 ${isPowered ? 'opacity-100' : 'opacity-20'}`}>
-                <div className={`border-b ${isPowered ? 'border-yellow-500/30' : 'border-white/10'} py-2`}>
-                  <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Forename</label>
-                  <input type="text" className="bg-transparent outline-none w-full text-sm" placeholder={isPowered ? "ENTER_NAME" : "LOCKED"} disabled={!isPowered} />
-                </div>
-                <div className={`border-b ${isPowered ? 'border-yellow-500/30' : 'border-white/10'} py-2`}>
-                  <label className="text-[8px] uppercase tracking-[0.2em] block mb-2 opacity-50">Legal Surname</label>
-                  <input type="text" className="bg-transparent outline-none w-full text-sm" placeholder={isPowered ? "ENTER_SURNAME" : "LOCKED"} disabled={!isPowered} />
-                </div>
-              </div>
-            </div>
+      {/* 2. Modular Grid Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <SnippetBlock 
+          title="The Protocol" 
+          content="A decentralized spiritual ledger built on Base Sepolia, ensuring absolute immutability of the soul." 
+        />
+        <SnippetBlock 
+          title="Identity Gate" 
+          content="Future integration with Coinbase EAS will mandate a 'One Human, One Soul' attestation."
+          label="AUTH_V4.1" 
+        />
+        <SnippetBlock 
+          title="The Ledger" 
+          content="Real-time synchronization between mortal wallets and eternal on-chain state." 
+        />
+      </div>
 
-            <button 
-              disabled={!isPowered}
-              className={`w-full py-5 mt-12 uppercase text-[10px] tracking-[0.4em] font-black transition-all border
-                ${isPowered 
-                  ? "bg-yellow-400 text-black border-yellow-400 cursor-pointer hover:bg-black hover:text-yellow-400" 
-                  : "bg-transparent text-white/20 border-white/10 cursor-not-allowed"}`}
-            >
-              Execute Indenture
-            </button>
-          </section>
-        </div>
+      {/* 3. Navigation CTA */}
+      <div className="mt-24 text-center">
+        <Link href="/portal" className="text-[10px] tracking-[0.6em] border border-white/20 px-12 py-4 hover:bg-white hover:text-black transition-all">
+          ENTER_PORTAL
+        </Link>
       </div>
     </main>
-  );
-}
-
-export default function SoulContractPage() {
-  return (
-    <ThirdwebProvider>
-      <PortalContent />
-    </ThirdwebProvider>
   );
 }
