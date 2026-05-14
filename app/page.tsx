@@ -6,8 +6,12 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-black text-white font-sans p-8 md:p-24 overflow-hidden relative">
       
+// MARK: - CodeAI Output
+    CodeAI is unable to perform request
       {/* --- THE GLOW ENGINE --- */}
       {/* Large, slow-pulsing background light */}
+// MARK: - CodeAI Output
+      CodeAI is unable to perform request
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none"></div>
       
