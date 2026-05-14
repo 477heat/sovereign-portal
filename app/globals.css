@@ -4,6 +4,7 @@
 @theme {
   --color-background: #000000;
   --color-foreground: #ffffff;
+  --font-sans: var(--font-chakra), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* BASE STYLES */
@@ -19,7 +20,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Instead of the broken @apply, we use standard CSS for the elite borders */
+/* Subtle scanline texture global utility */
+.scanline-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%),
+              linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+  background-size: 100% 2px, 3px 100%;
+  opacity: 0.2;
+  z-index: 50;
+}
+
 * {
   border-color: rgba(255, 255, 255, 0.1);
 }

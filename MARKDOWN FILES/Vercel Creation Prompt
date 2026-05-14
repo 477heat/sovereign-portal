@@ -3,7 +3,7 @@
 **Classification:** Frontend Web3 Development (Next.js / Thirdweb v5)
 
 ## 1. Current Project State
-We have successfully deployed the static frontend shell of the "Genesis Soul Contract" to Vercel using Next.js (App Router) and Tailwind CSS. The site features a dark, hyper-legal, terminal-like aesthetic. 
+We have successfully deployed the static frontend shell of the "Sovereign Engine Protocol" to Vercel using Next.js (App Router) and Tailwind CSS. The site features a dark, hyper-legal, terminal-like aesthetic. 
 
 We now need to replace the static placeholder buttons with actual Web3 functionality to bridge the gap between the user, the blockchain, and our backend Python engine (AWS Lambda).
 
@@ -23,18 +23,21 @@ We now need to replace the static placeholder buttons with actual Web3 functiona
 **B. The Proof of Personhood Gate (Coinbase EAS)**
 * We must enforce the "One Human, One Soul" rule.
 * Write a function that takes the user's connected wallet address and checks the Coinbase EAS registry to verify they have a valid "Verified Account" attestation.
-* **The UX Bottleneck:** If the user connects a wallet but fails the EAS check, they must see a red/grayed-out terminal warning: *"Identity Attestation Failed. Mortal verification required via Coinbase EAS."* The minting form must remain hidden or disabled.
+* **The UX Bottleneck:** If the user connects a wallet but fails the EAS check, they must see a red/grayed-out terminal warning: *"Identity Attestation Failed. Mortal verification required via Coinbase EAS."* The minting form must remain hidden or disabled.
+* There must be warnings and notices of Single Mint only. One Person One Mint. Ever.
 
 **C. The Intake Form & API Bridge**
-* If the user passes the EAS check, reveal the "Deed of Spiritual Conveyance" form.
-* The form requires three inputs: `First Name` (text), `Last Name` (text), and `Date of Birth` (date picker).
-* Upon clicking the final "Execute Indenture" submit button, the frontend must package this data and send a `POST` request to our AWS Lambda endpoint.
+* If the user passes the EAS check,'A contract button' at the top of the page becomes selectable. They can choose to Read the terms of the Deed of Spiritual Conveyance . If selected they are then required to "Validate or Confirm" actual `First Name` (text), `Last Name` (text), and `Date of Birth` (date picker) at which time we reveal the "Deed of Spiritual Conveyance" which they read and then are provided a button to "mint the token". 
+	* Insinuate that all information will be verified and that they must provide actual info. Strict EAS confirmation through Coinbase KYC is necessary. 
+* Upon clicking the final "token Mint" submit button, the frontend must package their data and send a `POST` request to our AWS Lambda endpoint.
 
-**The Payload Structure:**
+	*The Payload Structure:**
 ```json
 {
-  "dob": "1990-05-20",
+  "dob": "yyyy-dd-mm",
   "mortal_wallet": "0xUserConnectedWalletAddress...",
   "first_name": "UserFirstName",
   "last_name": "UserLastName"
 }
+
+**D. White Paper Page, Developer Information page, Concepts and Implementation page. (Any others you might feel will give it a professional feel." 
