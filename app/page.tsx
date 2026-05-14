@@ -12,22 +12,12 @@ export default function LandingPage() {
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <header className="flex flex-col items-center mb-32 text-center">
-          <div className="mb-8 relative w-24 h-24 md:w-32 md:h-32">
-             <Image 
-                src="/seal.png" 
-                alt="Genesis Seal" 
-                fill 
-                className="object-contain opacity-80"
-                priority
-             />
-          </div>
-          <h1 className="text-6xl md:text-8xl font-light uppercase tracking-[0.6em] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-            Genesis
+               </div>
+          <h1 className="text-5xl md:text-8xl font-light uppercase tracking-[0.6em] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+            Sovereign Engine Protocol
           </h1>
-          <p className="mt-6 text-[10px] tracking-[0.8em] opacity-40 uppercase font-light">
-            Sovereign Spiritual Protocol
+          <p className="mt-6 text-[14px] tracking-[0.8em] opacity-40 uppercase font-light">
+           Contractual Conveyance
           </p>
         </header>
 
