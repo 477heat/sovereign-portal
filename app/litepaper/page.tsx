@@ -7,22 +7,25 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-black text-white font-sans p-8 md:p-24 overflow-hidden relative">
       
-      {/* 1. THE GLOW ENGINE */}
+      {/* GLOW ENGINE */}
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none"></div>
       
+      {/* SCANLINES */}
+      <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.01),rgba(255,255,255,0.01))] bg-[length:100%_2px,3px_100%] opacity-20"></div>
+
       <div className="relative z-10 max-w-6xl mx-auto">
-        {/* 2. Header Section */}
+        {/* HEADER SECTION */}
         <header className="mb-32">
           <h1 className="text-6xl md:text-8xl font-extralight uppercase tracking-[0.8em] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             Genesis
           </h1>
           <p className="mt-6 text-[10px] tracking-[0.5em] opacity-30 uppercase font-light">
-            Sovereign Spiritual Protocol
+            Sovereign Spiritual Protocol // v4.1
           </p>
         </header>
 
-        {/* 3. Modular Grid Section */}
+        {/* MODULAR SNIPPET GRID */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
           <SnippetBlock 
             title="The Protocol" 
@@ -38,7 +41,7 @@ export default function LandingPage() {
           />
         </div>
 
-        {/* 4. Navigation CTA */}
+        {/* NAVIGATION CTA */}
         <div className="flex flex-col items-center gap-12">
           <Link 
             href="/portal" 
