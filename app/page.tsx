@@ -12,12 +12,12 @@ export default function LandingPage() {
       <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-white/[0.03] rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-8xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto">
         <header className="flex flex-col items-center mb-32 text-center">
-          <h1 className="text-5xl md:text-8xl font-light uppercase tracking-[0.6em] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+          <h1 className="text-6xl md:text-9xl font-light uppercase tracking-[0.5em] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             Sovereign Engine Protocol
           </h1>
-          <p className="mt-6 text-[14px] tracking-[0.8em] opacity-40 uppercase font-light">
+          <p className="mt-8 text-lg md:text-2xl tracking-[0.5em] opacity-40 uppercase font-light">
             Contractual Conveyance
           </p>
         </header>
@@ -73,13 +73,13 @@ export default function LandingPage() {
 
           <nav className="flex flex-wrap justify-center gap-8">
             <Link href="/whitepaper" className="group relative px-12 py-4 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
-              <span className="text-[10px] tracking-[0.4em] font-bold uppercase">Whitepaper</span>
+              <span className="text-sm tracking-[0.4em] font-bold uppercase">Whitepaper</span>
             </Link>
             <Link href="/economics" className="group relative px-12 py-4 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
-              <span className="text-[10px] tracking-[0.4em] font-bold uppercase">Economics</span>
+              <span className="text-sm tracking-[0.4em] font-bold uppercase">Economics</span>
             </Link>
             <Link href="/portal" className="group relative px-12 py-4 border border-white transition-all duration-500 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] bg-white text-black">
-              <span className="text-[10px] tracking-[0.4em] font-black uppercase">Enter Portal</span>
+              <span className="text-sm tracking-[0.4em] font-black uppercase">Enter Portal</span>
             </Link>
           </nav>
         </section>
