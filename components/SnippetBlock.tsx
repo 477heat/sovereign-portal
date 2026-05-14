@@ -20,15 +20,16 @@ export default function SnippetBlock({ title, content, label = "DATA_STREAM", im
 
         {/* 2. The image rendering logic */}
         {image && (
-          <div className="mb-6 relative h-48 w-full overflow-hidden border border-white/5 grayscale group-hover:grayscale-0 transition-all duration-700">
-            <Image 
-              src={image} 
-              alt={title} 
-              fill 
-              className="object-cover opacity-40 group-hover:opacity-100 transition-opacity"
-            />
-          </div>
-        )}
+      <div className="relative w-full h-48 mb-6 overflow-hidden border border-white/10 bg-white/5 grayscale group-hover:grayscale-0 transition-all duration-700">
+        <Image 
+          src={image} 
+          alt={title} 
+          fill 
+          className="object-cover opacity-50 group-hover:opacity-100 transition-opacity"
+          priority={true} // Helps load critical elite assets faster
+        />
+      </div>
+   )}
         
         <h3 className="text-[11px] font-bold tracking-[0.3em] uppercase mb-3 text-white/90">{title}</h3>
         <p className="text-[12px] leading-relaxed opacity-40 font-light group-hover:opacity-80 transition-opacity">

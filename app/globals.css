@@ -1,26 +1,25 @@
-@import "tailwindcss";
+/* Standard Tailwind v3.4+ imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Fix for the 'Ugly' render - Force the theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif; /* Fallback until Geist loads */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure glassmorphism works */
+@layer base {
+  * {
+    @apply border-white/10;
+  }
 }

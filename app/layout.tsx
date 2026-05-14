@@ -1,4 +1,5 @@
 // app/layout.tsx
+import "./globals.css";
 import React from "react";
 
 // Define the shape of the props for the layout 
