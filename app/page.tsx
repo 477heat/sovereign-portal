@@ -67,17 +67,6 @@ export default function LandingPage() {
              </div>
           </div>
 
-          <nav className="flex flex-wrap justify-center gap-8">
-            <Link href="/whitepaper" className="group relative px-12 py-4 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
-              <span className="text-sm tracking-[0.4em] font-bold uppercase">Whitepaper</span>
-            </Link>
-            <Link href="/economics" className="group relative px-12 py-4 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
-              <span className="text-sm tracking-[0.4em] font-bold uppercase">Economics</span>
-            </Link>
-            <Link href="/portal" className="group relative px-12 py-4 border border-white transition-all duration-500 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] bg-white text-black">
-              <span className="text-sm tracking-[0.4em] font-black uppercase">Enter Portal</span>
-            </Link>
-          </nav>
         </section>
       </div>
     </main>
