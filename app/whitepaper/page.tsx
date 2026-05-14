@@ -16,22 +16,22 @@ export default function WhitepaperPage() {
           </div>
         </nav>
 
-        <header className="mb-24 text-center">
+        <header className="mb-20 text-center">
           <h1 className="text-4xl md:text-5xl font-light uppercase tracking-[0.3em] mb-6">
             Sovereign Protocol Engine
           </h1>
-          <p className="text-sm italic opacity-40 tracking-widest uppercase">
+          <p className="text-base italic opacity-40 tracking-widest uppercase">
             A Metaphysical Contract for Proof of Concept
           </p>
           <div className="mt-12 p-6 border border-white/10 bg-white/[0.02] text-left">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2">Notice of Compliance</p>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/60 mb-2">Notice of Compliance</p>
+            <p className="text-sm text-gray-400 leading-relaxed">
               Strict EAS verification is required. All metaphysical conveyances are executed strictly via the server-side Minter Role following successful intake.
             </p>
           </div>
         </header>
 
-        <div className="space-y-24 text-sm leading-relaxed text-gray-300">
+        <div className="space-y-16 text-base leading-relaxed text-gray-300">
           {/* Irreverent Summary */}
           <section>
             <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-white mb-8 border-b border-white/10 pb-2">
@@ -74,11 +74,11 @@ export default function WhitepaperPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div className="p-6 border border-white/10 bg-white/[0.01]">
                   <h3 className="text-xs font-bold uppercase mb-3 text-white">Diverse Duality</h3>
-                  <p className="text-xs text-gray-400">The engine measures internal synergy and contradiction. If a user exhibits profound internal clashes, the engine triggers a 1.7x spike to their top two base stats.</p>
+                  <p className="text-sm text-gray-400">The engine measures internal synergy and contradiction. If a user exhibits profound internal clashes, the engine triggers a 1.7x spike to their top two base stats.</p>
                 </div>
                 <div className="p-6 border border-white/10 bg-white/[0.01]">
                   <h3 className="text-xs font-bold uppercase mb-3 text-white">Anomalous Designations</h3>
-                  <p className="text-xs text-gray-400">Mathematically constrained to produce unique permutations. Only a statistically rare subset will receive the coveted "Anomalous" designation.</p>
+                  <p className="text-sm text-gray-400">Mathematically constrained to produce unique permutations. Only a statistically rare subset will receive the coveted "Anomalous" designation.</p>
                 </div>
               </div>
             </div>
@@ -96,18 +96,18 @@ export default function WhitepaperPage() {
               <ul className="space-y-4">
                 <li className="flex gap-4">
                   <span className="text-white font-bold text-xs">/01</span>
-                  <p className="text-xs text-gray-400"><span className="text-white">Non-Transferable Rights:</span> The Vanguard Charter is permanently bound to the minting wallet, regardless of whether the Deed (NFT) is sold.</p>
+                  <p className="text-sm text-gray-400"><span className="text-white">Non-Transferable Rights:</span> The Vanguard Charter is permanently bound to the minting wallet, regardless of whether the Deed (NFT) is sold.</p>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-white font-bold text-xs">/02</span>
-                  <p className="text-xs text-gray-400"><span className="text-white">Perpetual Dividend:</span> A hardcoded 3.5% perpetual dividend on every future secondary sale of that specific contract.</p>
+                  <p className="text-sm text-gray-400"><span className="text-white">Perpetual Dividend:</span> A hardcoded 3.5% perpetual dividend on every future secondary sale of that specific contract.</p>
                 </li>
                 <li className="flex gap-4">
                   <span className="text-white font-bold text-xs">/03</span>
-                  <p className="text-xs text-gray-400"><span className="text-white">Execution Subsidies:</span> Charter holders receive grandfathered discounts for Phase 2 and Phase 3 engine iterations.</p>
+                  <p className="text-sm text-gray-400"><span className="text-white">Execution Subsidies:</span> Charter holders receive grandfathered discounts for Phase 2 and Phase 3 engine iterations.</p>
                 </li>
               </ul>
-              <p className="text-center italic text-xs text-gray-500 mt-12">"Relinquish the vessel; retain the yield."</p>
+              <p className="text-center italic text-sm text-gray-500 mt-12">"Relinquish the vessel; retain the yield."</p>
             </div>
           </section>
 
@@ -121,7 +121,7 @@ export default function WhitepaperPage() {
                 The engine utilizes an AES encryption key to lock the user's mortal wallet and origin data into a permanent, base64-encoded string injected directly into the ERC-721 metadata.
               </p>
               <div className="p-6 border-l-2 border-white bg-white/[0.02]">
-                <p className="text-xs text-gray-400 italic">
+                <p className="text-sm text-gray-400 italic">
                   The registry maintains zero persistent records of raw personal data. Once the anchor is cast, we are incapable of tracking or utilizing your origin data.
                 </p>
               </div>

@@ -18,7 +18,7 @@ export default function WhitepaperPage() {
 
         <header className="mb-20 text-center">
           <h1 className="text-4xl md:text-5xl font-light uppercase tracking-[0.3em] mb-6">
-            Sovereign Protocol Engine
+            Sovereign Engine Protocol
           </h1>
           <p className="text-base italic opacity-40 tracking-widest uppercase">
             A Metaphysical Contract for Proof of Concept
@@ -74,9 +74,7 @@ export default function WhitepaperPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div className="p-6 border border-white/10 bg-white/[0.01]">
                   <h3 className="text-xs font-bold uppercase mb-3 text-white">Diverse Duality</h3>
-                  <p className="text-sm text-gray-400">The engine measures internal synergy and contradiction. If a user exhibits profound internal clashes, the engine triggers a 1.7x spike to their top two base stats.</p>
-                </div>
-                <div className="p-6 border border-white/10 bg-white/[0.01]">
+                 <div className="p-6 border border-white/10 bg-white/[0.01]">
                   <h3 className="text-xs font-bold uppercase mb-3 text-white">Anomalous Designations</h3>
                   <p className="text-sm text-gray-400">Mathematically constrained to produce unique permutations. Only a statistically rare subset will receive the coveted "Anomalous" designation.</p>
                 </div>
