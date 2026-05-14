@@ -16,16 +16,16 @@ export default function EconomicsPage() {
           </div>
         </nav>
 
-        <header className="mb-24">
+        <header className="mb-20">
           <h1 className="text-5xl md:text-7xl font-light uppercase tracking-[0.4em] mb-6">
             Economic Mandates
           </h1>
-          <p className="text-sm tracking-[0.5em] opacity-40 uppercase">
+          <p className="text-base tracking-[0.5em] opacity-40 uppercase">
             Sovereign Engine Protocol Liquidity & Utility Models
           </p>
         </header>
 
-        <div className="space-y-32">
+        <div className="space-y-20">
           {/* Pillar 1: Vanguard Protocol */}
           <section>
             <div className="flex items-center gap-4 mb-12">
@@ -33,7 +33,7 @@ export default function EconomicsPage() {
               <h2 className="text-xs font-bold uppercase tracking-[0.6em] text-white">The Vanguard Protocol</h2>
               <div className="h-[1px] flex-1 bg-white/10"></div>
             </div>
-            <p className="text-sm opacity-50 mb-12 max-w-2xl italic">
+            <p className="text-base opacity-50 mb-12 max-w-2xl italic">
               "Sell the art. Keep the yield. Own the infrastructure."
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -65,13 +65,13 @@ export default function EconomicsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <h3 className="text-xl font-light uppercase tracking-widest">Verifiable Existence</h3>
-                <p className="text-sm opacity-60 leading-relaxed">
+                <p className="text-base opacity-60 leading-relaxed">
                   Moving beyond speculative PFP culture. We tokenize the ultimate scarce asset: <span className="text-white">Human Existence</span>. Leveraging Coinbase EAS for absolute, KYC-verified certainty.
                 </p>
               </div>
               <div className="space-y-6">
                 <h3 className="text-xl font-light uppercase tracking-widest">The Scarcity Loop</h3>
-                <p className="text-sm opacity-60 leading-relaxed">
+                <p className="text-base opacity-60 leading-relaxed">
                   Secondary collectors must purchase $OBOL liquidity directly from Vanguard early adopters to participate in upgrades, creating a robust, player-driven micro-economy.
                 </p>
               </div>
@@ -88,25 +88,25 @@ export default function EconomicsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="p-8 border border-white/10 bg-white/[0.02]">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-white/70 mb-4">Character Primitive</h4>
-                <p className="text-xs opacity-50 leading-relaxed">
+                <p className="text-sm opacity-50 leading-relaxed">
                   Standardized 7-core stats (Vitality, Vigor, Intuition, Resolve, Intellect, Spirit, Charisma) for instant integration into on-chain gaming and metaverses.
                 </p>
               </div>
               <div className="p-8 border border-white/10 bg-white/[0.02]">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-white/70 mb-4">Metaphysical Credit</h4>
-                <p className="text-xs opacity-50 leading-relaxed">
+                <p className="text-sm opacity-50 leading-relaxed">
                   KYC-backed human presence allows DeFi protocols to leverage Soul Contracts as an immutable, under-collateralized "Credit Score."
                 </p>
               </div>
               <div className="p-8 border border-white/10 bg-white/[0.02]">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-white/70 mb-4">Sybil Annihilation</h4>
-                <p className="text-xs opacity-50 leading-relaxed">
+                <p className="text-sm opacity-50 leading-relaxed">
                   Zero-knowledge proof of humanity for DAOs. Instantly inherit flawless Sybil-resistance by requiring Soul Contract ownership for voting.
                 </p>
               </div>
               <div className="p-8 border border-white/10 bg-white/[0.02]">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-white/70 mb-4">Reputation Locking</h4>
-                <p className="text-xs opacity-50 leading-relaxed">
+                <p className="text-sm opacity-50 leading-relaxed">
                   Integration with Lens/Farcaster to gate "human-only" channels, eliminating bot spam and AI-generated engagement.
                 </p>
               </div>
@@ -123,3 +123,4 @@ export default function EconomicsPage() {
     </main>
   );
 }
+
