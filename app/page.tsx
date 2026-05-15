@@ -67,7 +67,7 @@ export default function LandingPage() {
                 Forget the Faustian legalese: You are contractually shackling your actual, literal soul to an internet token so you can pawn it off to the highest bidder like the idiot founder. Upon its <span className="text-white not-italic font-bold">Initial Mint</span> you have absolute discretion to hold it, barter it, sell it, give it to your spouse. You probably owe them eternal servitude anyway.
               </p>
               <p>
-                Servitude begins at the moment of <span className="text-white not-italic font-bold">DEATH</span> as per the contract agreements. You retain full physical autonomy and a small Commission while breathing, but the holder claims rights to your spirit, <span className="not-italic">Ex Anima</span>.
+                Servitude begins at the moment of <span className="text-white not-italic font-bold">DEATH</span> as per the contract agreements. You retain full physical autonomy and a small Commission while breathing, but the holder claims rights to your spirit, <span className="not-italic">Ex Anima</span>.Enter the Portal to read the contract in its entierty. 
               </p>
             </div>
           </div>
