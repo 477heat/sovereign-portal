@@ -95,13 +95,13 @@ export default function EconomicsPage() {
               <div className="p-8 border border-white/10 bg-white/[0.02]">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-white/70 mb-4">Metaphysical Credit</h4>
                 <p className="text-sm opacity-50 leading-relaxed">
-                  KYC-backed human presence allows DeFi protocols to leverage Soul Contracts as an immutable, under-collateralized "Credit Score."
+                  KYC-backed human presence allows DeFi protocols to leverage Personhood Contracts as an immutable, under-collateralized "Credit Score."
                 </p>
               </div>
               <div className="p-8 border border-white/10 bg-white/[0.02]">
                 <h4 className="text-xs font-bold tracking-[0.3em] uppercase text-white/70 mb-4">Sybil Annihilation</h4>
                 <p className="text-sm opacity-50 leading-relaxed">
-                  Zero-knowledge proof of humanity for DAOs. Instantly inherit flawless Sybil-resistance by requiring Soul Contract ownership for voting.
+                  Zero-knowledge proof of humanity for DAOs. Instantly inherit flawless Sybil-resistance by requiring Personhood Contract ownership for voting.
                 </p>
               </div>
               <div className="p-8 border border-white/10 bg-white/[0.02]">
