@@ -30,7 +30,7 @@ export default function LandingPage() {
           <Link href="/economics" className="group relative px-10 py-3 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
             <span className="text-xs tracking-[0.4em] font-bold uppercase">Economics</span>
           </Link>
-          <Link href="/vanguard" className="group relative px-10 py-3 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
+          <Link href="/vanguardprivilegespage" className="group relative px-10 py-3 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
             <span className="text-xs tracking-[0.4em] font-bold uppercase">Privileges</span>
           </Link>
           <Link href="/portal" className="group relative px-10 py-3 border border-white transition-all duration-500 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] bg-white text-black">
@@ -67,7 +67,7 @@ export default function LandingPage() {
                 Forget the Faustian legalese: You are contractually shackling your actual, literal soul to an internet token so you can pawn it off to the highest bidder like the idiot founder. Upon its <span className="text-white not-italic font-bold">Initial Mint</span> you have absolute discretion to hold it, barter it, sell it, give it to your spouse. You probably owe them eternal servitude anyway.
               </p>
               <p>
-                Servitude begins at the moment of <span className="text-white not-italic font-bold">DEATH</span> as per the contract agreements. You retain full physical autonomy and a small Commission while breathing, but the holder claims rights to your spirit, <span className="not-italic">Ex Anima</span>.Enter the Portal to read the contract in its entierty. 
+                Servitude begins at the moment of <span className="text-white not-italic font-bold">DEATH</span> as per the contract agreements. You retain full physical autonomy and a small Commission while breathing, but the holder claims rights to your spirit, <span className="not-italic">Ex Anima</span>. Enter the Portal to read the contract in its entierty. 
               </p>
             </div>
           </div>
