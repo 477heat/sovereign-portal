@@ -40,38 +40,22 @@ export default function LandingPage() {
           
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           <SnippetBlock
-            title="The Protocol"
-            content="A decentralized spiritual ledger ensuring absolute immutability of the soul."
-            label="CORE_FUNCTION"
+            title="Vanguard Privileges"
+            content="See the benefits for users and developers in the privileges section"
+            label="COMMUNITY_DRIVEN"
           />
           <SnippetBlock
-            title="Identity Gate"
-            content="Mandatory 'One Human, One Soul' attestation via Coinbase EAS."
-            label="SECURITY_LAYER"
+            title="Progeny Engine"
+            content="You don't have to sell; Mint the Soul, Generate Unique Playables, Yield Forever"
+            label="ASSET_LAYER"
           />
           <SnippetBlock
-            title="Immutability"
-            content="Cryptographic certainty for the non-physical domain."
-            label="VERIFICATION"
+            title="DEVELOPER ADAPTATION"
+            content="User Attributes Drive Character Generation for a true community of unique players"
+            label="DEVELOPER_USAGE"
           />
         </section>
-
-        {/* Centered Artifact Asset */}
-        <section className="flex flex-col items-center gap-12 mb-32">
-          <div className="relative w-full max-w-4xl aspect-video border border-white/10 bg-white/[0.02] overflow-hidden group">
-             <Image
-                src="/artifact.png"
-                alt="Genesis Artifact"
-                fill
-                className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-1000"
-             />
-             <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-[1px] bg-white/10"></div>
-                <div className="absolute w-[1px] h-full bg-white/10"></div>
-             </div>
-          </div>
-        </section>
-
+   
         {/* IRREVERENT SUMMARY ADDENDUM */}
         <section className="max-w-3xl mx-auto mb-32">
           <div className="p-8 md:p-12 border border-white/10 bg-white/[0.01] backdrop-blur-sm text-center">
