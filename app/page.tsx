@@ -17,7 +17,7 @@ export default function LandingPage() {
           <h1 className="text-5xl md:text-7xl font-light uppercase tracking-[0.3em] drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             Sovereign Engine Protocol
           </h1>
-          <p className="mt-4 text-base md:text-lg tracking-[0.4em] opacity-40 uppercase font-light">
+          <p className="mt-4 text-base md:text-lg tracking-[0.4em] opacity-60 uppercase font-light">
             Contractual Conveyance
           </p>
         </header>
@@ -55,16 +55,16 @@ export default function LandingPage() {
             label="DEVELOPER_USAGE"
           />
         </section>
-   
+
         {/* IRREVERENT SUMMARY ADDENDUM */}
         <section className="max-w-3xl mx-auto mb-32">
           <div className="p-8 md:p-12 border border-white/10 bg-white/[0.01] backdrop-blur-sm text-center">
             <h2 className="text-[10px] tracking-[0.5em] uppercase text-white/40 mb-8">
               Contractual Addendum // Notice of Intent
             </h2>
-            <div className="space-y-8 text-sm md:text-base text-gray-400 italic leading-relaxed">
+            <div className="space-y-8 text-sm md:text-base text-gray-300 italic leading-relaxed">
               <p>
-                Forget the Faustian legalese: You are contractually shackling your actual, literal soul to an internet token so you can pawn it off to the highest bidder like the idiot founder. Upon its <span className="text-white not-italic font-bold">Initial Mint</span> you have absolute discretion to hold it, barter it, sell it, give it to your spouse. You probably owe them eternal servitude anyway.
+                Forget the Faustian legalese: You are contractually shackling your soul to an internet token so you can pawn it off to the highest bidder like the dumbass founder, who couldnt think of another way to get funded. Upon its <span className="text-white not-italic font-bold">Initial Mint</span> you have absolute discretion to hold it, barter it, sell it, give it to your spouse. You probably owe them eternal servitude anyway.
               </p>
               <p>
                 Servitude begins at the moment of <span className="text-white not-italic font-bold">DEATH</span> as per the contract agreements. You retain full physical autonomy and a small Commission while breathing, but the holder claims rights to your spirit, <span className="not-italic">Ex Anima</span>. Enter the Portal to read the contract in its entierty. 
