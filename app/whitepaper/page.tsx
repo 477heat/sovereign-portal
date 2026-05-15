@@ -75,7 +75,7 @@ export default function ExecutiveSummaryPage() {
               <p className="text-xs text-gray-500 mb-4 font-mono uppercase">Stack: Solidity | Base Sepolia</p>
               <ul className="text-sm text-gray-400 space-y-3 list-disc list-inside">
                 <li>Restricted Minting via dedicated Server Wallet.</li>
-                <li>Mandatory permission checks on {@code mintTo}.</li>
+                <li>Mandatory permission checks on <code>mintTo</code>.</li>
                 <li>Testnet-first deployment strategy.</li>
               </ul>
             </div>
@@ -93,7 +93,7 @@ export default function ExecutiveSummaryPage() {
               { step: "01", label: "Intake", desc: "User connects wallet via Vercel and completes EAS verification." },
               { step: "02", label: "Submission", desc: "Secure POST request triggers AWS Lambda with encrypted identity data." },
               { step: "03", label: "Forging", desc: "Astro-engine calculates stats; Identity-burner creates unique hashed image." },
-              { step: "04", label எழுத="Vaulting", desc: "Lambda uploads PNG and Metadata JSON to Pinata IPFS." },
+              { step: "04", label: "Vaulting", desc: "Lambda uploads PNG and Metadata JSON to Pinata IPFS." },
               { step: "05", label: "Execution", desc: "Server Wallet signs and executes mintTo on Base Sepolia." },
               { step: "06", label: "Finalization", desc: "Vanguard Charter is initialized; transaction confirmed to frontend." }
             ].map((item, i) => (
@@ -170,3 +170,4 @@ export default function ExecutiveSummaryPage() {
     </main>
   );
 }
+
