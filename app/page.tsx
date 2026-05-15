@@ -40,8 +40,8 @@ export default function LandingPage() {
           
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           <SnippetBlock
-            title="Progeny Engine"
-            content="You don't have to sell it. Mint the Soul, Generate Playables, Yield Forever."
+            title="The Protocol"
+            content="A decentralized spiritual ledger ensuring absolute immutability of the soul."
             label="CORE_FUNCTION"
           />
           <SnippetBlock
@@ -50,14 +50,14 @@ export default function LandingPage() {
             label="SECURITY_LAYER"
           />
           <SnippetBlock
-            title="Adoption for Developers"
-            content="Community driven creative creations unique to each individual that are tradeable and yield income for users."
+            title="Immutability"
+            content="Cryptographic certainty for the non-physical domain."
             label="VERIFICATION"
           />
         </section>
 
         {/* Centered Artifact Asset */}
-        <section className="flex flex-col items-center gap-12">
+        <section className="flex flex-col items-center gap-12 mb-32">
           <div className="relative w-full max-w-4xl aspect-video border border-white/10 bg-white/[0.02] overflow-hidden group">
              <Image
                 src="/artifact.png"
@@ -71,6 +71,24 @@ export default function LandingPage() {
              </div>
           </div>
         </section>
+
+        {/* IRREVERENT SUMMARY ADDENDUM */}
+        <section className="max-w-3xl mx-auto mb-32">
+          <div className="p-8 md:p-12 border border-white/10 bg-white/[0.01] backdrop-blur-sm text-center">
+            <h2 className="text-[10px] tracking-[0.5em] uppercase text-white/40 mb-8">
+              Contractual Addendum // Notice of Intent
+            </h2>
+            <div className="space-y-8 text-sm md:text-base text-gray-400 italic leading-relaxed">
+              <p>
+                Forget the Faustian legalese: You are contractually shackling your actual, literal soul to an internet token so you can pawn it off to the highest bidder like the idiot founder. Upon its <span className="text-white not-italic font-bold">Initial Mint</span> you have absolute discretion to hold it, barter it, sell it, give it to your spouse. You probably owe them eternal servitude anyway.
+              </p>
+              <p>
+                Servitude begins at the moment of <span className="text-white not-italic font-bold">DEATH</span> as per the contract agreements. You retain full physical autonomy and a small Commission while breathing, but the holder claims rights to your spirit, <span className="not-italic">Ex Anima</span>.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </div>
     </main>
   );
