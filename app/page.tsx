@@ -31,7 +31,7 @@ export default function LandingPage() {
             <span className="text-xs tracking-[0.4em] font-bold uppercase">Economics</span>
           </Link>
           <Link href="/vanguard" className="group relative px-10 py-3 border border-white/10 transition-all duration-500 hover:border-white/40 bg-white/[0.01] backdrop-blur-sm">
-            <span className="text-xs tracking-[0.4em] font-bold uppercase">Vanguard</span>
+            <span className="text-xs tracking-[0.4em] font-bold uppercase">Privileges</span>
           </Link>
           <Link href="/portal" className="group relative px-10 py-3 border border-white transition-all duration-500 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] bg-white text-black">
             <span className="text-xs tracking-[0.4em] font-black uppercase">Enter Portal</span>
@@ -40,8 +40,8 @@ export default function LandingPage() {
           
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           <SnippetBlock
-            title="The Protocol"
-            content="A decentralized spiritual ledger ensuring absolute immutability of the soul."
+            title="Progeny Engine"
+            content="You don't have to sell it. Mint the Soul, Generate Playables, Yield Forever."
             label="CORE_FUNCTION"
           />
           <SnippetBlock
@@ -50,8 +50,8 @@ export default function LandingPage() {
             label="SECURITY_LAYER"
           />
           <SnippetBlock
-            title="Immutability"
-            content="Cryptographic certainty for the non-physical domain."
+            title="Adoption for Developers"
+            content="Community driven creative creations unique to each individual that are tradeable and yield income for users."
             label="VERIFICATION"
           />
         </section>
