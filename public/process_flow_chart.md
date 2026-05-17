@@ -1,4 +1,4 @@
-# Cryptographic Zodiac NFT Minting Pipeline
+# Cryptographic NFT Minting Pipeline
 
 This document outlines the end-to-end technical workflow for the automated identity-verification and dynamic Zodiac NFT minting pipeline on the **Base L2 Network** using an **AWS Lambda** backend.
 
@@ -22,11 +22,11 @@ The system uses a hybrid architecture designed to minimize blockchain gas costs 
 2. **EAS Attestation Check:** The frontend queries the **Ethereum Attestation Service (EAS)** registry.
    * *If Valid:* The user is granted access to the minting portal.
    * *If Invalid/Missing:* Entry is denied, prompting the user to complete verification.
-3. **User Input Data:** The permitted user inputs their **Name** and **Date of Birth (DOB)** into the website form and clicks "Confirm Mint."
+3. **User Data verified against coinbase EAS**
 
 ### Phase 2: Serverless Backend Processing (AWS Lambda)
 4. **Data Transmission:** The frontend securely sends the User's Name, DOB, and Wallet Address to the AWS Lambda server endpoint.
-5. **Processing:** The Python engine calculates the user’s specific Zodiac sign and generates dynamic on-chain "Stats" based on their birth metrics.
+5. **Processing:** The Python engine calculates the user’s specific attributes and generates dynamic on-chain "Stats" based on their birth metrics.
 6. **Data Encryption:** The engine cryptographically hashes and encrypts the Name and DOB to protect PII (Personally Identifiable Information).
 7. **Image Burning:** The engine pulls the standard base template PNG from **Amazon S3**, uses an image processing library (e.g., Pillow) to burn the encrypted data hash and a verification mock signature directly onto the image pixels.
 
