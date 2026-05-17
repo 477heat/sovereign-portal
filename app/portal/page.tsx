@@ -1,22 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import React from "react";
 import Link from "next/link";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 
-function LitepaperContent() {
+function PortalContent() {
   const account = useActiveAccount();
   const isPowered = !!account;
-  const [content, setContent] = useState("");
-
-  // Fetch the markdown from the public folder
-  useEffect(() => {
-    fetch("/litepaper_v1.md")
-      .then((res) => res.text())
-      .then((text) => setContent(text))
-      .catch((err) => setContent("# ERROR: Protocol Transmission Interrupted"));
-  }, []);
 
   return (
     <main className={`min-h-screen bg-black font-mono p-6 md:p-24 transition-colors duration-1000 relative overflow-hidden ${isPowered ? 'text-yellow-400' : 'text-white'}`}>
@@ -26,46 +16,50 @@ function LitepaperContent() {
         <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] ${isPowered ? 'bg-yellow-500/20' : 'bg-white/10'}`}></div>
       </div>
 
-      <div className="max-w-3xl mx-auto relative z-10">
+      <div className="max-w-3xl mx-auto relative z-10 flex flex-col items-center justify-center min-h-[70vh]">
         {/* Navigation Bridge */}
-        <nav className="mb-16">
+        <nav className="absolute top-0 left-0 mb-16">
           <Link href="/" className={`text-[10px] tracking-[0.4em] border px-4 py-2 transition-all ${isPowered ? 'border-yellow-500/40 hover:bg-yellow-500 hover:text-black shadow-[0_0_15px_rgba(250,204,21,0.2)]' : 'border-white/20 hover:bg-white hover:text-black'}`}>
-            RETURN_TO_PORTAL
+            RETURN_TO_HOME
           </Link>
         </nav>
 
-        {/* LitGlassmorphism Paper Shell */}
-        <article className={`p-8 md:p-16 border bg-black/40 backdrop-blur-xl transition-all duration-1000 ${isPowered ? 'border-yellow-500/30 shadow-[0_0_50px_rgba(250,204,21,0.1)]' : 'border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]'}`}>
-          <div className="prose prose-invert max-w-none 
-            prose-headings:uppercase prose-headings:tracking-widest 
-            prose-p:text-[14px] prose-p:leading-relaxed prose-p:opacity-70 
-            prose-strong:text-white prose-strong:font-bold">
-            
-            <ReactMarkdown
-              components={{
-                h1: ({node, ...props}) => <h1 className="text-3xl mb-12 border-b border-current pb-4 font-light italic" {...props} />,
-                h2: ({node, ...props}) => <h2 className="text-lg mt-12 mb-6 underline decoration-double underline-offset-8" {...props} />,
-                p: ({node, ...props}) => <p className="mb-6" {...props} />,
-              }}
-            >
-              {content}
-            </ReactMarkdown>
-          </div>
-        </article>
+        {/* Main Content */}
+        <div className="text-center space-y-12">
+          <h1 className="text-4xl md:text-6xl font-light tracking-[0.3em] uppercase">
+            Mint Yours Soon
+          </h1>
 
-        <footer className="mt-20 text-[9px] opacity-30 tracking-[0.3em] uppercase flex justify-between">
-          <span>Document: litepaper_v1.md</span>
+          <div className="flex justify-center">
+            <Link 
+              href="/architect_soul_contract.md"
+              className={`group relative px-12 py-6 border text-lg tracking-[0.2em] uppercase transition-all duration-500 ${
+                isPowered 
+                ? 'border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black shadow-[0_0_30px_rgba(250,204,21,0.3)]' 
+                : 'border-white text-white hover:bg-white hover:text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]'
+              }`}
+            >
+              Architects Deed
+            </Link>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="absolute bottom-0 w-full text-[9px] opacity-30 tracking-[0.3em] uppercase flex justify-between items-center">
           <span>Genesis Soul Protocol</span>
+          <Link href="/process_flow_chart.md" className="hover:opacity-100 transition-opacity">
+            Process Flow Chart
+          </Link>
         </footer>
       </div>
     </main>
   );
 }
 
-export default function LitepaperPage() {
+export default function PortalPage() {
   return (
     <ThirdwebProvider>
-      <LitepaperContent />
+      <PortalContent />
     </ThirdwebProvider>
   );
 }
