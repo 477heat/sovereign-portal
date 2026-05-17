@@ -125,23 +125,25 @@ export default function PreRegistryPortal() {
               None of this works if I couldn’t get all the contract conditions to compile. “DEPRECATED” “DEPRECATED” What the eff is Deprecated? ….  Effin Nightmare. When NFT's first came out,  the word “Contracts" were being thrown around so much it made me think of that game we made up.  What could a person attach to an NFT that was not personally Identifiable but still very personal to them? Personal attributes that were determined by an outside force beyond any dice rolling, stat farming or any other manipulatable mechanic. Something everyone has; is already predetermined, and already determines every attribute you can think because of it? Well, since I’ve known a lot of Hippies, the answer struck me…..If you figured it out then Kudos but it’s a semi-secret for now. 
             </p>
             <p>
-              The original restrictions of ERC-20 made the idea untenable. Six weeks ago I heard about ERC-721 and its possibilities, and I began to build. I created a Python Engine first. AI helped, but it was a cluster fu&#36;&amp;!! AI made it cheap, but not easy. Easier for sure but still… Damn it all to Hell.
+             The original restrictions that ERC-20 had, always made the idea untenable….  6 weeks ago I heard about ERC-721 and its possibilities then began to build. I created a python Engine first. AI helped but it was a cluster fu&$!! AI made it cheap but not easy. Easier for sure but still…Damn it all to Hell.  
             </p>
             <p>
-              If I knew then what I know now, it would’ve been a few days to a week. I’ve built and attempted to deploy 25 different test contracts, and that’s not including the learning curve with the Python Engine. I’m 46 years old and I’ve been a taxi dispatcher most of my life. I don’t know shit about coding except some HTML experience using MySpace.
+             If I knew then what I know now it would’ve been a few days to a week. Ive built and attempted to deploy 25 different test contracts and that’s not including the learning curve with the Python Engine. Im 46 years old and Ive been a taxi dispatcher most of my life. I don’t know shit about coding except some HTML experience using myspace.
             </p>
             <p>
-              May 15th, about 4:00 AM; I’ve pasted my 665th error message into the chat session and again Clark Kent (I named them all) swears he’s got the fix. (The problem with AI is it absolutely knows the answer. It just never knows all the problems). I’ve been ready to give up so many times, but I thought the same thing building the Python Engine and it finally came. Sure enough, I’m 2 weeks past my wife’s patience, and on attempt 666, something clicks. The commands make sense, the process becomes clear. I’ve been screwing myself the whole time. Don’t even ask. The solution was dumb.
+             May 15th about 400am; Ive pasted my 665th error message into the chat session and again Clark Kent (I named them all) swears he’s got the fix. (The problem with AI is it absolutely knows the answer) It just never knows all the problems). Ive been ready to give up so many times but I thought the same thing when I was building the Python Engine and it did finally come so I persisted. Sure enough, Im 2 weeks past my wife’s patience, and at attempt 666, something clicks. The commands make sense, the process becomes clear. I’ve been screwing myself the whole time. Don’t even ask. The solution was dumb.
             </p>
             <p>
-              Remix saved me. All the tools were there and they are free. Up to that point I had deployed over 500 sessions across 5 AI platforms trying to manage and organize while hallucinating robots kept pulling me back. So I figured out project management. Structured tasks, Chief Officers, Managers, Technicians, the Mighty Handoff document; oh, and the first lesson: your prompt is everything.
+             Remix saved me. All the tools were there and they are free. Up to that point I had deployed over 500 sessions across 5 AI platforms. Trying to manage and organize while hallucinating robots kept pulling me back. So I figured out project management. Structured task and assignments, Chief Officers, Managers and Technicians;  and the Mighty Handoff document; oh, and the first lesson, your prompt is everything.
             </p>
             <p>
-              But it doesn’t matter anymore. I made it here and I’ll make it to the next goal. I hope someone comes along. My wife probably isn’t. She’s probably madder because she has no rights in the afterlife after today.
+             But it doesn’t matter anymore. I made it here and I’ll make it to the next goal. I hope someone comes along, my wife probably isn’t. She’s probably madder because she has no rights to me in the afterlife after today, but you can still come. It’s a real community, everyone gets to keep royalties in perpetuity for minting in this Phase. It’s written in the contract and automatically executed. Just don’t kill me yet til this thing fails or I’ve thrown up from coding for 22 hours.
             </p>
             <p>
-              All the Faustian legalese and the novelty of it all is just a fun little play on the “Contract” system that I had a mind to corner. You will be able to mint yours in a few days. And no, you don't have to sell it. I have a feeling most people might do it for the novelty and hold on to them, but this is just stage one. Look at the contract and what's ahead. If you’re interested, then come on.
+                 All the faustian legalese, and the novelty of it all is just a play on the “Contract” system that I had a mind to corner so I don’t want to hear about Jesus or Shamalama ding dong frowning down on me.
+                 Read the Contract and the contract, give me some feedback on X. If you’re interested then come along.  You will be able to mint yours in a few days. Just after the Auction. I have a feeling most people might do it for the novelty and not let go of them but this is just stage one. Look at the contract and whats ahead at my website.
             </p>
+     
           </div>
         </section>
 
