@@ -43,20 +43,28 @@ export default function PreRegistryPortal() {
         <div className="mt-6 text-2xl font-bold text-white tracking-widest">
           T-MINUS: {timeLeft || "CALCULATING..."}
         </div>
+        
+        {/* NEW HEADER LINKS */}
+        <div className="mt-8 flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-bold tracking-widest text-gray-500">
+          <Link href="/whitepaper" className="hover:text-red-500 transition-colors">[ WHITEPAPER ]</Link>
+          <a href="https://opensea.io" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">[ ARCHITECT'S DEED ]</a>
+          <Link href="/vanguard" className="hover:text-red-500 transition-colors">[ VANGUARD ]</Link>
+        </div>
       </header>
 
-      <main className="max-w-6xl mx-auto p-6 md:p-12 space-y-24 flex-grow">
+      {/* Reduced spacing from space-y-24 to space-y-12 */}
+      <main className="max-w-6xl mx-auto p-6 md:p-12 space-y-12 flex-grow">
         
         {/* SECTION 2: THE ARCHITECT's TITHE */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="border border-gray-800 p-2 bg-zinc-900 shadow-2xl relative">
             <img
               src="/architect_deed.png"
-              alt="Vessel 0000 Deed of Spiritual Conveyance"
+              alt="Essence 0000 Deed of Spiritual Conveyance"
               className="w-full h-auto grayscale hover:grayscale-0 transition-all duration-700"
             />
             <div className="absolute top-4 right-4 bg-black/80 text-red-500 px-3 py-1 border border-red-900 text-xs tracking-widest">
-              VESSEL 0000
+              ESSENCE 0000
             </div>
           </div>
           <div className="space-y-6">
@@ -64,7 +72,7 @@ export default function PreRegistryPortal() {
               Become the Ethereal Master
             </h2>
             <p className="text-gray-400 leading-relaxed text-justify">
-              The Sovereign Engine requires startup capital. To fund the infrastructure, Vessel 0000—the literal, cryptographic soul of the developer—is being auctioned to the highest bidder.
+              The Sovereign Engine requires startup capital. To fund the infrastructure, Essence 0000—the literal, cryptographic soul of the developer—is being auctioned to the highest bidder.
             </p>
             <p className="text-gray-400 leading-relaxed text-justify">
               There is a distinct, bureaucratic absurdity in purchasing the absolute metaphysical rights to a human life for $1, but the ledger does not judge. Winning this auction grants you the <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence.
@@ -83,7 +91,8 @@ export default function PreRegistryPortal() {
         </section>
 
         {/* SECTION 3: PROTOCOL PROSPECTUS (UPDATED BLOCKS) */}
-        <section className="border-t border-gray-800 pt-16">
+        {/* Reduced top padding from pt-16 to pt-8 */}
+        <section className="border-t border-gray-800 pt-8">
           <h2 className="text-2xl font-bold text-center text-white uppercase tracking-widest mb-12">
             Protocol Mechanics
           </h2>
@@ -109,7 +118,7 @@ export default function PreRegistryPortal() {
           </div>
         </section>
 
-        {/* SECTION 4: THE DEV MANIFESTO (NEW) */}
+        {/* SECTION 4: THE DEV MANIFESTO */}
         <section className="border border-gray-800 bg-zinc-900 p-6 md:p-12 relative shadow-2xl">
           <div className="absolute top-0 left-0 bg-red-900 text-white text-xs px-2 py-1 uppercase tracking-widest font-bold">
             ARCHITECT_LOG // MAY 2026
@@ -122,35 +131,34 @@ export default function PreRegistryPortal() {
               When we were kids my buddy made me read <em>Memnoch the Devil</em> by Anne Rice. Scared religion right out of me. We thought up a game where we collected souls from anyone we could trick into signing a contract. We even had little business cards that we cut at the library from printer paper. The caveat was, the person had to ask you for something before you proposed the signing of it away. We imagined collecting everyone in our family, our friends, my grandma! Anyway, that was when we were 12 and we never got a single one. Here I am now throwing mine to the OpenSea.
             </p>
             <p>
-              None of this works if I couldn’t get all the contract conditions to compile. “DEPRECATED” “DEPRECATED” What the eff is Deprecated? ….  Effin Nightmare. When NFT's first came out,  the word “Contracts" were being thrown around so much it made me think of that game we made up.  What could a person attach to an NFT that was not personally Identifiable but still very personal to them? Personal attributes that were determined by an outside force beyond any dice rolling, stat farming or any other manipulatable mechanic. Something everyone has; is already predetermined, and already determines every attribute you can think because of it? Well, since I’ve known a lot of Hippies, the answer struck me…..If you figured it out then Kudos but it’s a semi-secret for now. 
+              When NFTs first came out, the word “Contracts” was being thrown around so much it made me think of that game. What could a person attach to an NFT that was not personally identifiable but still very personal to them? Personal attributes determined by an outside force—beyond any dice rolling, stat farming, or manipulatable mechanic. Something everyone has; is already predetermined, and determines every attribute you can think of. Well, since I’ve known a lot of Hippies, the answer struck me. If you figured it out, kudos, but it’s a semi-secret for now.
             </p>
             <p>
-             The original restrictions that ERC-20 had, always made the idea untenable….  6 weeks ago I heard about ERC-721 and its possibilities then began to build. I created a python Engine first. AI helped but it was a cluster fu&$!! AI made it cheap but not easy. Easier for sure but still…Damn it all to Hell.  
+              The original restrictions of ERC-20 made the idea untenable. Six weeks ago I heard about ERC-721 and its possibilities, and I began to build. I created a Python Engine first. AI helped, but it was a cluster fu&#36;&amp;!! AI made it cheap, but not easy. Easier for sure but still… Damn it all to Hell.
             </p>
             <p>
-             If I knew then what I know now it would’ve been a few days to a week. Ive built and attempted to deploy 25 different test contracts and that’s not including the learning curve with the Python Engine. Im 46 years old and Ive been a taxi dispatcher most of my life. I don’t know shit about coding except some HTML experience using myspace.
+              If I knew then what I know now, it would’ve been a few days to a week. I’ve built and attempted to deploy 25 different test contracts, and that’s not including the learning curve with the Python Engine. I’m 46 years old and I’ve been a taxi dispatcher most of my life. I don’t know shit about coding except some HTML experience using MySpace.
             </p>
             <p>
-             May 15th about 400am; Ive pasted my 665th error message into the chat session and again Clark Kent (I named them all) swears he’s got the fix. (The problem with AI is it absolutely knows the answer) It just never knows all the problems). Ive been ready to give up so many times but I thought the same thing when I was building the Python Engine and it did finally come so I persisted. Sure enough, Im 2 weeks past my wife’s patience, and at attempt 666, something clicks. The commands make sense, the process becomes clear. I’ve been screwing myself the whole time. Don’t even ask. The solution was dumb.
+              May 15th, about 4:00 AM; I’ve pasted my 665th error message into the chat session and again Clark Kent (I named them all) swears he’s got the fix. (The problem with AI is it absolutely knows the answer. It just never knows all the problems). I’ve been ready to give up so many times, but I thought the same thing building the Python Engine and it finally came. Sure enough, I’m 2 weeks past my wife’s patience, and on attempt 666, something clicks. The commands make sense, the process becomes clear. I’ve been screwing myself the whole time. Don’t even ask. The solution was dumb.
             </p>
             <p>
-             Remix saved me. All the tools were there and they are free. Up to that point I had deployed over 500 sessions across 5 AI platforms. Trying to manage and organize while hallucinating robots kept pulling me back. So I figured out project management. Structured task and assignments, Chief Officers, Managers and Technicians;  and the Mighty Handoff document; oh, and the first lesson, your prompt is everything.
+              Remix saved me. All the tools were there and they are free. Up to that point I had deployed over 500 sessions across 5 AI platforms trying to manage and organize while hallucinating robots kept pulling me back. So I figured out project management. Structured tasks, Chief Officers, Managers, Technicians, the Mighty Handoff document; oh, and the first lesson: your prompt is everything.
             </p>
             <p>
-             But it doesn’t matter anymore. I made it here and I’ll make it to the next goal. I hope someone comes along, my wife probably isn’t. She’s probably madder because she has no rights to me in the afterlife after today, but you can still come. It’s a real community, everyone gets to keep royalties in perpetuity for minting in this Phase. It’s written in the contract and automatically executed. Just don’t kill me yet til this thing fails or I’ve thrown up from coding for 22 hours.
+              But it doesn’t matter anymore. I made it here and I’ll make it to the next goal. I hope someone comes along. My wife probably isn’t. She’s probably madder because she has no rights in the afterlife after today.
             </p>
             <p>
-                 All the faustian legalese, and the novelty of it all is just a play on the “Contract” system that I had a mind to corner so I don’t want to hear about Jesus or Shamalama ding dong frowning down on me.
-                 Read the Contract and the contract, give me some feedback on X. If you’re interested then come along.  You will be able to mint yours in a few days. Just after the Auction. I have a feeling most people might do it for the novelty and not let go of them but this is just stage one. Look at the contract and whats ahead at my website.
+              All the Faustian legalese and the novelty of it all is just a fun little play on the “Contract” system that I had a mind to corner. You will be able to mint yours in a few days. And no, you don't have to sell it. I have a feeling most people might do it for the novelty and hold on to them, but this is just stage one. Look at the contract and what's ahead. If you’re interested, then come on.
             </p>
-     
           </div>
         </section>
 
       </main>
 
       {/* FOOTER WITH INTERNAL LINKS */}
-      <footer className="border-t border-gray-800 bg-zinc-950 py-8 mt-12">
+      {/* Reduced top margin to keep it closer to the bottom section */}
+      <footer className="border-t border-gray-800 bg-zinc-950 py-8 mt-8">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-bold text-gray-500 tracking-widest">
             <Link href="/Economics" className="hover:text-white transition-colors">[ ECONOMICS ]</Link>
