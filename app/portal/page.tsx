@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 
 function PortalContent() {
@@ -30,17 +31,28 @@ function PortalContent() {
             Mint Yours Soon
           </h1>
 
-          <div className="flex justify-center">
-            <Link 
-              href="/architect_soul_contract.md"
-              className={`group relative px-12 py-6 border text-lg tracking-[0.2em] uppercase transition-all duration-500 ${
-                isPowered 
-                ? 'border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black shadow-[0_0_30px_rgba(250,204,21,0.3)]' 
-                : 'border-white text-white hover:bg-white hover:text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]'
-              }`}
-            >
-              Architects Deed
-            </Link>
+          <div className="flex flex-col items-center gap-12">
+            <div className="flex justify-center">
+              <Link 
+                href="/architect_soul_contract.md"
+                className={`group relative px-12 py-6 border text-lg tracking-[0.2em] uppercase transition-all duration-500 ${
+                  isPowered 
+                  ? 'border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black shadow-[0_0_30px_rgba(250,204,21,0.3)]' 
+                  : 'border-white text-white hover:bg-white hover:text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]'
+                }`}
+              >
+                Architects Deed
+              </Link>
+            </div>
+
+            <Image 
+              src="/architect_soul_contract.png"
+              alt="Architects Deed"
+              width={600}
+              height={400}
+              className="opacity-60 hover:opacity-100 transition-opacity duration-700 ease-in-out"
+              priority
+            />
           </div>
         </div>
 
