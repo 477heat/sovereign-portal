@@ -77,7 +77,7 @@ export default function PreRegistryPortal() {
               The Sovereign Engine requires startup capital. To fund the infrastructure, Essence 0000—the literal, cryptographic soul of the developer—is being auctioned to the highest bidder.
             </p>
             <p className="text-gray-400 leading-relaxed text-justify">
-              There is a distinct, bureaucratic absurdity in purchasing the absolute metaphysical rights to a human life for $1, but the ledger does not judge. Winning this auction grants you the <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence.
+              Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain unalienable rights. Read the contract in its entierty before bidding. Unless its still a dollar then for godssake, please bid. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
             </p>
             <div className="pt-4">
               <a
