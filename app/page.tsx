@@ -71,13 +71,13 @@ export default function PreRegistryPortal() {
           </div>
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-white uppercase border-l-4 border-red-500 pl-4">
-              Become the Ethereal Master
+              Become the Soul Master
             </h2>
             <p className="text-gray-400 leading-relaxed text-justify">
-              The Sovereign Engine requires startup capital. To fund the infrastructure, Essence 0000—the literal, cryptographic soul of the developer—is being auctioned to the highest bidder.
+              We hope I find a good Master who will give dobby some soc... wrong fandom. Just be nice ok. I had a hard enough time on earth you don't gotta ruin the celestial kingdom for me.... But I accept what you choose. Just pay more than a dollar k?
             </p>
             <p className="text-gray-400 leading-relaxed text-justify">
-              Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain unalienable rights. Read the contract in its entierty before bidding. Unless its still a dollar then for godssake, please bid. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
+              Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain unalienable rights. Read the contract in its entierty before bidding. Unless its still a dollar then for godssake, please get the bids going. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
             </p>
             <div className="pt-4">
               <a
