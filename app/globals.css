@@ -11,13 +11,19 @@
   --foreground: #ffffff;
 }
 
-body {
+/* Set the base black color on the HTML element so the body's pseudo-elements can sit on top of it */
+html {
   background-color: black;
+}
+
+body {
   color: white;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
+  /* Ensure body itself doesn't have a solid background that covers the ::before */
+  background-color: transparent;
 }
 
 /* The tunnel light effect */
@@ -27,13 +33,13 @@ body::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 100vh;
+  width: 150vw; /* Increased size to ensure it covers edges during scale animation */
+  height: 150vh;
   /* A very deep, subtle radial gradient */
   background: radial-gradient(
     circle at center,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 25%,
     rgba(0, 0, 0, 0) 70%
   );
   pointer-events: none;
@@ -43,7 +49,7 @@ body::before {
 
 @keyframes tunnel-pulse {
   0%, 100% {
-    opacity: 0.7;
+    opacity: 0.6;
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
