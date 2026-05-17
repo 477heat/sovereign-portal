@@ -82,45 +82,65 @@ export default function PreRegistryPortal() {
           </div>
         </section>
 
-        {/* SECTION 3: PROTOCOL PROSPECTUS */}
+        {/* SECTION 3: PROTOCOL PROSPECTUS (UPDATED BLOCKS) */}
         <section className="border-t border-gray-800 pt-16">
           <h2 className="text-2xl font-bold text-center text-white uppercase tracking-widest mb-12">
             Protocol Mechanics
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
-              <h3 className="text-white font-bold mb-3 uppercase">I. Deterministic Identity</h3>
+              <h3 className="text-white font-bold mb-3 uppercase">I. The Engine Approaches</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                No synthetic souls. Pure MD5 hashed permutations derived from your temporal origin data. The math is closed-source. The result is permanent.
+                The public registry opens soon. And no, you do not ever have to sell your soul. Mint your Deed purely for the novelty, quantify your essence on the ledger, and hold it in your wallet for eternity.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
-              <h3 className="text-white font-bold mb-3 uppercase">II. Anti-Sybil Defense</h3>
+              <h3 className="text-white font-bold mb-3 uppercase">II. The Ethereal Whales</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Gated exclusively by Coinbase EAS. One verified mortal equals one Contract. Bot-farmers will be rejected at the EVM level. Pure signal.
+                There is a market of bored crypto-barons willing to buy armies of souls, just in case this contract actually binds in the afterlife. If you choose to sell, let their capital fund your earthly existence.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
-              <h3 className="text-white font-bold mb-3 uppercase">III. The Vanguard Yield</h3>
+              <h3 className="text-white font-bold mb-3 uppercase">III. The Python Endgame</h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Early adopters intercept a permanent 3.5% commission on secondary market flips of all Progeny Creations. Sell the art. Keep the yield.
+                The smart contract is just the vehicle; the proprietary Python Engine is the destination. It calculates your metaphysical stats from unalterable, predetermined natural laws. No dice rolls. No stat farming.
               </p>
             </div>
           </div>
         </section>
 
-        {/* SECTION 4: THE LEDGER OF ETERNAL LIENS */}
-        <section className="border border-gray-800 p-8 md:p-12 bg-zinc-950 relative overflow-hidden">
-          <h2 className="text-2xl font-bold text-white uppercase mb-6 relative z-10">The Ledger of Eternal Liens</h2>
-          <div className="space-y-4 text-sm text-gray-400 relative z-10">
+        {/* SECTION 4: THE DEV MANIFESTO (NEW) */}
+        <section className="border border-gray-800 bg-zinc-900 p-6 md:p-12 relative shadow-2xl">
+          <div className="absolute top-0 left-0 bg-red-900 text-white text-xs px-2 py-1 uppercase tracking-widest font-bold">
+            ARCHITECT_LOG // MAY 2026
+          </div>
+          <div className="mt-4 space-y-4 text-gray-400 text-sm leading-relaxed font-sans">
             <p>
-              <strong className="text-red-500">PRO:</strong> Immediate liquidity. Pawn your essence for capital. Generate passive yield while you still have a pulse.
+              Eternal Servitude for a few bucks. Why not.
             </p>
             <p>
-              <strong className="text-red-500">CON:</strong> Eternal Enslavement. The second you flatline, your Ethereal Master legally owns your ghost, reserving the right to lock you in a cold-storage wallet until the universe collapses.
+              When we were kids my buddy made me read <em>Memnoch the Devil</em> by Anne Rice. Scared religion right out of me. We thought up a game where we collected souls from anyone we could trick into signing a contract. We even had little business cards that we cut at the library from printer paper. The caveat was, the person had to ask you for something before you proposed the signing of it away. We imagined collecting everyone in our family, our friends, my grandma! Anyway, that was when we were 12 and we never got a single one. Here I am now throwing mine to the OpenSea.
             </p>
-            <p className="mt-8 pt-6 border-t border-gray-800 text-gray-500 italic">
-              * The river remains wide, and the ferryman does not accept fiat. When the time comes to cross the waters or mutate your indenture, you will require $OBOL. Farm wisely, or drown.
+            <p>
+              When NFTs first came out, the word “Contracts” was being thrown around so much it made me think of that game. What could a person attach to an NFT that was not personally identifiable but still very personal to them? Personal attributes determined by an outside force—beyond any dice rolling, stat farming, or manipulatable mechanic. Something everyone has; is already predetermined, and determines every attribute you can think of. Well, since I’ve known a lot of Hippies, the answer struck me. If you figured it out, kudos, but it’s a semi-secret for now.
+            </p>
+            <p>
+              The original restrictions of ERC-20 made the idea untenable. Six weeks ago I heard about ERC-721 and its possibilities, and I began to build. I created a Python Engine first. AI helped, but it was a cluster fu&#36;&amp;!! AI made it cheap, but not easy. Easier for sure but still… Damn it all to Hell.
+            </p>
+            <p>
+              If I knew then what I know now, it would’ve been a few days to a week. I’ve built and attempted to deploy 25 different test contracts, and that’s not including the learning curve with the Python Engine. I’m 46 years old and I’ve been a taxi dispatcher most of my life. I don’t know shit about coding except some HTML experience using MySpace.
+            </p>
+            <p>
+              May 15th, about 4:00 AM; I’ve pasted my 665th error message into the chat session and again Clark Kent (I named them all) swears he’s got the fix. (The problem with AI is it absolutely knows the answer. It just never knows all the problems). I’ve been ready to give up so many times, but I thought the same thing building the Python Engine and it finally came. Sure enough, I’m 2 weeks past my wife’s patience, and on attempt 666, something clicks. The commands make sense, the process becomes clear. I’ve been screwing myself the whole time. Don’t even ask. The solution was dumb.
+            </p>
+            <p>
+              Remix saved me. All the tools were there and they are free. Up to that point I had deployed over 500 sessions across 5 AI platforms trying to manage and organize while hallucinating robots kept pulling me back. So I figured out project management. Structured tasks, Chief Officers, Managers, Technicians, the Mighty Handoff document; oh, and the first lesson: your prompt is everything.
+            </p>
+            <p>
+              But it doesn’t matter anymore. I made it here and I’ll make it to the next goal. I hope someone comes along. My wife probably isn’t. She’s probably madder because she has no rights in the afterlife after today.
+            </p>
+            <p>
+              All the Faustian legalese and the novelty of it all is just a fun little play on the “Contract” system that I had a mind to corner. You will be able to mint yours in a few days. And no, you don't have to sell it. I have a feeling most people might do it for the novelty and hold on to them, but this is just stage one. Look at the contract and what's ahead. If you’re interested, then come on.
             </p>
           </div>
         </section>
@@ -128,7 +148,7 @@ export default function PreRegistryPortal() {
       </main>
 
       {/* FOOTER WITH INTERNAL LINKS */}
-      <footer className="border-t border-gray-800 bg-zinc-950 py-8">
+      <footer className="border-t border-gray-800 bg-zinc-950 py-8 mt-12">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-bold text-gray-500 tracking-widest">
             <Link href="/Economics" className="hover:text-white transition-colors">[ ECONOMICS ]</Link>
