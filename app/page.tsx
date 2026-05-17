@@ -49,7 +49,7 @@ export default function PreRegistryPortal() {
         {/* NEW HEADER LINKS */}
         <div className="mt-8 flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-bold tracking-widest text-gray-500">
           <Link href="/whitepaper" className="hover:text-red-500 transition-colors">[ WHITEPAPER ]</Link>
-          <a href="https://opensea.io/SoulessDev" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">[ ARCHITECT'S DEED ]</a>
+          <a href="https://opensea.io/SoulessWebDev" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">[ ARCHITECT'S DEED ]</a>
           <Link href="/vanguard" className="hover:text-red-500 transition-colors">[ VANGUARD ]</Link>
         </div>
       </header>
