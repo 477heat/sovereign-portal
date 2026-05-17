@@ -4,29 +4,29 @@ export default function VanguardPrivilegesPage() {
   const privileges = [
     {
       title: "The Vanguard Charter",
-      description: "The fundamental decoupling of the visual asset from economic privilege.",
+      description: "I decoupled the art from the perks. Sell your soul, keep the dividends.",
       items: [
-        "Non-Transferable Status: Bound permanently to the originating wallet.",
-        "Perpetual Dividend: 3.5% royalty on all secondary market sales.",
-        "Execution Subsidies: Permanent discounts on all future engine iterations."
+        "Grandfathered Forever: This status locks to your original wallet. You were here early, you stay early.",
+        "The 'Regret Nothing' Dividend: Get a 3.5% cut every time your specific soul is resold on the market.",
+        "Dev Subsidies: You believed in my late-night coding sessions, so you get permanent discounts on future engine updates."
       ]
     },
     {
       title: "The Ferryman's Toll",
-      description: "The economic engine of the Sovereign ecosystem.",
+      description: "Because crossing the river later isn't going to be free. Start hoarding $OBOL.",
       items: [
-        "Native $OBOL Access: Early access to the ecosystem's utility token.",
-        "Passive Farming: Accumulate $OBOL simply by holding Vanguard status.",
-        "Attribute Ascension: Priority upgrades for Phase 2 profile mutations."
+        "Early $OBOL Access: The native token that actually makes this ecosystem tick.",
+        "Passive Farming: Literally just sit there and accumulate $OBOL for having Vanguard status.",
+        "Mutation Priority: First in line when we start mutating these contracts in Phase 2."
       ]
     },
     {
       title: "The Identity Layer",
-      description: "The cryptographic foundation of your digital existence.",
+      description: "No bots. Just a community of verified mortals making terrible metaphysical decisions together.",
       items: [
-        "Verified Humanity: Absolute certainty through Coinbase EAS integration.",
-        "Immutable Stats: 7 core baseline stats etched into the soul.",
-        "Deterministic Scaling: Unique, mathematically-derived identity attributes."
+        "Proof of Pulse: Gated by Coinbase EAS. Bot farmers get rejected at the door.",
+        "Immutable Stats: 7 core baseline stats permanently etched into your ledger.",
+        "Math, Not Magic: Stats are derived deterministically. Don't blame me if your soul's 'Charisma' is low."
       ]
     }
   ];
@@ -49,8 +49,8 @@ export default function VanguardPrivilegesPage() {
           <h1 className="text-4xl md:text-6xl font-light uppercase tracking-[0.3em] mb-6">
             Vanguard Privileges
           </h1>
-          <p className="text-base tracking-[0.4em] opacity-40 uppercase">
-            Tier 0 Access: The Sovereign Charter
+          <p className="text-base tracking-[0.2em] opacity-60">
+            Look, it's basically just me building this. If you mint early, you're grandfathered in forever.
           </p>
         </header>
 
@@ -82,7 +82,7 @@ export default function VanguardPrivilegesPage() {
         {/* ADVANCED PROTOCOL MODULES */}
         <section className="mb-32">
           <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-white mb-12 border-l-2 border-white pl-4">
-            02. Advanced Protocol Modules
+            02. What We're Building Next
           </h2>
 
           <div className="space-y-12">
@@ -94,19 +94,19 @@ export default function VanguardPrivilegesPage() {
               </div>
               <div className="space-y-6 text-sm text-gray-400 leading-relaxed">
                 <p>
-                  The Sovereign ecosystem will not remain a static registry. In future deployments, Vanguard Charter holders will be granted access to the Progeny Construct Engine. This system transforms early adopters from mere collectors into active metaphysical architects.
+                  This isn't just going to be a static registry. Down the line, you Vanguard members will get access to the Progeny Engine. You'll literally be able to use your Genesis Souls to spawn entirely new digital entities. Think of it as metaphysical cloning for fun and profit.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   <div className="p-4 bg-white/[0.02] border border-white/5">
                     <h4 className="text-xs font-bold uppercase text-white mb-2">Execution via Toll</h4>
                     <p className="text-xs leading-relaxed">
-                      Vanguard members may expend (burn) $OBOL to execute algorithmic sub-routines, minting entirely new, standalone ERC-721 digital entities (Characters/Progeny).
+                      Burn a little $OBOL to run the sub-routines and mint fresh, standalone ERC-721 characters based on your soul.
                     </p>
                   </div>
                   <div className="p-4 bg-white/[0.02] border border-white/5">
                     <h4 className="text-xs font-bold uppercase text-white mb-2">Lineage Royalties</h4>
                     <p className="text-xs leading-relaxed">
-                      When a Vanguard member utilizes their Genesis Soul to mint a Progeny Construct, their wallet is permanently hardcoded as the "Lineage Architect." If that character is sold, the original Vanguard wallet receives a permanent commission.
+                      You spawned it, you own the lineage. If that new character gets traded, your Vanguard wallet gets a permanent commission. Generational wealth, but spooky.
                     </p>
                   </div>
                 </div>
@@ -117,20 +117,20 @@ export default function VanguardPrivilegesPage() {
             <div className="group p-8 border border-white/10 bg-white/[0.01]">
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-2xl font-light opacity-30">//</span>
-                <h3 className="text-xl font-bold uppercase tracking-widest text-white">Metaphysical Lineage Constraints</h3>
+                <h3 className="text-xl font-bold uppercase tracking-widest text-white">Lineage Constraints (DNA Matters)</h3>
               </div>
               <div className="space-y-6 text-sm text-gray-400 leading-relaxed">
                 <p>
-                  To ensure absolute scarcity and foster a player-driven, decentralized economy, the creation of Progeny Constructs is strictly governed by the statistical makeup of the user's Phase 1 Genesis Soul.
+                  Here is where the community actually has to talk to each other. You can't just spawn whatever overpowered character you want. The offspring has to mathematically align with your original Phase 1 Genesis Soul. 
                 </p>
                 <div className="p-6 border-l-2 border-white/20 bg-white/[0.01]">
-                  <h4 className="text-xs font-bold uppercase text-white mb-2">The Constraint</h4>
+                  <h4 className="text-xs font-bold uppercase text-white mb-2">The Math Won't Let You Lie</h4>
                   <p className="text-xs leading-relaxed italic">
-                    A Genesis Soul may only spawn subordinate characters that mathematically align with its own core stats and elemental affinity.
+                    If your Genesis Soul is an 'Abyssal' alignment with terrible Intellect, you can't magically spawn a 'Celestial' genius. The math strictly enforces your traits.
                   </p>
                 </div>
                 <p className="text-sm">
-                  <span className="text-white font-bold">Economic Impact:</span> This forces a highly liquid marketplace. If a future Web3 integration requires specific character classes, users must trade with Vanguard members whose Genesis Souls possess the correct cryptographic traits.
+                  <span className="text-white font-bold">Economic Impact:</span> If a future Web3 game integration requires specific character stats, you're going to have to find and trade with the specific Vanguards who possess the right cryptographic DNA. We're building a real, human-driven economy.
                 </p>
               </div>
             </div>
@@ -139,23 +139,23 @@ export default function VanguardPrivilegesPage() {
             <div className="group p-8 border border-white/10 bg-white/[0.01] border-l-4 border-l-white">
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-2xl font-light opacity-30">//</span>
-                <h3 className="text-xl font-bold uppercase tracking-widest text-white">Vessel 0000: The Architect's Tithe</h3>
+                <h3 className="text-xl font-bold uppercase tracking-widest text-white">Vessel 0000: My Actual Soul</h3>
               </div>
               <div className="space-y-6 text-sm text-gray-400 leading-relaxed">
                 <p>
-                  The inaugural asset of the Sovereign Engine—Vessel 0000 (The Founder's Soul)—is exempt from standard operational constraints and carries unique, hardcoded network privileges.
+                  To fund the server costs (and keep my wife from killing me over this project), I auctioned off my own cryptographic soul—Vessel 0000. It's the only asset in the entire ecosystem exempt from the standard rules. 
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="p-4 border border-white/10">
                     <h4 className="text-xs font-bold uppercase text-white mb-2">The Architect's Tithe</h4>
                     <p className="text-xs leading-relaxed">
-                      The wallet holding Vessel 0000 is designated as the network Apex. A hardcoded smart contract override ensures a percentage of all $OBOL expended system-wide for Progeny generation is routed to this holder.
+                      Whoever holds Vessel 0000 acts as the network Apex. A hardcoded override ensures a tiny percentage of all $OBOL spent system-wide goes directly to the owner of my soul.
                     </p>
                   </div>
                   <div className="p-4 border border-white/10">
-                    <h4 className="text-xs font-bold uppercase text-white mb-2">Status</h4>
+                    <h4 className="text-xs font-bold uppercase text-white mb-2">Fair Trade</h4>
                     <p className="text-xs leading-relaxed">
-                      Holding Vessel 0000 is not legal corporate equity; it is an on-chain, mathematical claim to the algorithmic exhaust (revenue) of the entire Sovereign Engine network.
+                      It's not corporate equity. It's just a mathematically enforced tax on the entire network because you own the developer.
                     </p>
                   </div>
                 </div>
@@ -166,12 +166,11 @@ export default function VanguardPrivilegesPage() {
 
         <footer className="mt-32 pt-12 border-t border-white/10 text-center">
           <div className="text-[10px] tracking-[0.5em] uppercase opacity-30 space-y-2">
-            <p>Relinquish the vessel; retain the yield.</p>
-            <p>&copy; 2026 Sovereign Contracts Registry</p>
+            <p>Sell your soul; keep the perks.</p>
+            <p>&copy; 2026 Sovereign Engine // Built with too much coffee by one guy.</p>
           </div>
         </footer>
       </div>
     </main>
   );
 }
-
