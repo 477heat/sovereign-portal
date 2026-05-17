@@ -81,7 +81,7 @@ export default function PreRegistryPortal() {
             </p>
             <div className="pt-4">
               <a
-                href="https://opensea.io"
+                href="https://opensea.io/SoulessWebDev"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-white text-black font-bold uppercase tracking-widest px-8 py-4 hover:bg-red-500 hover:text-white transition-colors duration-300 w-full md:w-auto text-center"
@@ -107,7 +107,7 @@ export default function PreRegistryPortal() {
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
               <h3 className="text-white font-bold mb-3 uppercase">II. Collectors Wet Dream</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
-                Each contract belongs to a real person and each have their own set of Attributes closely related to their very person.
+                Each contract belongs to a real person and each have their own set of Attributes tied to their existence. Use the engine and get your soul stats.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
@@ -150,7 +150,7 @@ export default function PreRegistryPortal() {
               But it doesn’t matter anymore. I made it here and I’ll make it to the next goal. I hope someone comes along. My wife probably isn’t. She’s probably madder because she has no rights in the afterlife after today.
             </p>
             <p>
-              All the Faustian legalese and the novelty of it all is just a fun little play on the “Contract” system that I had a mind to corner. You will be able to mint yours in a few days. And no, you don't have to sell it. I have a feeling most people might do it for the novelty and hold on to them, but this is just stage one. Look at the contract and what's ahead. If you’re interested, then come on.
+              All the Faustian legalese and the novelty of it all is just a fun little play on the “Contract” system that I had a mind to corner. You will be able to mint yours in a few days. And no, you don't have to sell it. Maybe its the Novelty, Maybe its desperation, you can join me anyway. 
             </p>
           </div>
         </section>
