@@ -73,6 +73,15 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <footer className="py-12 text-center border-t border-white/5">
+          <Link 
+            href="/process_flow_chart.md" 
+            className="text-[10px] tracking-[0.4em] uppercase text-white/30 hover:text-white/60 transition-colors"
+          >
+            Process Flow Chart
+          </Link>
+        </footer>
+
       </div>
     </main>
   );
