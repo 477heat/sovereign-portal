@@ -30,36 +30,43 @@ export default function PreRegistryPortal() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-gray-300 font-mono selection:bg-gray-700 flex flex-col">
-          <div className="fixed inset-0 pointer-events-none z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01),rgba(255,255,255,0.03))] bg-[length:100%_4px,3px_100%] opacity-20 mix-blend-overlay"></div>
+    {/* Notice the added relative and z-0 here to ensure our background layers sit properly */}
+    <div className="min-h-screen bg-black text-gray-300 font-mono selection:bg-gray-700 flex flex-col relative z-0">
+      
+      {/* BACKGROUND LAYER 1: The Distant Tunnel Light */}
+      <div className="fixed inset-0 pointer-events-none z-[-1] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.07)_0%,rgba(0,0,0,1)_40%,rgba(0,0,0,1)_100%)]"></div>
+
+      {/* BACKGROUND LAYER 2: The CRT Monitor Scanlines */}
+      <div className="fixed inset-0 pointer-events-none z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01),rgba(255,255,255,0.03))] bg-[length:100%_4px,3px_100%] opacity-20 mix-blend-overlay"></div>
       
       {/* SECTION 1: THE TERMINAL NOTICE */}
-      <header className="border-b border-gray-800 p-6 md:p-12 text-center bg-zinc-950">
+      {/* We make the backgrounds slightly transparent (bg-zinc-950/90) so the tunnel light faintly bleeds through */}
+      <header className="border-b border-gray-800 p-6 md:p-12 text-center bg-zinc-950/90 relative z-10 backdrop-blur-sm">
         <h1 className="text-red-500 font-bold tracking-widest text-xl md:text-3xl uppercase mb-2">
           Status: Metaphysical Registry Locked
         </h1>
         <p className="text-gray-500 text-sm md:text-base uppercase tracking-widest">
           Awaiting the Genesis Sacrifice. Public indenture execution commences post-auction.
         </p>
-          <div className="mt-6 text-2xl font-bold text-white tracking-widest flex items-center justify-center gap-2">
-            <span>T-MINUS: {timeLeft || "CALCULATING..."}</span>
-            <span className="animate-pulse text-red-500">█</span>
-          </div>
         
-        {/* NEW HEADER LINKS */}
+        {/* Blinking Cursor Added Here */}
+        <div className="mt-6 text-2xl font-bold text-white tracking-widest flex items-center justify-center gap-2">
+          <span>T-MINUS: {timeLeft || "CALCULATING..."}</span>
+          <span className="animate-pulse text-red-500">█</span>
+        </div>
+        
         <div className="mt-8 flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-bold tracking-widest text-gray-500">
           <Link href="/whitepaper" className="hover:text-red-500 transition-colors">[ WHITEPAPER ]</Link>
-          <a href="https://opensea.io/SoulessDev" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">[ ARCHITECT'S DEED ]</a>
+          <a href="https://opensea.io" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">[ ARCHITECT'S DEED ]</a>
           <Link href="/vanguard" className="hover:text-red-500 transition-colors">[ VANGUARD ]</Link>
         </div>
       </header>
 
-      {/* Reduced spacing from space-y-24 to space-y-12 */}
-      <main className="max-w-6xl mx-auto p-6 md:p-12 space-y-12 flex-grow">
+      <main className="max-w-6xl mx-auto p-6 md:p-12 space-y-12 flex-grow relative z-10">
         
         {/* SECTION 2: THE ARCHITECT's TITHE */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="border border-gray-800 p-2 bg-zinc-900 shadow-2xl relative">
+          <div className="border border-gray-800 p-2 bg-zinc-900/90 shadow-2xl relative">
             <img
               src="/architect_deed.png"
               alt="Essence 0000 Deed of Spiritual Conveyance"
@@ -92,43 +99,45 @@ export default function PreRegistryPortal() {
           </div>
         </section>
 
-        {/* SECTION 3: PROTOCOL PROSPECTUS (UPDATED BLOCKS) */}
-        {/* Reduced top padding from pt-16 to pt-8 */}
+        {/* SECTION 3: PROTOCOL PROSPECTUS */}
         <section className="border-t border-gray-800 pt-8">
           <h2 className="text-2xl font-bold text-center text-white uppercase tracking-widest mb-12">
             Protocol Mechanics
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
+            
+            {/* Hover Effects and Typo Fixed in these blocks */}
+            <div className="group border border-gray-800 p-6 bg-zinc-950/90 hover:bg-zinc-900 hover:border-red-900 transition-all duration-300 cursor-crosshair">
               <h3 className="text-white font-bold mb-3 uppercase">I. The Engine Approaches</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
                 The public registry opens soon. And no, you do not ever have to sell your soul. Mint your Deed purely for the novelty, quantify your essence on the ledger, and hold it in your wallet for eternity.
               </p>
             </div>
-            <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
+            
+            <div className="group border border-gray-800 p-6 bg-zinc-950/90 hover:bg-zinc-900 hover:border-red-900 transition-all duration-300 cursor-crosshair">
               <h3 className="text-white font-bold mb-3 uppercase">II. The Ethereal Whales</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
                 There is a market of bored crypto-barons willing to buy armies of souls, just in case this contract actually binds in the afterlife. If you choose to sell, let their capital fund your earthly existence.
               </p>
             </div>
-            <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
+            
+            <div className="group border border-gray-800 p-6 bg-zinc-950/90 hover:bg-zinc-900 hover:border-red-900 transition-all duration-300 cursor-crosshair">
               <h3 className="text-white font-bold mb-3 uppercase">III. The Python Endgame</h3>
-              <<p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
+              <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
                 The smart contract is just the vehicle; the proprietary Python Engine is the destination. It calculates your metaphysical stats from unalterable, predetermined natural laws. No dice rolls. No stat farming.
               </p>
             </div>
+
           </div>
         </section>
 
         {/* SECTION 4: THE DEV MANIFESTO */}
-        <section className="border border-gray-800 bg-zinc-900 p-6 md:p-12 relative shadow-2xl">
+        <section className="border border-gray-800 bg-zinc-900/90 p-6 md:p-12 relative shadow-2xl backdrop-blur-sm">
           <div className="absolute top-0 left-0 bg-red-900 text-white text-xs px-2 py-1 uppercase tracking-widest font-bold">
             ARCHITECT_LOG // MAY 2026
           </div>
           <div className="mt-4 space-y-4 text-gray-400 text-sm leading-relaxed font-sans">
-            <p>
-              Eternal Servitude for a few bucks. Why not.
-            </p>
+            <p>Eternal Servitude for a few bucks. Why not.</p>
             <p>
               When we were kids my buddy made me read <em>Memnoch the Devil</em> by Anne Rice. Scared religion right out of me. We thought up a game where we collected souls from anyone we could trick into signing a contract. We even had little business cards that we cut at the library from printer paper. The caveat was, the person had to ask you for something before you proposed the signing of it away. We imagined collecting everyone in our family, our friends, my grandma! Anyway, that was when we were 12 and we never got a single one. Here I am now throwing mine to the OpenSea.
             </p>
@@ -158,9 +167,7 @@ export default function PreRegistryPortal() {
 
       </main>
 
-      {/* FOOTER WITH INTERNAL LINKS */}
-      {/* Reduced top margin to keep it closer to the bottom section */}
-      <footer className="border-t border-gray-800 bg-zinc-950 py-8 mt-8">
+      <footer className="border-t border-gray-800 bg-zinc-950/90 py-8 mt-8 relative z-10 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-bold text-gray-500 tracking-widest">
             <Link href="/Economics" className="hover:text-white transition-colors">[ ECONOMICS ]</Link>
