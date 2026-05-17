@@ -16,7 +16,7 @@ SECTION II: TIERED AUTHORITY OVER THE ARCHITECT
 (b) SUMMONING: The right to evoke the Architect for spectral labor, consultation, or comedic relief at any hour
 
 SECTION III: EXCLUSIVE ECONOMIC PRIVILEGES (THE APEX TITHE)  
-3.1 BIFURCATION OF ROYALTIES & VANGUARD PRIVILEGE: The Victor of the initial Genesis Sacrifice Auction shall retain the 3.5% "Life-Lease" residual royalty on future secondary market sales of this Contract while in his possession and for 3 months after it is relinquished. Royalties will be awarded the current Contract owner if he has retained the deed for a period of 90 days.
+3.1 BIFURCATION OF ROYALTIES & VANGUARD PRIVILEGE: The Victor of the initial Genesis Sacrifice Auction shall retain the 3.5% "Life-Lease" residual royalty on future secondary market sales of this Contract while in his possession and for 3 months after it is relinquished. Royalties will be awarded to any subsequent  Contract owner once he has retained the deed for a period of 90 days.
 
 All Vanguard Privileges—including heavily subsidized execution costs and Progeny Construct rights—decouple from the royalty and remain strictly vested in the wallet of whoever actively holds the Contract
 
