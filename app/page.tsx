@@ -31,6 +31,7 @@ export default function PreRegistryPortal() {
 
   return (
     <div className="min-h-screen bg-black text-gray-300 font-mono selection:bg-gray-700 flex flex-col">
+          <div className="fixed inset-0 pointer-events-none z-50 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01),rgba(255,255,255,0.03))] bg-[length:100%_4px,3px_100%] opacity-20 mix-blend-overlay"></div>
       
       {/* SECTION 1: THE TERMINAL NOTICE */}
       <header className="border-b border-gray-800 p-6 md:p-12 text-center bg-zinc-950">
@@ -40,9 +41,10 @@ export default function PreRegistryPortal() {
         <p className="text-gray-500 text-sm md:text-base uppercase tracking-widest">
           Awaiting the Genesis Sacrifice. Public indenture execution commences post-auction.
         </p>
-        <div className="mt-6 text-2xl font-bold text-white tracking-widest">
-          T-MINUS: {timeLeft || "CALCULATING..."}
-        </div>
+          <div className="mt-6 text-2xl font-bold text-white tracking-widest flex items-center justify-center gap-2">
+            <span>T-MINUS: {timeLeft || "CALCULATING..."}</span>
+            <span className="animate-pulse text-red-500">█</span>
+          </div>
         
         {/* NEW HEADER LINKS */}
         <div className="mt-8 flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-bold tracking-widest text-gray-500">
@@ -99,19 +101,19 @@ export default function PreRegistryPortal() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
               <h3 className="text-white font-bold mb-3 uppercase">I. The Engine Approaches</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
                 The public registry opens soon. And no, you do not ever have to sell your soul. Mint your Deed purely for the novelty, quantify your essence on the ledger, and hold it in your wallet for eternity.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
               <h3 className="text-white font-bold mb-3 uppercase">II. The Ethereal Whales</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
                 There is a market of bored crypto-barons willing to buy armies of souls, just in case this contract actually binds in the afterlife. If you choose to sell, let their capital fund your earthly existence.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
               <h3 className="text-white font-bold mb-3 uppercase">III. The Python Endgame</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <<p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
                 The smart contract is just the vehicle; the proprietary Python Engine is the destination. It calculates your metaphysical stats from unalterable, predetermined natural laws. No dice rolls. No stat farming.
               </p>
             </div>
