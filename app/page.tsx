@@ -105,15 +105,15 @@ export default function PreRegistryPortal() {
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
-              <h3 className="text-white font-bold mb-3 uppercase">II. The Ethereal Whales</h3>
+              <h3 className="text-white font-bold mb-3 uppercase">II. Collectors Wet Dream</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
-                There is a market of bored crypto-barons willing to buy armies of souls, just in case this contract actually binds in the afterlife. If you choose to sell, let their capital fund your earthly existence.
+                Each contract belongs to a real person and each have their own set of Attributes closely related to their very person.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
-              <h3 className="text-white font-bold mb-3 uppercase">III. The Python Endgame</h3>
+              <h3 className="text-white font-bold mb-3 uppercase">III. Personal Data</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
-                The smart contract is just the vehicle; the proprietary Python Engine is the destination. It calculates your metaphysical stats from unalterable, predetermined natural laws. No dice rolls. No stat farming.
+                Its encrypted then burned as a hash onto the contract that only the backend engine can decipher. We purge your personal data from our system and only keep the Decryption Key.
               </p>
             </div>
           </div>
