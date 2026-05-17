@@ -34,7 +34,7 @@ export default function LandingPage() {
             <span className="text-xs tracking-[0.4em] font-bold uppercase">Privileges</span>
           </Link>
           <Link href="/portal" className="group relative px-10 py-3 border border-white transition-all duration-500 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] bg-white text-black">
-            <span className="text-xs tracking-[0.4em] font-black uppercase">Enter Portal</span>
+            <span className="text-xs tracking-[0.4em] font-black uppercase">Soul Portal</span>
           </Link>
         </nav>
           

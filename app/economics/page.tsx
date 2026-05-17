@@ -18,7 +18,7 @@ export default function EconomicsPage() {
 
         <header className="mb-20">
           <h1 className="text-5xl md:text-7xl font-light uppercase tracking-[0.4em] mb-6">
-            Economic Mandates
+            Vanguard Provisions
           </h1>
           <p className="text-base tracking-[0.5em] opacity-40 uppercase">
             Sovereign Engine Protocol Liquidity & Utility Models

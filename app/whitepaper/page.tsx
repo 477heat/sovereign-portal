@@ -2,164 +2,207 @@ import Link from "next/link";
 
 export default function ExecutiveSummaryPage() {
   return (
-    <main className="min-h-screen bg-black text-white p-8 md:p-24 relative overflow-x-hidden">
-      <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.01),rgba(255,255,255,0.01))] bg-[length:100%_2px,3px_100%] opacity-20"></div>
+    <main className="min-h-screen bg-black text-white p-8 md:p-24 relative overflow-x-hidden font-mono">
+      {/* Background Scanline/Gradient Effect */}
+      <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.01),rgba(255,255,255,0.01))] bg-[length:100%_2px,3px_100%] opacity-20 z-0"></div>
+      
+      {/* Subtle "Tunnel" Glow to match Portal Page */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-30">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[160px] bg-white/[0.05]"></div>
+      </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto">
-        <nav className="mb-16 flex justify-between items-center border-b border-white/10 pb-8">
+      <div className="relative z-10 max-w-4xl mx-auto">
+        {/* Header / Navigation */}
+        <nav className="mb-20 flex justify-between items-center border-b border-white/10 pb-8">
           <Link href="/" className="text-[10px] tracking-[0.4em] uppercase opacity-50 hover:opacity-100 transition-opacity">
             ← Back to SovEng
           </Link>
           <div className="text-[10px] tracking-[0.4em] uppercase opacity-30">
-            Briefing // Executive Summary
+            Protocol Documentation // Version 1.0.4
           </div>
         </nav>
 
-        <header className="mb-24">
+        <header className="mb-32">
           <div className="inline-block px-3 py-1 border border-white/20 text-[10px] tracking-[0.3em] uppercase mb-6 opacity-60">
-            Project: Sovereign Engine Protocol // Network: Base Sepolia
+            Classification: Restricted // Subject: Sovereign Engine Protocol
           </div>
-          <h1 className="text-4xl md:text-6xl font-light uppercase tracking-[0.2em] mb-6">
-            Standard Practices & Procedures
+          <h1 className="text-5xl md:text-7xl font-light uppercase tracking-tighter mb-8 leading-none">
+            The Sovereign <br /> <span className="opacity-50">Manifesto</span>
           </h1>
-          <p className="text-lg text-gray-400 max-w-2xl leading-relaxed">
-            Codifying the operational architecture, cryptographic safeguards, and economic mandates governing the Sovereign Engine ecosystem.
+          <div className="h-px w-full bg-gradient-to-r from-white/40 to-transparent mb-8"></div>
+          <p className="text-xl text-gray-400 max-w-2xl leading-relaxed font-sans">
+            Codifying the shift from speculative assets to cryptographically verifiable human existence.
           </p>
         </header>
 
-        {/* SECTION 1: OPERATIONAL ARCHITECTURE */}
-        <section className="mb-32">
-          <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-white mb-12 border-l-2 border-white pl-4">
-            01. System Architecture
-          </h2>
+        <div className="space-y-40">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Frontend */}
-            <div className="p-8 border border-white/10 bg-white/[0.02]">
-              <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white">Frontend (Sovereign-Portal)</h3>
-              <p className="text-xs text-gray-500 mb-4 font-mono uppercase">Stack: Next.js | TypeScript | Tailwind | Vercel</p>
-              <ul className="text-sm text-gray-400 space-y-3 list-disc list-inside">
-                <li>Thirdweb SDK for secure wallet integration.</li>
-                <li>Strict enforcement of Base Sepolia Testnet.</li>
-                <li>Optimized SSG/ISR for high-performance loading.</li>
-                <li>EAS Verification Gate (Planned implementation).</li>
-              </ul>
+          {/* 1. INTRODUCTION */}
+          <section>
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-xs opacity-30">01</span>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Introduction & Founder's Note</h2>
+              <div className="h-px flex-1 bg-white/10"></div>
+            </div>
+            <div className="space-y-6 text-gray-300 leading-relaxed text-lg font-sans">
+              <p>
+                The Web3 consumer landscape is shifting away from speculative, low-utility assets toward utility-driven, cryptographically verifiable on-chain experiences. The <span className="text-white font-semibold">Sovereign Engine Protocol</span> is an advanced decentralized application (dApp) designed to tokenize verified human existence into an immutable digital asset known as a <span className="italic text-white">Personhood Contract</span>.
+              </p>
+              <p className="border-l-2 border-white/20 pl-6 italic text-gray-400">
+                "As a sole owner and developer, I have invested countless hours architecting, coding, and refining this multi-stack infrastructure. The goal was to build a foundational 'Identity Lego' for the broader Web3 space—a secure, Sybil-resistant, and dynamically generated metaphysical registry built on the Base Layer-2 network."
+              </p>
+            </div>
+          </section>
+
+          {/* 2. PROOF OF PERSONHOOD */}
+          <section>
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-xs opacity-30">02</span>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Proof of Personhood & Privacy</h2>
+              <div className="h-px flex-1 bg-white/10"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-12">
+              <div className="group p-8 border border-white/10 bg-white/[0.02] hover:border-white/30 transition-colors">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  The EAS Bottleneck (Sybil Resistance)
+                </h3>
+                <p className="text-gray-400 leading-relaxed">
+                  The protocol establishes an absolute one-to-one ratio between verified humans and on-chain assets. Before interaction, the frontend queries the <span className="text-white">Coinbase Ethereum Attestation Service (EAS)</span>. If the wallet lacks a "Verified Account" attestation, the transaction is blocked at the EVM level.
+                </p>
+              </div>
+
+              <div className="group p-8 border border-white/10 bg-white/[0.02] hover:border-white/30 transition-colors">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  The Cryptographic Soul Anchor (Data Privacy)
+                </h3>
+                <p className="text-gray-400 leading-relaxed mb-4">
+                  Protecting Personally Identifiable Information (PII) is paramount. Our strict zero-retention policy ensures user data is never stored permanently.
+                </p>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-gray-500 uppercase">
+                  <li className="flex items-center gap-2"><span className="text-white">→</span> AWS Lambda Volatile Memory (3-5s)</li>
+                  <li className="flex items-center gap-2"><span className="text-white">→</span> Irreversible AES Encryption</li>
+                  <li className="flex items-center gap-2"><span className="text-white">→</span> Metadata Soul Anchor Injection</li>
+                  <li className="flex items-center gap-2"><span className="text-white">→</span> Zero Permanent PII Storage</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. DECOUPLED ARCHITECTURE */}
+          <section>
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-xs opacity-30">03</span>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">The Decoupled Architecture</h2>
+              <div className="h-px flex-1 bg-white/10"></div>
+            </div>
+            
+            <div className="relative">
+              {/* Vertical Line connecting nodes */}
+              <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-white/20 via-white/10 to-transparent hidden md:block"></div>
+              
+              <div className="space-y-12">
+                {[
+                  {
+                    title: "The Portal (Frontend)",
+                    desc: "Next.js/React application hosted on Vercel. Acts as the bureaucratic interface, verifying EAS status and passing secure intake data.",
+                    tags: ["Next.js", "Vercel", "React"]
+                  },
+                  {
+                    title: "The Metaphysical Forge (Backend)",
+                    desc: "Serverless Python architecture on AWS Lambda. Deterministically calculates unique user stats: Intellect, Vigor, Spirit, Vitality, Intuition, Resolve, and Charisma.",
+                    tags: ["Python", "AWS Lambda", "Sovereign Engine"]
+                  },
+                  {
+                    title: "The Hybrid Cryptographic Burner",
+                    desc: "Uses Pillow (PIL) to dynamically composite 4K assets, physically burning personalized initials and a 12-character Hash ID onto the digital parchment. Uploaded via Pinata IPFS.",
+                    tags: ["Pillow", "IPFS", "4K Composition"]
+                  },
+                  {
+                    title: "The Ledger (Smart Contract)",
+                    desc: "Solidity-based, deployed on Base via Thirdweb. Restricts minting exclusively to the AWS backend server wallet.",
+                    tags: ["Solidity", "Base", "Thirdweb"]
+                  }
+                ].map((item, idx) => (
+                  <div key={idx} className="relative md:pl-12 group">
+                    <div className="absolute left-[-4px] top-2 w-2 h-2 bg-black border border-white rounded-full z-10 group-hover:bg-white transition-colors"></div>
+                    <h3 className="text-lg text-white mb-2">{item.title}</h3>
+                    <p className="text-gray-400 leading-relaxed mb-4 font-sans">{item.desc}</p>
+                    <div className="flex gap-2">
+                      {item.tags.map(tag => (
+                        <span key={tag} className="text-[9px] px-2 py-1 border border-white/10 text-gray-500 uppercase tracking-widest">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 4. TOKENOMICS */}
+          <section className="bg-white/[0.02] border border-white/10 p-8 md:p-16">
+            <div className="flex items-center gap-4 mb-12">
+              <span className="text-xs opacity-30">04</span>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Tokenomics & The Vanguard Charter</h2>
+              <div className="h-px flex-1 bg-white/10"></div>
             </div>
 
-            {/* Backend */}
-            <div className="p-8 border border-white/10 bg-white/[0.02]">
-              <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white">Backend (SovereignEngine)</h3>
-              <p className="text-xs text-gray-500 mb-4 font-mono uppercase">Stack: Python | AWS Lambda (Serverless)</p>
-              <ul className="text-sm text-gray-400 space-y-3 list-disc list-inside">
-                <li><span className="text-white">astro_engine.py:</span> Statistical calculations.</li>
-                <li><span className="text-white">image_identity_burner.py:</span> Hashing & compositing.</li>
-                <li>Secure AES Secret & Private Key management via AWS Env.</li>
-                <li>Authenticated API endpoints via secure POST requests.</li>
-              </ul>
-            </div>
-
-            {/* Storage */}
-            <div className="p-8 border border-white/10 bg-white/[0.02]">
-              <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white">Decentralized Storage</h3>
-              <p className="text-xs text-gray-500 mb-4 font-mono uppercase">Stack: Pinata IPFS API</p>
-              <ul className="text-sm text-gray-400 space-y-3 list-disc list-inside">
-                <li>Explicit pinning for image & metadata permanence.</li>
-                <li>Standardized, machine-readable JSON metadata.</li>
-                <li>OpenSea metadata standard compliance.</li>
-              </ul>
-            </div>
-
-            {/* Ledger */}
-            <div className="p-8 border border-white/10 bg-white/[0.02]">
-              <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white">Blockchain Ledger</h3>
-              <p className="text-xs text-gray-500 mb-4 font-mono uppercase">Stack: Solidity | Base Sepolia</p>
-              <ul className="text-sm text-gray-400 space-y-3 list-disc list-inside">
-                <li>Restricted Minting via dedicated Server Wallet.</li>
-                <li>Mandatory permission checks on <code>mintTo</code>.</li>
-                <li>Testnet-first deployment strategy.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 2: THE PIPELINE */}
-        <section className="mb-32">
-          <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-white mb-12 border-l-2 border-white pl-4">
-            02. Operational Pipeline (The Minting Flow)
-          </h2>
-
-          <div className="space-y-4">
-            {[
-              { step: "01", label: "Intake", desc: "User connects wallet via Vercel and completes EAS verification." },
-              { step: "02", label: "Submission", desc: "Secure POST request triggers AWS Lambda with encrypted identity data." },
-              { step: "03", label: "Forging", desc: "Astro-engine calculates stats; Identity-burner creates unique hashed image." },
-              { step: "04", label: "Vaulting", desc: "Lambda uploads PNG and Metadata JSON to Pinata IPFS." },
-              { step: "05", label: "Execution", desc: "Server Wallet signs and executes mintTo on Base Sepolia." },
-              { step: "06", label: "Finalization", desc: "Vanguard Charter is initialized; transaction confirmed to frontend." }
-            ].map((item, i) => (
-              <div key={i} className="flex gap-8 items-start group">
-                <div className="text-xl font-light opacity-20 group-hover:opacity-100 transition-opacity pt-1">
-                  {item.step}
-                </div>
-                <div className="flex-1 pb-8 border-b border-white/5">
-                  <h4 className="text-sm font-bold uppercase tracking-widest mb-1">{item.label}</h4>
-                  <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <div className="space-y-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-white">The Vanguard Status</h3>
+                <p className="text-gray-400 leading-relaxed font-sans">
+                  The cryptographic wallet that originally mints a Phase 1 Genesis Soul Contract is permanently granted <span className="text-white">Vanguard status</span>. This status is irrevocably bound to the original wallet, even through secondary market transfers.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-white">Perpetual Indenture Dividends</h3>
+                <p className="text-gray-400 leading-relaxed font-sans">
+                  A hardcoded 7% secondary royalty (ERC2981) is split 50/50 via an ultra-lightweight EIP-1167 Minimal Proxy Clone:
+                </p>
+                <div className="space-y-3">
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-xs text-gray-500 uppercase">3.5% Life-Lease Royalty</span>
+                    <span className="text-xs text-white">To Original Vanguard</span>
+                  </div>
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-xs text-gray-500 uppercase">3.5% Architect's Tithe</span>
+                    <span className="text-xs text-white">To Sovereign R&D</span>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
+          </section>
 
-        {/* SECTION 3: PRIVACY & DATA */}
-        <section className="mb-32">
-          <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-white mb-12 border-l-2 border-white pl-4">
-            03. Data Sanctity & Privacy
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-8 bg-white/[0.01] border border-white/10">
-              <h3 className="text-sm font-bold uppercase mb-4">Minimization Protocol</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                No raw PII (Names, DOBs) is stored in databases or on-chain. Identity is converted into a reversible AES "Soul Anchor" string, ensuring privacy while allowing future verification.
-              </p>
+          {/* 5. FUTURE TRAJECTORY */}
+          <section className="pb-32">
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-xs opacity-30">05</span>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Future Trajectory: Phase 2</h2>
+              <div className="h-px flex-1 bg-white/10"></div>
             </div>
-            <div className="p-8 bg-white/[0.01] border border-white/10">
-              <h3 className="text-sm font-bold uppercase mb-4">Immediate Purging</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Following successful smart contract interaction, all sensitive biological and temporal data is immediately discarded from AWS Lambda temporary volatile memory.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="p-6 border border-white/5">
+                <h4 className="text-xs font-bold uppercase mb-4 text-white">The Ferryman's Toll ($OBOL)</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">Vanguard members passively farm and receive airdrops of the ecosystem's native ERC-20 token.</p>
+              </div>
+              <div className="p-6 border border-white/5">
+                <h4 className="text-xs font-bold uppercase mb-4 text-white">Progeny Constructs</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">Expend $OBOL to mint subordinate characters that mathematically align with your original Soul's core stats.</p>
+              </div>
+              <div className="p-6 border border-white/5">
+                <h4 className="text-xs font-bold uppercase mb-4 text-white">Asset Forfeiture & Upgrade</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">Voluntarily "Burn" your contract to trigger an automated upgrade to higher visual tiers and core stats.</p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* SECTION 4: ECONOMICS */}
-        <section className="mb-32">
-          <h2 className="text-xs font-bold uppercase tracking-[0.4em] text-white mb-12 border-l-2 border-white pl-4">
-            04. Economic Mandates
-          </h2>
-          <div className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div className="p-6 border border-white/10">
-                  <h4 className="text-xs font-bold uppercase mb-2">Vanguard Charter</h4>
-                  <p className="text-xs text-gray-400">Permanent decoupling of physical asset from economic status.</p>
-               </div>
-               <div className="p-6 border border-white/10">
-                  <h4 className="text-xs font-bold uppercase mb-2">$OBOL Utility</h4>
-                  <p className="text-xs text-gray-400">The mandatory Ferryman's Toll for all Phase 2 mutations.</p>
-               </div>
-               <div className="p-6 border border-white/10">
-                  <h4 className="text-xs font-bold uppercase mb-2">Yield Model</h4>
-                  <p className="text-xs text-gray-400">3.5% perpetual smart-contract routed secondary royalties.</p>
-               </div>
-            </div>
-            <div className="p-8 border border-white/10 bg-white/[0.02]">
-              <h3 className="text-sm font-bold uppercase mb-4">Tokenomics Philosophy</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                We explicitly reject standard meme-coin supply procedures. The $OBOL supply is designed to be boundless, mirroring the infinite deterministic permutations of the Sovereign Engine itself.
-              </p>
-            </div>
-          </div>
-        </section>
+        </div>
 
+        {/* Footer */}
         <footer className="pt-12 border-t border-white/10 text-center">
           <div className="text-[10px] tracking-[0.5em] uppercase opacity-30 space-y-2">
             <p>Fiat Lux • Caveat Emptor • Memento Mori</p>
@@ -170,4 +213,3 @@ export default function ExecutiveSummaryPage() {
     </main>
   );
 }
-
