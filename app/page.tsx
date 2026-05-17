@@ -74,7 +74,7 @@ export default function PreRegistryPortal() {
               Become the Soul Master
             </h2>
             <p className="text-gray-400 leading-relaxed text-justify">
-              We hope I find a good Master who will give dobby some soc... wrong fandom. Just be nice ok. I had a hard enough time on earth you don't gotta ruin the celestial kingdom for me.... But I accept what you choose. Just pay more than a dollar k?
+              WIN THE $SLMSTR Token NFT Auction Bid and become the Slamster..... Slimster...SoooooulMaaaaaster!
             </p>
             <p className="text-gray-400 leading-relaxed text-justify">
               Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain unalienable rights. Read the contract in its entierty before bidding. Unless its still a dollar then for godssake, please get the bids going. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
