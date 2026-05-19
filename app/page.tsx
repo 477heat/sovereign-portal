@@ -71,13 +71,13 @@ export default function PreRegistryPortal() {
           </div>
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-white uppercase border-l-4 border-red-500 pl-4">
-              Personal Servants in the Afterlife
+              Personal Servant the Afterlife
             </h2>
             <p className="text-gray-400 leading-relaxed text-justify">
               First Real Soul Ever Sold to the Public. (Numerous closed door deals)
             </p>
             <p className="text-gray-400 leading-relaxed text-justify">
-              Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain guarantees. Read the contract in its entierty before bidding. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
+              Your eternal servant in the afterlife. The holder of this contract is immediately imbued with certain guarantees. Read the contract in its entierty before making an offer. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
             </p>
             <div className="pt-4">
               <a
