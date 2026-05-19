@@ -5,10 +5,9 @@ import Link from 'next/link';
 export default function PreRegistryPortal() {
   const [timeLeft, setTimeLeft] = useState("");
 
-  // Countdown timer logic targeting 7 days from now
+  // Countdown timer logic targeting May 25th, 2026
   useEffect(() => {
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 7);
+    const targetDate = new Date('2026-05-25T00:00:00');
 
     const interval = setInterval(() => {
       const now = new Date();
