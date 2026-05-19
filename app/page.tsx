@@ -36,10 +36,10 @@ export default function PreRegistryPortal() {
       {/* SECTION 1: THE TERMINAL NOTICE */}
       <header className="border-b border-gray-800 p-6 md:p-12 text-center bg-zinc-950">
         <h1 className="text-red-500 font-bold tracking-widest text-xl md:text-3xl uppercase mb-2">
-          Status: Metaphysical Registry Locked
+          Status: Registry Initializing...
         </h1>
         <p className="text-gray-500 text-sm md:text-base uppercase tracking-widest">
-          Awaiting the Genesis Sacrifice. Public indenture execution commences post-auction.
+          Awaiting the Architect Sacrifice. Public indenture execution commences Pre-auction.
         </p>
           <div className="mt-6 text-2xl font-bold text-white tracking-widest flex items-center justify-center gap-2">
             <span>T-MINUS: {timeLeft || "CALCULATING..."}</span>
@@ -71,13 +71,13 @@ export default function PreRegistryPortal() {
           </div>
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-white uppercase border-l-4 border-red-500 pl-4">
-              Become the Soul Master
+              Personal Servants in the Afterlife
             </h2>
             <p className="text-gray-400 leading-relaxed text-justify">
-              WIN THE $SLMSTR Token NFT Auction Bid and become the Slamster..... Slimster...SoooooulMaaaaaster!
+              First Real Soul Ever Sold to the Public. (Numerous closed door deals)
             </p>
             <p className="text-gray-400 leading-relaxed text-justify">
-              Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain unalienable rights. Read the contract in its entierty before bidding. Unless its still a dollar then for godssake, please get the bids going. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
+              Enternal Servitude for me, Indentured servant in the after life for you.  The Contract winner is immediately imbued with certain guarantees. Read the contract in its entierty before bidding. <span className="text-white font-bold">$SLMSTR</span> designation and immutable dominion over the developer's essence (while you retain the asset, of course). 
             </p>
             <div className="pt-4">
               <a
@@ -99,15 +99,15 @@ export default function PreRegistryPortal() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
-              <h3 className="text-white font-bold mb-3 uppercase">I. The Engine Approaches</h3>
+              <h3 className="text-white font-bold mb-3 uppercase">I. The Engine Initialization</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
-                The public registry opens soon. And no, you do not ever have to sell your soul. Mint your Deed purely for the novelty, quantify your essence on the ledger, and hold it in your wallet for eternity.
+                SovEngine.xyz is rolling out its Engine 4.6. It is  used to determine attributes and character stats based on Real Identity and your bday.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
               <h3 className="text-white font-bold mb-3 uppercase">II. Collectors Wet Dream</h3>
               <p className="text-gray-600 group-hover:text-gray-300 text-sm leading-relaxed transition-colors duration-300">
-                Each contract belongs to a real person and each have their own set of Attributes tied to their existence. Use the engine and get your soul stats.
+                Each contract belongs to a real person and each have their own set of Attributes tied to their existence allowing bringing a demand for tradeability. Use the engine and get your soul stats.
               </p>
             </div>
             <div className="border border-gray-800 p-6 bg-zinc-950 hover:border-gray-500 transition-colors">
