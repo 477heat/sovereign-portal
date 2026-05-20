@@ -2,7 +2,7 @@ import "./globals.css";
 import React from "react";
 import { Chakra_Petch } from "next/font/google";
 import Link from "next/link";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 const chakraPetch = Chakra_Petch({
   subsets: ["latin"],
