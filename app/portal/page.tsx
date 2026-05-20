@@ -414,8 +414,8 @@ function PortalContent() {
           <aside className="flex flex-col border border-white/10 bg-black/50 p-4">
             <div className="relative min-h-[420px] overflow-hidden border border-white/10 bg-white/[0.03]">
               <Image
-                src="/architect_deed.png"
-                alt="Deed preview"
+                src="/Satoshi_Nakamoto.png"
+                alt="Mock Genesis deed preview"
                 fill
                 sizes="(max-width: 1024px) 100vw, 360px"
                 className="object-contain object-top opacity-70"
