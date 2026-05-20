@@ -2,7 +2,7 @@ import "./globals.css";
 import React from "react";
 import { Chakra_Petch } from "next/font/google";
 import Link from "next/link";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/next";
 
 const chakraPetch = Chakra_Petch({
   subsets: ["latin"],
@@ -21,6 +21,7 @@ export default function RootLayout({
         <div className="flex-grow">
           {children}
         </div>
+        <Analytics />
         <footer className="py-12 px-8 flex justify-center items-center border-t border-white/5">
           <Link 
             href="/process_flow_chart.md" 
