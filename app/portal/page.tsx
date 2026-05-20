@@ -4,12 +4,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { createThirdwebClient } from "thirdweb";
-import { base, baseSepolia } from "thirdweb/chains";
+import { base } from "thirdweb/chains";
 import {
   ConnectButton,
   ThirdwebProvider,
   useActiveAccount,
 } from "thirdweb/react";
+import {
+  contractLanguage,
+  contractLanguageVersion,
+} from "./contractLanguage";
 
 type VerificationState = {
   eligible: boolean;
@@ -22,6 +26,11 @@ type MintReceipt = {
   tokenId: string;
   status: string;
   deedName: string;
+  mode?: "mock" | "live";
+  chainId?: number;
+  contractAddress?: string;
+  transactionId?: string;
+  transactionHash?: string;
 };
 
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
@@ -84,6 +93,7 @@ function PortalContent() {
   const [checkingAttestation, setCheckingAttestation] = useState(false);
   const [accuracyAccepted, setAccuracyAccepted] = useState(false);
   const [publicMarkAccepted, setPublicMarkAccepted] = useState(false);
+  const [contractAccepted, setContractAccepted] = useState(false);
   const [minting, setMinting] = useState(false);
   const [receipt, setReceipt] = useState<MintReceipt | null>(null);
   const [error, setError] = useState("");
@@ -103,6 +113,7 @@ function PortalContent() {
     hasIdentity &&
     accuracyAccepted &&
     publicMarkAccepted &&
+    contractAccepted &&
     !minting;
 
   useEffect(() => {
@@ -165,17 +176,26 @@ function PortalContent() {
           lastName,
           dob,
           publicMark,
+          contractAccepted,
+          contractLanguageVersion,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Mint simulation failed.");
+        const failure = (await response.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+        throw new Error(failure?.message ?? "Mint request failed.");
       }
 
       const result = (await response.json()) as MintReceipt;
       setReceipt(result);
-    } catch {
-      setError("Mint simulation failed. The backend route is ready for wiring.");
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Mint request failed. The backend route is ready for wiring.",
+      );
     } finally {
       setMinting(false);
     }
@@ -207,7 +227,10 @@ function PortalContent() {
                   (index === 0 && Boolean(account?.address)) ||
                   (index === 1 && Boolean(verification?.eligible)) ||
                   (index === 2 && hasIdentity) ||
-                  (index === 3 && accuracyAccepted && publicMarkAccepted) ||
+                  (index === 3 &&
+                    accuracyAccepted &&
+                    publicMarkAccepted &&
+                    contractAccepted) ||
                   (index === 4 && Boolean(receipt));
 
                 return (
@@ -227,8 +250,9 @@ function PortalContent() {
             </div>
 
             <div className="mt-6 border-t border-white/10 pt-5 text-xs leading-6 text-white/55">
-              Wallet attestation confirms eligibility. The deed inscription is
-              generated from the name and birth date entered here.
+              Wallet attestation confirms eligibility on Base mainnet. The deed
+              inscription is generated from the name and birth date entered
+              here.
             </div>
           </aside>
 
@@ -257,7 +281,7 @@ function PortalContent() {
                     {thirdwebClient ? (
                       <ConnectButton
                         client={thirdwebClient}
-                        chains={[baseSepolia, base]}
+                        chains={[base]}
                         connectModal={{ size: "compact" }}
                       />
                     ) : (
@@ -289,7 +313,7 @@ function PortalContent() {
                     </div>
                     <p className="text-sm leading-6 text-white/65">
                       {verification?.message ??
-                        "Connect a wallet to check for a valid Coinbase Verified Account attestation."}
+                        "Connect a Base mainnet wallet to check for a valid Coinbase Verified Account attestation."}
                     </p>
                     {verification?.mode === "mock" && (
                       <p className="mt-3 text-xs uppercase tracking-[0.18em] text-yellow-200/70">
@@ -350,7 +374,53 @@ function PortalContent() {
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 border-t border-white/10 pt-5 text-sm text-white/65">
+              <div className="mt-5 border-t border-white/10 pt-5">
+                <div className="border border-white/10 bg-white/[0.03] p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
+                      Contract Agreement
+                    </div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+                      Version {contractLanguageVersion}
+                    </div>
+                  </div>
+                  <div className="mt-4 max-h-72 space-y-3 overflow-y-auto border border-white/10 bg-black/70 p-4 text-xs leading-6 text-white/65">
+                    {contractLanguage.map((paragraph, index) => {
+                      const isHeading =
+                        index === 0 || paragraph.startsWith("SECTION ");
+
+                      return (
+                        <p
+                          key={`${paragraph.slice(0, 24)}-${index}`}
+                          className={
+                            isHeading
+                              ? "text-yellow-100 uppercase tracking-[0.18em]"
+                              : ""
+                          }
+                        >
+                          {paragraph}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3 text-sm text-white/65">
+                <label className="flex gap-3">
+                  <input
+                    checked={contractAccepted}
+                    onChange={(event) =>
+                      setContractAccepted(event.target.checked)
+                    }
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-yellow-300"
+                  />
+                  <span>
+                    I have read and agree to the Deed of Spiritual Conveyance
+                    before minting.
+                  </span>
+                </label>
                 <label className="flex gap-3">
                   <input
                     checked={accuracyAccepted}
@@ -442,10 +512,24 @@ function PortalContent() {
             {receipt && (
               <div className="mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
                 <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
-                  Mint Simulation Complete
+                  {receipt.mode === "live"
+                    ? "Mainnet Mint Submitted"
+                    : "Mainnet Route Ready"}
                 </div>
                 <div className="mt-2">{receipt.deedName}</div>
-                <div className="text-yellow-100/70">Token {receipt.tokenId}</div>
+                <div className="text-yellow-100/70">
+                  Base chain {receipt.chainId ?? 8453}
+                </div>
+                {receipt.contractAddress && (
+                  <div className="break-all text-yellow-100/70">
+                    {receipt.contractAddress}
+                  </div>
+                )}
+                {receipt.transactionHash && (
+                  <div className="break-all text-yellow-100/70">
+                    {receipt.transactionHash}
+                  </div>
+                )}
               </div>
             )}
           </aside>
