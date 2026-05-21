@@ -23,7 +23,7 @@ type VerificationState = {
 };
 
 type MintReceipt = {
-  tokenId: string;
+  tokenId?: string;
   status: string;
   deedName: string;
   mode?: "mock" | "live";
@@ -31,6 +31,7 @@ type MintReceipt = {
   contractAddress?: string;
   transactionId?: string;
   transactionHash?: string;
+  tokenURI?: string;
 };
 
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
@@ -528,6 +529,16 @@ function PortalContent() {
                 {receipt.transactionHash && (
                   <div className="break-all text-yellow-100/70">
                     {receipt.transactionHash}
+                  </div>
+                )}
+                {!receipt.transactionHash && receipt.transactionId && (
+                  <div className="break-all text-yellow-100/70">
+                    {receipt.transactionId}
+                  </div>
+                )}
+                {receipt.tokenURI && (
+                  <div className="break-all text-yellow-100/70">
+                    {receipt.tokenURI}
                   </div>
                 )}
               </div>

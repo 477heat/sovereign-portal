@@ -20,6 +20,21 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Mint Wiring
+
+The portal keeps minting in preview mode unless `PORTAL_MINT_MODE=live` is set.
+
+Live portal minting needs these server-only environment variables:
+
+```bash
+PORTAL_ENGINE_URL=
+PORTAL_MINT_WORKER_URL=
+```
+
+`PORTAL_ENGINE_URL` must return final ERC-721 metadata with a real IPFS deed image URI. The portal rejects live mints when the engine still returns placeholder or local-test image references.
+
+`PORTAL_MINT_WORKER_URL` should point at the NFT mint worker origin. The portal posts wallet and metadata to its `/mint` route, and that worker pins metadata through Pinata before calling the Base `backendMint` path.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
