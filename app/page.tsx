@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BackgroundHashStream } from "@/components/DATA_STREAM";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 const launchDate = new Date("2026-05-25T00:00:00");
@@ -41,21 +42,26 @@ function getTimeLeft() {
 }
 
 export default function HomePage() {
-  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft());
+  const [timeLeft, setTimeLeft] = useState("calculating");
 
   useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setTimeLeft(getTimeLeft()));
     const interval = window.setInterval(() => setTimeLeft(getTimeLeft()), 1000);
 
-    return () => window.clearInterval(interval);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearInterval(interval);
+    };
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white">
+    <main className="relative isolate min-h-screen overflow-hidden bg-black text-white">
       <TunnelBackdrop />
+      <BackgroundHashStream className="z-0" />
 
-      <section className="mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-5 py-8 md:px-8 lg:grid-cols-[minmax(0,1fr)_430px]">
-        <div>
-          <nav className="mb-14 flex flex-wrap gap-4 border-b border-white/10 pb-5 text-[10px] uppercase tracking-[0.28em] text-white/45">
+      <section className="relative z-10 mx-auto grid min-h-[calc(100svh-3rem)] max-w-7xl items-center gap-8 px-5 py-8 md:px-8 lg:grid-cols-[minmax(0,1fr)_430px] lg:gap-12">
+        <div className="relative z-10">
+          <nav className="mb-10 flex flex-wrap gap-4 border-b border-white/10 pb-5 text-[10px] uppercase tracking-[0.28em] text-white/45 md:mb-14">
             <Link href="/portal" className="transition hover:text-white">
               Portal
             </Link>
@@ -84,27 +90,29 @@ export default function HomePage() {
             birth marks, and tokenized covenant records on Base mainnet.
           </p>
 
-          <div className="mt-8 inline-flex border border-cyan-200/30 bg-cyan-200/10 px-5 py-4 text-sm uppercase tracking-[0.22em] text-cyan-100">
-            T-minus {timeLeft}
-          </div>
+          <div className="mt-9 grid max-w-2xl gap-4">
+            <div className="inline-flex min-h-14 w-fit items-center border border-cyan-200/30 bg-cyan-200/10 px-5 text-sm uppercase tracking-[0.22em] text-cyan-100">
+              T-minus {timeLeft}
+            </div>
 
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link
-              href="/portal"
-              className="border border-yellow-200/70 bg-yellow-200 px-6 py-4 text-sm font-semibold uppercase tracking-[0.24em] text-black transition hover:bg-yellow-100"
-            >
-              Enter Portal
-            </Link>
-            <Link
-              href="/artifact"
-              className="border border-cyan-200/35 bg-cyan-200/10 px-6 py-4 text-sm font-semibold uppercase tracking-[0.24em] text-cyan-100 transition hover:bg-cyan-200 hover:text-black"
-            >
-              Test Artifact
-            </Link>
+            <div className="grid max-w-xl gap-3 sm:grid-cols-2">
+              <Link
+                href="/portal"
+                className="flex min-h-16 items-center justify-center border border-yellow-200/70 bg-yellow-200 px-6 py-4 text-center text-sm font-semibold uppercase tracking-[0.24em] text-black transition hover:bg-yellow-100"
+              >
+                Enter Portal
+              </Link>
+              <Link
+                href="/artifact"
+                className="flex min-h-16 items-center justify-center border border-cyan-200/35 bg-cyan-200/10 px-6 py-4 text-center text-sm font-semibold uppercase tracking-[0.24em] text-cyan-100 transition hover:bg-cyan-200 hover:text-black"
+              >
+                Test Artifact
+              </Link>
+            </div>
           </div>
         </div>
 
-        <aside className="border border-white/12 bg-black/58 p-4 shadow-[0_0_80px_rgba(81,197,255,0.14)]">
+        <aside className="relative z-10 border border-white/12 bg-black/58 p-4 shadow-[0_0_80px_rgba(81,197,255,0.14)]">
           <div className="relative aspect-[4/5] overflow-hidden border border-cyan-200/20 bg-black">
             <Image
               src="/Satoshi_Nakamoto.png"
@@ -123,7 +131,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-20 md:px-8">
+      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-20 md:px-8">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <article key={card.title} className="border border-white/10 bg-black/55 p-5">

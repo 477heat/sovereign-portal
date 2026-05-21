@@ -88,6 +88,30 @@ body::after {
   50% { opacity: 0.7; }
 }
 
+@keyframes hash-fall {
+  0% {
+    transform: translateY(-6%);
+  }
+  100% {
+    transform: translateY(-56%);
+  }
+}
+
+.hash-stream-column {
+  animation: hash-fall 58s linear infinite;
+}
+
+.hash-stream-column:nth-child(2n) {
+  animation-direction: reverse;
+  animation-duration: 72s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hash-stream-column {
+    animation: none;
+  }
+}
+
 .scanline-overlay {
   pointer-events: none;
   position: fixed;
