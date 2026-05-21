@@ -1,14 +1,7 @@
 import "./globals.css";
 import React from "react";
-import { Chakra_Petch } from "next/font/google";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
-
-const chakraPetch = Chakra_Petch({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-chakra",
-});
 
 export default function RootLayout({
   children
@@ -16,18 +9,24 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${chakraPetch.variable}`}>
+    <html lang="en">
       <body className="bg-black antialiased font-sans flex flex-col min-h-screen">
         <div className="flex-grow">
           {children}
         </div>
         <Analytics />
-        <footer className="py-12 px-8 flex justify-center items-center border-t border-white/5">
+        <footer className="flex flex-wrap items-center justify-center gap-5 border-t border-white/5 px-8 py-12">
           <Link 
             href="/process_flow_chart.md" 
             className="text-[10px] tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors duration-500"
           >
             Process Flow Chart
+          </Link>
+          <Link
+            href="/admin"
+            className="text-[10px] uppercase tracking-[0.4em] text-white/20 transition-colors duration-500 hover:text-white"
+          >
+            Admin
           </Link>
         </footer>
       </body>

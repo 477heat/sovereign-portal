@@ -3,7 +3,7 @@
 @theme {
   --color-background: #000000;
   --color-foreground: #ffffff;
-  --font-sans: var(--font-chakra), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
