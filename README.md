@@ -1,5 +1,24 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Portal mint commerce
+
+The portal keeps mint execution backend-funded so the user can pay a small
+checkout fee while the backend wallet pays Base mint gas.
+
+- `NEXT_PUBLIC_PORTAL_PAYMENT_MODE=checkout` shows the thirdweb checkout block.
+- `PORTAL_PAYMENT_MODE=required` makes live `/api/mint` calls require a paid mint
+  order before the mint worker is called.
+- Checkout `purchaseData` includes a mint `orderId`; thirdweb payment webhooks
+  must point to `/api/payments/webhook` so that order can be marked paid.
+- The payment verifier expects Base USDC-style token decimals by default. Set
+  `PORTAL_PAYMENT_TOKEN_DECIMALS` if the accepted checkout token differs.
+- Mint orders use a DynamoDB table named by `PORTAL_LEDGER_TABLE`. The table only
+  needs a string partition key named `pk`; it stores the order record and the
+  one-wallet mint claim.
+
+Local mock mode uses an in-memory order ledger for development. Never use that
+fallback for a live mint deployment.
+
 ## Getting Started
 
 First, run the development server:

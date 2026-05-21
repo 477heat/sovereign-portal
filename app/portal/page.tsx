@@ -6,6 +6,7 @@ import Image from "next/image";
 import { createThirdwebClient } from "thirdweb";
 import { base } from "thirdweb/chains";
 import {
+  CheckoutWidget,
   ConnectButton,
   ThirdwebProvider,
   useActiveAccount,
@@ -36,16 +37,30 @@ type MintReceipt = {
   tokenURI?: string;
 };
 
+type MintOrderState = {
+  orderId: string;
+  status: "pending_payment" | "paid" | "minting" | "mint_submitted";
+  wallet: string;
+};
+
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
   : null;
+const paymentAmount = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "2.50";
+const paymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
+const paymentTokenAddress =
+  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;
+const checkoutEnabled =
+  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout" &&
+  Boolean(paymentSeller && paymentTokenAddress);
 
 const steps = [
   "Wallet",
   "Attestation",
   "Identity",
   "Deed Review",
+  "Payment",
   "Mint",
 ];
 
@@ -99,6 +114,9 @@ function PortalContent() {
   const [contractAccepted, setContractAccepted] = useState(false);
   const [minting, setMinting] = useState(false);
   const [receipt, setReceipt] = useState<MintReceipt | null>(null);
+  const [mintOrder, setMintOrder] = useState<MintOrderState | null>(null);
+  const [orderBusy, setOrderBusy] = useState(false);
+  const [paymentNotice, setPaymentNotice] = useState("");
   const [error, setError] = useState("");
 
   const publicMark = useMemo(
@@ -110,13 +128,24 @@ function PortalContent() {
       ? "Deed for Soul Ownership"
       : `Deed for Soul Ownership of ${publicMark}`;
   const hasIdentity = publicMark !== "_. ___" && Boolean(dob);
+  const deedAccepted =
+    accuracyAccepted && publicMarkAccepted && contractAccepted;
+  const checkoutReady =
+    Boolean(account?.address) &&
+    Boolean(verification?.eligible) &&
+    hasIdentity &&
+    deedAccepted;
+  const orderPaid =
+    !checkoutEnabled ||
+    mintOrder?.status === "paid" ||
+    mintOrder?.status === "minting" ||
+    mintOrder?.status === "mint_submitted";
   const canMint =
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
     hasIdentity &&
-    accuracyAccepted &&
-    publicMarkAccepted &&
-    contractAccepted &&
+    deedAccepted &&
+    orderPaid &&
     !minting;
 
   useEffect(() => {
@@ -181,6 +210,7 @@ function PortalContent() {
           publicMark,
           contractAccepted,
           contractLanguageVersion,
+          orderId: mintOrder?.orderId,
         }),
       });
 
@@ -204,10 +234,82 @@ function PortalContent() {
     }
   }
 
+  async function createOrder() {
+    if (!checkoutReady || !account?.address) {
+      return;
+    }
+
+    setOrderBusy(true);
+    setError("");
+    setPaymentNotice("");
+
+    try {
+      const response = await fetch("/api/mint-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          wallet: account.address,
+          publicMark,
+        }),
+      });
+      const result = (await response.json()) as MintOrderState & {
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "Could not prepare checkout.");
+      }
+
+      setMintOrder(result);
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Could not prepare checkout.",
+      );
+    } finally {
+      setOrderBusy(false);
+    }
+  }
+
+  async function refreshOrder() {
+    if (!mintOrder) {
+      return;
+    }
+
+    setOrderBusy(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/mint-order/${mintOrder.orderId}`, {
+        cache: "no-store",
+      });
+      const result = (await response.json()) as MintOrderState & {
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "Could not refresh payment status.");
+      }
+
+      setMintOrder(result);
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Could not refresh payment status.",
+      );
+    } finally {
+      setOrderBusy(false);
+    }
+  }
+
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-black px-4 py-5 text-white md:px-8 md:py-8">
-      <TunnelBackdrop />
-      <BackgroundHashStream className="z-0" />
+      <TunnelBackdrop className="opacity-70" />
+      <BackgroundHashStream className="z-0 opacity-45 md:opacity-60" />
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col gap-5">
         <nav className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
@@ -233,11 +335,9 @@ function PortalContent() {
                   (index === 0 && Boolean(account?.address)) ||
                   (index === 1 && Boolean(verification?.eligible)) ||
                   (index === 2 && hasIdentity) ||
-                  (index === 3 &&
-                    accuracyAccepted &&
-                    publicMarkAccepted &&
-                    contractAccepted) ||
-                  (index === 4 && Boolean(receipt));
+                  (index === 3 && deedAccepted) ||
+                  (index === 4 && orderPaid) ||
+                  (index === 5 && Boolean(receipt));
 
                 return (
                   <div
@@ -263,7 +363,7 @@ function PortalContent() {
           </aside>
 
           <section className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_300px]">
-            <div className="border border-white/10 bg-black/60 p-5 shadow-[0_0_80px_rgba(81,197,255,0.09)] backdrop-blur-[2px] md:p-6">
+            <div className="border border-white/10 bg-black/70 p-5 shadow-[0_0_56px_rgba(81,197,255,0.07)] backdrop-blur-[2px] md:p-6">
               <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.35em] text-yellow-300/70">
@@ -276,6 +376,18 @@ function PortalContent() {
                 <div className="min-w-44 text-right text-xs uppercase tracking-[0.2em] text-white/50">
                   {shortAddress(account?.address)}
                 </div>
+              </div>
+
+              <div className="mb-5 border border-yellow-300/20 bg-yellow-300/[0.06] p-4 text-sm leading-6 text-white/75">
+                <p className="text-white/90">Welcome in.</p>
+                <p className="mt-2">
+                  This contract creates your onchain deed and generated soul
+                  artifact on Base after the portal checks the mint requirements
+                  below. I built it to help fund the Engine&apos;s evolution and
+                  future deployments, because apparently every big idea I have
+                  arrives with a hosting bill and a dramatic entrance. Mint one
+                  and join the ridiculousness.
+                </p>
               </div>
 
               <div className="grid gap-5 xl:grid-cols-2">
@@ -463,6 +575,73 @@ function PortalContent() {
                 </div>
               )}
 
+              {checkoutEnabled && (
+                <div className="mt-5 border border-cyan-100/20 bg-cyan-100/[0.06] p-4">
+                  <div className="text-[11px] uppercase tracking-[0.28em] text-cyan-100/72">
+                    Checkout
+                  </div>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-white/62">
+                    The deed mint is priced at {paymentAmount} USDC. The portal
+                    prepares a payment order first, then the backend funds the
+                    onchain mint and its gas after the verified payment webhook
+                    marks that order paid.
+                  </p>
+                  {!mintOrder && (
+                    <button
+                      className="mt-4 min-h-12 border border-cyan-100/45 bg-cyan-100/10 px-4 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-50 transition hover:bg-cyan-100/20 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-white/35"
+                      disabled={!checkoutReady || orderBusy}
+                      onClick={createOrder}
+                      type="button"
+                    >
+                      {orderBusy ? "Preparing" : `Prepare ${paymentAmount} Checkout`}
+                    </button>
+                  )}
+                  {mintOrder && thirdwebClient && paymentSeller && paymentTokenAddress && (
+                    <div className="mt-4 grid gap-3">
+                      <CheckoutWidget
+                        amount={paymentAmount}
+                        chain={base}
+                        client={thirdwebClient}
+                        description="Verified mint order for the Sovereign Portal deed."
+                        feePayer="seller"
+                        name="Deed for Soul Ownership"
+                        onSuccess={() => {
+                          setPaymentNotice(
+                            "Checkout completed. Refresh until the verified webhook marks this mint order paid.",
+                          );
+                        }}
+                        purchaseData={{
+                          orderId: mintOrder.orderId,
+                          publicMark,
+                          wallet: account?.address,
+                        }}
+                        seller={paymentSeller as `0x${string}`}
+                        showThirdwebBranding={false}
+                        tokenAddress={paymentTokenAddress as `0x${string}`}
+                      />
+                      <div className="flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
+                        <span className="break-all">
+                          Order {mintOrder.orderId} / {mintOrder.status}
+                        </span>
+                        <button
+                          className="border border-white/15 px-3 py-2 uppercase tracking-[0.18em] text-cyan-100 transition hover:border-cyan-100/45"
+                          disabled={orderBusy}
+                          onClick={refreshOrder}
+                          type="button"
+                        >
+                          Refresh Status
+                        </button>
+                      </div>
+                      {paymentNotice && (
+                        <p className="text-sm leading-6 text-cyan-50/72">
+                          {paymentNotice}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="mt-5 flex flex-col gap-4 border border-yellow-200/25 bg-yellow-200/[0.08] p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.28em] text-yellow-100/72">
@@ -540,7 +719,7 @@ function PortalContent() {
             </div>
           </section>
 
-          <aside className="flex flex-col self-start border border-white/10 bg-black/60 p-4 shadow-[0_0_80px_rgba(81,197,255,0.09)] backdrop-blur-[2px] xl:sticky xl:top-8">
+          <aside className="flex flex-col self-start border border-white/10 bg-black/70 p-4 shadow-[0_0_56px_rgba(81,197,255,0.07)] backdrop-blur-[2px] xl:sticky xl:top-8">
             <div className="relative min-h-[420px] overflow-hidden border border-white/10 bg-white/[0.03]">
               <Image
                 src="/Satoshi_Nakamoto.png"

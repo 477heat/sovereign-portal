@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  claimMintOrder,
+  markMintOrderSubmitted,
+  releaseMintOrder,
+} from "@/lib/portalOrders";
+import { paymentRequired } from "@/lib/portalPayments";
 
 const BASE_MAINNET_CHAIN_ID = 8453;
 const GENESIS_CONTRACT_ADDRESS = "0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65";
@@ -12,6 +18,7 @@ type MintRequest = {
   contractAccepted?: boolean;
   contractLanguageVersion?: string;
   tokenURI?: string;
+  orderId?: string;
 };
 
 type MintMetadata = {
@@ -199,6 +206,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let claimedOrder = false;
+
+    if (paymentRequired()) {
+      if (!payload.orderId) {
+        return NextResponse.json(
+          {
+            status: "rejected",
+            message: "A verified paid mint order is required.",
+          },
+          { status: 402 },
+        );
+      }
+
+      try {
+        await claimMintOrder(payload.orderId, payload.wallet!, payload.publicMark!);
+        claimedOrder = true;
+      } catch (error) {
+        return NextResponse.json(
+          {
+            status: "rejected",
+            message:
+              error instanceof Error
+                ? error.message
+                : "The paid mint order could not be claimed.",
+          },
+          { status: 409 },
+        );
+      }
+    }
+
     const response = await fetch(mintWorkerEndpoint(mintWorkerUrl), {
       method: "POST",
       headers: {
@@ -216,6 +253,10 @@ export async function POST(request: NextRequest) {
       | null;
 
     if (!response.ok) {
+      if (claimedOrder && payload.orderId) {
+        await releaseMintOrder(payload.orderId, payload.wallet!);
+      }
+
       return NextResponse.json(
         {
           status: "rejected",
@@ -224,6 +265,14 @@ export async function POST(request: NextRequest) {
         },
         { status: response.status },
       );
+    }
+
+    if (claimedOrder && payload.orderId) {
+      await markMintOrderSubmitted({
+        orderId: payload.orderId,
+        mintTransactionId: data?.transactionId,
+        mintTransactionHash: data?.transactionHash,
+      });
     }
 
     return NextResponse.json({

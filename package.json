@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1052.0",
+    "@aws-sdk/lib-dynamodb": "^3.1052.0",
     "@ethereum-attestation-service/eas-sdk": "^2.9.0",
     "@vercel/analytics": "^2.0.1",
     "ethers": "^6.16.0",
