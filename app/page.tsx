@@ -20,9 +20,9 @@ const protocolCards = [
     body: "The public deed displays a shortened covenant mark while private inputs are used for generation.",
   },
   {
-    label: "Artifact",
-    title: "Preview The Engine",
-    body: "Visitors can test a limited alternate readout before committing to the full Soul Contract.",
+    label: "Engine",
+    title: "Open The Console",
+    body: "Visitors can query alternate stat readouts before the profile system expands into live chart memory.",
   },
 ];
 
@@ -65,8 +65,8 @@ export default function HomePage() {
             <Link href="/portal" className="transition hover:text-white">
               Portal
             </Link>
-            <Link href="/artifact" className="transition hover:text-white">
-              Artifact Tester
+            <Link href="/engine" className="transition hover:text-white">
+              Engine Console
             </Link>
             <Link href="/vanguard" className="transition hover:text-white">
               Vanguard
@@ -103,10 +103,10 @@ export default function HomePage() {
                 Enter Portal
               </Link>
               <Link
-                href="/artifact"
+                href="/engine"
                 className="flex min-h-16 items-center justify-center border border-cyan-200/35 bg-cyan-200/10 px-6 py-4 text-center text-sm font-semibold uppercase tracking-[0.24em] text-cyan-100 transition hover:bg-cyan-200 hover:text-black"
               >
-                Test Artifact
+                Trial Engine
               </Link>
             </div>
           </div>

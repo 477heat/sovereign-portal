@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
@@ -67,6 +66,9 @@ export default function ArtifactPage() {
           <Link href="/portal" className="transition hover:text-white">
             Mainnet Portal
           </Link>
+          <Link href="/engine" className="transition hover:text-white">
+            Engine Console
+          </Link>
         </nav>
 
         <section className="grid flex-1 items-center gap-6 py-8 2xl:grid-cols-[250px_minmax(0,1fr)_250px]">
@@ -84,14 +86,7 @@ export default function ArtifactPage() {
           </aside>
 
           <section className="relative overflow-hidden border border-cyan-200/30 bg-black/60 shadow-[0_0_90px_rgba(80,190,255,0.18)]">
-            <Image
-              src="/ARTIFACT.jpg"
-              alt="Sovereign artifact interface"
-              fill
-              sizes="100vw"
-              className="object-cover opacity-42"
-              priority
-            />
+            <div className="engine-screen-grid absolute inset-0 opacity-65" aria-hidden="true" />
             <div className="relative z-10 grid min-h-[680px] gap-5 p-5 lg:grid-cols-[minmax(0,1fr)_330px] md:p-8">
               <div className="flex flex-col justify-between">
                 <div>

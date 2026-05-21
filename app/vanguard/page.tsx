@@ -99,10 +99,10 @@ export default function VanguardPrivilegesPage() {
                     </p>
                   </div>
                   <Link
-                    href="/artifact"
+                    href="/engine"
                     className="border border-cyan-200/30 px-4 py-3 text-[10px] uppercase tracking-[0.24em] text-cyan-100 transition hover:bg-cyan-100 hover:text-black"
                   >
-                    Open Artifact
+                    Open Engine
                   </Link>
                 </div>
                 <div className="mt-6 grid gap-3 md:grid-cols-3">
