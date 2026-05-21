@@ -14,6 +14,8 @@ import {
   contractLanguage,
   contractLanguageVersion,
 } from "./contractLanguage";
+import { BackgroundHashStream } from "@/components/DATA_STREAM";
+import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 type VerificationState = {
   eligible: boolean;
@@ -203,8 +205,11 @@ function PortalContent() {
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white px-4 py-5 md:px-8 md:py-8">
-      <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col gap-5">
+    <main className="relative isolate min-h-screen overflow-hidden bg-black px-4 py-5 text-white md:px-8 md:py-8">
+      <TunnelBackdrop />
+      <BackgroundHashStream className="z-0" />
+
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col gap-5">
         <nav className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
           <Link
             href="/"
@@ -218,7 +223,7 @@ function PortalContent() {
         </nav>
 
         <section className="grid flex-1 gap-5 xl:grid-cols-[220px_minmax(0,1fr)_340px]">
-          <aside className="border border-white/10 bg-black/40 p-4">
+          <aside className="border border-white/10 bg-black/55 p-4 backdrop-blur-[2px]">
             <div className="mb-5 text-[11px] uppercase tracking-[0.3em] text-white/45">
               Gate Status
             </div>
@@ -258,7 +263,7 @@ function PortalContent() {
           </aside>
 
           <section className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_300px]">
-            <div className="border border-white/10 bg-black/50 p-5 md:p-6">
+            <div className="border border-white/10 bg-black/60 p-5 shadow-[0_0_80px_rgba(81,197,255,0.09)] backdrop-blur-[2px] md:p-6">
               <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.35em] text-yellow-300/70">
@@ -457,9 +462,62 @@ function PortalContent() {
                   {error}
                 </div>
               )}
+
+              <div className="mt-5 flex flex-col gap-4 border border-yellow-200/25 bg-yellow-200/[0.08] p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.28em] text-yellow-100/72">
+                    Mint Action
+                  </div>
+                  <p className="mt-2 max-w-xl text-sm leading-6 text-white/58">
+                    Generate the deed after wallet eligibility, identity, and
+                    agreement review are cleared.
+                  </p>
+                </div>
+                <button
+                  onClick={handleMint}
+                  disabled={!canMint}
+                  className="min-h-16 w-full border border-yellow-300/50 bg-yellow-300 px-5 py-4 text-sm font-semibold uppercase tracking-[0.25em] text-black transition hover:bg-yellow-200 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/10 disabled:text-white/35 sm:w-auto sm:min-w-60"
+                >
+                  {minting ? "Minting" : "Generate Deed"}
+                </button>
+              </div>
+
+              {receipt && (
+                <div className="mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
+                  <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
+                    {receipt.mode === "live"
+                      ? "Mainnet Mint Submitted"
+                      : "Mainnet Route Ready"}
+                  </div>
+                  <div className="mt-2">{receipt.deedName}</div>
+                  <div className="text-yellow-100/70">
+                    Base chain {receipt.chainId ?? 8453}
+                  </div>
+                  {receipt.contractAddress && (
+                    <div className="break-all text-yellow-100/70">
+                      {receipt.contractAddress}
+                    </div>
+                  )}
+                  {receipt.transactionHash && (
+                    <div className="break-all text-yellow-100/70">
+                      {receipt.transactionHash}
+                    </div>
+                  )}
+                  {!receipt.transactionHash && receipt.transactionId && (
+                    <div className="break-all text-yellow-100/70">
+                      {receipt.transactionId}
+                    </div>
+                  )}
+                  {receipt.tokenURI && (
+                    <div className="break-all text-yellow-100/70">
+                      {receipt.tokenURI}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            <div className="border border-white/10 bg-black/50 p-4">
+            <div className="border border-white/10 bg-black/55 p-4 backdrop-blur-[2px]">
               <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-white/45">
                 Stat Frame
               </div>
@@ -482,7 +540,7 @@ function PortalContent() {
             </div>
           </section>
 
-          <aside className="flex flex-col border border-white/10 bg-black/50 p-4">
+          <aside className="flex flex-col self-start border border-white/10 bg-black/60 p-4 shadow-[0_0_80px_rgba(81,197,255,0.09)] backdrop-blur-[2px] xl:sticky xl:top-8">
             <div className="relative min-h-[420px] overflow-hidden border border-white/10 bg-white/[0.03]">
               <Image
                 src="/Satoshi_Nakamoto.png"
@@ -502,47 +560,6 @@ function PortalContent() {
               </div>
             </div>
 
-            <button
-              onClick={handleMint}
-              disabled={!canMint}
-              className="mt-4 border border-yellow-300/50 bg-yellow-300 px-5 py-4 text-sm font-semibold uppercase tracking-[0.25em] text-black transition hover:bg-yellow-200 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/10 disabled:text-white/35"
-            >
-              {minting ? "Minting" : "Generate Deed"}
-            </button>
-
-            {receipt && (
-              <div className="mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
-                <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
-                  {receipt.mode === "live"
-                    ? "Mainnet Mint Submitted"
-                    : "Mainnet Route Ready"}
-                </div>
-                <div className="mt-2">{receipt.deedName}</div>
-                <div className="text-yellow-100/70">
-                  Base chain {receipt.chainId ?? 8453}
-                </div>
-                {receipt.contractAddress && (
-                  <div className="break-all text-yellow-100/70">
-                    {receipt.contractAddress}
-                  </div>
-                )}
-                {receipt.transactionHash && (
-                  <div className="break-all text-yellow-100/70">
-                    {receipt.transactionHash}
-                  </div>
-                )}
-                {!receipt.transactionHash && receipt.transactionId && (
-                  <div className="break-all text-yellow-100/70">
-                    {receipt.transactionId}
-                  </div>
-                )}
-                {receipt.tokenURI && (
-                  <div className="break-all text-yellow-100/70">
-                    {receipt.tokenURI}
-                  </div>
-                )}
-              </div>
-            )}
           </aside>
         </section>
       </div>
