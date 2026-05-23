@@ -59,7 +59,7 @@ export default function HomePage() {
       <TunnelBackdrop />
       <BackgroundHashStream className="z-0" />
 
-      <section className="relative z-10 mx-auto grid min-h-[calc(100svh-3rem)] max-w-7xl items-center gap-8 px-5 py-8 md:px-8 lg:grid-cols-[minmax(0,1fr)_430px] lg:gap-12">
+      <section className="relative z-10 mx-auto grid min-h-[calc(100svh-3rem)] max-w-7xl items-center gap-10 px-5 py-8 md:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]">
         <div className="relative z-10">
           <nav className="mb-10 flex flex-wrap gap-4 border-b border-white/10 pb-5 text-[10px] uppercase tracking-[0.28em] text-white/45 md:mb-14">
             <Link href="/portal" className="transition hover:text-white">
@@ -79,6 +79,16 @@ export default function HomePage() {
             </Link>
           </nav>
 
+          <div className="mb-7 flex h-14 w-14 items-center justify-center border border-cyan-200/20 bg-black/55 shadow-[0_0_34px_rgba(70,210,220,0.18)]">
+            <Image
+              src="/brand/sovengine-header.png"
+              alt=""
+              width={96}
+              height={96}
+              className="h-11 w-11 object-contain"
+              priority
+            />
+          </div>
           <p className="mb-5 text-[11px] uppercase tracking-[0.38em] text-cyan-200/80">
             Registry Initializing
           </p>
@@ -112,21 +122,18 @@ export default function HomePage() {
           </div>
         </div>
 
-        <aside className="relative z-10 border border-white/12 bg-black/58 p-4 shadow-[0_0_80px_rgba(81,197,255,0.14)]">
-          <div className="relative aspect-[4/5] overflow-hidden border border-cyan-200/20 bg-black">
+        <aside className="relative z-10 hidden items-center justify-center lg:flex">
+          <div className="relative aspect-square w-full max-w-[27rem]">
+            <div className="absolute inset-8 rounded-full border border-cyan-200/12 shadow-[0_0_120px_rgba(70,210,220,0.16)]" />
+            <div className="absolute inset-0 rounded-full border border-white/8 bg-cyan-200/5 blur-3xl" />
             <Image
-              src="/Satoshi_Nakamoto.png"
-              alt="Genesis deed preview"
-              fill
-              sizes="(max-width: 1024px) 100vw, 430px"
-              className="object-contain opacity-85"
+              src="/brand/sovengine-hero.png"
+              alt="Sovereign Engine logo"
+              width={640}
+              height={640}
+              className="relative z-10 h-full w-full object-contain drop-shadow-[0_0_42px_rgba(126,228,255,0.22)]"
               priority
             />
-          </div>
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[10px] uppercase tracking-[0.2em] text-white/48">
-            <span className="border border-white/10 py-2">Base</span>
-            <span className="border border-white/10 py-2">EAS</span>
-            <span className="border border-white/10 py-2">ERC-721</span>
           </div>
         </aside>
       </section>
