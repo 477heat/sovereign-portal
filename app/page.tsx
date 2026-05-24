@@ -51,7 +51,7 @@ export default function HomePage() {
 
           <div className="mb-7 flex h-14 w-14 items-center justify-center border border-cyan-200/20 bg-black/55 shadow-[0_0_34px_rgba(70,210,220,0.18)]">
             <Image
-              src="/brand/sovengine-header.png"
+              src="/brand/sovengine-header-transparent.png"
               alt=""
               width={96}
               height={96}
@@ -90,14 +90,12 @@ export default function HomePage() {
 
         <aside className="relative z-10 hidden items-center justify-center lg:flex">
           <div className="relative aspect-square w-full max-w-[27rem]">
-            <div className="absolute inset-8 rounded-full border border-cyan-200/12 shadow-[0_0_120px_rgba(70,210,220,0.16)]" />
-            <div className="absolute inset-0 rounded-full border border-white/8 bg-cyan-200/5 blur-3xl" />
             <Image
-              src="/brand/sovengine-hero.png"
+              src="/brand/sovengine-hero-transparent.png"
               alt="Sovereign Engine logo"
               width={640}
               height={640}
-              className="relative z-10 h-full w-full object-contain drop-shadow-[0_0_42px_rgba(126,228,255,0.22)]"
+              className="h-full w-full object-contain drop-shadow-[0_0_42px_rgba(126,228,255,0.22)]"
               priority
             />
           </div>
