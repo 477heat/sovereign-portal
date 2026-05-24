@@ -2,11 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
-
-const launchDate = new Date("2026-05-25T00:00:00");
 
 const protocolCards = [
   {
@@ -26,34 +23,7 @@ const protocolCards = [
   },
 ];
 
-function getTimeLeft() {
-  const difference = launchDate.getTime() - Date.now();
-
-  if (difference <= 0) {
-    return "00d 00h 00m 00s";
-  }
-
-  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((difference / 1000 / 60) % 60);
-  const seconds = Math.floor((difference / 1000) % 60);
-
-  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-}
-
 export default function HomePage() {
-  const [timeLeft, setTimeLeft] = useState("calculating");
-
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setTimeLeft(getTimeLeft()));
-    const interval = window.setInterval(() => setTimeLeft(getTimeLeft()), 1000);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.clearInterval(interval);
-    };
-  }, []);
-
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-black text-white">
       <TunnelBackdrop />
@@ -101,10 +71,6 @@ export default function HomePage() {
           </p>
 
           <div className="mt-9 grid max-w-2xl gap-4">
-            <div className="inline-flex min-h-14 w-fit items-center border border-cyan-200/30 bg-cyan-200/10 px-5 text-sm uppercase tracking-[0.22em] text-cyan-100">
-              T-minus {timeLeft}
-            </div>
-
             <div className="grid max-w-xl gap-3 sm:grid-cols-2">
               <Link
                 href="/portal"
