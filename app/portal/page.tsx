@@ -10,6 +10,8 @@ import {
   ConnectButton,
   ThirdwebProvider,
   useActiveAccount,
+  useActiveWallet,
+  useDisconnect,
 } from "thirdweb/react";
 import {
   contractLanguage,
@@ -17,6 +19,7 @@ import {
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
 
 type VerificationState = {
   eligible: boolean;
@@ -102,6 +105,8 @@ function shortAddress(address?: string) {
 
 function PortalContent() {
   const account = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const { disconnect } = useDisconnect();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [dob, setDob] = useState("");
@@ -130,6 +135,8 @@ function PortalContent() {
   const hasIdentity = publicMark !== "_. ___" && Boolean(dob);
   const deedAccepted =
     accuracyAccepted && publicMarkAccepted && contractAccepted;
+  const activeOrder =
+    mintOrder?.wallet === account?.address?.toLowerCase() ? mintOrder : null;
   const checkoutReady =
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
@@ -137,9 +144,9 @@ function PortalContent() {
     deedAccepted;
   const orderPaid =
     !checkoutEnabled ||
-    mintOrder?.status === "paid" ||
-    mintOrder?.status === "minting" ||
-    mintOrder?.status === "mint_submitted";
+    activeOrder?.status === "paid" ||
+    activeOrder?.status === "minting" ||
+    activeOrder?.status === "mint_submitted";
   const canMint =
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
@@ -210,7 +217,7 @@ function PortalContent() {
           publicMark,
           contractAccepted,
           contractLanguageVersion,
-          orderId: mintOrder?.orderId,
+          orderId: activeOrder?.orderId,
         }),
       });
 
@@ -275,7 +282,7 @@ function PortalContent() {
   }
 
   async function refreshOrder() {
-    if (!mintOrder) {
+    if (!activeOrder || !account?.address) {
       return;
     }
 
@@ -283,7 +290,17 @@ function PortalContent() {
     setError("");
 
     try {
-      const response = await fetch(`/api/mint-order/${mintOrder.orderId}`, {
+      const signature = await account.signMessage({
+        message: buildMintOrderStatusMessage({
+          wallet: account.address,
+          orderId: activeOrder.orderId,
+        }),
+      });
+      const params = new URLSearchParams({
+        wallet: account.address,
+        signature,
+      });
+      const response = await fetch(`/api/mint-order/${activeOrder.orderId}?${params}`, {
         cache: "no-store",
       });
       const result = (await response.json()) as MintOrderState & {
@@ -397,11 +414,30 @@ function PortalContent() {
                       Wallet
                     </div>
                     {thirdwebClient ? (
-                      <ConnectButton
-                        client={thirdwebClient}
-                        chains={[base]}
-                        connectModal={{ size: "compact" }}
-                      />
+                      account?.address ? (
+                        <div className="flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/50 px-3 py-3">
+                          <span className="font-mono text-sm text-white/80">
+                            {shortAddress(account.address)}
+                          </span>
+                          <button
+                            className="border border-white/15 px-3 py-2 text-[11px] uppercase tracking-[0.2em] text-white/60 transition hover:border-yellow-300/60 hover:text-yellow-200"
+                            onClick={() => {
+                              if (activeWallet) {
+                                disconnect(activeWallet);
+                              }
+                            }}
+                            type="button"
+                          >
+                            Disconnect
+                          </button>
+                        </div>
+                      ) : (
+                        <ConnectButton
+                          client={thirdwebClient}
+                          chain={base}
+                          connectModal={{ size: "compact" }}
+                        />
+                      )
                     ) : (
                       <div className="text-sm leading-6 text-white/65">
                         Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live
@@ -535,8 +571,8 @@ function PortalContent() {
                     className="mt-1 h-4 w-4 accent-yellow-300"
                   />
                   <span>
-                    I have read and agree to the Deed of Spiritual Conveyance
-                    before minting.
+                    I have read and agree to the Certificate of Title to
+                    Spiritual Ownership before minting.
                   </span>
                 </label>
                 <label className="flex gap-3">
@@ -586,7 +622,7 @@ function PortalContent() {
                     onchain mint and its gas after the verified payment webhook
                     marks that order paid.
                   </p>
-                  {!mintOrder && (
+                  {!activeOrder && (
                     <button
                       className="mt-4 min-h-12 border border-cyan-100/45 bg-cyan-100/10 px-4 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-50 transition hover:bg-cyan-100/20 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-white/35"
                       disabled={!checkoutReady || orderBusy}
@@ -596,7 +632,7 @@ function PortalContent() {
                       {orderBusy ? "Preparing" : `Prepare ${paymentAmount} Checkout`}
                     </button>
                   )}
-                  {mintOrder && thirdwebClient && paymentSeller && paymentTokenAddress && (
+                  {activeOrder && thirdwebClient && paymentSeller && paymentTokenAddress && (
                     <div className="mt-4 grid gap-3">
                       <CheckoutWidget
                         amount={paymentAmount}
@@ -611,7 +647,7 @@ function PortalContent() {
                           );
                         }}
                         purchaseData={{
-                          orderId: mintOrder.orderId,
+                          orderId: activeOrder.orderId,
                           publicMark,
                           wallet: account?.address,
                         }}
@@ -621,7 +657,7 @@ function PortalContent() {
                       />
                       <div className="flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
                         <span className="break-all">
-                          Order {mintOrder.orderId} / {mintOrder.status}
+                          Order {activeOrder.orderId} / {activeOrder.status}
                         </span>
                         <button
                           className="border border-white/15 px-3 py-2 uppercase tracking-[0.18em] text-cyan-100 transition hover:border-cyan-100/45"

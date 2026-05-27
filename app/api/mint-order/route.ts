@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMintOrder } from "@/lib/portalOrders";
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rateLimit";
 
 type CreateMintOrderRequest = {
   wallet?: string;
@@ -13,6 +18,25 @@ function isWalletAddress(value: string | undefined) {
 export async function POST(request: NextRequest) {
   const payload = (await request.json()) as CreateMintOrderRequest;
   const publicMark = payload.publicMark?.trim();
+  const walletKey = payload.wallet?.toLowerCase() ?? "missing";
+  const ipLimit = checkRateLimit({
+    key: `mint-order:ip:${getClientIp(request)}`,
+    limit: 20,
+    windowMs: 10 * 60_000,
+  });
+  const walletLimit = checkRateLimit({
+    key: `mint-order:wallet:${walletKey}`,
+    limit: 5,
+    windowMs: 10 * 60_000,
+  });
+
+  if (!ipLimit.ok) {
+    return rateLimitResponse(ipLimit.retryAfter);
+  }
+
+  if (!walletLimit.ok) {
+    return rateLimitResponse(walletLimit.retryAfter);
+  }
 
   if (!isWalletAddress(payload.wallet) || !publicMark || publicMark === "_. ___") {
     return NextResponse.json(

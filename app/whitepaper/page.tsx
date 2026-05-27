@@ -41,7 +41,7 @@ export default function ExecutiveSummaryPage() {
           <section>
             <div className="flex items-center gap-4 mb-8">
               <span className="text-xs opacity-30">01</span>
-              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Introduction & Founder's Note</h2>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Introduction & Founder&apos;s Note</h2>
               <div className="h-px flex-1 bg-white/10"></div>
             </div>
             <div className="space-y-6 text-gray-300 leading-relaxed text-lg font-sans">
@@ -49,7 +49,7 @@ export default function ExecutiveSummaryPage() {
                 The Web3 consumer landscape is shifting away from speculative, low-utility assets toward utility-driven, cryptographically verifiable on-chain experiences. The <span className="text-white font-semibold">Sovereign Engine Protocol</span> is an advanced decentralized application (dApp) designed to tokenize verified human existence into an immutable digital asset known as a <span className="italic text-white">Personhood Contract</span>.
               </p>
               <p className="border-l-2 border-white/20 pl-6 italic text-gray-400">
-                "As a sole owner and developer, I have invested countless hours architecting, coding, and refining this multi-stack infrastructure. The goal was to build a foundational 'Identity Lego' for the broader Web3 space—a secure, Sybil-resistant, and dynamically generated metaphysical registry built on the Base Layer-2 network."
+                &quot;As a sole owner and developer, I have invested countless hours architecting, coding, and refining this multi-stack infrastructure. The goal was to build a foundational &apos;Identity Lego&apos; for the broader Web3 space—a secure, Sybil-resistant, and dynamically generated metaphysical registry built on the Base Layer-2 network.&quot;
               </p>
             </div>
           </section>
@@ -69,7 +69,7 @@ export default function ExecutiveSummaryPage() {
                   The EAS Bottleneck (Sybil Resistance)
                 </h3>
                 <p className="text-gray-400 leading-relaxed">
-                  The protocol establishes an absolute one-to-one ratio between verified humans and on-chain assets. Before interaction, the frontend queries the <span className="text-white">Coinbase Ethereum Attestation Service (EAS)</span>. If the wallet lacks a "Verified Account" attestation, the transaction is blocked at the EVM level.
+                  The protocol establishes an absolute one-to-one ratio between verified humans and on-chain assets. Before interaction, the frontend queries the <span className="text-white">Coinbase Ethereum Attestation Service (EAS)</span>. If the wallet lacks a &quot;Verified Account&quot; attestation, the transaction is blocked at the EVM level.
                 </p>
               </div>
 
@@ -157,22 +157,34 @@ export default function ExecutiveSummaryPage() {
                 <p className="text-gray-400 leading-relaxed font-sans">
                   The cryptographic wallet that originally mints a Phase 1 Genesis Soul Contract is permanently granted <span className="text-white">Vanguard status</span>. This status is irrevocably bound to the original wallet, even through secondary market transfers.
                 </p>
+                <p className="text-xs leading-relaxed text-gray-500">
+                  Potestas Contractus: the contract can mint the ERC-721 deed,
+                  record the original minter, expose metadata and royalty info,
+                  permit transfers while enabled, and support a controlled
+                  owner-reviewed burn path. The upgradeable master contract can
+                  also support later aesthetic or metadata implementations,
+                  subject to upgrade authority and metadata-freeze limits.
+                  Future benefits require future published terms.
+                </p>
               </div>
               <div className="space-y-6">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-white">Perpetual Indenture Dividends</h3>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-white">Royalty Signal</h3>
                 <p className="text-gray-400 leading-relaxed font-sans">
-                  A hardcoded 7% secondary royalty (ERC2981) is split 50/50 via an ultra-lightweight EIP-1167 Minimal Proxy Clone:
+                  The intended Genesis royalty path uses ERC-2981 marketplace signaling with a 7% total royalty, split 50/50 when the sale venue honors and routes royalties:
                 </p>
                 <div className="space-y-3">
                   <div className="flex justify-between border-b border-white/5 pb-2">
-                    <span className="text-xs text-gray-500 uppercase">3.5% Life-Lease Royalty</span>
+                    <span className="text-xs text-gray-500 uppercase">3.5% Vanguard Share</span>
                     <span className="text-xs text-white">To Original Vanguard</span>
                   </div>
                   <div className="flex justify-between border-b border-white/5 pb-2">
-                    <span className="text-xs text-gray-500 uppercase">3.5% Architect's Tithe</span>
+                    <span className="text-xs text-gray-500 uppercase">3.5% Architect&apos;s Tithe</span>
                     <span className="text-xs text-white">To Sovereign R&D</span>
                   </div>
                 </div>
+                <p className="text-xs leading-relaxed text-gray-500">
+                  Caveat Mercator: royalties are not universal law. They depend on marketplace support, proper routing, and the contract actually receiving funds to split.
+                </p>
               </div>
             </div>
           </section>
@@ -186,16 +198,16 @@ export default function ExecutiveSummaryPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="p-6 border border-white/5">
-                <h4 className="text-xs font-bold uppercase mb-4 text-white">The Ferryman's Toll ($OBOL)</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">Vanguard members passively farm and receive airdrops of the ecosystem's native ERC-20 token.</p>
+                <h4 className="text-xs font-bold uppercase mb-4 text-white">The Ferryman&apos;s Toll ($OBOL)</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">A future-token idea reserved for later published terms. No automatic farming is active in the Genesis mint.</p>
               </div>
               <div className="p-6 border border-white/5">
                 <h4 className="text-xs font-bold uppercase mb-4 text-white">Progeny Constructs</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">Expend $OBOL to mint subordinate characters that mathematically align with your original Soul's core stats.</p>
+                <p className="text-sm text-gray-500 leading-relaxed">A future Engine branch that may use Genesis stats and verified wallet history, subject to terms published on the site.</p>
               </div>
               <div className="p-6 border border-white/5">
                 <h4 className="text-xs font-bold uppercase mb-4 text-white">Asset Forfeiture & Upgrade</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">Voluntarily "Burn" your contract to trigger an automated upgrade to higher visual tiers and core stats.</p>
+                <p className="text-sm text-gray-500 leading-relaxed">A burn request path may be offered only to the original holder before sale or transfer, with owner review and burn fee controls.</p>
               </div>
             </div>
           </section>

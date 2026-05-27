@@ -3,23 +3,23 @@ import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 const metrics = [
   { label: "Network", value: "Base", detail: "Mainnet deployment target" },
-  { label: "Royalty", value: "Per NFT", detail: "Split clone receiver planned" },
+  { label: "Royalty", value: "7%", detail: "ERC-2981 signal, venue-dependent" },
   { label: "Stats", value: "12", detail: "Limited previews stay separate" },
   { label: "Gate", value: "EAS", detail: "Coinbase attestation path" },
 ];
 
 const models = [
   {
+    title: "Actual Contract Powers",
+    body: "The live contract can mint the ERC-721 deed, record the original minter, expose token royalty info, point to metadata, support transfers when allowed, permit a controlled burn path, and accept future upgrade implementations for new aesthetics or metadata behavior.",
+  },
+  {
     title: "Per-NFT Royalty Clones",
-    body: "Each deed should point to its own split clone so the Vanguard wallet and developer wallet can receive that token's configured royalty proceeds.",
+    body: "Each deed should expose the configured royalty path for that token. Collection still depends on the marketplace honoring ERC-2981 and routing proceeds correctly.",
   },
   {
     title: "Artifact Preview Layer",
     body: "Visitors can test date-based resonance without exposing the protected Genesis Engine output or the true Soul Contract metadata.",
-  },
-  {
-    title: "Future Lineage Economy",
-    body: "The Progeny Engine can use original token stats, ownership, and split records as the primitive for later derivative assets.",
   },
 ];
 
@@ -81,8 +81,8 @@ export default function EconomicsPage() {
           </div>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-yellow-50/75">
             Do not advertise an automatic split until `royaltyInfo()` returns a
-            token-specific split clone. The public language should stay aligned
-            with what Base mainnet actually reports.
+            token-specific receiver. Public language should say royalties are
+            intended and configured, not universally guaranteed.
           </p>
         </section>
       </div>

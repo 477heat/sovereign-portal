@@ -5,6 +5,15 @@ import {
   releaseMintOrder,
 } from "@/lib/portalOrders";
 import { paymentRequired } from "@/lib/portalPayments";
+import {
+  hasCoinbaseEasRpcUrl,
+  lookupCoinbaseVerifiedAccount,
+} from "@/lib/coinbaseEas";
+import {
+  checkRateLimit,
+  getClientIp,
+  rateLimitResponse,
+} from "@/lib/rateLimit";
 
 const BASE_MAINNET_CHAIN_ID = 8453;
 const GENESIS_CONTRACT_ADDRESS = "0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65";
@@ -151,6 +160,25 @@ async function requestMetadata(payload: MintRequest, engineUrl: string) {
 export async function POST(request: NextRequest) {
   const payload = (await request.json()) as MintRequest;
   const mintMode = process.env.PORTAL_MINT_MODE === "live" ? "live" : "mock";
+  const walletKey = payload.wallet?.toLowerCase() ?? "missing";
+  const ipLimit = checkRateLimit({
+    key: `mint:ip:${getClientIp(request)}`,
+    limit: 20,
+    windowMs: 10 * 60_000,
+  });
+  const walletLimit = checkRateLimit({
+    key: `mint:wallet:${walletKey}`,
+    limit: 5,
+    windowMs: 10 * 60_000,
+  });
+
+  if (!ipLimit.ok) {
+    return rateLimitResponse(ipLimit.retryAfter);
+  }
+
+  if (!walletLimit.ok) {
+    return rateLimitResponse(walletLimit.retryAfter);
+  }
 
   if (!isWalletAddress(payload.wallet) || !hasRequiredIdentity(payload)) {
     return NextResponse.json(
@@ -166,6 +194,8 @@ export async function POST(request: NextRequest) {
   if (mintMode === "live") {
     const engineUrl = process.env.PORTAL_ENGINE_URL;
     const mintWorkerUrl = process.env.PORTAL_MINT_WORKER_URL;
+    const attestationMode =
+      process.env.PORTAL_ATTESTATION_MODE === "live" ? "live" : "mock";
 
     if (!engineUrl || !mintWorkerUrl) {
       return NextResponse.json(
@@ -178,31 +208,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let metadata: MintMetadata;
-
-    try {
-      metadata = await requestMetadata(payload, engineUrl);
-    } catch (error) {
+    if (attestationMode !== "live") {
       return NextResponse.json(
         {
           status: "rejected",
           message:
-            error instanceof Error
-              ? error.message
-              : "The Genesis Engine metadata request failed.",
+            "Live minting requires PORTAL_ATTESTATION_MODE=live so Coinbase EAS eligibility is enforced server-side.",
+        },
+        { status: 500 },
+      );
+    }
+
+    if (!hasCoinbaseEasRpcUrl()) {
+      return NextResponse.json(
+        {
+          status: "rejected",
+          message:
+            "Live minting requires BASE_RPC_URL or COINBASE_EAS_RPC_URL for Coinbase EAS eligibility.",
+        },
+        { status: 500 },
+      );
+    }
+
+    let attestation: Awaited<ReturnType<typeof lookupCoinbaseVerifiedAccount>>;
+
+    try {
+      attestation = await lookupCoinbaseVerifiedAccount(payload.wallet!);
+    } catch (error) {
+      console.error("Coinbase EAS mint gate failed", error);
+
+      return NextResponse.json(
+        {
+          status: "rejected",
+          message:
+            "Coinbase EAS eligibility could not be checked. Check Base RPC configuration and try again.",
         },
         { status: 502 },
       );
     }
 
-    if (!hasMintableImage(metadata)) {
+    if (!attestation.eligible) {
       return NextResponse.json(
         {
           status: "rejected",
-          message:
-            "The Genesis Engine returned metadata without a final IPFS deed image.",
+          message: attestation.message,
+          attestation,
         },
-        { status: 409 },
+        { status: 403 },
       );
     }
 
@@ -234,6 +286,42 @@ export async function POST(request: NextRequest) {
           { status: 409 },
         );
       }
+    }
+
+    let metadata: MintMetadata;
+
+    try {
+      metadata = await requestMetadata(payload, engineUrl);
+    } catch (error) {
+      if (claimedOrder && payload.orderId) {
+        await releaseMintOrder(payload.orderId, payload.wallet!);
+      }
+
+      return NextResponse.json(
+        {
+          status: "rejected",
+          message:
+            error instanceof Error
+              ? error.message
+              : "The Genesis Engine metadata request failed.",
+        },
+        { status: 502 },
+      );
+    }
+
+    if (!hasMintableImage(metadata)) {
+      if (claimedOrder && payload.orderId) {
+        await releaseMintOrder(payload.orderId, payload.wallet!);
+      }
+
+      return NextResponse.json(
+        {
+          status: "rejected",
+          message:
+            "The Genesis Engine returned metadata without a final IPFS deed image.",
+        },
+        { status: 409 },
+      );
     }
 
     const response = await fetch(mintWorkerEndpoint(mintWorkerUrl), {

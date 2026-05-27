@@ -9,7 +9,7 @@ const privileges = [
       "Early minters keep the protocol status that marks the first lineage of the registry.",
     items: [
       "Status binds to the original verified wallet.",
-      "Per-NFT royalty split planning is handled through token-specific split clones.",
+      "Royalty participation depends on ERC-2981 support and marketplace routing.",
       "Future engine iterations can recognize this wallet as an early registry actor.",
     ],
   },
@@ -60,8 +60,8 @@ export default function VanguardPrivilegesPage() {
             </h1>
             <p className="mt-6 max-w-2xl text-sm leading-7 text-white/60">
               A practical registry for early wallets, future lineage mechanics,
-              and the royalty routing that has to be correct before public
-              mainnet minting.
+              and royalty terms that stay aligned with what the deployed
+              contract and marketplaces can actually honor.
             </p>
           </div>
 
@@ -73,8 +73,8 @@ export default function VanguardPrivilegesPage() {
               Per NFT Splits
             </div>
             <p className="mt-4 text-sm leading-6 text-white/55">
-              The clean path is one split clone per deed, attached as that
-              token&apos;s royalty receiver.
+              The clean path is token-specific royalty routing, with current
+              terms maintained on the site and marketplace limits disclosed.
             </p>
           </aside>
         </header>
