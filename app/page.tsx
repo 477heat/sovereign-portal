@@ -3,8 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 const dayOneLaunchAt = Date.UTC(2026, 4, 29, 12, 0, 0);
 
@@ -34,7 +32,7 @@ const protocolCards = [
 
 const navLinks = [
   ["Portal", "/portal"],
-  ["Artifact", "/engine"],
+  ["ARTIFACTS", "/engine"],
   ["Vanguard", "/vanguard"],
   ["Access", "/economics"],
   ["Litepaper", "/whitepaper"],
@@ -109,9 +107,6 @@ export default function HomePage() {
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-black text-white">
-      <TunnelBackdrop />
-      <BackgroundHashStream className="z-0" variant="right" />
-
       <header className="fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
           <Link
@@ -166,8 +161,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-8 grid max-w-2xl gap-4">
-            <div className="flex flex-wrap gap-3">
+          <div className="mt-8 grid w-fit gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Link
                 href="/portal"
                 className="chamfer-hero-link chamfer-hero-link--primary"
@@ -181,33 +176,41 @@ export default function HomePage() {
                 Artifact Engine
               </Link>
             </div>
-            <Link
-              aria-label="Open Access page for Day 1 countdown"
-              className="chamfer-countdown-link"
-              href="/economics"
-            >
-              <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
-                Day 1 Countdown
-              </div>
-              <div className="mt-1 text-[7px] uppercase tracking-[0.12em] text-cyan-100/62">
-                29 May 2026 / 12:00 UTC
-              </div>
-              <div className="mt-2 grid grid-cols-4 gap-1">
-                {dayOneCountdown.map(([value, label]) => (
-                  <div
-                    className="border border-cyan-200/18 bg-black/80 px-1 py-1.5 text-center backdrop-blur-sm"
-                    key={label}
-                  >
-                    <div className="font-mono text-sm leading-none text-yellow-100">
-                      {value}
+            <div className="flex flex-wrap gap-2">
+              <Link
+                aria-label="Open Access page for Day 1 countdown details"
+                className="chamfer-countdown-label-link"
+                href="/economics"
+              >
+                <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
+                  Day 1 Countdown
+                </div>
+                <div className="mt-1 text-[7px] uppercase tracking-[0.12em] text-cyan-100/62">
+                  29 May 2026 / 12:00 UTC
+                </div>
+              </Link>
+              <Link
+                aria-label="Open Access page for Day 1 countdown timer"
+                className="chamfer-countdown-link"
+                href="/economics"
+              >
+                <div className="grid grid-cols-4 gap-1">
+                  {dayOneCountdown.map(([value, label]) => (
+                    <div
+                      className="chamfer-countdown-cell px-1 py-1.5 text-center backdrop-blur-sm"
+                      key={label}
+                    >
+                      <div className="font-mono text-sm leading-none text-yellow-100">
+                        {value}
+                      </div>
+                      <div className="mt-1 text-[6px] uppercase tracking-[0.08em] text-white/62">
+                        {label}
+                      </div>
                     </div>
-                    <div className="mt-1 text-[6px] uppercase tracking-[0.08em] text-white/62">
-                      {label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Link>
+                  ))}
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
 
