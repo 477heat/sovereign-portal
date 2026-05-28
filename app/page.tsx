@@ -15,7 +15,6 @@ const protocolCards = [
     body: "Day One wallets become Vanguards, carrying early status into future creations and projects.",
     href: "/vanguard",
     destination: "Vanguard status",
-    countdown: true,
   },
   {
     label: "Base-native",
@@ -35,10 +34,10 @@ const protocolCards = [
 
 const navLinks = [
   ["Portal", "/portal"],
-  ["Artifact Engine", "/engine"],
+  ["Artifact", "/engine"],
   ["Vanguard", "/vanguard"],
   ["Access", "/economics"],
-  ["Whitepaper", "/whitepaper"],
+  ["Litepaper", "/whitepaper"],
 ] as const;
 
 const whyThisMatters = [
@@ -144,21 +143,28 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-10 px-5 pb-6 pt-24 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]">
+      <section className="relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-24 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-100"
+          src="/media/command-console.mp4"
+        />
+        <div className="pointer-events-none absolute inset-0 z-0 bg-black/35" />
         <div className="relative z-10">
-          <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cyan-200/80">
-            Registry Initializing
-          </p>
-          <h1 className="max-w-4xl text-4xl font-light uppercase leading-[1.02] tracking-[0.1em] md:text-6xl">
-            Sovereign Engine
-          </h1>
-          <p className="mt-7 max-w-2xl text-base leading-8 text-white/62">
-            Real characters from real people. Each individual carries
-            deterministic data that Sovereign Engine parses into stats. Those
-            stats remain constant because the source is not random. One person,
-            one Genesis mint. No bot farms, no prize harvesting, no empty
-            wallets pretending to be a community.
-          </p>
+          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[30rem] px-5 py-5 md:px-7 md:py-6">
+            <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cyan-200/80">
+              Registry Initializing
+            </p>
+            <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
+              Sovereign Engine
+            </h1>
+            <p className="mt-7 max-w-2xl text-base leading-8 text-white/68">
+              One person, one Genesis mint. No bot farms, no prize harvesting,
+              no empty wallets pretending to be a community.
+            </p>
+          </div>
 
           <div className="mt-8 grid max-w-2xl gap-4">
             <div className="flex flex-wrap gap-3">
@@ -175,20 +181,56 @@ export default function HomePage() {
                 Artifact Engine
               </Link>
             </div>
+            <Link
+              aria-label="Open Access page for Day 1 countdown"
+              className="chamfer-countdown-link"
+              href="/economics"
+            >
+              <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
+                Day 1 Countdown
+              </div>
+              <div className="mt-1 text-[7px] uppercase tracking-[0.12em] text-cyan-100/62">
+                29 May 2026 / 12:00 UTC
+              </div>
+              <div className="mt-2 grid grid-cols-4 gap-1">
+                {dayOneCountdown.map(([value, label]) => (
+                  <div
+                    className="border border-cyan-200/18 bg-black/80 px-1 py-1.5 text-center backdrop-blur-sm"
+                    key={label}
+                  >
+                    <div className="font-mono text-sm leading-none text-yellow-100">
+                      {value}
+                    </div>
+                    <div className="mt-1 text-[6px] uppercase tracking-[0.08em] text-white/62">
+                      {label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Link>
           </div>
         </div>
 
+        <div
+          aria-hidden="true"
+          className="hero-clear-stage relative z-10 hidden min-h-[10rem] w-full lg:block lg:min-h-[18rem]"
+        />
+
+        <div
+          aria-hidden="true"
+          className="hero-clear-stage relative z-10 hidden min-h-[12rem] w-full lg:block lg:min-h-[20rem]"
+        />
+
+        <div
+          aria-hidden="true"
+          className="hero-clear-stage relative z-10 hidden min-h-[9rem] w-full lg:block lg:min-h-[15rem]"
+        />
+
         <aside className="relative z-10 hidden items-center justify-center lg:flex">
-          <div className="relative aspect-square w-full max-w-[27rem]">
-            <Image
-              src="/brand/sovereign-engine-site-logo-1024.png"
-              alt="Sovereign Engine logo"
-              width={640}
-              height={640}
-              className="h-full w-full object-contain drop-shadow-[0_0_42px_rgba(126,228,255,0.22)]"
-              priority
-            />
-          </div>
+          <div
+            aria-hidden="true"
+            className="hero-clear-stage relative aspect-square w-full max-w-[27rem]"
+          />
         </aside>
       </section>
 
@@ -210,28 +252,6 @@ export default function HomePage() {
               <div className="mt-4 text-[10px] uppercase tracking-[0.24em] text-cyan-200/55">
                 Open {card.destination}
               </div>
-              {card.countdown ? (
-                <div className="mt-5 border-t border-cyan-200/15 pt-4">
-                  <div className="text-[10px] uppercase tracking-[0.28em] text-yellow-200/70">
-                    Day 1 Countdown / 29 May 2026 / 12:00 UTC
-                  </div>
-                  <div className="mt-3 grid grid-cols-4 gap-2">
-                    {dayOneCountdown.map(([value, label]) => (
-                      <div
-                        className="bg-cyan-200/[0.06] px-2 py-2 text-center"
-                        key={label}
-                      >
-                        <div className="font-mono text-lg leading-none text-yellow-100">
-                          {value}
-                        </div>
-                        <div className="mt-1 text-[9px] uppercase tracking-[0.18em] text-white/45">
-                          {label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
             </Link>
           ))}
         </div>
