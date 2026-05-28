@@ -1,7 +1,7 @@
-export const contractLanguageVersion = "certificate-title-spiritual-ownership-2026-05-26e";
+export const contractLanguageVersion = "certificate-title-soul-ownership-2026-05-28a";
 
 export const contractLanguage = [
-  "CERTIFICATE OF TITLE TO SPIRITUAL OWNERSHIP",
+  "CERTIFICATE OF TITLE FOR SOUL OWNERSHIP",
   'ALSO KNOWN AS: "Soul Deed", "Spiritual Title Deed", and/or "Certificate of Metaphysical Possession" (choose your preferred euphemism).',
   'THIS INDENTURE (the "Contract" or "Deed") is authored and executed sua sponte by its Creator upon confirmation and completion of its Mint (the "Mint Event"), who shall be the initial and lawful issuing authority hereof (the "Grantor", "Original Minter", or "Original Vessel"), and who creates this instrument as an original title of one of its kind (Primus et Unicus) for the Soul associated with this Token.',
   "SECTION I: TITLE OF OWNERSHIP; INITIAL VESTING; OWNER PREROGATIVES",

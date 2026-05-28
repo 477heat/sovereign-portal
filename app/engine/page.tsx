@@ -189,16 +189,16 @@ export default function EnginePage() {
       <BackgroundHashStream className="z-0" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col px-4 py-5 md:px-8">
-        <nav className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4 text-[10px] uppercase tracking-[0.3em] text-white/45">
+        <nav className="flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
           <div className="flex flex-wrap gap-4">
-            <Link href="/" className="transition hover:text-white">
+            <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
               Return Home
             </Link>
-            <Link href="/portal" className="transition hover:text-white">
+            <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
               Mint Portal
             </Link>
           </div>
-          <span className="text-cyan-100/72">Engine Instance 01</span>
+          <span className="text-[11px] tracking-[0.28em] text-cyan-100/72">Artifact Engine // Instance 01</span>
         </nav>
 
         <section className="grid flex-1 gap-5 py-6 xl:grid-cols-[280px_minmax(0,1fr)_270px]">

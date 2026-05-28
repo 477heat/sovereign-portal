@@ -1,5 +1,6 @@
 interface BackgroundHashStreamProps {
   className?: string;
+  variant?: "grid" | "right";
 }
 
 const hashes = [
@@ -46,7 +47,22 @@ function StreamColumn({
 
 export function BackgroundHashStream({
   className = "",
+  variant = "grid",
 }: BackgroundHashStreamProps) {
+  if (variant === "right") {
+    return (
+      <div
+        className={`pointer-events-none absolute inset-0 overflow-hidden select-none ${className}`}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black/78 via-black/28 to-transparent md:w-44" />
+        <div className="absolute bottom-0 right-4 top-0 flex w-28 items-stretch justify-center overflow-hidden opacity-[0.18] md:right-8 md:w-36 md:opacity-[0.24]">
+          <StreamColumn column={hashes} index={0} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`pointer-events-none absolute inset-0 overflow-hidden select-none ${className}`}

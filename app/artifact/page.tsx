@@ -59,15 +59,15 @@ export default function ArtifactPage() {
       <TunnelBackdrop />
 
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-5 md:px-8">
-        <nav className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4 text-[10px] uppercase tracking-[0.3em] text-white/45">
-          <Link href="/" className="transition hover:text-white">
+        <nav className="flex flex-wrap items-center justify-between gap-3 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
             Return Home
           </Link>
-          <Link href="/portal" className="transition hover:text-white">
+          <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
             Mainnet Portal
           </Link>
-          <Link href="/engine" className="transition hover:text-white">
-            Engine Console
+          <Link href="/engine" className="chamfer-nav-link chamfer-nav-link--compact">
+            Artifact Engine
           </Link>
         </nav>
 

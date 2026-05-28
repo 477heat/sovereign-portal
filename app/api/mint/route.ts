@@ -125,6 +125,12 @@ function mintWorkerEndpoint(url: string) {
   return `${url.replace(/\/$/, "")}/mint`;
 }
 
+function forgetRawIdentity(payload: MintRequest) {
+  payload.firstName = undefined;
+  payload.lastName = undefined;
+  payload.dob = undefined;
+}
+
 async function requestMetadata(payload: MintRequest, engineUrl: string) {
   const response = await fetch(engineUrl, {
     method: "POST",
@@ -292,7 +298,10 @@ export async function POST(request: NextRequest) {
 
     try {
       metadata = await requestMetadata(payload, engineUrl);
+      forgetRawIdentity(payload);
     } catch (error) {
+      forgetRawIdentity(payload);
+
       if (claimedOrder && payload.orderId) {
         await releaseMintOrder(payload.orderId, payload.wallet!);
       }
@@ -368,7 +377,7 @@ export async function POST(request: NextRequest) {
       mode: mintMode,
       chainId: BASE_MAINNET_CHAIN_ID,
       contractAddress: GENESIS_CONTRACT_ADDRESS,
-      deedName: `Deed for Soul Ownership of ${payload.publicMark}`,
+      deedName: `Certificate of Title for Soul Ownership of ${payload.publicMark}`,
       contractLanguageVersion: payload.contractLanguageVersion,
       transactionId: data?.transactionId,
       transactionHash: data?.transactionHash,
@@ -383,7 +392,7 @@ export async function POST(request: NextRequest) {
     chainId: BASE_MAINNET_CHAIN_ID,
     contractAddress: GENESIS_CONTRACT_ADDRESS,
     tokenId: "LOCAL-PREVIEW-001",
-    deedName: `Deed for Soul Ownership of ${payload.publicMark}`,
+    deedName: `Certificate of Title for Soul Ownership of ${payload.publicMark}`,
     contractLanguageVersion: payload.contractLanguageVersion,
   });
 }

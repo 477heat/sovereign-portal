@@ -6,9 +6,9 @@ const privileges = [
     id: "01",
     title: "Vanguard Charter",
     description:
-      "Early minters keep the protocol status that marks the first lineage of the registry.",
+      "Day One supporter wallets keep the Vanguard status that marks the first lineage of the registry.",
     items: [
-      "Status binds to the original verified wallet.",
+      "Vanguard status binds to the original wallet-linked mint.",
       "Royalty participation depends on ERC-2981 support and marketplace routing.",
       "Future engine iterations can recognize this wallet as an early registry actor.",
     ],
@@ -17,7 +17,7 @@ const privileges = [
     id: "02",
     title: "Artifact Access",
     description:
-      "Vanguard wallets become the first testers for identity artifacts beyond the Genesis deed.",
+      "Vanguard wallets become the first testers for artifacts beyond the Genesis deed.",
     items: [
       "Early access to limited preview tools.",
       "Priority for Progeny Engine experiments.",
@@ -26,9 +26,9 @@ const privileges = [
   },
   {
     id: "03",
-    title: "Human Gate",
+    title: "Wallet Gate",
     description:
-      "The system is being built around verified wallets, not anonymous mint swarms.",
+      "The system is being built around wallet-linked artifacts, not anonymous mint swarms.",
     items: [
       "Coinbase EAS attestation gates the mint path.",
       "The public deed uses a shortened covenant mark.",
@@ -43,11 +43,11 @@ export default function VanguardPrivilegesPage() {
       <TunnelBackdrop />
 
       <div className="mx-auto max-w-6xl">
-        <nav className="mb-12 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 text-[10px] uppercase tracking-[0.3em] text-white/45">
-          <Link href="/" className="transition hover:text-white">
+        <nav className="mb-12 flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
             Back to Genesis
           </Link>
-          <div>Access Level // Vanguard</div>
+          <div className="text-[11px] tracking-[0.28em] text-cyan-100/72">Access Level // Vanguard</div>
         </nav>
 
         <header className="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -56,12 +56,13 @@ export default function VanguardPrivilegesPage() {
               Charter Layer
             </p>
             <h1 className="mt-4 max-w-4xl text-5xl font-light uppercase leading-tight tracking-[0.12em] md:text-7xl">
-              Vanguard Privileges
+              Vanguard Status
             </h1>
             <p className="mt-6 max-w-2xl text-sm leading-7 text-white/60">
-              A practical registry for early wallets, future lineage mechanics,
-              and royalty terms that stay aligned with what the deployed
-              contract and marketplaces can actually honor.
+              Vanguard is the status attached to Day One supporter wallets:
+              early wallets, future lineage mechanics, and royalty terms that
+              stay aligned with what the deployed contract and marketplaces can
+              actually honor.
             </p>
           </div>
 

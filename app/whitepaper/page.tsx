@@ -1,23 +1,18 @@
 import Link from "next/link";
+import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 export default function ExecutiveSummaryPage() {
   return (
-    <main className="min-h-screen bg-black text-white p-8 md:p-24 relative overflow-x-hidden font-mono">
-      {/* Background Scanline/Gradient Effect */}
-      <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.01),rgba(255,255,255,0.01))] bg-[length:100%_2px,3px_100%] opacity-20 z-0"></div>
-      
-      {/* Subtle "Tunnel" Glow to match Portal Page */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-30">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[160px] bg-white/[0.05]"></div>
-      </div>
+    <main className="relative isolate min-h-screen overflow-x-hidden bg-black p-8 font-mono text-white md:p-24">
+      <TunnelBackdrop />
 
       <div className="relative z-10 max-w-4xl mx-auto">
         {/* Header / Navigation */}
-        <nav className="mb-20 flex justify-between items-center border-b border-white/10 pb-8">
-          <Link href="/" className="text-[10px] tracking-[0.4em] uppercase opacity-50 hover:opacity-100 transition-opacity">
-            ← Back to SovEng
+        <nav className="mb-20 flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-5 text-xs uppercase tracking-[0.22em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
+            Back to SovEng
           </Link>
-          <div className="text-[10px] tracking-[0.4em] uppercase opacity-30">
+          <div className="text-[11px] tracking-[0.28em] text-cyan-100/55">
             Protocol Documentation // Version 1.0.4
           </div>
         </nav>
@@ -31,7 +26,8 @@ export default function ExecutiveSummaryPage() {
           </h1>
           <div className="h-px w-full bg-gradient-to-r from-white/40 to-transparent mb-8"></div>
           <p className="text-xl text-gray-400 max-w-2xl leading-relaxed font-sans">
-            Codifying the shift from speculative assets to cryptographically verifiable human existence.
+            Defining Sovereign Engine as a deterministic character/stat engine,
+            with the Soul Deed as its first access token.
           </p>
         </header>
 
@@ -46,19 +42,28 @@ export default function ExecutiveSummaryPage() {
             </div>
             <div className="space-y-6 text-gray-300 leading-relaxed text-lg font-sans">
               <p>
-                The Web3 consumer landscape is shifting away from speculative, low-utility assets toward utility-driven, cryptographically verifiable on-chain experiences. The <span className="text-white font-semibold">Sovereign Engine Protocol</span> is an advanced decentralized application (dApp) designed to tokenize verified human existence into an immutable digital asset known as a <span className="italic text-white">Personhood Contract</span>.
+                Sovereign Engine is broader than the first Soul Deed mint. It is
+                a deterministic character and stat engine that parses individual
+                source data into constant traits because the source is not
+                random. The <span className="text-white font-semibold">Certificate of Title for Soul Ownership</span> is
+                the first public access token and funding mechanism for that
+                broader Engine.
               </p>
               <p className="border-l-2 border-white/20 pl-6 italic text-gray-400">
-                &quot;As a sole owner and developer, I have invested countless hours architecting, coding, and refining this multi-stack infrastructure. The goal was to build a foundational &apos;Identity Lego&apos; for the broader Web3 space—a secure, Sybil-resistant, and dynamically generated metaphysical registry built on the Base Layer-2 network.&quot;
+                &quot;As a sole owner and developer, I have invested countless hours
+                architecting, coding, and refining this multi-stack
+                infrastructure. The goal is a wallet-linked, Base-native Engine
+                where real people create real character origins, not a random
+                generator, bot farm, or empty-wallet prize loop.&quot;
               </p>
             </div>
           </section>
 
-          {/* 2. PROOF OF PERSONHOOD */}
+          {/* 2. WALLET LINKAGE */}
           <section>
             <div className="flex items-center gap-4 mb-8">
               <span className="text-xs opacity-30">02</span>
-              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Proof of Personhood & Privacy</h2>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Wallet Linkage & Privacy</h2>
               <div className="h-px flex-1 bg-white/10"></div>
             </div>
             
@@ -66,10 +71,13 @@ export default function ExecutiveSummaryPage() {
               <div className="group p-8 border border-white/10 bg-white/[0.02] hover:border-white/30 transition-colors">
                 <h3 className="text-sm font-bold uppercase tracking-widest mb-4 text-white flex items-center gap-2">
                   <span className="w-2 h-2 bg-white rounded-full"></span>
-                  The EAS Bottleneck (Sybil Resistance)
+                  Wallet-linked eligibility
                 </h3>
                 <p className="text-gray-400 leading-relaxed">
-                  The protocol establishes an absolute one-to-one ratio between verified humans and on-chain assets. Before interaction, the frontend queries the <span className="text-white">Coinbase Ethereum Attestation Service (EAS)</span>. If the wallet lacks a &quot;Verified Account&quot; attestation, the transaction is blocked at the EVM level.
+                  The protocol uses wallet-linked eligibility checks before the
+                  Genesis mint. Before interaction, the frontend queries the <span className="text-white">Coinbase Ethereum Attestation Service (EAS)</span>.
+                  If the wallet lacks the required attestation, the mint path
+                  remains unavailable.
                 </p>
               </div>
 
@@ -107,12 +115,12 @@ export default function ExecutiveSummaryPage() {
                 {[
                   {
                     title: "The Portal (Frontend)",
-                    desc: "Next.js/React application hosted on Vercel. Acts as the bureaucratic interface, verifying EAS status and passing secure intake data.",
+                    desc: "Next.js/React application hosted on Vercel. Handles wallet-linked EAS eligibility, payment, agreement, and secure intake flow.",
                     tags: ["Next.js", "Vercel", "React"]
                   },
                   {
                     title: "The Metaphysical Forge (Backend)",
-                    desc: "Serverless Python architecture on AWS Lambda. Deterministically calculates unique user stats: Intellect, Vigor, Spirit, Vitality, Intuition, Resolve, and Charisma.",
+                    desc: "Serverless Python architecture on AWS Lambda. Deterministically calculates the user's Engine stats from source data rather than random generation.",
                     tags: ["Python", "AWS Lambda", "Sovereign Engine"]
                   },
                   {
@@ -147,15 +155,19 @@ export default function ExecutiveSummaryPage() {
           <section className="bg-white/[0.02] border border-white/10 p-8 md:p-16">
             <div className="flex items-center gap-4 mb-12">
               <span className="text-xs opacity-30">04</span>
-              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Tokenomics & The Vanguard Charter</h2>
+              <h2 className="text-xl uppercase tracking-[0.2em] font-bold">Access, Royalties & The Vanguard Charter</h2>
               <div className="h-px flex-1 bg-white/10"></div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
               <div className="space-y-6">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-white">The Vanguard Status</h3>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-white">Vanguard Status</h3>
                 <p className="text-gray-400 leading-relaxed font-sans">
-                  The cryptographic wallet that originally mints a Phase 1 Genesis Soul Contract is permanently granted <span className="text-white">Vanguard status</span>. This status is irrevocably bound to the original wallet, even through secondary market transfers.
+                  The cryptographic wallet that originally mints a Certificate
+                  of Title for Soul Ownership is treated as a <span className="text-white">Day One supporter</span> wallet
+                  with Vanguard status. This status is intended to remain bound
+                  to the original wallet, even through secondary market
+                  transfers.
                 </p>
                 <p className="text-xs leading-relaxed text-gray-500">
                   Potestas Contractus: the contract can mint the ERC-721 deed,
@@ -164,18 +176,20 @@ export default function ExecutiveSummaryPage() {
                   owner-reviewed burn path. The upgradeable master contract can
                   also support later aesthetic or metadata implementations,
                   subject to upgrade authority and metadata-freeze limits.
-                  Future benefits require future published terms.
+                  Soul Deed Access token holders are guaranteed access to
+                  Progeny when that Engine branch opens. The exact interface and
+                  mint mechanics require future published terms.
                 </p>
               </div>
               <div className="space-y-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-white">Royalty Signal</h3>
                 <p className="text-gray-400 leading-relaxed font-sans">
-                  The intended Genesis royalty path uses ERC-2981 marketplace signaling with a 7% total royalty, split 50/50 when the sale venue honors and routes royalties:
+                  The intended Genesis royalty-routing path uses ERC-2981 marketplace signaling with a 7% total royalty, split 50/50 when the sale venue honors and routes royalties:
                 </p>
                 <div className="space-y-3">
                   <div className="flex justify-between border-b border-white/5 pb-2">
                     <span className="text-xs text-gray-500 uppercase">3.5% Vanguard Share</span>
-                    <span className="text-xs text-white">To Original Vanguard</span>
+                    <span className="text-xs text-white">To Original Vanguard Wallet</span>
                   </div>
                   <div className="flex justify-between border-b border-white/5 pb-2">
                     <span className="text-xs text-gray-500 uppercase">3.5% Architect&apos;s Tithe</span>
@@ -198,12 +212,12 @@ export default function ExecutiveSummaryPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="p-6 border border-white/5">
-                <h4 className="text-xs font-bold uppercase mb-4 text-white">The Ferryman&apos;s Toll ($OBOL)</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">A future-token idea reserved for later published terms. No automatic farming is active in the Genesis mint.</p>
+                <h4 className="text-xs font-bold uppercase mb-4 text-white">Access Tokens</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">The Soul Deed is the first access token. Future access tokens may qualify holders for the same guaranteed Progeny access path.</p>
               </div>
               <div className="p-6 border border-white/5">
                 <h4 className="text-xs font-bold uppercase mb-4 text-white">Progeny Constructs</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">A future Engine branch that may use Genesis stats and verified wallet history, subject to terms published on the site.</p>
+                <p className="text-sm text-gray-500 leading-relaxed">A guaranteed-access Engine branch for qualifying access-token holders. The interface, mint flow, and lineage NFT format still need published implementation terms.</p>
               </div>
               <div className="p-6 border border-white/5">
                 <h4 className="text-xs font-bold uppercase mb-4 text-white">Asset Forfeiture & Upgrade</h4>

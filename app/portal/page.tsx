@@ -57,30 +57,10 @@ const paymentTokenAddress =
 const checkoutEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout" &&
   Boolean(paymentSeller && paymentTokenAddress);
+const architectOpenSeaUrl =
+  "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
 
-const steps = [
-  "Wallet",
-  "Attestation",
-  "Identity",
-  "Deed Review",
-  "Payment",
-  "Mint",
-];
-
-const statPreview = [
-  "Presence",
-  "Wealth",
-  "Fortitude",
-  "Cunning",
-  "Flair",
-  "Vigor",
-  "Kinship",
-  "Potency",
-  "Wisdom",
-  "Prestige",
-  "Influence",
-  "Arcana",
-];
+const steps = ["Wallet", "EAS", "Identity", "Terms", "Payment", "Mint"];
 
 function buildPublicMark(firstName: string, lastName: string) {
   const firstInitial = firstName.trim().charAt(0).toUpperCase();
@@ -130,8 +110,8 @@ function PortalContent() {
   );
   const deedName =
     publicMark === "_. ___"
-      ? "Deed for Soul Ownership"
-      : `Deed for Soul Ownership of ${publicMark}`;
+      ? "Certificate of Title for Soul Ownership"
+      : `Certificate of Title for Soul Ownership of ${publicMark}`;
   const hasIdentity = publicMark !== "_. ___" && Boolean(dob);
   const deedAccepted =
     accuracyAccepted && publicMarkAccepted && contractAccepted;
@@ -154,6 +134,16 @@ function PortalContent() {
     deedAccepted &&
     orderPaid &&
     !minting;
+  const progress = [
+    { label: steps[0], complete: Boolean(account?.address) },
+    { label: steps[1], complete: Boolean(verification?.eligible) },
+    { label: steps[2], complete: hasIdentity },
+    { label: steps[3], complete: deedAccepted },
+    { label: steps[4], complete: orderPaid },
+    { label: steps[5], complete: Boolean(receipt) },
+  ];
+  const nextStep =
+    progress.find((step) => !step.complete)?.label ?? "Complete";
 
   useEffect(() => {
     let ignore = false;
@@ -325,14 +315,14 @@ function PortalContent() {
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-black px-4 py-5 text-white md:px-8 md:py-8">
-      <TunnelBackdrop className="opacity-70" />
-      <BackgroundHashStream className="z-0 opacity-45 md:opacity-60" />
+      <TunnelBackdrop />
+      <BackgroundHashStream className="z-0 opacity-20 md:opacity-30" />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col gap-5">
-        <nav className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col gap-5">
+        <nav className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
           <Link
             href="/"
-            className="text-[10px] uppercase tracking-[0.35em] text-white/50 transition hover:text-white"
+            className="chamfer-nav-link chamfer-nav-link--compact tracking-[0.22em]"
           >
             Return Home
           </Link>
@@ -341,96 +331,163 @@ function PortalContent() {
           </div>
         </nav>
 
-        <section className="grid flex-1 gap-5 xl:grid-cols-[220px_minmax(0,1fr)_340px]">
-          <aside className="border border-white/10 bg-black/55 p-4 backdrop-blur-[2px]">
-            <div className="mb-5 text-[11px] uppercase tracking-[0.3em] text-white/45">
-              Gate Status
-            </div>
-            <div className="space-y-3">
-              {steps.map((step, index) => {
-                const complete =
-                  (index === 0 && Boolean(account?.address)) ||
-                  (index === 1 && Boolean(verification?.eligible)) ||
-                  (index === 2 && hasIdentity) ||
-                  (index === 3 && deedAccepted) ||
-                  (index === 4 && orderPaid) ||
-                  (index === 5 && Boolean(receipt));
-
-                return (
-                  <div
-                    key={step}
-                    className={`flex items-center justify-between border px-3 py-3 text-xs ${
-                      complete
-                        ? "border-yellow-300/50 bg-yellow-300/10 text-yellow-200"
-                        : "border-white/10 bg-white/[0.03] text-white/45"
-                    }`}
-                  >
-                    <span>{step}</span>
-                    <span>{complete ? "CLEARED" : "WAITING"}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-6 border-t border-white/10 pt-5 text-xs leading-6 text-white/55">
-              Wallet attestation confirms eligibility on Base mainnet. The deed
-              inscription is generated from the name and birth date entered
-              here.
-            </div>
-          </aside>
-
-          <section className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_300px]">
-            <div className="border border-white/10 bg-black/70 p-5 shadow-[0_0_56px_rgba(81,197,255,0.07)] backdrop-blur-[2px] md:p-6">
-              <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.35em] text-yellow-300/70">
-                    Genesis Mint Intake
-                  </p>
-                  <h1 className="mt-3 max-w-2xl text-3xl font-light uppercase tracking-[0.12em] md:text-4xl">
-                    {deedName}
-                  </h1>
+        <section className="flex flex-1 flex-col gap-5">
+          <div className="border border-white/10 bg-black/55 p-4 shadow-[0_0_56px_rgba(81,197,255,0.06)] backdrop-blur-[2px] md:p-5">
+            <div className="mb-5 border border-yellow-300/35 bg-yellow-300/[0.09] px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-xl font-semibold uppercase tracking-[0.16em] text-yellow-100 md:text-2xl">
+                  One Person. One Genesis Mint.
                 </div>
-                <div className="min-w-44 text-right text-xs uppercase tracking-[0.2em] text-white/50">
+                <a
+                  href="#one-person-one-mint"
+                  className="text-[10px] uppercase tracking-[0.24em] text-yellow-200/75 underline-offset-4 transition hover:text-yellow-100 hover:underline"
+                >
+                  Why this rule exists
+                </a>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.35em] text-yellow-300/70">
+                  Genesis Soul Registry
+                </p>
+                <h1 className="mt-3 max-w-3xl text-3xl font-light uppercase tracking-[0.12em] md:text-5xl">
+                  {deedName}
+                </h1>
+              </div>
+              <div className="text-right text-[10px] uppercase tracking-[0.22em] text-white/45">
+                <div>Next: {nextStep}</div>
+                <div className="mt-2 font-mono text-white/65">
                   {shortAddress(account?.address)}
                 </div>
               </div>
+            </div>
 
-              <div className="mb-5 border border-yellow-300/20 bg-yellow-300/[0.06] p-4 text-sm leading-6 text-white/75">
-                <p className="text-white/90">Welcome in.</p>
-                <p className="mt-2">
-                  This contract creates your onchain deed and generated soul
-                  artifact on Base after the portal checks the mint requirements
-                  below. I built it to help fund the Engine&apos;s evolution and
-                  future deployments, because apparently every big idea I have
-                  arrives with a hosting bill and a dramatic entrance. Mint one
-                  and join the ridiculousness.
-                </p>
+            <div className="mt-5 grid gap-2 sm:grid-cols-3 lg:grid-cols-6">
+              {progress.map((step) => (
+                <div
+                  key={step.label}
+                  className={`border px-3 py-2 text-[10px] uppercase tracking-[0.2em] ${
+                    step.complete
+                      ? "border-yellow-300/45 bg-yellow-300/10 text-yellow-200"
+                      : "border-white/10 bg-white/[0.025] text-white/38"
+                  }`}
+                >
+                  {step.label}
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-5 grid gap-3 text-sm leading-6 text-white/68 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.42fr)]">
+              <p>
+                This portal creates an onchain Certificate of Title for Soul
+                Ownership on Base after wallet eligibility, payment, and
+                agreement checks are complete. The mint helps fund Engine
+                evolution and future deployments. Join the ridiculousness, but
+                read the terms before signing the cosmic receipt.
+              </p>
+              <p className="border border-yellow-300/20 bg-yellow-300/[0.06] p-3 text-yellow-50/78">
+                Creative product, not legal, religious, medical, or financial
+                advice. Royalties depend on marketplace support, and public NFT
+                metadata is effectively permanent.
+              </p>
+            </div>
+          </div>
+
+          <section
+            id="one-person-one-mint"
+            className="border border-white/10 bg-black/55 p-4 text-sm leading-6 text-white/68 backdrop-blur-[2px]"
+          >
+            <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
+              Why one per person
+            </div>
+            <p className="mt-2 max-w-4xl">
+              Genesis deeds are meant to represent individual entry into the
+              registry, not repeat-wallet farming. The portal uses Coinbase EAS
+              eligibility and the mint ledger to reduce duplicate participation.
+              Raw name and DOB details submitted for the deed are used only to
+              generate the mint request, then purged after mint completion. They
+              are not sold, shared, or stored by our servers.
+            </p>
+            <p className="mt-4 max-w-4xl">
+              The soul is the origin point. It is brought into a body; the body
+              lives, creates children, gathers material things, and tries to do
+              the best it can with the traits it was born with. The Certificate
+              treats that origin as the first entry in the Engine record.
+            </p>
+            <p className="mt-4 max-w-4xl">
+              This Certificate also functions as a Soul Deed Access token.
+              Holders of this access token, or any future access tokens, are
+              guaranteed access to Progeny when that Engine branch opens.
+            </p>
+          </section>
+
+          <section className="grid gap-5 border border-white/10 bg-black/60 p-4 backdrop-blur-[2px] lg:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="relative min-h-[300px] overflow-hidden border border-yellow-300/20 bg-black/45">
+              <Image
+                src="/architect_deed.jpg"
+                alt="The Architect Soul Deed listed on OpenSea"
+                fill
+                sizes="(max-width: 1024px) 100vw, 220px"
+                className="object-contain"
+                priority
+              />
+            </div>
+            <div className="flex flex-col justify-center">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
+                The Architect&apos;s Soul
               </div>
+              <h2 className="mt-3 text-2xl font-light uppercase tracking-[0.14em] text-white md:text-3xl">
+                Yes, I listed mine first.
+              </h2>
+              <p className="mt-4 max-w-3xl text-sm leading-6 text-white/68">
+                This is my minted Architect contract, token 0 in the Soul deed
+                collection. It is listed on OpenSea for anyone who wants to own
+                the ceremonial paperwork to my soul. So if you&apos;re looking for
+                a servant in the afterlife, I can safely say I&apos;m the first to
+                sell it publicly.
+              </p>
+              <Link
+                href={architectOpenSeaUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 inline-flex min-h-11 w-fit items-center border border-yellow-300/45 bg-yellow-300/10 px-4 text-xs font-semibold uppercase tracking-[0.22em] text-yellow-100 transition hover:bg-yellow-300/20"
+              >
+                View The Listing
+              </Link>
+            </div>
+          </section>
 
-              <div className="grid gap-5 xl:grid-cols-2">
-                <div className="space-y-4">
-                  <div className="border border-white/10 bg-white/[0.03] p-4">
-                    <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-white/45">
-                      Wallet
+          <section className="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]">
+            <div className="space-y-5">
+              <div className="border border-white/10 bg-black/60 p-4 backdrop-blur-[2px]">
+                <div className="mb-4 text-[11px] uppercase tracking-[0.3em] text-white/45">
+                  Access
+                </div>
+                <div className="grid gap-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-white/[0.03] p-3">
+                    <div>
+                      <div className="text-[10px] uppercase tracking-[0.24em] text-white/42">
+                        Wallet
+                      </div>
+                      <div className="mt-1 font-mono text-sm text-white/75">
+                        {shortAddress(account?.address)}
+                      </div>
                     </div>
                     {thirdwebClient ? (
                       account?.address ? (
-                        <div className="flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/50 px-3 py-3">
-                          <span className="font-mono text-sm text-white/80">
-                            {shortAddress(account.address)}
-                          </span>
-                          <button
-                            className="border border-white/15 px-3 py-2 text-[11px] uppercase tracking-[0.2em] text-white/60 transition hover:border-yellow-300/60 hover:text-yellow-200"
-                            onClick={() => {
-                              if (activeWallet) {
-                                disconnect(activeWallet);
-                              }
-                            }}
-                            type="button"
-                          >
-                            Disconnect
-                          </button>
-                        </div>
+                        <button
+                          className="border border-white/15 px-3 py-2 text-[11px] uppercase tracking-[0.2em] text-white/60 transition hover:border-yellow-300/60 hover:text-yellow-200"
+                          onClick={() => {
+                            if (activeWallet) {
+                              disconnect(activeWallet);
+                            }
+                          }}
+                          type="button"
+                        >
+                          Disconnect
+                        </button>
                       ) : (
                         <ConnectButton
                           client={thirdwebClient}
@@ -446,8 +503,8 @@ function PortalContent() {
                     )}
                   </div>
 
-                  <div className="border border-white/10 bg-white/[0.03] p-4">
-                    <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="border border-white/10 bg-white/[0.03] p-3">
+                    <div className="flex items-center justify-between gap-3">
                       <span className="text-[11px] uppercase tracking-[0.3em] text-white/45">
                         Coinbase EAS
                       </span>
@@ -465,7 +522,7 @@ function PortalContent() {
                             : "Awaiting Wallet"}
                       </span>
                     </div>
-                    <p className="text-sm leading-6 text-white/65">
+                    <p className="mt-2 text-sm leading-6 text-white/62">
                       {verification?.message ??
                         "Connect a Base mainnet wallet to check for a valid Coinbase Verified Account attestation."}
                     </p>
@@ -476,11 +533,16 @@ function PortalContent() {
                     )}
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-4">
+              <div className="border border-white/10 bg-black/60 p-4 backdrop-blur-[2px]">
+                <div className="mb-4 text-[11px] uppercase tracking-[0.3em] text-white/45">
+                  Identity
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   <label className="block">
                     <span className="mb-2 block text-[11px] uppercase tracking-[0.25em] text-white/45">
-                      Legal First Name
+                      First Name as it appears on Coinbase
                     </span>
                     <input
                       value={firstName}
@@ -492,7 +554,7 @@ function PortalContent() {
 
                   <label className="block">
                     <span className="mb-2 block text-[11px] uppercase tracking-[0.25em] text-white/45">
-                      Legal Surname
+                      Last Name as it appears on Coinbase
                     </span>
                     <input
                       value={lastName}
@@ -502,9 +564,9 @@ function PortalContent() {
                     />
                   </label>
 
-                  <label className="block">
+                  <label className="block sm:col-span-2 lg:col-span-1">
                     <span className="mb-2 block text-[11px] uppercase tracking-[0.25em] text-white/45">
-                      Date of Birth
+                      DOB as it appears on your Coinbase EAS
                     </span>
                     <input
                       value={dob}
@@ -514,7 +576,7 @@ function PortalContent() {
                     />
                   </label>
 
-                  <div className="border border-yellow-300/30 bg-yellow-300/10 p-4">
+                  <div className="border border-yellow-300/30 bg-yellow-300/10 p-4 sm:col-span-2 lg:col-span-1">
                     <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/80">
                       Public Covenant Mark
                     </div>
@@ -527,38 +589,81 @@ function PortalContent() {
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="mt-5 border-t border-white/10 pt-5">
-                <div className="border border-white/10 bg-white/[0.03] p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
-                      Contract Agreement
-                    </div>
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-white/40">
-                      Version {contractLanguageVersion}
-                    </div>
+            <div className="border border-white/10 bg-black/65 p-4 shadow-[0_0_56px_rgba(81,197,255,0.06)] backdrop-blur-[2px] md:p-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
+                    Agreement
                   </div>
-                  <div className="mt-4 max-h-72 space-y-3 overflow-y-auto border border-white/10 bg-black/70 p-4 text-xs leading-6 text-white/65">
-                    {contractLanguage.map((paragraph, index) => {
-                      const isHeading =
-                        index === 0 || paragraph.startsWith("SECTION ");
-
-                      return (
-                        <p
-                          key={`${paragraph.slice(0, 24)}-${index}`}
-                          className={
-                            isHeading
-                              ? "text-yellow-100 uppercase tracking-[0.18em]"
-                              : ""
-                          }
-                        >
-                          {paragraph}
-                        </p>
-                      );
-                    })}
-                  </div>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-white/60">
+                    Review the deed summary, open the full wording when needed,
+                    then clear the required acknowledgements.
+                  </p>
+                </div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+                  Version {contractLanguageVersion}
                 </div>
               </div>
+
+              <div className="mt-4 grid gap-3 text-sm leading-6 text-white/68 md:grid-cols-3">
+                <div className="border border-white/10 bg-white/[0.03] p-3">
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/42">
+                    Product
+                  </div>
+                  <p className="mt-2">
+                    A generated ERC-721 deed artifact minted to the connected
+                    wallet after eligibility and payment.
+                  </p>
+                </div>
+                <div className="border border-white/10 bg-white/[0.03] p-3">
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/42">
+                    Public Data
+                  </div>
+                  <p className="mt-2">
+                    Metadata and the deed image are public once minted. Enter
+                    only information you accept using for this artifact.
+                  </p>
+                </div>
+                <div className="border border-white/10 bg-white/[0.03] p-3">
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/42">
+                    Royalties
+                  </div>
+                  <p className="mt-2">
+                    The contract signals royalties, but marketplace collection
+                    depends on marketplace support and routing.
+                  </p>
+                </div>
+              </div>
+
+              <details className="mt-4 border border-yellow-300/55 bg-yellow-300/[0.08] shadow-[0_0_34px_rgba(253,224,71,0.14)]">
+                <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 text-[11px] uppercase tracking-[0.26em] text-yellow-100 transition hover:bg-yellow-300/[0.12]">
+                  <span>Review Full Certificate Text</span>
+                  <span className="border border-yellow-200/45 bg-black/45 px-2 py-1 text-[9px] tracking-[0.22em] text-yellow-100/80">
+                    Required Review
+                  </span>
+                </summary>
+                <div className="max-h-72 space-y-3 overflow-y-auto border-t border-white/10 bg-black/70 p-4 text-xs leading-6 text-white/65">
+                  {contractLanguage.map((paragraph, index) => {
+                    const isHeading =
+                      index === 0 || paragraph.startsWith("SECTION ");
+
+                    return (
+                      <p
+                        key={`${paragraph.slice(0, 24)}-${index}`}
+                        className={
+                          isHeading
+                            ? "text-yellow-100 uppercase tracking-[0.18em]"
+                            : ""
+                        }
+                      >
+                        {paragraph}
+                      </p>
+                    );
+                  })}
+                </div>
+              </details>
 
               <div className="mt-5 grid gap-3 text-sm text-white/65">
                 <label className="flex gap-3">
@@ -585,8 +690,8 @@ function PortalContent() {
                     className="mt-1 h-4 w-4 accent-yellow-300"
                   />
                   <span>
-                    I attest that the information entered is accurate and may
-                    be used to generate my deed.
+                    I attest that the name and DOB entered match my
+                    Coinbase/EAS identity and may be used to generate my deed.
                   </span>
                 </label>
                 <label className="flex gap-3">
@@ -617,10 +722,16 @@ function PortalContent() {
                     Checkout
                   </div>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-white/62">
-                    The deed mint is priced at {paymentAmount} USDC. The portal
-                    prepares a payment order first, then the backend funds the
-                    onchain mint and its gas after the verified payment webhook
-                    marks that order paid.
+                    {paymentAmount} USDC. The backend pays contract mint price
+                    and gas after the signed payment webhook marks this order
+                    paid.
+                  </p>
+                  <p className="mt-3 max-w-2xl border border-cyan-100/20 bg-black/35 p-3 text-sm leading-6 text-cyan-50/72">
+                    Once minted, the artifact belongs to your connected wallet.
+                    That wallet is recorded in the NFT metadata and original
+                    minter record, so royalties can route back to you if you
+                    ever choose to sell and the marketplace honors the royalty
+                    path.
                   </p>
                   {!activeOrder && (
                     <button
@@ -640,7 +751,7 @@ function PortalContent() {
                         client={thirdwebClient}
                         description="Verified mint order for the Sovereign Portal deed."
                         feePayer="seller"
-                        name="Deed for Soul Ownership"
+                        name="Certificate of Title for Soul Ownership"
                         onSuccess={() => {
                           setPaymentNotice(
                             "Checkout completed. Refresh until the verified webhook marks this mint order paid.",
@@ -684,14 +795,14 @@ function PortalContent() {
                     Mint Action
                   </div>
                   <p className="mt-2 max-w-xl text-sm leading-6 text-white/58">
-                    Generate the deed after wallet eligibility, identity, and
-                    agreement review are cleared.
+                    Generate the deed after wallet, EAS, identity, terms, and
+                    payment are cleared.
                   </p>
                 </div>
                 <button
                   onClick={handleMint}
                   disabled={!canMint}
-                  className="min-h-16 w-full border border-yellow-300/50 bg-yellow-300 px-5 py-4 text-sm font-semibold uppercase tracking-[0.25em] text-black transition hover:bg-yellow-200 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/10 disabled:text-white/35 sm:w-auto sm:min-w-60"
+                  className="min-h-14 w-full border border-yellow-300/50 bg-yellow-300 px-5 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-black transition hover:bg-yellow-200 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/10 disabled:text-white/35 sm:w-auto sm:min-w-56"
                 >
                   {minting ? "Minting" : "Generate Deed"}
                 </button>
@@ -732,50 +843,7 @@ function PortalContent() {
               )}
             </div>
 
-            <div className="border border-white/10 bg-black/55 p-4 backdrop-blur-[2px]">
-              <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-white/45">
-                Stat Frame
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {statPreview.map((stat) => (
-                  <div
-                    key={stat}
-                    className="border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/70"
-                  >
-                    {stat}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 border border-white/10 bg-white/[0.03] p-3">
-                <div className="text-[11px] uppercase tracking-[0.25em] text-white/45">
-                  Karmic Debt
-                </div>
-                <div className="mt-2 text-3xl text-yellow-200">Pending</div>
-              </div>
-            </div>
           </section>
-
-          <aside className="flex flex-col self-start border border-white/10 bg-black/70 p-4 shadow-[0_0_56px_rgba(81,197,255,0.07)] backdrop-blur-[2px] xl:sticky xl:top-8">
-            <div className="relative min-h-[420px] overflow-hidden border border-white/10 bg-white/[0.03]">
-              <Image
-                src="/Satoshi_Nakamoto.png"
-                alt="Mock Genesis deed preview"
-                fill
-                sizes="(max-width: 1024px) 100vw, 360px"
-                className="object-contain object-top opacity-70"
-                priority
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-black/80 p-4">
-                <div className="text-[10px] uppercase tracking-[0.25em] text-white/45">
-                  Preview Inscription
-                </div>
-                <div className="mt-2 text-lg uppercase tracking-[0.12em] text-yellow-100">
-                  {publicMark}
-                </div>
-              </div>
-            </div>
-
-          </aside>
         </section>
       </div>
     </main>
