@@ -77,9 +77,9 @@ body::after {
   background: transparent;
   border: 0;
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(236, 254, 255, 0.92);
   display: inline-flex;
-  font-size: 0.5rem !important;
+  font-size: 0.62rem !important;
   font-weight: 600;
   height: 1.9rem !important;
   isolation: isolate;
@@ -111,7 +111,7 @@ body::after {
 }
 
 .chamfer-nav-link::after {
-  background: rgba(5, 15, 19, 0.88);
+  background: rgba(5, 15, 19, 0.94);
   inset: 1px;
   z-index: -1;
 }
@@ -119,7 +119,7 @@ body::after {
 .chamfer-nav-link:hover,
 .chamfer-nav-link:focus-visible {
   box-shadow: 0 0 22px rgba(103, 232, 249, 0.12);
-  color: rgb(236, 254, 255);
+  color: rgb(255, 255, 255);
   outline: none;
 }
 

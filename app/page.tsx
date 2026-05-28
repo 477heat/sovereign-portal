@@ -34,10 +34,10 @@ const protocolCards = [
 
 const navLinks = [
   ["Portal", "/portal"],
-  ["Artifact Engine", "/engine"],
+  ["Artifact", "/engine"],
   ["Vanguard", "/vanguard"],
   ["Access", "/economics"],
-  ["Whitepaper", "/whitepaper"],
+  ["Litepaper", "/whitepaper"],
 ] as const;
 
 const whyThisMatters = [
