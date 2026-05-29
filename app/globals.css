@@ -144,14 +144,14 @@ body::after {
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
   color: rgb(207, 250, 254);
   display: inline-flex;
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  height: 2.75rem;
+  height: 3.4rem;
   isolation: isolate;
   justify-content: center;
-  letter-spacing: 0.14em;
-  min-width: 9.4rem;
-  padding: 0 1rem;
+  letter-spacing: 0.12em;
+  min-width: 10.5rem;
+  padding: 0 0.8rem;
   position: relative;
   text-align: center;
   text-transform: uppercase;
@@ -179,6 +179,10 @@ body::after {
   background: rgba(4, 18, 24, 0.86);
   inset: 1px;
   z-index: -1;
+}
+
+.chamfer-hero-link--opposite {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
 
 .chamfer-hero-link:hover,
@@ -223,10 +227,12 @@ body::after {
   background: rgba(9, 40, 48, 0.92);
 }
 
+.chamfer-countdown-label-link,
 .chamfer-countdown-link {
   background: rgba(4, 18, 24, 0.88);
-  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
   display: block;
+  height: 3.4rem;
   isolation: isolate;
   max-width: 10.5rem;
   min-width: 10.5rem;
@@ -239,6 +245,25 @@ body::after {
     box-shadow 160ms ease;
 }
 
+.chamfer-countdown-label-link {
+  align-content: center;
+  min-width: 10.5rem;
+  padding: 0.55rem 0.75rem;
+}
+
+.chamfer-countdown-link {
+  align-content: center;
+}
+
+.chamfer-countdown-link {
+  max-width: 10.5rem;
+  min-width: 10.5rem;
+  padding: 0.55rem;
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+.chamfer-countdown-label-link::before,
+.chamfer-countdown-label-link::after,
 .chamfer-countdown-link::before,
 .chamfer-countdown-link::after {
   clip-path: inherit;
@@ -247,24 +272,69 @@ body::after {
   position: absolute;
 }
 
+.chamfer-countdown-label-link::before,
 .chamfer-countdown-link::before {
   background: rgba(165, 243, 252, 0.38);
   inset: 0;
   z-index: -2;
 }
 
+.chamfer-countdown-label-link::after,
 .chamfer-countdown-link::after {
   background: rgba(4, 18, 24, 0.88);
   inset: 1px;
   z-index: -1;
 }
 
+.chamfer-countdown-label-link:hover,
+.chamfer-countdown-label-link:focus-visible,
 .chamfer-countdown-link:hover,
 .chamfer-countdown-link:focus-visible {
   box-shadow: 0 0 28px rgba(103, 232, 249, 0.14);
   filter: brightness(1.08);
   outline: none;
   transform: translateY(-1px);
+}
+
+.chamfer-countdown-cell {
+  background: rgba(0, 0, 0, 0.8);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  isolation: isolate;
+  position: relative;
+}
+
+.chamfer-countdown-cell::before,
+.chamfer-countdown-cell::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.chamfer-countdown-cell::before {
+  background: rgba(165, 243, 252, 0.18);
+  inset: 0;
+  z-index: -2;
+}
+
+.chamfer-countdown-cell::after {
+  background: rgba(0, 0, 0, 0.8);
+  inset: 1px;
+  z-index: -1;
+}
+
+:where(.chamfer-nav-link, .chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive) {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.14),
+    0 0 18px rgba(254, 240, 138, 0.08);
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.16);
+}
+
+:where(.chamfer-nav-link, .chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):hover,
+:where(.chamfer-nav-link, .chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.22),
+    0 0 24px rgba(254, 240, 138, 0.13);
 }
 
 .chamfer-panel {
@@ -309,7 +379,7 @@ body::after {
 
 .chamfer-panel--hero-copy {
   background: rgba(0, 0, 0, 0.42);
-  clip-path: polygon(18px 0, calc(100% - 60px) 0, 100% 60px, 100% 100%, 52px 100%, 0 calc(100% - 52px), 0 18px);
+  clip-path: polygon(18px 0, calc(100% - 96px) 0, 100% 60px, 100% 100%, 52px 100%, 0 calc(100% - 52px), 0 18px);
 }
 
 .chamfer-panel--hero-copy::after {
@@ -324,8 +394,68 @@ body::after {
   background: rgba(0, 0, 0, 0.72);
 }
 
+.chamfer-panel--command {
+  clip-path: polygon(32px 0, 100% 0, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0 100%, 0 32px);
+}
+
+.chamfer-panel--command::before {
+  background: linear-gradient(135deg, rgba(254, 240, 138, 0.18), rgba(165, 243, 252, 0.24));
+}
+
+.chamfer-panel--command::after {
+  background:
+    linear-gradient(115deg, rgba(254, 240, 138, 0.035), transparent 34%),
+    rgba(0, 0, 0, 0.74);
+}
+
+.chamfer-panel--wide {
+  clip-path: polygon(26px 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%, 0 26px);
+}
+
+.chamfer-panel--wide::before {
+  background: rgba(165, 243, 252, 0.2);
+}
+
+.chamfer-panel--wide::after {
+  background:
+    linear-gradient(90deg, rgba(254, 240, 138, 0.035), transparent 42%),
+    rgba(0, 0, 0, 0.72);
+}
+
+.chamfer-panel--policy {
+  clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+}
+
+.chamfer-panel--policy::before {
+  background: rgba(165, 243, 252, 0.16);
+}
+
+.chamfer-panel--policy::after {
+  background: rgba(0, 0, 0, 0.76);
+}
+
+.chamfer-panel--small {
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.chamfer-panel--small::before {
+  background: rgba(254, 240, 138, 0.16);
+}
+
+.chamfer-panel--small::after {
+  background: rgba(5, 19, 24, 0.82);
+}
+
 .chamfer-panel--readout {
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.chamfer-panel--all-corners {
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+}
+
+.chamfer-panel--opposite-corners {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
 }
 
 .chamfer-panel--readout::before {
@@ -365,6 +495,65 @@ body::after {
 .chamfer-panel--interactive:hover::after,
 .chamfer-panel--interactive:focus-visible::after {
   background: rgba(5, 25, 32, 0.72);
+}
+
+.home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive)::before {
+  background: rgba(254, 240, 138, 0.72);
+}
+
+.home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive) {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.08),
+    0 0 14px rgba(254, 240, 138, 0.035);
+  text-shadow: 0 0 8px rgba(254, 240, 138, 0.08);
+}
+
+.home-control-page .chamfer-panel--interactive::after {
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):hover::before,
+.home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):focus-visible::before {
+  background: rgba(254, 240, 138, 0.9);
+}
+
+.home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):hover,
+.home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.12),
+    0 0 18px rgba(254, 240, 138, 0.06);
+}
+
+.home-control-page .chamfer-panel--interactive:hover::after,
+.home-control-page .chamfer-panel--interactive:focus-visible::after {
+  background: rgba(4, 18, 22, 0.86);
+}
+
+.home-lower-clickables .chamfer-panel--interactive {
+  box-shadow:
+    inset 0 0 0 1px rgba(125, 211, 252, 0.06),
+    0 0 12px rgba(56, 189, 248, 0.025);
+  text-shadow: 0 0 7px rgba(125, 211, 252, 0.06);
+}
+
+.home-lower-clickables .chamfer-panel--interactive::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.035), rgba(14, 165, 233, 0.012)),
+    rgba(0, 0, 0, 0.86);
+}
+
+.home-lower-clickables .chamfer-panel--interactive:hover,
+.home-lower-clickables .chamfer-panel--interactive:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(125, 211, 252, 0.09),
+    0 0 16px rgba(56, 189, 248, 0.045);
+}
+
+.home-lower-clickables .chamfer-panel--interactive:hover::after,
+.home-lower-clickables .chamfer-panel--interactive:focus-visible::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(14, 165, 233, 0.018)),
+    rgba(0, 0, 0, 0.86);
 }
 
 @keyframes tunnel-pulse {

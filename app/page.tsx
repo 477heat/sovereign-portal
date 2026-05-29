@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import TunnelBackdrop from "@/components/TunnelBackdrop";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 
 const dayOneLaunchAt = Date.UTC(2026, 4, 29, 12, 0, 0);
+const heroLoopEnd = 4;
+const heroLinkExitStartAt = 4.58;
+const heroLinkExitPlaySeconds = 2;
+const heroPointerIdleMs = 420;
 
 const protocolCards = [
   {
@@ -34,7 +36,7 @@ const protocolCards = [
 
 const navLinks = [
   ["Portal", "/portal"],
-  ["Artifact", "/engine"],
+  ["ARTIFACTS", "/engine"],
   ["Vanguard", "/vanguard"],
   ["Access", "/economics"],
   ["Litepaper", "/whitepaper"],
@@ -45,26 +47,31 @@ const whyThisMatters = [
     body: "The Deed is your Genesis Character. It contains stats that remain with your profile whether you sell it or give it away.",
     href: "/whitepaper",
     featured: false,
+    opposite: false,
   },
   {
     body: "Vanguards retain a special status that carries on through legacy creations and projects.",
     href: "/vanguard",
     featured: false,
+    opposite: true,
   },
   {
     body: "Your Progeny (children) are embedded with your qualities and characteristics, so each child can be traced back to its parents.",
     href: "/economics",
     featured: false,
+    opposite: true,
   },
   {
     body: "Material items are also Progeny: clothing, armor, weapons, creatures, adversarial constructs, modes of transport, and more.",
     href: "/engine",
     featured: false,
+    opposite: false,
   },
   {
     body: "The Engine has a very distinct algorithm that can attribute 479,001,600 possibilities completely unique to you for each Progeny Project.",
     href: "/engine",
     featured: true,
+    opposite: false,
   },
 ] as const;
 
@@ -93,6 +100,11 @@ function getCountdownParts(milliseconds: number | null) {
 }
 
 export default function HomePage() {
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+  const pointerIdleTimer = useRef<number | null>(null);
+  const navigationTimer = useRef<number | null>(null);
+  const isPointerActive = useRef(false);
+  const isExitingPage = useRef(false);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
 
@@ -107,11 +119,128 @@ export default function HomePage() {
     return () => window.clearInterval(interval);
   }, []);
 
-  return (
-    <main className="relative isolate min-h-screen overflow-hidden bg-black text-white">
-      <TunnelBackdrop />
-      <BackgroundHashStream className="z-0" variant="right" />
+  useEffect(() => {
+    return () => {
+      if (pointerIdleTimer.current !== null) {
+        window.clearTimeout(pointerIdleTimer.current);
+      }
 
+      if (navigationTimer.current !== null) {
+        window.clearTimeout(navigationTimer.current);
+      }
+    };
+  }, []);
+
+  function playVideoSegment(startAt: number) {
+    const video = heroVideoRef.current;
+
+    if (!video) return;
+
+    video.currentTime = startAt;
+    void video.play().catch(() => {
+      video.pause();
+    });
+  }
+
+  function handlePointerMove() {
+    if (isExitingPage.current) return;
+
+    isPointerActive.current = true;
+
+    const video = heroVideoRef.current;
+
+    if (video) {
+      if (video.currentTime >= heroLoopEnd || video.currentTime < 0) {
+        video.currentTime = 0;
+      }
+
+      void video.play().catch(() => {
+        video.pause();
+      });
+    }
+
+    if (pointerIdleTimer.current !== null) {
+      window.clearTimeout(pointerIdleTimer.current);
+    }
+
+    pointerIdleTimer.current = window.setTimeout(() => {
+      isPointerActive.current = false;
+      heroVideoRef.current?.pause();
+    }, heroPointerIdleMs);
+  }
+
+  function handleVideoTimeUpdate() {
+    const video = heroVideoRef.current;
+
+    if (!video) return;
+
+    if (isExitingPage.current) {
+      return;
+    }
+
+    if (video.currentTime >= heroLoopEnd) {
+      video.currentTime = 0;
+
+      if (isPointerActive.current) {
+        void video.play().catch(() => {
+          video.pause();
+        });
+      } else {
+        video.pause();
+      }
+    }
+  }
+
+  function handlePageLinkClick(event: MouseEvent<HTMLElement>) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const anchor = (event.target as Element | null)?.closest("a");
+
+    if (!anchor) return;
+
+    const href = anchor.getAttribute("href");
+    const target = anchor.getAttribute("target");
+
+    if (!href || target === "_blank" || href.startsWith("#")) return;
+
+    const destination = new URL(href, window.location.href);
+
+    if (destination.origin !== window.location.origin) return;
+    if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
+
+    event.preventDefault();
+    isExitingPage.current = true;
+
+    if (pointerIdleTimer.current !== null) {
+      window.clearTimeout(pointerIdleTimer.current);
+    }
+
+    playVideoSegment(heroLinkExitStartAt);
+
+    if (navigationTimer.current !== null) {
+      window.clearTimeout(navigationTimer.current);
+    }
+
+    navigationTimer.current = window.setTimeout(() => {
+      window.location.assign(`${destination.pathname}${destination.search}${destination.hash}`);
+    }, heroLinkExitPlaySeconds * 1000);
+  }
+
+  return (
+    <main
+      className="home-control-page relative isolate min-h-screen overflow-hidden bg-black text-white"
+      onClickCapture={handlePageLinkClick}
+      onPointerMove={handlePointerMove}
+    >
       <header className="fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
           <Link
@@ -145,15 +274,17 @@ export default function HomePage() {
 
       <section className="relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-24 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
         <video
-          autoPlay
           muted
+          onTimeUpdate={handleVideoTimeUpdate}
           playsInline
+          preload="auto"
+          ref={heroVideoRef}
           className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-100"
           src="/media/command-console.mp4"
         />
         <div className="pointer-events-none absolute inset-0 z-0 bg-black/35" />
         <div className="relative z-10">
-          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[30rem] px-5 py-5 md:px-7 md:py-6">
+          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[22.5rem] px-5 py-5 md:px-7 md:py-6">
             <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cyan-200/80">
               Registry Initializing
             </p>
@@ -166,8 +297,8 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-8 grid max-w-2xl gap-4">
-            <div className="flex flex-wrap gap-3">
+          <div className="mt-8 grid w-fit gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Link
                 href="/portal"
                 className="chamfer-hero-link chamfer-hero-link--primary"
@@ -176,38 +307,46 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/engine"
-                className="chamfer-hero-link chamfer-hero-link--secondary"
+                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite"
               >
                 Artifact Engine
               </Link>
             </div>
-            <Link
-              aria-label="Open Access page for Day 1 countdown"
-              className="chamfer-countdown-link"
-              href="/economics"
-            >
-              <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
-                Day 1 Countdown
-              </div>
-              <div className="mt-1 text-[7px] uppercase tracking-[0.12em] text-cyan-100/62">
-                29 May 2026 / 12:00 UTC
-              </div>
-              <div className="mt-2 grid grid-cols-4 gap-1">
-                {dayOneCountdown.map(([value, label]) => (
-                  <div
-                    className="border border-cyan-200/18 bg-black/80 px-1 py-1.5 text-center backdrop-blur-sm"
-                    key={label}
-                  >
-                    <div className="font-mono text-sm leading-none text-yellow-100">
-                      {value}
+            <div className="flex flex-wrap gap-2">
+              <Link
+                aria-label="Open Access page for Day 1 countdown details"
+                className="chamfer-countdown-label-link"
+                href="/economics"
+              >
+                <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
+                  Day 1 Countdown
+                </div>
+                <div className="mt-1 text-[7px] uppercase tracking-[0.12em] text-cyan-100/62">
+                  29 May 2026 / 12:00 UTC
+                </div>
+              </Link>
+              <Link
+                aria-label="Open Access page for Day 1 countdown timer"
+                className="chamfer-countdown-link"
+                href="/economics"
+              >
+                <div className="grid grid-cols-4 gap-1">
+                  {dayOneCountdown.map(([value, label]) => (
+                    <div
+                      className="chamfer-countdown-cell px-1 py-1.5 text-center backdrop-blur-sm"
+                      key={label}
+                    >
+                      <div className="font-mono text-sm leading-none text-yellow-100">
+                        {value}
+                      </div>
+                      <div className="mt-1 text-[6px] uppercase tracking-[0.08em] text-white/62">
+                        {label}
+                      </div>
                     </div>
-                    <div className="mt-1 text-[6px] uppercase tracking-[0.08em] text-white/62">
-                      {label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Link>
+                  ))}
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -234,7 +373,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="relative z-10 mx-auto -mt-4 max-w-7xl px-5 pb-12 md:-mt-8 md:px-8">
+      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-5 md:px-8 md:pt-7">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link
@@ -257,12 +396,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
+      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="chamfer-panel chamfer-panel--frame p-6 backdrop-blur-md md:p-8">
           <p className="text-center text-[11px] uppercase tracking-[0.36em] text-cyan-200/70">
             THE REASONING
           </p>
-          <div className="chamfer-panel chamfer-panel--readout mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-xs leading-5 text-white/62">
+          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-xs leading-5 text-white/62">
             Developers can choose which Progeny structure they want for their
             games, request a specific Character Attribute Tree for users to
             generate a profile from, or purchase from a Vanguard&apos;s
@@ -271,7 +410,7 @@ export default function HomePage() {
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {whyThisMatters.map((item) => (
               <Link
-                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-sm leading-6 text-white/68 ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
+                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-sm leading-6 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
                 href={item.href}
                 key={item.body}
               >
