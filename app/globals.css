@@ -537,7 +537,344 @@ body {
 
 .info-control-page .control-input-surface {
   background-color: rgba(0, 0, 0, 0.25) !important;
+  caret-color: rgba(254, 240, 138, 0.95);
   clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+
+.info-control-page .control-input-surface:focus {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.08),
+    0 0 18px rgba(254, 240, 138, 0.055);
+}
+
+.console-field-note {
+  color: rgba(254, 249, 195, 0.52);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.console-field-note--warning {
+  color: rgba(254, 202, 202, 0.58);
+}
+
+.stored-shape-tile--confirmed {
+  background-color: rgba(20, 83, 45, 0.16) !important;
+  border-color: rgba(134, 239, 172, 0.58) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(134, 239, 172, 0.1),
+    0 0 22px rgba(34, 197, 94, 0.2);
+}
+
+.stored-shape-tile--unconfirmed {
+  background-color: rgba(127, 29, 29, 0.14) !important;
+  border-color: rgba(252, 165, 165, 0.66) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(252, 165, 165, 0.1),
+    0 0 28px rgba(248, 113, 113, 0.28);
+}
+
+@media (min-width: 520px) {
+  .engine-two-column-layout {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.console-key-button {
+  align-items: center;
+  background: rgba(4, 18, 24, 0.7);
+  border: 0;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  color: rgba(207, 250, 254, 0.72);
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 700;
+  height: 1.9rem;
+  isolation: isolate;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  min-height: 1.9rem;
+  min-width: 5.1rem;
+  padding: 0 0.55rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    color 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.console-key-button::before,
+.console-key-button::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.console-key-button::before {
+  background: rgba(165, 243, 252, 0.28);
+  inset: 0;
+  z-index: -2;
+}
+
+.console-key-button::after {
+  background: rgba(4, 18, 24, 0.88);
+  inset: 1px;
+  z-index: -1;
+}
+
+.console-key-button:hover,
+.console-key-button:focus-visible {
+  box-shadow: 0 0 20px rgba(103, 232, 249, 0.14);
+  color: rgb(255, 255, 255);
+  filter: brightness(1.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.console-key-button--complete {
+  color: rgba(254, 240, 138, 0.86);
+}
+
+.console-key-button--complete::before {
+  background: rgba(254, 240, 138, 0.32);
+}
+
+.console-key-button--entered {
+  color: rgba(220, 252, 231, 0.88);
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.16);
+}
+
+.console-key-button--entered::before {
+  background: rgba(74, 222, 128, 0.26);
+}
+
+.console-key-button--entered::after {
+  background:
+    linear-gradient(120deg, rgba(22, 101, 52, 0.14), transparent 46%),
+    rgba(8, 24, 16, 0.9);
+}
+
+.console-key-button--active {
+  color: rgb(254, 249, 195);
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.22);
+}
+
+.console-key-button--active::before {
+  background: rgba(254, 240, 138, 0.74);
+}
+
+.console-key-button--active::after {
+  background: rgba(24, 22, 9, 0.9);
+}
+
+.console-key-button--entered,
+.console-key-button--active.console-key-button--entered {
+  color: rgba(220, 252, 231, 0.94);
+  text-shadow: 0 0 14px rgba(74, 222, 128, 0.36);
+  box-shadow:
+    0 0 22px rgba(74, 222, 128, 0.25),
+    0 0 42px rgba(22, 163, 74, 0.16);
+}
+
+.console-key-button--entered::before,
+.console-key-button--active.console-key-button--entered::before {
+  background: rgba(74, 222, 128, 0.46);
+}
+
+.console-key-button--entered::after,
+.console-key-button--active.console-key-button--entered::after {
+  background:
+    linear-gradient(120deg, rgba(22, 101, 52, 0.18), transparent 48%),
+    rgba(8, 28, 18, 0.92);
+}
+
+.console-key-button--gold {
+  color: rgb(8, 16, 18);
+}
+
+.console-key-button--gold::before,
+.console-key-button--gold::after {
+  background: rgba(254, 240, 138, 0.86);
+}
+
+.console-key-button--category-selected {
+  color: rgba(220, 252, 231, 0.94);
+  cursor: default;
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+}
+
+.console-key-button--category-selected::before {
+  background: rgba(74, 222, 128, 0.4);
+}
+
+.console-key-button--category-selected::after {
+  background:
+    linear-gradient(120deg, rgba(22, 101, 52, 0.2), transparent 48%),
+    rgba(8, 28, 18, 0.92);
+}
+
+.console-key-button--disabled {
+  color: rgba(148, 163, 184, 0.42);
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+.console-key-button--disabled::before {
+  background: rgba(148, 163, 184, 0.14);
+}
+
+.console-key-button--disabled::after {
+  background:
+    linear-gradient(120deg, rgba(71, 85, 105, 0.16), transparent 48%),
+    rgba(11, 18, 24, 0.9);
+}
+
+.console-key-button:disabled:hover,
+.console-key-button:disabled:focus-visible {
+  box-shadow: none;
+  color: inherit;
+  filter: none;
+  transform: none;
+}
+
+.console-active-field--entered {
+  border-color: rgba(74, 222, 128, 0.24) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(74, 222, 128, 0.04),
+    0 0 20px rgba(22, 101, 52, 0.08);
+}
+
+.console-status-tile--entered {
+  border-color: rgba(74, 222, 128, 0.24) !important;
+  background-color: rgba(22, 101, 52, 0.07) !important;
+  box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.04);
+}
+
+.console-enter-button {
+  align-items: center;
+  background: rgba(127, 29, 29, 0.34);
+  border: 0;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  color: rgba(254, 226, 226, 0.88);
+  display: flex;
+  font-size: 0.66rem;
+  font-weight: 800;
+  justify-content: center;
+  letter-spacing: 0.18em;
+  min-height: 2.4rem;
+  padding: 0 0.85rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    color 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(248, 113, 113, 0.12),
+    0 0 18px rgba(127, 29, 29, 0.1);
+}
+
+.console-enter-button::before,
+.console-enter-button::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.console-enter-button::before {
+  background: rgba(248, 113, 113, 0.26);
+  inset: 0;
+  z-index: -2;
+}
+
+.console-enter-button::after {
+  background:
+    linear-gradient(90deg, rgba(248, 113, 113, 0.045), transparent 50%),
+    rgba(38, 13, 16, 0.9);
+  inset: 1px;
+  z-index: -1;
+}
+
+.console-enter-button:hover,
+.console-enter-button:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(248, 113, 113, 0.22),
+    0 0 24px rgba(248, 113, 113, 0.2);
+  color: white;
+  filter: brightness(1.08);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.console-launch-button {
+  align-items: center;
+  background: rgba(127, 29, 29, 0.9);
+  border: 0;
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+  color: rgb(254, 226, 226);
+  display: flex;
+  font-size: 0.78rem;
+  font-weight: 800;
+  justify-content: center;
+  letter-spacing: 0.16em;
+  min-height: 4rem;
+  padding: 0 1rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    color 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  box-shadow:
+    0 0 34px rgba(248, 113, 113, 0.48),
+    0 0 88px rgba(185, 28, 28, 0.34),
+    inset 0 0 0 1px rgba(254, 202, 202, 0.26);
+}
+
+.console-launch-button::before,
+.console-launch-button::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.console-launch-button::before {
+  background: rgba(248, 113, 113, 0.88);
+  inset: 0;
+  z-index: -2;
+}
+
+.console-launch-button::after {
+  background:
+    linear-gradient(90deg, rgba(254, 202, 202, 0.12), rgba(127, 29, 29, 0.9), rgba(254, 202, 202, 0.12)),
+    rgba(127, 29, 29, 0.9);
+  inset: 1px;
+  z-index: -1;
+}
+
+.console-launch-button:hover,
+.console-launch-button:focus-visible {
+  box-shadow:
+    0 0 42px rgba(248, 113, 113, 0.64),
+    0 0 110px rgba(220, 38, 38, 0.46),
+    inset 0 0 0 1px rgba(254, 226, 226, 0.34);
+  color: white;
+  filter: brightness(1.12);
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive)::before {

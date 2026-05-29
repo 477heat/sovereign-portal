@@ -78,7 +78,7 @@ const baseStatLabels = [
 ] as const;
 
 function titleCaseMark(value: string) {
-  const clean = value.trim().replace(/\s+/g, " ").slice(0, 18);
+  const clean = value.trim().replace(/\s+/g, " ").slice(0, 42);
   return clean || "Unmarked Signal";
 }
 
@@ -186,7 +186,7 @@ export function buildReadouts(profile: EngineProfile): EngineReadout[] {
     },
     {
       id: "d20",
-      label: "d20",
+      label: "Illvium",
       eyebrow: "Tabletop Lens",
       title: `${profile.mark} Ability Array`,
       summary:
@@ -236,7 +236,7 @@ export function buildReadouts(profile: EngineProfile): EngineReadout[] {
     },
     {
       id: "transit",
-      label: "Transit",
+      label: "Creature",
       eyebrow: "Sky Preview",
       title: profile.transit,
       summary:
