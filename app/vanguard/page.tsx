@@ -32,8 +32,8 @@ const policyPanels = [
   {
     id: "day-one",
     number: "01",
-    title: "Day One Introduction",
-    body: "Day One is the first introduction to Vanguard status. It marks the earliest wallet-linked supporters without promising automatic rewards before the terms for a future launch are published.",
+    title: "Legacy Access Tier",
+    body: "Vanguard is a legacy access tier. As new Access Token variants launch, Vanguard benefits carry forward, keep pace with current rewards, and include eligible future project access by default.",
     link: { href: "/whitepaper#vanguard", label: "Read Vanguard" },
   },
   {
@@ -47,14 +47,14 @@ const policyPanels = [
     id: "legacy",
     number: "03",
     title: "Legacy Recognition",
-    body: "Vanguards are intended to retain special status through legacy creations and projects. Each new system still needs clear rules for how that recognition is applied.",
+    body: "Vanguards keep the royalty rate assigned to their tier. Future tiers may launch with lower rates, but Vanguard royalty terms are protected from reduction and may only improve.",
     link: { href: "/economics#developer-access", label: "Builder Use" },
   },
   {
     id: "royalty-routing",
     number: "04",
     title: "Routing Limits",
-    body: "Royalty routing should stay specific. ERC-2981 can signal royalty data, but actual collection depends on the contract, sale flow, marketplace behavior, and receiver configuration.",
+    body: "Not every marketplace honors royalty routing. To protect Vanguard benefits, use approved marketplaces that support the collection's royalty flow; OpenSea is one approved option when creator earnings are supported.",
     link: { href: "/economics#royalty-routing", label: "Open Routing" },
   },
 ];
