@@ -89,6 +89,14 @@ body {
   width: 5rem !important;
 }
 
+.chamfer-nav-link--opposite {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.chamfer-nav-link--return {
+  clip-path: polygon(6px 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+}
+
 .chamfer-hero-link {
   align-items: center;
   background: rgba(4, 18, 24, 0.86);
@@ -545,6 +553,139 @@ body {
   box-shadow:
     inset 0 0 0 1px rgba(254, 240, 138, 0.08),
     0 0 18px rgba(254, 240, 138, 0.055);
+}
+
+.portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft) {
+  --portal-surface-border: rgba(165, 243, 252, 0.24);
+  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-corner: 18px;
+  background: transparent !important;
+  border-color: transparent !important;
+  isolation: isolate;
+  position: relative;
+}
+
+.portal-control-page .control-surface {
+  --portal-surface-border: rgba(165, 243, 252, 0.24);
+  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-corner: 18px;
+}
+
+.portal-control-page .control-surface-strong {
+  --portal-surface-border: rgba(165, 243, 252, 0.3);
+  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-corner: 22px;
+}
+
+.portal-control-page .control-surface-large {
+  --portal-surface-border: rgba(165, 243, 252, 0.34);
+  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-corner: 30px;
+}
+
+.portal-control-page .control-surface-soft {
+  --portal-surface-border: rgba(165, 243, 252, 0.2);
+  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-corner: 10px;
+}
+
+.portal-control-page .portal-surface-gold {
+  --portal-surface-border: rgba(254, 240, 138, 0.42);
+  --portal-surface-fill: rgba(36, 31, 12, 0.66);
+}
+
+.portal-control-page .portal-surface-cyan {
+  --portal-surface-border: rgba(165, 243, 252, 0.36);
+  --portal-surface-fill: rgba(8, 35, 42, 0.65);
+}
+
+.portal-control-page .portal-surface-red {
+  --portal-surface-border: rgba(252, 165, 165, 0.48);
+  --portal-surface-fill: rgba(48, 14, 18, 0.66);
+}
+
+.portal-control-page .portal-clickable-surface {
+  --portal-surface-corner: 12px;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.portal-control-page .console-status-tile--entered {
+  --portal-surface-border: rgba(134, 239, 172, 0.48);
+  --portal-surface-fill: rgba(12, 44, 26, 0.65);
+}
+
+.portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::before,
+.portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::before {
+  background-image:
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(135deg, transparent calc(50% - 0.75px), var(--portal-surface-border) calc(50% - 0.75px), var(--portal-surface-border) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(45deg, transparent calc(50% - 0.75px), var(--portal-surface-border) calc(50% - 0.75px), var(--portal-surface-border) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(135deg, transparent calc(50% - 0.75px), var(--portal-surface-border) calc(50% - 0.75px), var(--portal-surface-border) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(45deg, transparent calc(50% - 0.75px), var(--portal-surface-border) calc(50% - 0.75px), var(--portal-surface-border) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+  background-position:
+    top center,
+    right center,
+    bottom center,
+    left center,
+    left top,
+    right top,
+    right bottom,
+    left bottom;
+  background-repeat: no-repeat;
+  background-size:
+    calc(100% - var(--portal-surface-corner) - var(--portal-surface-corner)) 1px,
+    1px calc(100% - var(--portal-surface-corner) - var(--portal-surface-corner)),
+    calc(100% - var(--portal-surface-corner) - var(--portal-surface-corner)) 1px,
+    1px calc(100% - var(--portal-surface-corner) - var(--portal-surface-corner)),
+    var(--portal-surface-corner) var(--portal-surface-corner),
+    var(--portal-surface-corner) var(--portal-surface-corner),
+    var(--portal-surface-corner) var(--portal-surface-corner),
+    var(--portal-surface-corner) var(--portal-surface-corner);
+  inset: 0;
+  z-index: -2;
+}
+
+.portal-control-page .portal-clickable-surface::before {
+  background-image:
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(var(--portal-surface-border), var(--portal-surface-border)),
+    linear-gradient(45deg, transparent calc(50% - 0.75px), var(--portal-surface-border) calc(50% - 0.75px), var(--portal-surface-border) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(45deg, transparent calc(50% - 0.75px), var(--portal-surface-border) calc(50% - 0.75px), var(--portal-surface-border) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+  background-position:
+    left top,
+    right bottom,
+    right bottom,
+    left top,
+    right top,
+    left bottom;
+  background-repeat: no-repeat;
+  background-size:
+    calc(100% - var(--portal-surface-corner)) 1px,
+    1px calc(100% - var(--portal-surface-corner)),
+    calc(100% - var(--portal-surface-corner)) 1px,
+    1px calc(100% - var(--portal-surface-corner)),
+    var(--portal-surface-corner) var(--portal-surface-corner),
+    var(--portal-surface-corner) var(--portal-surface-corner);
+}
+
+.portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::after {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 34%),
+    var(--portal-surface-fill);
+  inset: 1px;
+  z-index: -1;
 }
 
 .console-field-note {
