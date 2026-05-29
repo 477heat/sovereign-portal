@@ -40,7 +40,7 @@ const developerSections = [
     id: "progeny-structures",
     number: "02",
     title: "Progeny Structures",
-    body: "A Progeny Project can define what gets generated from a source profile: children, playable characters, clothing, armor, weapons, creatures, adversarial constructs, transport, locations, or other game objects. Developers can choose an existing structure or request a custom character attribute tree.",
+    body: "A Progeny Project can define what gets generated from a source profile: children, playable characters, clothing, armor, weapons, creatures, adversarial constructs, transport, locations, or other game objects. Developers can choose an existing structure or request a custom character attribute tree, including stricter one-character or season-limited rules where a game needs them.",
     link: { href: "/economics#progeny-model", label: "Open Progeny" },
   },
   {
@@ -61,7 +61,7 @@ const developerSections = [
     id: "vanguard-collections",
     number: "05",
     title: "Vanguard Collections",
-    body: "Developers may design systems where users generate from their own profile or acquire assets from a Vanguard collection. Vanguard status is the Day One legacy access tier, so future game integrations should treat it as an origin-status signal with benefits defined by each published launch.",
+    body: "Developers may design systems where users generate from their own profile or acquire assets from a Vanguard collection. Some categories can stay volume-friendly, while game-critical characters can be stricter when balance requires it. Vanguard status is the Day One legacy access tier, with benefits defined by each published launch.",
     link: { href: "/vanguard", label: "Vanguard" },
   },
   {

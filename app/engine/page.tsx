@@ -238,21 +238,21 @@ function StoredShape({
           }`}
         >
           <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
-            Attestation Status
+            Mock Attestation Status
           </div>
           <div
             className={`mt-2 uppercase tracking-[0.14em] ${
               attestationConfirmed ? "text-cyan-100" : "text-cyan-50"
             }`}
           >
-            {attestationConfirmed ? "Name + Wallet Entered" : "Awaiting Entry"}
+            {attestationConfirmed ? "Name + Mock Wallet Entered" : "Awaiting Entry"}
           </div>
         </div>
         <div
           className={`control-surface-soft border p-3 transition ${walletStatusClass}`}
         >
           <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
-            Status
+            Mock Vanguard Status
           </div>
           <div className="mt-2 uppercase tracking-[0.14em] text-cyan-100">
             {walletStatusLabel}
@@ -333,6 +333,7 @@ export default function EnginePage() {
   const [mode, setMode] = useState<ReadoutMode>("sovereign");
   const [activeField, setActiveField] = useState<ActiveConsoleField>("mark");
   const [shareState, setShareState] = useState<"idle" | "copied">("idle");
+  const [mockWalletConnected, setMockWalletConnected] = useState(false);
   const [confirmedSignatures, setConfirmedSignatures] = useState<Record<ActiveConsoleField, string>>({
     mark: "",
     dob: "",
@@ -350,7 +351,7 @@ export default function EnginePage() {
   const fieldCompletion: Record<ActiveConsoleField, boolean> = {
     mark: firstName.trim().length > 0 && lastName.trim().length > 0,
     dob: dob.trim().length > 0,
-    wallet: wallet.trim().length > 0,
+    wallet: mockWalletConnected && wallet.trim().length > 0,
     statType: Boolean(mode),
   };
   const trimmedWallet = wallet.trim();
@@ -393,7 +394,9 @@ export default function EnginePage() {
       const legacyMark = params.get("mark");
 
       setDob(params.get("dob") ?? "");
-      setWallet(params.get("wallet") ?? "");
+      const urlWallet = params.get("wallet") ?? "";
+      setWallet(urlWallet);
+      setMockWalletConnected(Boolean(urlWallet));
 
       if (urlFirstName !== null || urlLastName !== null) {
         setFirstName(urlFirstName ?? "");
@@ -429,10 +432,28 @@ export default function EnginePage() {
   }
 
   function confirmActiveField() {
+    if (activeField === "wallet" && !mockWalletConnected) {
+      return;
+    }
+
     setConfirmedSignatures((current) => ({
       ...current,
       [activeField]: fieldSignatures[activeField],
     }));
+  }
+
+  function connectMockWallet() {
+    setMockWalletConnected(true);
+
+    if (!wallet.trim()) {
+      setWallet(MOCK_VANGUARD_WALLET);
+    }
+
+    setConfirmedSignatures((current) => ({
+      ...current,
+      wallet: "",
+    }));
+    setArmedSignature("");
   }
 
   function resetConfirmedField(field: ActiveConsoleField) {
@@ -453,6 +474,7 @@ export default function EnginePage() {
 
     if (field === "wallet") {
       setWallet("");
+      setMockWalletConnected(false);
     }
 
     if (field === "statType") {
@@ -472,8 +494,8 @@ export default function EnginePage() {
       <BackgroundHashStream className="z-0" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col px-4 py-5 md:px-8">
-        <nav className="control-surface flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
-          <div className="flex flex-wrap gap-4">
+        <nav className="engine-top-nav control-surface flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+          <div className="engine-nav-links flex flex-wrap gap-4">
             <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
               Return Home
             </Link>
@@ -481,7 +503,7 @@ export default function EnginePage() {
               Mint Portal
             </Link>
           </div>
-          <span className="text-[11px] tracking-[0.28em] text-cyan-100/72">Artifact Engine // Instance 01</span>
+          <span className="engine-nav-title text-[11px] tracking-[0.28em] text-cyan-100/72">Artifact Engine // Instance 01</span>
         </nav>
 
         <section className="engine-two-column-layout grid flex-1 gap-5 py-5">
@@ -507,12 +529,12 @@ export default function EnginePage() {
                   </button>
                 </div>
 
-                <div className="grid gap-2 sm:grid-cols-4">
+                <div className="engine-field-button-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {consoleFields.map((field) => (
                     <button
                       key={field.id}
                       onClick={() => resetConfirmedField(field.id)}
-                      className={`console-key-button w-full ${
+                      className={`console-key-button console-key-button--field w-full ${
                         activeField === field.id ? "console-key-button--active" : ""
                       } ${fieldConfirmed[field.id] ? "console-key-button--entered" : ""}`}
                       type="button"
@@ -573,7 +595,7 @@ export default function EnginePage() {
                       </label>
                     </div>
                     <div className="console-field-note">
-                      Name as it appears on Coinbase Account
+                      Prototype identity details. Real Portal fields should match Coinbase/EAS records.
                     </div>
                   </div>
                 )}
@@ -599,25 +621,38 @@ export default function EnginePage() {
                       <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
                         Wallet Marker
                         <span className="ml-2 text-[9px] tracking-[0.16em] text-cyan-100/42">
-                          any number works
+                          mock only
                         </span>
                       </span>
                       <input
                         value={wallet}
                         onChange={(event) => setWallet(event.target.value)}
                         autoFocus
+                        disabled={!mockWalletConnected}
                         placeholder="7777"
-                        className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
+                        className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition disabled:cursor-not-allowed disabled:opacity-45 focus:border-cyan-100/65"
                       />
                     </label>
+                    <button
+                      className={`console-key-button w-full ${
+                        mockWalletConnected ? "console-key-button--active" : "console-key-button--gold"
+                      }`}
+                      onClick={connectMockWallet}
+                      type="button"
+                    >
+                      {mockWalletConnected ? "Mock Wallet Connected" : "Connect Mock Wallet"}
+                    </button>
                     <div className="console-field-note console-field-note--warning">
-                      Mock Vanguard wallet: 7777. Verify real wallets can receive Base tokens.
+                      Mock marker only. Real Portal uses connected wallet + Coinbase EAS. Vanguard marker: 7777.
                     </div>
                   </div>
                 )}
 
                 {activeField === "statType" && (
                   <div className="grid gap-3">
+                    <div className="console-field-note">
+                      Prototype categories. Future asset types are not wired.
+                    </div>
                     <div className="grid gap-2 sm:grid-cols-5">
                       <button
                         className="console-key-button console-key-button--category-selected w-full"

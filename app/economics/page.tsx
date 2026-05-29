@@ -9,7 +9,7 @@ const accessPanels = [
     body: "Vanguard is the legacy access tier. Benefits carry forward as new Access Token variants launch.",
   },
   {
-    href: "#progeny-model",
+    href: "#future-progeny-flow",
     label: "Progeny",
     value: "Inheritance",
     body: "Characters, children, gear, creatures, and project assets can inherit traceable source qualities.",
@@ -40,14 +40,14 @@ const policyPanels = [
     id: "progeny-model",
     number: "02",
     title: "Progeny Model",
-    body: "Progeny includes children and material assets: clothing, armor, weapons, creatures, adversarial constructs, transport, and project objects. Each Progeny Project can draw from 479,001,600 user-specific possibilities.",
+    body: "Progeny includes children and material assets: clothing, armor, weapons, creatures, adversarial constructs, transport, and project objects. Each Progeny Project can draw from 479,001,600 user-specific possibilities, with supply rules shaped by the asset type and published project terms.",
     link: { href: "/whitepaper#progeny", label: "Open Progeny" },
   },
   {
     id: "royalty-routing",
     number: "03",
     title: "Royalty Routing",
-    body: "When the contract and marketplace route support it, the originating wallet can be written into a lineage NFT as a royalty receiver. Approved marketplaces, including OpenSea when creator earnings are supported, help preserve that route.",
+    body: "When the contract and marketplace route support it, the originating wallet is written into a lineage NFT as a royalty receiver. Approved marketplaces, including OpenSea when creator earnings are supported, help preserve that route.",
     link: { href: "/whitepaper#royalty-routing", label: "Open Routing" },
   },
   {
@@ -63,6 +63,21 @@ const policyPanels = [
     title: "Marketplace Limits",
     body: "Some marketplaces do not honor royalty routing. Users should use approved marketplaces for Vanguard and Progeny sales so contract-level attribution has the best chance to work as intended.",
     link: { href: "/whitepaper#privacy-practices", label: "Read Limits" },
+  },
+];
+
+const progenyExplainer = [
+  {
+    label: "Genesis stays scarce",
+    body: "The Genesis Soul Deed is intended as the one-person entry point. It anchors the profile layer before later Engine branches open.",
+  },
+  {
+    label: "Progeny can repeat",
+    body: "Future Progeny is planned as the repeatable creation layer. Eligible users, especially Vanguards, may be able to generate and sell multiple assets over time.",
+  },
+  {
+    label: "Rules fit the asset",
+    body: "A developer game character can be strict if the game needs one active character per player. Weapons, armor, transport, companions, and similar assets can stay more flexible.",
   },
 ];
 
@@ -138,6 +153,50 @@ export default function EconomicsPage() {
               generated from their profile, and where marketplace support matters.
               This is the short version before reading the full policy layer.
             </p>
+          </div>
+        </section>
+
+        <section
+          id="future-progeny-flow"
+          className="chamfer-panel chamfer-panel--wide mb-9 scroll-mt-24 px-6 py-7 md:px-9 md:py-8"
+        >
+          <div className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+            <div>
+              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-yellow-100/70">
+                Future Progeny Flow
+              </p>
+              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
+                One Genesis. Many Future Builds.
+              </h2>
+              <p className="mt-4 text-sm leading-6 text-cyan-50/66 md:text-base">
+                Early users should think of Genesis as the origin deed, not the
+                entire Engine. Progeny is planned to become the layer where
+                characters, gear, vehicles, creatures, and project-specific
+                assets can be generated from that origin.
+              </p>
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
+              {progenyExplainer.map((item) => (
+                <div
+                  key={item.label}
+                  className="chamfer-panel chamfer-panel--small border border-cyan-100/15 bg-black/35 p-4"
+                >
+                  <div className="text-[0.62rem] uppercase tracking-[0.2em] text-yellow-100/75">
+                    {item.label}
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-cyan-50/66">
+                    {item.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-6 border-t border-cyan-100/10 pt-5 text-sm leading-6 text-cyan-50/64 md:text-base">
+            In a later release, Vanguard inventory may let users compare
+            generated Progeny by type or game, request a mint from a
+            Vanguard-generated asset, or purchase through approved routes where
+            the contract and marketplace support the flow. These mechanics are
+            roadmap direction until published in live terms.
           </div>
         </section>
 

@@ -423,42 +423,6 @@ function PortalContent() {
             </p>
           </section>
 
-          <section className="grid gap-5 border border-white/10 bg-black/60 p-4 backdrop-blur-[2px] lg:grid-cols-[220px_minmax(0,1fr)]">
-            <div className="relative min-h-[300px] overflow-hidden border border-yellow-300/20 bg-black/45">
-              <Image
-                src="/architect_deed.jpg"
-                alt="The Architect Soul Deed listed on OpenSea"
-                fill
-                sizes="(max-width: 1024px) 100vw, 220px"
-                className="object-contain"
-                priority
-              />
-            </div>
-            <div className="flex flex-col justify-center">
-              <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
-                The Architect&apos;s Soul
-              </div>
-              <h2 className="mt-3 text-2xl font-light uppercase tracking-[0.14em] text-white md:text-3xl">
-                Yes, I listed mine first.
-              </h2>
-              <p className="mt-4 max-w-3xl text-sm leading-6 text-white/68">
-                This is my minted Architect contract, token 0 in the Soul deed
-                collection. It is listed on OpenSea for anyone who wants to own
-                the ceremonial paperwork to my soul. So if you&apos;re looking for
-                a servant in the afterlife, I can safely say I&apos;m the first to
-                sell it publicly.
-              </p>
-              <Link
-                href={architectOpenSeaUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-5 inline-flex min-h-11 w-fit items-center border border-yellow-300/45 bg-yellow-300/10 px-4 text-xs font-semibold uppercase tracking-[0.22em] text-yellow-100 transition hover:bg-yellow-300/20"
-              >
-                View The Listing
-              </Link>
-            </div>
-          </section>
-
           <section className="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]">
             <div className="space-y-5">
               <div className="border border-white/10 bg-black/60 p-4 backdrop-blur-[2px]">
@@ -843,6 +807,45 @@ function PortalContent() {
               )}
             </div>
 
+          </section>
+
+          <section className="grid gap-5 border border-white/10 bg-black/60 p-4 backdrop-blur-[2px] lg:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="relative min-h-[300px] overflow-hidden border border-yellow-300/20 bg-black/45">
+              <Image
+                src="/architect_deed.jpg"
+                alt="The Architect Soul Deed listed on OpenSea"
+                fill
+                sizes="(max-width: 1024px) 100vw, 220px"
+                className="object-contain"
+                priority
+              />
+            </div>
+            <div className="flex flex-col justify-center">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
+                The Architect&apos;s Soul
+              </div>
+              <h2 className="mt-3 text-2xl font-light uppercase tracking-[0.14em] text-white md:text-3xl">
+                Selling mine to continue a dream...
+              </h2>
+              <p className="mt-4 max-w-3xl text-sm leading-6 text-white/68">
+                I am a lifelong taxi dispatcher who recently became a solo Web3
+                developer. For years, my idea of building online meant Wix and
+                drag-and-drop tools; now I am learning the machinery underneath.
+                After 46 years of ordinary 9-to-5 work, I was given a rare
+                three-month window to study, build, and chase the strange,
+                ambitious projects I kept carrying around in my head. This is
+                where that work begins, alongside other ongoing projects at
+                Anthologies.xyz.
+              </p>
+              <Link
+                href={architectOpenSeaUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 inline-flex min-h-11 w-fit items-center border border-yellow-300/45 bg-yellow-300/10 px-4 text-xs font-semibold uppercase tracking-[0.22em] text-yellow-100 transition hover:bg-yellow-300/20"
+              >
+                View The Listing
+              </Link>
+            </div>
           </section>
         </section>
       </div>
