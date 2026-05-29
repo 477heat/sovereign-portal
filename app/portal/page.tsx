@@ -733,7 +733,7 @@ function PortalContent() {
                             <input
                               value={firstName}
                               onChange={(event) => setFirstName(event.target.value)}
-                              className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-2 text-xs text-white outline-none transition focus:border-yellow-300/60"
+                              className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-3 text-xs text-white outline-none transition focus:border-yellow-300/60"
                               placeholder="As it Appears on Coinbase Acct."
                             />
                           </label>
@@ -745,7 +745,7 @@ function PortalContent() {
                             <input
                               value={lastName}
                               onChange={(event) => setLastName(event.target.value)}
-                              className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-2 text-xs text-white outline-none transition focus:border-yellow-300/60"
+                              className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-3 text-xs text-white outline-none transition focus:border-yellow-300/60"
                               placeholder="As it Appears on Coinbase Acct."
                             />
                           </label>
@@ -758,7 +758,7 @@ function PortalContent() {
                               value={dob}
                               onChange={(event) => setDob(event.target.value)}
                               type="date"
-                              className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-2 text-xs text-white outline-none transition focus:border-yellow-300/60"
+                              className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-3 text-xs text-white outline-none transition focus:border-yellow-300/60"
                             />
                           </label>
                         </div>
