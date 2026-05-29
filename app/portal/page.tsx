@@ -58,6 +58,9 @@ const paymentTokenAddress =
 const checkoutEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout" &&
   Boolean(paymentSeller && paymentTokenAddress);
+const previewShellEnabled =
+  process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
+  process.env.NODE_ENV === "development";
 const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
 
@@ -184,6 +187,14 @@ function PortalContent() {
   const [orderBusy, setOrderBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
   const [error, setError] = useState("");
+  const [previewShellRequested] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      new URLSearchParams(window.location.search).get("previewShell") === "1"
+    );
+  });
+  const previewShellActive = previewShellEnabled && previewShellRequested;
+  const showWalletGate = !account?.address && !previewShellActive;
 
   const publicMark = useMemo(
     () => buildPublicMark(firstName, lastName),
@@ -417,10 +428,23 @@ function PortalContent() {
           </span>
         </nav>
 
-        {!account?.address ? (
+        {showWalletGate ? (
           <PortalWalletGate />
         ) : (
         <section className="flex flex-1 flex-col gap-5">
+          {previewShellActive && (
+            <div className="control-surface portal-surface-cyan border border-cyan-100/30 bg-cyan-100/[0.06] px-4 py-3 text-sm leading-6 text-cyan-50/78">
+              <div className="text-[10px] uppercase tracking-[0.28em] text-cyan-100/80">
+                Preview Shell
+              </div>
+              <p className="mt-2">
+                Wallet, EAS, checkout, and mint actions are intentionally
+                disabled. This view exists only so reviewers can inspect the
+                Portal layout without connecting a wallet.
+              </p>
+            </div>
+          )}
+
           <section className="grid gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(430px,1.1fr)]">
             <div className="control-surface control-surface-large border border-cyan-100/20 bg-black/55 p-4 shadow-[0_0_70px_rgba(72,220,255,0.08)] backdrop-blur-[2px] md:p-5">
               <div className="control-surface-soft portal-surface-gold border border-yellow-300/35 bg-yellow-300/[0.09] px-4 py-3">
