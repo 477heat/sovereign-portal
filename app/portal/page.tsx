@@ -60,7 +60,8 @@ const checkoutEnabled =
   Boolean(paymentSeller && paymentTokenAddress);
 const previewShellEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
-  process.env.NODE_ENV === "development";
+  process.env.NODE_ENV === "development" ||
+  process.env.VERCEL_ENV === "preview";
 const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
 
