@@ -6,25 +6,25 @@ const accessPanels = [
     href: "/vanguard",
     label: "Day One",
     value: "Vanguard",
-    body: "Day One support introduces Vanguard status: an early-wallet class intended to carry forward through later Engine systems.",
+    body: "Vanguard is the legacy access tier. Benefits carry forward as new Access Token variants launch.",
   },
   {
     href: "#progeny-model",
     label: "Progeny",
-    value: "Traceable",
-    body: "Children, items, creatures, transport, and project assets can inherit qualities from their source profile.",
+    value: "Inheritance",
+    body: "Characters, children, gear, creatures, and project assets can inherit traceable source qualities.",
   },
   {
     href: "#royalty-routing",
     label: "Routing",
-    value: "Wallet",
-    body: "Lineage mints are planned around wallet-linked attribution and contract-level royalty receiver rules.",
+    value: "Approved",
+    body: "Royalty benefits depend on approved marketplace routes that honor the collection's royalty flow.",
   },
   {
     href: "#developer-access",
     label: "Builder Use",
     value: "Trees",
-    body: "Developers can choose a Progeny structure or request a project-specific character attribute tree.",
+    body: "Developers can choose a Progeny structure or request a project-specific attribute tree.",
   },
 ];
 
@@ -32,22 +32,22 @@ const policyPanels = [
   {
     id: "day-one-access",
     number: "01",
-    title: "Day One Access",
-    body: "Day One wallets are introduced as Vanguards. The benefit is persistent recognition for early support, not a vague promise of automatic rewards. Future benefits need published terms for the launch or project using them.",
+    title: "Legacy Access",
+    body: "Vanguard wallets keep their access tier as the Engine expands. New Access Token variants may introduce new benefits, but Vanguard eligibility is designed to carry forward by default.",
     link: { href: "/vanguard", label: "Read Vanguard" },
   },
   {
     id: "progeny-model",
     number: "02",
     title: "Progeny Model",
-    body: "Progeny includes children and material assets: clothing, armor, weapons, creatures, adversarial constructs, modes of transport, and other project objects. Each Progeny Project can use 479,001,600 possibilities unique to a user.",
+    body: "Progeny includes children and material assets: clothing, armor, weapons, creatures, adversarial constructs, transport, and project objects. Each Progeny Project can draw from 479,001,600 user-specific possibilities.",
     link: { href: "/whitepaper#progeny", label: "Open Progeny" },
   },
   {
     id: "royalty-routing",
     number: "03",
     title: "Royalty Routing",
-    body: "When supported by the contract and marketplace flow, the originating wallet can be written into a lineage NFT as a royalty receiver. This keeps attribution tied to the profile source instead of treating referrals as loose off-chain promises.",
+    body: "When the contract and marketplace route support it, the originating wallet can be written into a lineage NFT as a royalty receiver. Approved marketplaces, including OpenSea when creator earnings are supported, help preserve that route.",
     link: { href: "/whitepaper#royalty-routing", label: "Open Routing" },
   },
   {
@@ -61,7 +61,7 @@ const policyPanels = [
     id: "marketplace-limits",
     number: "05",
     title: "Marketplace Limits",
-    body: "Royalty language should stay aligned with what the deployed contract and sale venue can actually honor. ERC-2981 is a signal; collection depends on marketplace support and correct routing.",
+    body: "Some marketplaces do not honor royalty routing. Users should use approved marketplaces for Vanguard and Progeny sales so contract-level attribution has the best chance to work as intended.",
     link: { href: "/whitepaper#privacy-practices", label: "Read Limits" },
   },
 ];
@@ -93,14 +93,14 @@ export default function EconomicsPage() {
                 Access Layer
               </p>
               <h1 className="max-w-3xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 md:text-5xl">
-                Progeny And Routing
+                Access And Progeny
               </h1>
             </div>
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              This page explains the practical user benefit: early wallets gain
-              Vanguard context, Genesis profiles can branch into Progeny, and
-              future lineage assets can carry wallet-linked attribution where
-              the contract and marketplace path support it.
+              This page explains how Vanguard access, Progeny creation, and
+              royalty routing connect. The practical rule is simple: source
+              profiles create traceable assets, and approved routes preserve
+              wallet-linked benefits where supported.
             </p>
           </div>
         </header>
@@ -134,10 +134,9 @@ export default function EconomicsPage() {
               </h2>
             </div>
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              The economic story should stay concrete. Users need to understand
-              what Vanguard status means, how Progeny can inherit traceable
-              profile qualities, and where royalty-routing depends on contract
-              and marketplace support.
+              Users should understand what carries forward, what can be
+              generated from their profile, and where marketplace support matters.
+              This is the short version before reading the full policy layer.
             </p>
           </div>
         </section>

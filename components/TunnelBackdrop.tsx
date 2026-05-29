@@ -19,8 +19,8 @@ export default function TunnelBackdrop({
       : "bg-[radial-gradient(circle_at_50%_28%,rgba(212,244,255,0.72)_0%,rgba(80,190,255,0.22)_7%,rgba(117,72,255,0.12)_17%,rgba(0,0,0,0)_42%)]";
   const diffusedGlow =
     intensity === "dim"
-      ? "bg-[radial-gradient(ellipse_28%_62%_at_50%_44%,rgba(212,244,255,0.18)_0%,rgba(80,190,255,0.08)_18%,rgba(117,72,255,0.04)_36%,rgba(0,0,0,0)_74%)]"
-      : "bg-[radial-gradient(ellipse_30%_64%_at_50%_44%,rgba(212,244,255,0.34)_0%,rgba(80,190,255,0.16)_18%,rgba(117,72,255,0.08)_38%,rgba(0,0,0,0)_76%)]";
+      ? "bg-[radial-gradient(ellipse_28%_62%_at_50%_44%,rgba(212,244,255,0.28)_0%,rgba(80,190,255,0.13)_18%,rgba(117,72,255,0.065)_36%,rgba(0,0,0,0)_74%)]"
+      : "bg-[radial-gradient(ellipse_30%_64%_at_50%_44%,rgba(212,244,255,0.46)_0%,rgba(80,190,255,0.21)_18%,rgba(117,72,255,0.1)_38%,rgba(0,0,0,0)_76%)]";
   const glow = variant === "diffused" ? diffusedGlow : legacyGlow;
   const layerClass = layer === "page" ? "z-0" : "-z-10";
 
@@ -33,8 +33,8 @@ export default function TunnelBackdrop({
       <div className={`absolute inset-0 ${glow}`} />
       {variant === "diffused" ? (
         <>
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_18%_52%_at_50%_47%,rgba(255,255,255,0.11)_0%,rgba(126,228,255,0.055)_24%,rgba(0,0,0,0)_72%)] blur-2xl" />
-          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(0,228,255,0.055)_0%,rgba(0,0,0,0)_38%,rgba(255,200,86,0.035)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_18%_52%_at_50%_47%,rgba(255,255,255,0.16)_0%,rgba(126,228,255,0.082)_24%,rgba(0,0,0,0)_72%)] blur-2xl" />
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(0,228,255,0.078)_0%,rgba(0,0,0,0)_38%,rgba(255,200,86,0.045)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.38)_46%,rgba(0,0,0,0.95)_82%)]" />
         </>
       ) : (

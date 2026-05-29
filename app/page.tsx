@@ -103,9 +103,11 @@ export default function HomePage() {
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const pointerIdleTimer = useRef<number | null>(null);
   const navigationTimer = useRef<number | null>(null);
+  const lastScrollY = useRef(0);
   const isPointerActive = useRef(false);
   const isExitingPage = useRef(false);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
+  const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
 
   useEffect(() => {
@@ -128,6 +130,38 @@ export default function HomePage() {
       if (navigationTimer.current !== null) {
         window.clearTimeout(navigationTimer.current);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+
+      if (!isMobile) {
+        setMobileHeaderHidden(false);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      if (currentScrollY < 24) {
+        setMobileHeaderHidden(false);
+      } else if (currentScrollY > lastScrollY.current + 8 && currentScrollY > 80) {
+        setMobileHeaderHidden(true);
+      } else if (currentScrollY < lastScrollY.current - 8) {
+        setMobileHeaderHidden(false);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    lastScrollY.current = window.scrollY;
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -241,11 +275,17 @@ export default function HomePage() {
       onClickCapture={handlePageLinkClick}
       onPointerMove={handlePointerMove}
     >
-      <header className="fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+      <header
+        className={`fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-300 max-sm:will-change-transform ${
+          mobileHeaderHidden
+            ? "max-sm:-translate-y-full max-sm:opacity-0"
+            : "max-sm:translate-y-0 max-sm:opacity-100"
+        }`}
+      >
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
           <Link
             aria-current="page"
-            className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-100"
+            className="home-brand-link flex min-h-11 items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0"
             href="/"
           >
             <Image
@@ -261,7 +301,7 @@ export default function HomePage() {
           <nav className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/72 md:gap-3 md:text-sm">
             {navLinks.map(([label, href]) => (
               <Link
-                className="chamfer-nav-link"
+                className="chamfer-nav-link max-sm:!h-11 max-sm:!min-h-11 max-sm:!w-[5.65rem] max-sm:!text-[0.66rem]"
                 href={href}
                 key={href}
               >
@@ -272,7 +312,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-24 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
+      <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
         <video
           muted
           onTimeUpdate={handleVideoTimeUpdate}
@@ -297,25 +337,25 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-8 grid w-fit gap-4">
-            <div className="grid grid-cols-[10.5rem_10.5rem] gap-3">
+          <div className="home-hero-controls mt-8 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-4">
+            <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"
-                className="chamfer-hero-link chamfer-hero-link--primary"
+                className="chamfer-hero-link chamfer-hero-link--primary max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.64rem]"
               >
                 Enter Portal
               </Link>
               <Link
                 href="/engine"
-                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite"
+                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.64rem]"
               >
                 Artifact Engine
               </Link>
             </div>
-            <div className="grid grid-cols-[10.5rem_10.5rem] gap-3">
+            <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 aria-label="Open Access page for Day 1 countdown details"
-                className="chamfer-countdown-label-link"
+                className="chamfer-countdown-label-link max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
                 href="/economics"
               >
                 <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
@@ -327,7 +367,7 @@ export default function HomePage() {
               </Link>
               <Link
                 aria-label="Open Access page for Day 1 countdown timer"
-                className="chamfer-countdown-link"
+                className="chamfer-countdown-link max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
                 href="/economics"
               >
                 <div className="grid grid-cols-4 gap-1">
@@ -420,6 +460,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <footer className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-cyan-100/10 px-5 pb-10 pt-6 text-center text-[0.62rem] uppercase tracking-[0.24em] text-cyan-100/35 md:flex-row md:px-8 md:text-left">
+        <span>Sovereign Engine // Builder access</span>
+        <Link href="/developer" className="chamfer-nav-link">
+          Developer
+        </Link>
+      </footer>
     </main>
   );
 }

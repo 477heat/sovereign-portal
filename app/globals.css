@@ -452,7 +452,11 @@ body {
 }
 
 .info-control-page .chamfer-panel::after {
-  background: rgba(0, 0, 0, 0.46);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.info-control-page .chamfer-panel::before {
+  background: rgba(165, 243, 252, 0.1);
 }
 
 .info-control-page .chamfer-panel:not(.chamfer-panel--interactive) {
@@ -473,36 +477,52 @@ body {
 
 .info-control-page .chamfer-panel--command::after {
   background:
-    linear-gradient(115deg, rgba(254, 240, 138, 0.035), transparent 34%),
-    rgba(0, 0, 0, 0.54);
+    linear-gradient(115deg, rgba(254, 240, 138, 0.018), transparent 34%),
+    rgba(0, 0, 0, 0.25);
 }
 
 .info-control-page .chamfer-panel--wide::after {
   background:
-    linear-gradient(90deg, rgba(254, 240, 138, 0.035), transparent 42%),
-    rgba(0, 0, 0, 0.52);
+    linear-gradient(90deg, rgba(254, 240, 138, 0.018), transparent 42%),
+    rgba(0, 0, 0, 0.25);
+}
+
+.info-control-page .chamfer-panel--command::before {
+  background: linear-gradient(135deg, rgba(254, 240, 138, 0.08), rgba(165, 243, 252, 0.12));
+}
+
+.info-control-page .chamfer-panel--wide::before {
+  background: rgba(165, 243, 252, 0.1);
+}
+
+.info-control-page .chamfer-panel--policy::before {
+  background: rgba(165, 243, 252, 0.08);
+}
+
+.info-control-page .chamfer-panel--small::before {
+  background: rgba(254, 240, 138, 0.08);
 }
 
 .info-control-page .chamfer-panel--policy::after {
-  background: rgba(0, 0, 0, 0.56);
+  background: rgba(0, 0, 0, 0.25);
 }
 
 .info-control-page .chamfer-panel--small::after {
-  background: rgba(5, 19, 24, 0.56);
+  background: rgba(5, 19, 24, 0.25);
 }
 
 .info-control-page .chamfer-panel--interactive:hover::after,
 .info-control-page .chamfer-panel--interactive:focus-visible::after {
-  background: rgba(5, 25, 32, 0.54);
+  background: rgba(5, 25, 32, 0.25);
 }
 
 .info-control-page .control-surface {
-  background-color: rgba(0, 0, 0, 0.42) !important;
+  background-color: rgba(0, 0, 0, 0.25) !important;
   clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
 }
 
 .info-control-page .control-surface-strong {
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(0, 0, 0, 0.25) !important;
   clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
 }
 
@@ -511,12 +531,12 @@ body {
 }
 
 .info-control-page .control-surface-soft {
-  background-color: rgba(255, 255, 255, 0.018) !important;
+  background-color: rgba(0, 0, 0, 0.25) !important;
   clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
 }
 
 .info-control-page .control-input-surface {
-  background-color: rgba(0, 0, 0, 0.55) !important;
+  background-color: rgba(0, 0, 0, 0.25) !important;
   clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
 }
 

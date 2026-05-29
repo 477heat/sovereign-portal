@@ -630,12 +630,20 @@ function AdminContent() {
     <main className="min-h-screen bg-[#050505] px-4 py-5 text-white md:px-8 md:py-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-5">
         <nav className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <Link
-            className="text-[10px] uppercase tracking-[0.35em] text-white/50 transition hover:text-white"
-            href="/"
-          >
-            Return Home
-          </Link>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              className="text-[10px] uppercase tracking-[0.35em] text-white/50 transition hover:text-white"
+              href="/"
+            >
+              Return Home
+            </Link>
+            <Link
+              className="text-[10px] uppercase tracking-[0.35em] text-white/50 transition hover:text-white"
+              href="/admin/operations"
+            >
+              Operations
+            </Link>
+          </div>
           <div className="text-[10px] uppercase tracking-[0.3em] text-yellow-300/70">
             Soul Admin
           </div>
