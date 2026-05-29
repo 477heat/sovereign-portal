@@ -7,7 +7,7 @@ import { type MouseEvent, useEffect, useRef, useState } from "react";
 const dayOneLaunchAt = Date.UTC(2026, 4, 29, 12, 0, 0);
 const heroLoopEnd = 4;
 const heroLinkExitStartAt = 4.58;
-const heroLinkExitPlaySeconds = 2;
+const heroLinkExitPlaySeconds = 1;
 const heroPointerIdleMs = 420;
 
 const protocolCards = [
