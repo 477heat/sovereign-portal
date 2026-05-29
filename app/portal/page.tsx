@@ -188,12 +188,7 @@ function PortalContent() {
   const [orderBusy, setOrderBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
   const [error, setError] = useState("");
-  const [previewShellRequested] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return (
-      new URLSearchParams(window.location.search).get("previewShell") === "1"
-    );
-  });
+  const [previewShellRequested, setPreviewShellRequested] = useState(false);
   const previewShellActive = previewShellEnabled && previewShellRequested;
   const showWalletGate = !account?.address && !previewShellActive;
 
@@ -237,6 +232,19 @@ function PortalContent() {
   ];
   const nextStep =
     progress.find((step) => !step.complete)?.label ?? "Complete";
+
+  useEffect(() => {
+    const previewShellTimer = window.setTimeout(
+      () =>
+        setPreviewShellRequested(
+          new URLSearchParams(window.location.search).get("previewShell") ===
+            "1",
+        ),
+      0,
+    );
+
+    return () => window.clearTimeout(previewShellTimer);
+  }, []);
 
   useEffect(() => {
     let ignore = false;
