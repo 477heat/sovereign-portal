@@ -43,26 +43,31 @@ const whyThisMatters = [
     body: "The Deed is your Genesis Character. It contains stats that remain with your profile whether you sell it or give it away.",
     href: "/whitepaper",
     featured: false,
+    opposite: false,
   },
   {
     body: "Vanguards retain a special status that carries on through legacy creations and projects.",
     href: "/vanguard",
     featured: false,
+    opposite: true,
   },
   {
     body: "Your Progeny (children) are embedded with your qualities and characteristics, so each child can be traced back to its parents.",
     href: "/economics",
     featured: false,
+    opposite: true,
   },
   {
     body: "Material items are also Progeny: clothing, armor, weapons, creatures, adversarial constructs, modes of transport, and more.",
     href: "/engine",
     featured: false,
+    opposite: false,
   },
   {
     body: "The Engine has a very distinct algorithm that can attribute 479,001,600 possibilities completely unique to you for each Progeny Project.",
     href: "/engine",
     featured: true,
+    opposite: false,
   },
 ] as const;
 
@@ -106,7 +111,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="relative isolate min-h-screen overflow-hidden bg-black text-white">
+    <main className="home-control-page relative isolate min-h-screen overflow-hidden bg-black text-white">
       <header className="fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
           <Link
@@ -148,7 +153,7 @@ export default function HomePage() {
         />
         <div className="pointer-events-none absolute inset-0 z-0 bg-black/35" />
         <div className="relative z-10">
-          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[30rem] px-5 py-5 md:px-7 md:py-6">
+          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[22.5rem] px-5 py-5 md:px-7 md:py-6">
             <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cyan-200/80">
               Registry Initializing
             </p>
@@ -171,7 +176,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/engine"
-                className="chamfer-hero-link chamfer-hero-link--secondary"
+                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite"
               >
                 Artifact Engine
               </Link>
@@ -237,7 +242,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="relative z-10 mx-auto -mt-4 max-w-7xl px-5 pb-12 md:-mt-8 md:px-8">
+      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-5 md:px-8 md:pt-7">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link
@@ -260,12 +265,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
+      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="chamfer-panel chamfer-panel--frame p-6 backdrop-blur-md md:p-8">
           <p className="text-center text-[11px] uppercase tracking-[0.36em] text-cyan-200/70">
             THE REASONING
           </p>
-          <div className="chamfer-panel chamfer-panel--readout mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-xs leading-5 text-white/62">
+          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-xs leading-5 text-white/62">
             Developers can choose which Progeny structure they want for their
             games, request a specific Character Attribute Tree for users to
             generate a profile from, or purchase from a Vanguard&apos;s
@@ -274,7 +279,7 @@ export default function HomePage() {
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {whyThisMatters.map((item) => (
               <Link
-                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-sm leading-6 text-white/68 ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
+                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-sm leading-6 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
                 href={item.href}
                 key={item.body}
               >
