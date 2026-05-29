@@ -670,12 +670,132 @@ body {
 }
 
 .portal-control-page .console-status-tile--mint-active {
-  --portal-surface-border: rgba(248, 113, 113, 0.82);
-  --portal-surface-fill: rgba(80, 12, 20, 0.82);
+  --portal-surface-border: rgba(74, 222, 128, 0.88);
+  --portal-surface-fill: rgba(13, 88, 43, 0.84);
   box-shadow:
-    inset 0 0 0 1px rgba(254, 202, 202, 0.12),
-    0 0 30px rgba(248, 113, 113, 0.36),
-    0 0 70px rgba(248, 113, 113, 0.16);
+    inset 0 0 0 1px rgba(187, 247, 208, 0.18),
+    0 0 30px rgba(34, 197, 94, 0.4),
+    0 0 70px rgba(22, 163, 74, 0.2);
+}
+
+.portal-pay-button {
+  align-items: center;
+  border: 0;
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  justify-content: center;
+  min-height: 6.1rem;
+  padding: 1rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  width: 100%;
+}
+
+.portal-pay-button span {
+  font-size: clamp(1.05rem, 3.5vw, 1.9rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1.05;
+}
+
+.portal-pay-button small {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  line-height: 1.45;
+}
+
+.portal-pay-button--waiting {
+  background: rgba(69, 56, 16, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.16),
+    0 0 26px rgba(234, 179, 8, 0.16);
+  color: rgb(254, 249, 195);
+}
+
+.portal-pay-button--ready,
+.portal-pay-button--confirmed {
+  background: rgba(18, 96, 51, 0.82);
+  box-shadow:
+    inset 0 0 0 1px rgba(187, 247, 208, 0.22),
+    0 0 30px rgba(34, 197, 94, 0.32);
+  color: rgb(220, 252, 231);
+}
+
+.portal-pay-button--ready {
+  cursor: pointer;
+}
+
+.portal-pay-button--ready:not(:disabled):hover,
+.portal-pay-button--ready:not(:disabled):focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(220, 252, 231, 0.34),
+    0 0 40px rgba(34, 197, 94, 0.48);
+  filter: brightness(1.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.portal-pay-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.76;
+}
+
+.portal-mint-pill {
+  align-items: center;
+  border: 0;
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+  display: flex;
+  font-size: clamp(1.15rem, 4vw, 2.25rem);
+  font-weight: 950;
+  justify-content: center;
+  letter-spacing: 0.22em;
+  min-height: 4.8rem;
+  padding: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  width: 100%;
+}
+
+.portal-mint-pill--locked {
+  background: rgba(45, 18, 22, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(252, 165, 165, 0.16),
+    0 0 24px rgba(248, 113, 113, 0.16);
+  color: rgba(254, 202, 202, 0.76);
+  cursor: not-allowed;
+}
+
+.portal-mint-pill--ready {
+  background: rgba(21, 128, 61, 0.96);
+  box-shadow:
+    inset 0 0 0 1px rgba(220, 252, 231, 0.34),
+    0 0 36px rgba(34, 197, 94, 0.6),
+    0 0 90px rgba(22, 163, 74, 0.34);
+  color: rgb(240, 253, 244);
+  cursor: pointer;
+}
+
+.portal-mint-pill--ready:hover,
+.portal-mint-pill--ready:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 253, 244, 0.44),
+    0 0 46px rgba(74, 222, 128, 0.72),
+    0 0 120px rgba(34, 197, 94, 0.42);
+  filter: brightness(1.12);
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::before,

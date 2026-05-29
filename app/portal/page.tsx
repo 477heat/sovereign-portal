@@ -225,6 +225,10 @@ function PortalContent() {
     !minting;
   const termsAwaitingIdentity = !hasIdentity && !deedAccepted;
   const paymentAwaitingTerms = !deedAccepted;
+  const checkoutPrerequisitesComplete = checkoutReady;
+  const checkoutPanelState = checkoutPrerequisitesComplete
+    ? "console-status-tile--entered"
+    : "console-status-tile--waiting";
   const progress = [
     { label: steps[0], complete: Boolean(account?.address) },
     { label: steps[1], complete: Boolean(verification?.eligible) },
@@ -625,7 +629,7 @@ function PortalContent() {
                       ))}
                     </div>
 
-                    <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,0.72fr)_minmax(360px,0.68fr)]">
+                    <div className="mt-4 grid gap-3">
                       <div className="grid gap-3 md:grid-cols-[minmax(150px,0.38fr)_minmax(0,0.42fr)_minmax(160px,0.32fr)]">
                         <div
                           className={`control-surface-soft flex min-w-0 flex-col items-start justify-between gap-2 border px-3 py-2 ${
@@ -767,119 +771,145 @@ function PortalContent() {
                         </p>
                       </div>
 
-                      <div className="grid content-start gap-3">
-                        <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
-                          <label
-                            className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-                              contractAccepted
-                                ? "console-status-tile--entered"
-                                : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-                            } ${certificateOpened ? "" : "cursor-not-allowed opacity-70"}`}
-                          >
-                            <input
-                              checked={contractAccepted}
-                              onChange={(event) =>
-                                setContractAccepted(event.target.checked)
-                              }
-                              disabled={!certificateOpened}
-                              type="checkbox"
-                              className="mt-1 h-4 w-4 shrink-0 accent-yellow-300 disabled:cursor-not-allowed"
-                            />
-                            <span className="text-[10px] leading-4">
-                              Read and agree to the Certificate.
-                            </span>
-                          </label>
-                          <label
-                            className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-                              accuracyAccepted
-                                ? "console-status-tile--entered"
-                                : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-                            }`}
-                          >
-                            <input
-                              checked={accuracyAccepted}
-                              onChange={(event) =>
-                                setAccuracyAccepted(event.target.checked)
-                              }
-                              type="checkbox"
-                              className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
-                            />
-                            <span className="text-[10px] leading-4">
-                              Name and DOB match Coinbase/EAS.
-                            </span>
-                          </label>
-                          <label
-                            className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-                              publicMarkAccepted
-                                ? "console-status-tile--entered"
-                                : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-                            }`}
-                          >
-                            <input
-                              checked={publicMarkAccepted}
-                              onChange={(event) =>
-                                setPublicMarkAccepted(event.target.checked)
-                              }
-                              type="checkbox"
-                              className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
-                            />
-                            <span className="text-[10px] leading-4">
-                              Public deed uses shortened mark.
-                            </span>
-                          </label>
+                      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(280px,1fr)]">
+                        <div className="grid content-start gap-3">
+                          <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
+                            <label
+                              className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+                                contractAccepted
+                                  ? "console-status-tile--entered"
+                                  : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
+                              } ${certificateOpened ? "" : "cursor-not-allowed opacity-70"}`}
+                            >
+                              <input
+                                checked={contractAccepted}
+                                onChange={(event) =>
+                                  setContractAccepted(event.target.checked)
+                                }
+                                disabled={!certificateOpened}
+                                type="checkbox"
+                                className="mt-1 h-4 w-4 shrink-0 accent-yellow-300 disabled:cursor-not-allowed"
+                              />
+                              <span className="text-[10px] leading-4">
+                                Read and agree to the Certificate.
+                              </span>
+                            </label>
+                            <label
+                              className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+                                accuracyAccepted
+                                  ? "console-status-tile--entered"
+                                  : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
+                              }`}
+                            >
+                              <input
+                                checked={accuracyAccepted}
+                                onChange={(event) =>
+                                  setAccuracyAccepted(event.target.checked)
+                                }
+                                type="checkbox"
+                                className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
+                              />
+                              <span className="text-[10px] leading-4">
+                                Name and DOB match Coinbase/EAS.
+                              </span>
+                            </label>
+                            <label
+                              className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+                                publicMarkAccepted
+                                  ? "console-status-tile--entered"
+                                  : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
+                              }`}
+                            >
+                              <input
+                                checked={publicMarkAccepted}
+                                onChange={(event) =>
+                                  setPublicMarkAccepted(event.target.checked)
+                                }
+                                type="checkbox"
+                                className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
+                              />
+                              <span className="text-[10px] leading-4">
+                                Public deed uses shortened mark.
+                              </span>
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    </div>
 
-                    {error && (
-                      <div className="control-surface-soft portal-surface-red mt-4 border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-100">
-                        {error}
-                      </div>
-                    )}
+                        <div
+                          className={`control-surface-soft min-h-full border p-4 ${checkoutPanelState}`}
+                        >
+                          <div className="text-[11px] uppercase tracking-[0.28em] text-white/60">
+                            Checkout
+                          </div>
 
-                    {checkoutEnabled && (
-                      <div className="control-surface-soft portal-surface-cyan mt-4 border border-cyan-100/20 bg-cyan-100/[0.06] p-4">
-                        <div className="text-[11px] uppercase tracking-[0.28em] text-cyan-100/72">
-                          Checkout
-                        </div>
-                        <p className="mt-2 max-w-2xl text-sm leading-6 text-white/62">
-                          {paymentAmount} USDC. The backend pays contract mint price
-                          and gas after the signed payment webhook marks this order
-                          paid.
-                        </p>
-                        {!activeOrder && (
-                          <button
-                            className="console-key-button mt-4 min-h-12 w-full disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
-                            disabled={!checkoutReady || orderBusy}
-                            onClick={createOrder}
-                            type="button"
-                          >
-                            {orderBusy ? "Preparing" : `Prepare ${paymentAmount} Checkout`}
-                          </button>
+                          {orderPaid ? (
+                            <div className="portal-pay-button portal-pay-button--confirmed mt-4">
+                              <span>Payment Confirmed</span>
+                              <small>Mint control armed.</small>
+                            </div>
+                          ) : checkoutPrerequisitesComplete ? (
+                            <button
+                              className="portal-pay-button portal-pay-button--ready mt-4"
+                              disabled={
+                                !checkoutEnabled ||
+                                Boolean(activeOrder) ||
+                                orderBusy
+                              }
+                              onClick={createOrder}
+                              type="button"
+                            >
+                              <span>
+                                {orderBusy
+                                  ? "Preparing Checkout"
+                                  : `Pay $${paymentAmount}`}
+                              </span>
+                              <small>confirm payment then Mint</small>
+                            </button>
+                          ) : (
+                            <div className="portal-pay-button portal-pay-button--waiting mt-4">
+                              <span>
+                                Confirm Previous Completion of previous steps
+                              </span>
+                              <small>
+                                Wallet, EAS, identity, and terms must be green first.
+                              </small>
+                            </div>
+                          )}
+
+                        {checkoutPrerequisitesComplete && !checkoutEnabled && (
+                          <p className="mt-3 text-xs uppercase tracking-[0.18em] text-yellow-100/70">
+                            Checkout is not enabled in this environment.
+                          </p>
                         )}
-                        {activeOrder && thirdwebClient && paymentSeller && paymentTokenAddress && (
+
+                        {activeOrder && checkoutEnabled && (
                           <div className="mt-4 grid gap-3">
-                            <CheckoutWidget
-                              amount={paymentAmount}
-                              chain={base}
-                              client={thirdwebClient}
-                              description="Verified mint order for the Sovereign Portal deed."
-                              feePayer="seller"
-                              name="Certificate of Title for Soul Ownership"
-                              onSuccess={() => {
-                                setPaymentNotice(
-                                  "Checkout completed. Refresh until the verified webhook marks this mint order paid.",
-                                );
-                              }}
-                              purchaseData={{
-                                orderId: activeOrder.orderId,
-                                publicMark,
-                                wallet: account?.address,
-                              }}
-                              seller={paymentSeller as `0x${string}`}
-                              showThirdwebBranding={false}
-                              tokenAddress={paymentTokenAddress as `0x${string}`}
-                            />
+                            {thirdwebClient &&
+                              paymentSeller &&
+                              paymentTokenAddress &&
+                              !orderPaid && (
+                                <CheckoutWidget
+                                  amount={paymentAmount}
+                                  chain={base}
+                                  client={thirdwebClient}
+                                  description="Verified mint order for the Sovereign Portal deed."
+                                  feePayer="seller"
+                                  name="Certificate of Title for Soul Ownership"
+                                  onSuccess={() => {
+                                    setPaymentNotice(
+                                      "Checkout completed. Refresh until the verified webhook marks this mint order paid.",
+                                    );
+                                  }}
+                                  purchaseData={{
+                                    orderId: activeOrder.orderId,
+                                    publicMark,
+                                    wallet: account?.address,
+                                  }}
+                                  seller={paymentSeller as `0x${string}`}
+                                  showThirdwebBranding={false}
+                                  tokenAddress={paymentTokenAddress as `0x${string}`}
+                                />
+                              )}
                             <div className="control-surface-soft flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
                               <span className="break-all">
                                 Order {activeOrder.orderId} / {activeOrder.status}
@@ -900,27 +930,26 @@ function PortalContent() {
                             )}
                           </div>
                         )}
+
+                        <button
+                          className={`portal-mint-pill mt-4 ${
+                            canMint ? "portal-mint-pill--ready" : "portal-mint-pill--locked"
+                          }`}
+                          disabled={!canMint}
+                          onClick={handleMint}
+                          type="button"
+                        >
+                          {minting ? "MINTING" : canMint ? "MINT" : "Mint Locked"}
+                        </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {error && (
+                      <div className="control-surface-soft portal-surface-red mt-4 border border-red-400/30 bg-red-500/10 p-3 text-sm text-red-100">
+                        {error}
                       </div>
                     )}
-
-                    <div className="control-surface-soft portal-surface-gold mt-4 flex flex-col gap-4 border border-yellow-200/25 bg-yellow-200/[0.08] p-4 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <div className="text-[11px] uppercase tracking-[0.28em] text-yellow-100/72">
-                          Mint Action
-                        </div>
-                        <p className="mt-2 max-w-xl text-sm leading-6 text-white/58">
-                          Generate the deed after wallet, EAS, identity, terms, and
-                          payment are cleared.
-                        </p>
-                      </div>
-                      <button
-                        onClick={handleMint}
-                        disabled={!canMint}
-                        className={`w-full disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto sm:min-w-56 ${canMint ? "console-launch-button" : "console-key-button"}`}
-                      >
-                        {minting ? "Minting" : "Generate Deed"}
-                      </button>
-                    </div>
 
                     {receipt && (
                       <div className="control-surface-soft portal-surface-gold mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
