@@ -555,6 +555,45 @@ body {
     0 0 18px rgba(254, 240, 138, 0.055);
 }
 
+.console-input-cursor {
+  background: rgba(254, 240, 138, 0.92);
+  bottom: 0.6rem;
+  box-shadow: 0 0 12px rgba(254, 240, 138, 0.48);
+  left: 0.65rem;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  right: auto;
+  top: 1.85rem;
+  width: 1px;
+}
+
+.console-input-field:focus-within .console-input-cursor {
+  animation: console-cursor-blink 1s steps(2, start) infinite;
+}
+
+.console-input-label {
+  color: rgba(254, 240, 138, 0.72);
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.16);
+}
+
+.console-input-field:focus-within .console-input-label {
+  color: rgba(254, 249, 195, 0.92);
+  text-shadow: 0 0 14px rgba(254, 240, 138, 0.28);
+}
+
+@keyframes console-cursor-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  46%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft) {
   --portal-surface-border: rgba(165, 243, 252, 0.24);
   --portal-surface-fill: rgba(8, 35, 42, 0.4);
@@ -604,6 +643,14 @@ body {
   --portal-surface-fill: rgba(48, 14, 18, 0.66);
 }
 
+.portal-control-page .portal-surface-red-soft {
+  --portal-surface-border: rgba(252, 165, 165, 0.34);
+  --portal-surface-fill: rgba(48, 14, 18, 0.36);
+  box-shadow:
+    inset 0 0 0 1px rgba(252, 165, 165, 0.06),
+    0 0 22px rgba(248, 113, 113, 0.12);
+}
+
 .portal-control-page .portal-clickable-surface {
   --portal-surface-corner: 12px;
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -612,6 +659,23 @@ body {
 .portal-control-page .console-status-tile--entered {
   --portal-surface-border: rgba(134, 239, 172, 0.48);
   --portal-surface-fill: rgba(12, 44, 26, 0.65);
+}
+
+.portal-control-page .console-status-tile--waiting {
+  --portal-surface-border: rgba(254, 240, 138, 0.48);
+  --portal-surface-fill: rgba(38, 34, 14, 0.58);
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.05),
+    0 0 20px rgba(254, 240, 138, 0.11);
+}
+
+.portal-control-page .console-status-tile--mint-active {
+  --portal-surface-border: rgba(248, 113, 113, 0.82);
+  --portal-surface-fill: rgba(80, 12, 20, 0.82);
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 202, 202, 0.12),
+    0 0 30px rgba(248, 113, 113, 0.36),
+    0 0 70px rgba(248, 113, 113, 0.16);
 }
 
 .portal-control-page :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::before,
