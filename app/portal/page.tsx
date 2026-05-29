@@ -487,18 +487,26 @@ function PortalContent() {
               Why one per person
             </div>
             <p className="mt-2 max-w-4xl">
-              Genesis deeds are meant to represent individual entry into the
-              registry, not repeat-wallet farming. The portal uses Coinbase EAS
-              eligibility and the mint ledger to reduce duplicate participation.
+              The Genesis mint is built around the idea that a soul is tied to
+              life, not automation. That is why the first artifact is a Deed
+              proving your ownership of one unique origin. Each Soul carries a
+              unique stat profile generated from deterministic identity data,
+              not random rolls. Wallet-linked Coinbase EAS eligibility and the
+              mint ledger help protect the Genesis layer from bots, duplicate
+              wallets, and empty-wallet farming. No clankers.
+            </p>
+            <p className="mt-4 max-w-4xl">
+              This mint points toward a future where the spaces built from the
+              Engine are populated by real people. The goal is not to make a
+              room full of hidden bots, synthetic competitors, or automated
+              accounts pretending to be a community. When someone speaks,
+              trades, creates, or competes beside you, the system should be
+              working toward the assumption that a person is actually there.
+            </p>
+            <p className="mt-4 max-w-4xl">
               Raw name and DOB details submitted for the deed are used only to
               generate the mint request, then purged after mint completion. They
               are not sold, shared, or stored by our servers.
-            </p>
-            <p className="mt-4 max-w-4xl">
-              The soul is the origin point. It is brought into a body; the body
-              lives, creates children, gathers material things, and tries to do
-              the best it can with the traits it was born with. The Certificate
-              treats that origin as the first entry in the Engine record.
             </p>
             <p className="mt-4 max-w-4xl">
               This Certificate also functions as a Soul Deed Access token.
