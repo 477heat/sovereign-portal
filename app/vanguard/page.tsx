@@ -1,125 +1,170 @@
 import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 
-const privileges = [
+const statusPanels = [
   {
-    id: "01",
-    title: "Vanguard Charter",
-    description:
-      "Day One supporter wallets keep the Vanguard status that marks the first lineage of the registry.",
-    items: [
-      "Vanguard status binds to the original wallet-linked mint.",
-      "Royalty participation depends on ERC-2981 support and marketplace routing.",
-      "Future engine iterations can recognize this wallet as an early registry actor.",
-    ],
+    href: "#day-one",
+    label: "Day One",
+    value: "Origin",
+    body: "Day One supporters are introduced as Vanguards: the first public access class for the Engine.",
   },
   {
-    id: "02",
-    title: "Artifact Access",
-    description:
-      "Vanguard wallets become the first testers for artifacts beyond the Genesis deed.",
-    items: [
-      "Early access to limited preview tools.",
-      "Priority for Progeny Engine experiments.",
-      "Reserved metadata fields for future lineage mechanics.",
-    ],
+    href: "#wallet-linked",
+    label: "Wallet",
+    value: "Linked",
+    body: "Recognition is designed around the wallet-linked Genesis mint, not anonymous mint farming.",
   },
   {
-    id: "03",
-    title: "Wallet Gate",
-    description:
-      "The system is being built around wallet-linked artifacts, not anonymous mint swarms.",
-    items: [
-      "Coinbase EAS attestation gates the mint path.",
-      "The public deed uses a shortened covenant mark.",
-      "The full profile uses the protected 12-stat Genesis framework.",
-    ],
+    href: "#legacy",
+    label: "Legacy",
+    value: "Carry-forward",
+    body: "Vanguard status is intended to remain visible through later creations and project systems.",
+  },
+  {
+    href: "#royalty-routing",
+    label: "Routing",
+    value: "Conditional",
+    body: "Royalty participation depends on contract rules, marketplace support, and published terms.",
+  },
+];
+
+const policyPanels = [
+  {
+    id: "day-one",
+    number: "01",
+    title: "Day One Introduction",
+    body: "Day One is the first introduction to Vanguard status. It marks the earliest wallet-linked supporters without promising automatic rewards before the terms for a future launch are published.",
+    link: { href: "/whitepaper#vanguard", label: "Read Vanguard" },
+  },
+  {
+    id: "wallet-linked",
+    number: "02",
+    title: "Wallet-linked Status",
+    body: "The access model is built around one Genesis mint per person and a wallet-linked origin. The goal is to keep the community layer human, traceable, and resistant to empty-wallet harvesting.",
+    link: { href: "/whitepaper#genesis-access", label: "Open Access" },
+  },
+  {
+    id: "legacy",
+    number: "03",
+    title: "Legacy Recognition",
+    body: "Vanguards are intended to retain special status through legacy creations and projects. Each new system still needs clear rules for how that recognition is applied.",
+    link: { href: "/economics#developer-access", label: "Builder Use" },
+  },
+  {
+    id: "royalty-routing",
+    number: "04",
+    title: "Routing Limits",
+    body: "Royalty routing should stay specific. ERC-2981 can signal royalty data, but actual collection depends on the contract, sale flow, marketplace behavior, and receiver configuration.",
+    link: { href: "/economics#royalty-routing", label: "Open Routing" },
   },
 ];
 
 export default function VanguardPrivilegesPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black px-5 py-6 text-white md:px-8">
-      <TunnelBackdrop />
+    <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-5 py-6 font-mono text-white md:px-10 md:py-10">
+      <TunnelBackdrop layer="page" variant="diffused" />
 
-      <div className="mx-auto max-w-6xl">
-        <nav className="mb-12 flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <nav className="mb-8 flex flex-col gap-3 border-b border-cyan-200/10 pb-5 text-[0.62rem] uppercase tracking-[0.22em] text-cyan-50/70 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
-            Back to Genesis
+            Home
           </Link>
-          <div className="text-[11px] tracking-[0.28em] text-cyan-100/72">Access Level // Vanguard</div>
+          <div>Access // Vanguard Status</div>
         </nav>
 
-        <header className="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.38em] text-cyan-100/75">
-              Charter Layer
-            </p>
-            <h1 className="mt-4 max-w-4xl text-5xl font-light uppercase leading-tight tracking-[0.12em] md:text-7xl">
-              Vanguard Status
-            </h1>
-            <p className="mt-6 max-w-2xl text-sm leading-7 text-white/60">
-              Vanguard is the status attached to Day One supporter wallets:
-              early wallets, future lineage mechanics, and royalty terms that
-              stay aligned with what the deployed contract and marketplaces can
-              actually honor.
+        <header className="chamfer-panel chamfer-panel--command mb-8 px-6 py-7 md:px-10 md:py-9">
+          <div className="mb-5 flex flex-wrap items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
+            <span>Day One</span>
+            <span className="h-px w-10 bg-cyan-100/20" />
+            <span>wallet-linked</span>
+            <span className="h-px w-10 bg-cyan-100/20" />
+            <span>legacy status</span>
+          </div>
+          <div className="grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-end">
+            <div>
+              <p className="mb-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/55">
+                Charter Layer
+              </p>
+              <h1 className="max-w-3xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 md:text-5xl">
+                Vanguard Status
+              </h1>
+            </div>
+            <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
+              Vanguards are the Day One supporter class for Sovereign Engine:
+              wallet-linked origin wallets with planned recognition across
+              future creations, access systems, and published project terms.
             </p>
           </div>
-
-          <aside className="border border-cyan-200/25 bg-black/55 p-5">
-            <div className="text-[10px] uppercase tracking-[0.28em] text-cyan-100/70">
-              Current Priority
-            </div>
-            <div className="mt-5 text-3xl uppercase tracking-[0.12em] text-white">
-              Per NFT Splits
-            </div>
-            <p className="mt-4 text-sm leading-6 text-white/55">
-              The clean path is token-specific royalty routing, with current
-              terms maintained on the site and marketplace limits disclosed.
-            </p>
-          </aside>
         </header>
 
-        <section className="grid gap-4">
-          {privileges.map((privilege) => (
-            <article
-              key={privilege.id}
-              className="grid gap-6 border border-white/10 bg-black/55 p-5 md:grid-cols-[110px_minmax(0,1fr)] md:p-7"
+        <section className="mb-9 grid gap-4 md:grid-cols-4">
+          {statusPanels.map((panel) => (
+            <Link
+              key={panel.label}
+              href={panel.href}
+              className="chamfer-panel chamfer-panel--interactive chamfer-panel--small p-5"
             >
-              <div className="text-5xl font-light text-cyan-100/35">
-                {privilege.id}
+              <div className="text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
+                {panel.label}
               </div>
-              <div>
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-2xl uppercase tracking-[0.14em] text-white">
-                      {privilege.title}
-                    </h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-6 text-white/55">
-                      {privilege.description}
-                    </p>
-                  </div>
-                  <Link
-                    href="/engine"
-                    className="border border-cyan-200/30 px-4 py-3 text-[10px] uppercase tracking-[0.24em] text-cyan-100 transition hover:bg-cyan-100 hover:text-black"
-                  >
-                    Open Engine
-                  </Link>
-                </div>
-                <div className="mt-6 grid gap-3 md:grid-cols-3">
-                  {privilege.items.map((item) => (
-                    <div
-                      key={item}
-                      className="border border-white/10 bg-white/[0.03] p-4 text-sm leading-6 text-white/58"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
+              <div className="mt-3 text-2xl uppercase tracking-normal text-cyan-50">
+                {panel.value}
               </div>
-            </article>
+              <p className="mt-3 text-sm leading-6 text-cyan-50/66">{panel.body}</p>
+            </Link>
           ))}
         </section>
+
+        <section className="chamfer-panel chamfer-panel--wide mb-9 px-6 py-7 md:px-9 md:py-8">
+          <div className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-center">
+            <div>
+              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-cyan-100/50">
+                User Summary
+              </p>
+              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
+                What Vanguard Means
+              </h2>
+            </div>
+            <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
+              Vanguard status is not generic affiliate language. It is the
+              named early-supporter layer for wallets that enter the Engine at
+              the Genesis stage, with future benefits defined by each launch.
+            </p>
+          </div>
+        </section>
+
+        <div className="space-y-5 pb-16">
+          {policyPanels.map((panel) => (
+            <section
+              key={panel.id}
+              id={panel.id}
+              className="chamfer-panel chamfer-panel--policy mx-auto max-w-5xl scroll-mt-24 px-6 py-6 md:px-8"
+            >
+              <div className="grid gap-5 md:grid-cols-[6rem_1fr_auto] md:items-start">
+                <div>
+                  <p className="mb-2 text-[0.62rem] uppercase tracking-[0.32em] text-cyan-100/35">
+                    {panel.number}
+                  </p>
+                  <div className="h-px w-8 bg-cyan-100/20" />
+                </div>
+                <div>
+                  <h2 className="mb-4 text-lg font-semibold uppercase tracking-normal text-cyan-50 md:text-xl">
+                    {panel.title}
+                  </h2>
+                  <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
+                    {panel.body}
+                  </p>
+                </div>
+                <Link
+                  href={panel.link.href}
+                  className="chamfer-hero-link chamfer-hero-link--secondary justify-self-start md:justify-self-end"
+                >
+                  {panel.link.label}
+                </Link>
+              </div>
+            </section>
+          ))}
+        </div>
       </div>
     </main>
   );

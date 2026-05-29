@@ -86,7 +86,7 @@ function Viewscreen({ readout }: { readout: EngineReadout }) {
   const colors = toneClass[readout.tone as keyof typeof toneClass];
 
   return (
-    <section className={`relative overflow-hidden border bg-black/70 p-4 ${colors.border} ${colors.glow} md:p-6`}>
+    <section className={`control-surface control-surface-large relative overflow-hidden border bg-black/70 p-4 ${colors.border} ${colors.glow} md:p-6`}>
       <div className="engine-screen-grid absolute inset-0 opacity-55" aria-hidden="true" />
       <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
 
@@ -101,7 +101,7 @@ function Viewscreen({ readout }: { readout: EngineReadout }) {
                 {readout.title}
               </h1>
             </div>
-            <div className={`min-w-32 border p-3 text-right ${colors.border} ${colors.wash}`}>
+            <div className={`control-surface-soft min-w-32 border p-3 text-right ${colors.border} ${colors.wash}`}>
               <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">
                 {readout.primaryLabel}
               </div>
@@ -118,21 +118,21 @@ function Viewscreen({ readout }: { readout: EngineReadout }) {
           </div>
         </div>
 
-        <aside className="flex flex-col gap-4 border border-white/10 bg-black/55 p-4">
+        <aside className="control-surface flex flex-col gap-4 border border-white/10 bg-black/55 p-4">
           <div>
             <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
               Diagnostics
             </div>
             <div className="mt-4 space-y-3">
               {readout.diagnostics.map((item) => (
-                <div key={item} className="border border-white/10 bg-white/[0.03] px-3 py-3 text-xs uppercase tracking-[0.18em] text-white/62">
+                <div key={item} className="control-surface-soft border border-white/10 bg-white/[0.03] px-3 py-3 text-xs uppercase tracking-[0.18em] text-white/62">
                   {item}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-auto border border-white/10 p-4">
+          <div className="control-surface-soft mt-auto border border-white/10 p-4">
             <div className="flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.24em] text-white/42">
               <span>Signal Path</span>
               <span className={colors.text}>Open</span>
@@ -184,12 +184,12 @@ export default function EnginePage() {
   }
 
   return (
-    <main className="relative isolate min-h-screen overflow-hidden bg-black text-white">
-      <TunnelBackdrop />
+    <main className="info-control-page relative isolate min-h-screen overflow-hidden bg-black text-white">
+      <TunnelBackdrop layer="page" variant="diffused" />
       <BackgroundHashStream className="z-0" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col px-4 py-5 md:px-8">
-        <nav className="flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+        <nav className="control-surface flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
           <div className="flex flex-wrap gap-4">
             <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
               Return Home
@@ -202,7 +202,7 @@ export default function EnginePage() {
         </nav>
 
         <section className="grid flex-1 gap-5 py-6 xl:grid-cols-[280px_minmax(0,1fr)_270px]">
-          <aside className="grid content-start gap-4 border border-white/10 bg-black/58 p-4 backdrop-blur-[2px]">
+          <aside className="control-surface grid content-start gap-4 border border-white/10 bg-black/58 p-4 backdrop-blur-[2px]">
             <div>
               <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/65">
                 Profile Seed
@@ -220,7 +220,7 @@ export default function EnginePage() {
                 value={dob}
                 onChange={(event) => setDob(event.target.value)}
                 type="date"
-                className="min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
+                className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
               />
             </label>
 
@@ -233,7 +233,7 @@ export default function EnginePage() {
                 onChange={(event) => setMark(event.target.value)}
                 maxLength={18}
                 placeholder="A. Sol"
-                className="min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
+                className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
               />
             </label>
 
@@ -265,7 +265,7 @@ export default function EnginePage() {
             <Viewscreen readout={activeReadout} />
 
             <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-              <div className="border border-white/10 bg-black/58 p-4 md:p-5">
+              <div className="control-surface border border-white/10 bg-black/58 p-4 md:p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
                     Readout Bus
@@ -276,7 +276,7 @@ export default function EnginePage() {
                 </div>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {telemetry.map((item, index) => (
-                    <div key={item} className="border border-white/10 bg-white/[0.03] p-3">
+                    <div key={item} className="control-surface-soft border border-white/10 bg-white/[0.03] p-3">
                       <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">
                         Lane 0{index + 1}
                       </div>
@@ -288,12 +288,12 @@ export default function EnginePage() {
                 </div>
               </div>
 
-              <div className="border border-white/10 bg-black/58 p-4 md:p-5">
+              <div className="control-surface border border-white/10 bg-black/58 p-4 md:p-5">
                 <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
                   Stored Shape
                 </div>
                 <div className="mt-4 grid gap-3 text-sm">
-                  <div className="border border-white/10 bg-white/[0.03] p-3">
+                  <div className="control-surface-soft border border-white/10 bg-white/[0.03] p-3">
                     <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
                       Public Mark
                     </div>
@@ -301,7 +301,7 @@ export default function EnginePage() {
                       {profile.mark}
                     </div>
                   </div>
-                  <div className="border border-white/10 bg-white/[0.03] p-3">
+                  <div className="control-surface-soft border border-white/10 bg-white/[0.03] p-3">
                     <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
                       Future Profile
                     </div>
@@ -314,8 +314,8 @@ export default function EnginePage() {
             </section>
           </div>
 
-          <aside className="grid content-start gap-4 border border-white/10 bg-black/58 p-4 backdrop-blur-[2px]">
-            <div className="border border-cyan-100/20 bg-cyan-100/[0.07] p-4">
+          <aside className="control-surface grid content-start gap-4 border border-white/10 bg-black/58 p-4 backdrop-blur-[2px]">
+            <div className="control-surface-soft border border-cyan-100/20 bg-cyan-100/[0.07] p-4">
               <div className="text-[10px] uppercase tracking-[0.3em] text-cyan-100/65">
                 Viewscreen Subject
               </div>
@@ -329,7 +329,7 @@ export default function EnginePage() {
 
             <div className="grid gap-2">
               {consoleLamps.map((lamp, index) => (
-                <div key={lamp} className="flex min-h-12 items-center justify-between gap-3 border border-white/10 bg-white/[0.03] px-3">
+                <div key={lamp} className="control-surface-soft flex min-h-12 items-center justify-between gap-3 border border-white/10 bg-white/[0.03] px-3">
                   <span className="text-[10px] uppercase tracking-[0.24em] text-white/48">
                     {lamp}
                   </span>
@@ -344,7 +344,7 @@ export default function EnginePage() {
               ))}
             </div>
 
-            <div className="border border-white/10 p-4">
+            <div className="control-surface-soft border border-white/10 p-4">
               <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
                 Long Arc
               </div>

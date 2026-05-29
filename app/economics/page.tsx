@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 const accessPanels = [
   {
@@ -67,8 +68,10 @@ const policyPanels = [
 
 export default function EconomicsPage() {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-black px-5 py-6 text-white md:px-10 md:py-10 font-mono">
-      <div className="mx-auto max-w-6xl">
+    <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-5 py-6 font-mono text-white md:px-10 md:py-10">
+      <TunnelBackdrop layer="page" variant="diffused" />
+
+      <div className="relative z-10 mx-auto max-w-6xl">
         <nav className="mb-8 flex flex-col gap-3 border-b border-cyan-200/10 pb-5 text-[0.62rem] uppercase tracking-[0.22em] text-cyan-50/70 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
             Home

@@ -11,7 +11,6 @@
   --foreground: #ffffff;
 }
 
-/* Set the base black color on the HTML element so the body's pseudo-elements can sit on top of it */
 html {
   background-color: black;
 }
@@ -22,54 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
-  /* Ensure body itself doesn't have a solid background that covers the ::before */
   background-color: transparent;
-}
-
-/* The tunnel light effect */
-body::before {
-  content: "";
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200vw; /* Increased size to ensure coverage */
-  height: 200vh;
-  /* 
-     Improved Gradient:
-     1. A very bright white core (0.4 opacity) to act as the 'light source'.
-     2. A larger, softer glow area.
-     3. A quick falloff to black.
-  */
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(255, 255, 255, 0.1) 15%,
-    rgba(255, 255, 255, 0.03) 35%,
-    rgba(0, 0, 0, 0) 70%
-  );
-  pointer-events: none;
-  z-index: -1;
-  animation: tunnel-pulse 6s ease-in-out infinite;
-}
-
-/* Added a second layer for a deeper, "flickering" atmosphere */
-body::after {
-  content: "";
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.05) 0%,
-    transparent 50%
-  );
-  pointer-events: none;
-  z-index: -1;
-  animation: tunnel-flicker 4s ease-in-out infinite;
 }
 
 .chamfer-nav-link {
@@ -499,6 +451,75 @@ body::after {
   background: rgba(5, 25, 32, 0.72);
 }
 
+.info-control-page .chamfer-panel::after {
+  background: rgba(0, 0, 0, 0.46);
+}
+
+.info-control-page .chamfer-panel:not(.chamfer-panel--interactive) {
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+}
+
+.info-control-page .chamfer-panel--command:not(.chamfer-panel--interactive) {
+  clip-path: polygon(32px 0, calc(100% - 32px) 0, 100% 32px, 100% calc(100% - 32px), calc(100% - 32px) 100%, 32px 100%, 0 calc(100% - 32px), 0 32px);
+}
+
+.info-control-page .chamfer-panel--wide:not(.chamfer-panel--interactive) {
+  clip-path: polygon(26px 0, calc(100% - 26px) 0, 100% 26px, 100% calc(100% - 26px), calc(100% - 26px) 100%, 26px 100%, 0 calc(100% - 26px), 0 26px);
+}
+
+.info-control-page .chamfer-panel--policy:not(.chamfer-panel--interactive) {
+  clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
+}
+
+.info-control-page .chamfer-panel--command::after {
+  background:
+    linear-gradient(115deg, rgba(254, 240, 138, 0.035), transparent 34%),
+    rgba(0, 0, 0, 0.54);
+}
+
+.info-control-page .chamfer-panel--wide::after {
+  background:
+    linear-gradient(90deg, rgba(254, 240, 138, 0.035), transparent 42%),
+    rgba(0, 0, 0, 0.52);
+}
+
+.info-control-page .chamfer-panel--policy::after {
+  background: rgba(0, 0, 0, 0.56);
+}
+
+.info-control-page .chamfer-panel--small::after {
+  background: rgba(5, 19, 24, 0.56);
+}
+
+.info-control-page .chamfer-panel--interactive:hover::after,
+.info-control-page .chamfer-panel--interactive:focus-visible::after {
+  background: rgba(5, 25, 32, 0.54);
+}
+
+.info-control-page .control-surface {
+  background-color: rgba(0, 0, 0, 0.42) !important;
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+}
+
+.info-control-page .control-surface-strong {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
+}
+
+.info-control-page .control-surface-large {
+  clip-path: polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px);
+}
+
+.info-control-page .control-surface-soft {
+  background-color: rgba(255, 255, 255, 0.018) !important;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+
+.info-control-page .control-input-surface {
+  background-color: rgba(0, 0, 0, 0.55) !important;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+}
+
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive)::before {
   background: rgba(254, 240, 138, 0.72);
 }
@@ -556,22 +577,6 @@ body::after {
   background:
     linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(14, 165, 233, 0.018)),
     rgba(0, 0, 0, 0.86);
-}
-
-@keyframes tunnel-pulse {
-  0%, 100% {
-    opacity: 0.5;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-}
-
-@keyframes tunnel-flicker {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
 }
 
 @keyframes hash-fall {
