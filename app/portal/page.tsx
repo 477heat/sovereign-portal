@@ -13,6 +13,7 @@ import {
   useActiveWallet,
   useDisconnect,
 } from "thirdweb/react";
+import { createWallet, walletConnect } from "thirdweb/wallets";
 import {
   contractLanguage,
   contractLanguageVersion,
@@ -61,6 +62,45 @@ const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
 
 const steps = ["Wallet", "EAS", "Identity", "Terms", "Payment", "Mint"];
+const portalAppMetadata = {
+  name: "Sovereign Portal",
+  url: "https://sovengine.xyz",
+  description: "Genesis Soul Deed minting portal on Base.",
+  logoUrl: "https://sovengine.xyz/icon.png",
+};
+const portalWallets = [
+  createWallet("org.base.account", {
+    appMetadata: portalAppMetadata,
+    chains: [base],
+  }),
+  createWallet("com.coinbase.wallet", {
+    appMetadata: portalAppMetadata,
+    walletConfig: {
+      options: "all",
+    },
+  }),
+  createWallet("io.metamask"),
+  walletConnect(),
+];
+const portalConnectButton = {
+  label: "Connect Base Wallet",
+};
+const portalSwitchButton = {
+  label: "Switch To Base",
+};
+const portalConnectModal = {
+  title: "Connect Base Wallet",
+  titleIcon: "",
+  size: "compact",
+  showThirdwebBranding: false,
+} as const;
+const portalDetailsModal = {
+  hideBuyFunds: true,
+  hideSendFunds: true,
+  manageWallet: {
+    allowLinkingProfiles: false,
+  },
+};
 
 function buildPublicMark(firstName: string, lastName: string) {
   const firstInitial = firstName.trim().charAt(0).toUpperCase();
@@ -81,6 +121,47 @@ function shortAddress(address?: string) {
   }
 
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+function PortalWalletGate() {
+  return (
+    <section className="flex flex-1 items-center justify-center py-12">
+      <div className="w-full max-w-2xl border border-yellow-300/35 bg-black/65 p-6 text-center shadow-[0_0_70px_rgba(253,224,71,0.08)] backdrop-blur-[2px] md:p-8">
+        <div className="text-[11px] uppercase tracking-[0.34em] text-yellow-300/70">
+          Wallet Required
+        </div>
+        <h1 className="mt-4 text-2xl font-light uppercase tracking-[0.14em] text-white md:text-4xl">
+          Connect to enter the Portal
+        </h1>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/62">
+          The Portal uses your connected Base wallet for Coinbase EAS
+          eligibility, checkout order ownership, and the final mint recipient.
+          Typed wallet addresses are not accepted for the live mint path.
+        </p>
+        <div className="mt-6 flex justify-center">
+          {thirdwebClient ? (
+            <ConnectButton
+              client={thirdwebClient}
+              chain={base}
+              appMetadata={portalAppMetadata}
+              connectButton={portalConnectButton}
+              connectModal={portalConnectModal}
+              detailsModal={portalDetailsModal}
+              recommendedWallets={portalWallets}
+              showAllWallets={false}
+              switchButton={portalSwitchButton}
+              wallets={portalWallets}
+            />
+          ) : (
+            <div className="border border-red-300/35 bg-red-500/10 p-4 text-sm leading-6 text-red-100">
+              Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live wallet
+              connector.
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function PortalContent() {
@@ -331,6 +412,9 @@ function PortalContent() {
           </div>
         </nav>
 
+        {!account?.address ? (
+          <PortalWalletGate />
+        ) : (
         <section className="flex flex-1 flex-col gap-5">
           <div className="border border-white/10 bg-black/55 p-4 shadow-[0_0_56px_rgba(81,197,255,0.06)] backdrop-blur-[2px] md:p-5">
             <div className="mb-5 border border-yellow-300/35 bg-yellow-300/[0.09] px-4 py-3">
@@ -456,7 +540,14 @@ function PortalContent() {
                         <ConnectButton
                           client={thirdwebClient}
                           chain={base}
-                          connectModal={{ size: "compact" }}
+                          appMetadata={portalAppMetadata}
+                          connectButton={portalConnectButton}
+                          connectModal={portalConnectModal}
+                          detailsModal={portalDetailsModal}
+                          recommendedWallets={portalWallets}
+                          showAllWallets={false}
+                          switchButton={portalSwitchButton}
+                          wallets={portalWallets}
                         />
                       )
                     ) : (
@@ -848,6 +939,7 @@ function PortalContent() {
             </div>
           </section>
         </section>
+        )}
       </div>
     </main>
   );
