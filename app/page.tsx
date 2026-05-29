@@ -298,7 +298,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-8 grid w-fit gap-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-[10.5rem_10.5rem] gap-3">
               <Link
                 href="/portal"
                 className="chamfer-hero-link chamfer-hero-link--primary"
@@ -312,7 +312,7 @@ export default function HomePage() {
                 Artifact Engine
               </Link>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-[10.5rem_10.5rem] gap-3">
               <Link
                 aria-label="Open Access page for Day 1 countdown details"
                 className="chamfer-countdown-label-link"

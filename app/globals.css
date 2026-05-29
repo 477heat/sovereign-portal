@@ -141,6 +141,7 @@ body::after {
   align-items: center;
   background: rgba(4, 18, 24, 0.86);
   border: 0;
+  box-sizing: border-box;
   clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
   color: rgb(207, 250, 254);
   display: inline-flex;
@@ -150,6 +151,7 @@ body::after {
   isolation: isolate;
   justify-content: center;
   letter-spacing: 0.12em;
+  max-width: 10.5rem;
   min-width: 10.5rem;
   padding: 0 0.8rem;
   position: relative;
