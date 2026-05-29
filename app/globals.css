@@ -379,7 +379,7 @@ body::after {
 
 .chamfer-panel--hero-copy {
   background: rgba(0, 0, 0, 0.42);
-  clip-path: polygon(18px 0, calc(100% - 60px) 0, 100% 60px, 100% 100%, 52px 100%, 0 calc(100% - 52px), 0 18px);
+  clip-path: polygon(18px 0, calc(100% - 96px) 0, 100% 60px, 100% 100%, 52px 100%, 0 calc(100% - 52px), 0 18px);
 }
 
 .chamfer-panel--hero-copy::after {

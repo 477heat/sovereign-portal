@@ -2,9 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 
 const dayOneLaunchAt = Date.UTC(2026, 4, 29, 12, 0, 0);
+const heroLoopEnd = 4;
+const heroLinkExitStartAt = 4.58;
+const heroLinkExitPlaySeconds = 2;
+const heroPointerIdleMs = 420;
 
 const protocolCards = [
   {
@@ -96,6 +100,11 @@ function getCountdownParts(milliseconds: number | null) {
 }
 
 export default function HomePage() {
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+  const pointerIdleTimer = useRef<number | null>(null);
+  const navigationTimer = useRef<number | null>(null);
+  const isPointerActive = useRef(false);
+  const isExitingPage = useRef(false);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
 
@@ -110,8 +119,128 @@ export default function HomePage() {
     return () => window.clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (pointerIdleTimer.current !== null) {
+        window.clearTimeout(pointerIdleTimer.current);
+      }
+
+      if (navigationTimer.current !== null) {
+        window.clearTimeout(navigationTimer.current);
+      }
+    };
+  }, []);
+
+  function playVideoSegment(startAt: number) {
+    const video = heroVideoRef.current;
+
+    if (!video) return;
+
+    video.currentTime = startAt;
+    void video.play().catch(() => {
+      video.pause();
+    });
+  }
+
+  function handlePointerMove() {
+    if (isExitingPage.current) return;
+
+    isPointerActive.current = true;
+
+    const video = heroVideoRef.current;
+
+    if (video) {
+      if (video.currentTime >= heroLoopEnd || video.currentTime < 0) {
+        video.currentTime = 0;
+      }
+
+      void video.play().catch(() => {
+        video.pause();
+      });
+    }
+
+    if (pointerIdleTimer.current !== null) {
+      window.clearTimeout(pointerIdleTimer.current);
+    }
+
+    pointerIdleTimer.current = window.setTimeout(() => {
+      isPointerActive.current = false;
+      heroVideoRef.current?.pause();
+    }, heroPointerIdleMs);
+  }
+
+  function handleVideoTimeUpdate() {
+    const video = heroVideoRef.current;
+
+    if (!video) return;
+
+    if (isExitingPage.current) {
+      return;
+    }
+
+    if (video.currentTime >= heroLoopEnd) {
+      video.currentTime = 0;
+
+      if (isPointerActive.current) {
+        void video.play().catch(() => {
+          video.pause();
+        });
+      } else {
+        video.pause();
+      }
+    }
+  }
+
+  function handlePageLinkClick(event: MouseEvent<HTMLElement>) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const anchor = (event.target as Element | null)?.closest("a");
+
+    if (!anchor) return;
+
+    const href = anchor.getAttribute("href");
+    const target = anchor.getAttribute("target");
+
+    if (!href || target === "_blank" || href.startsWith("#")) return;
+
+    const destination = new URL(href, window.location.href);
+
+    if (destination.origin !== window.location.origin) return;
+    if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
+
+    event.preventDefault();
+    isExitingPage.current = true;
+
+    if (pointerIdleTimer.current !== null) {
+      window.clearTimeout(pointerIdleTimer.current);
+    }
+
+    playVideoSegment(heroLinkExitStartAt);
+
+    if (navigationTimer.current !== null) {
+      window.clearTimeout(navigationTimer.current);
+    }
+
+    navigationTimer.current = window.setTimeout(() => {
+      window.location.assign(`${destination.pathname}${destination.search}${destination.hash}`);
+    }, heroLinkExitPlaySeconds * 1000);
+  }
+
   return (
-    <main className="home-control-page relative isolate min-h-screen overflow-hidden bg-black text-white">
+    <main
+      className="home-control-page relative isolate min-h-screen overflow-hidden bg-black text-white"
+      onClickCapture={handlePageLinkClick}
+      onPointerMove={handlePointerMove}
+    >
       <header className="fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
           <Link
@@ -145,9 +274,11 @@ export default function HomePage() {
 
       <section className="relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-24 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
         <video
-          autoPlay
           muted
+          onTimeUpdate={handleVideoTimeUpdate}
           playsInline
+          preload="auto"
+          ref={heroVideoRef}
           className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-100"
           src="/media/command-console.mp4"
         />
