@@ -52,8 +52,19 @@ export function GlossaryTerm({ children, term }: GlossaryTermProps) {
 
       if (!rect) return;
 
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+      const estimatedPopoverWidth = isMobile
+        ? Math.min(320, window.innerWidth - 64)
+        : Math.min(304, window.innerWidth - 32);
+      const minimumCenter = 16 + estimatedPopoverWidth / 2;
+      const maximumCenter = window.innerWidth - 16 - estimatedPopoverWidth / 2;
+      const triggerCenter = rect.left + rect.width / 2;
+
       setPopoverPosition({
-        left: Math.min(Math.max(rect.left + rect.width / 2, 16), window.innerWidth - 16),
+        left: Math.min(
+          Math.max(triggerCenter, minimumCenter),
+          Math.max(minimumCenter, maximumCenter),
+        ),
         top: rect.top,
       });
     }

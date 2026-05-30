@@ -33,7 +33,7 @@ const protocolCards = [
   {
     label: "Base-native",
     title: "Artifact on Base",
-    body: "Create the Genesis artifact that anchors your deterministic profile on Base.",
+    body: "Create the Genesis artifact on Base. Every Vanguard-created artifact keeps its origin wallet attached for royalty routing.",
     href: "/portal",
     destination: "Soul Registry Portal",
   },
