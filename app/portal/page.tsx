@@ -154,6 +154,7 @@ function PortalContent() {
   const firstNameInputRef = useRef<HTMLInputElement | null>(null);
   const lastNameInputRef = useRef<HTMLInputElement | null>(null);
   const dobInputRef = useRef<HTMLInputElement | null>(null);
+  const mobileGateTriggerRef = useRef<HTMLButtonElement | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [dob, setDob] = useState("");
@@ -175,6 +176,7 @@ function PortalContent() {
   const [paymentNotice, setPaymentNotice] = useState("");
   const [error, setError] = useState("");
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
+  const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
   const previewShellActive = previewShellEnabled && previewShellRequested;
 
   const publicMark = useMemo(
@@ -249,6 +251,23 @@ function PortalContent() {
 
     return () => window.clearTimeout(focusTimer);
   }, [identityFocus, selectedGate]);
+
+  useEffect(() => {
+    if (!mobileGateDrawerOpen) {
+      return;
+    }
+
+    function handleDrawerKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMobileGateDrawerOpen(false);
+        mobileGateTriggerRef.current?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleDrawerKeyDown);
+
+    return () => window.removeEventListener("keydown", handleDrawerKeyDown);
+  }, [mobileGateDrawerOpen]);
 
   useEffect(() => {
     let ignore = false;
@@ -550,6 +569,16 @@ function PortalContent() {
     }
   }
 
+  function selectGate(gate: PortalGate) {
+    setSelectedGate(gate);
+
+    if (gate === "identity") {
+      setIdentityFocus(
+        firstName.trim() ? (lastName.trim() ? "dob" : "lastName") : "firstName",
+      );
+    }
+  }
+
   const gateReadouts = [
     {
       key: "wallet",
@@ -786,7 +815,7 @@ function PortalContent() {
                     )}
 
                     <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(120px,0.24fr)_minmax(0,1fr)]">
-                      <div className="control-surface-soft portal-gate-chip-shell min-w-0 border border-cyan-100/18 p-3">
+                      <div className="control-surface-soft portal-gate-chip-shell min-w-0 border border-cyan-100/18 p-3 max-lg:hidden">
                         <div className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                           Select Panel
                         </div>
@@ -800,18 +829,7 @@ function PortalContent() {
                                   : ""
                               } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
                               key={gate.key}
-                              onClick={() => {
-                                setSelectedGate(gate.key);
-                                if (gate.key === "identity") {
-                                  setIdentityFocus(
-                                    firstName.trim()
-                                      ? lastName.trim()
-                                        ? "dob"
-                                        : "lastName"
-                                      : "firstName",
-                                  );
-                                }
-                              }}
+                              onClick={() => selectGate(gate.key)}
                               type="button"
                             >
                               <span>{gate.label}</span>
@@ -1447,6 +1465,76 @@ function PortalContent() {
           </section>
         </section>
       </div>
+
+      <button
+        aria-controls="portal-mobile-select-drawer"
+        aria-expanded={mobileGateDrawerOpen}
+        className="console-key-button portal-mobile-select-trigger lg:hidden"
+        onClick={() => setMobileGateDrawerOpen(true)}
+        ref={mobileGateTriggerRef}
+        type="button"
+      >
+        <span>Select</span>
+        <small>{selectedGateReadout.label}</small>
+      </button>
+
+      {mobileGateDrawerOpen && (
+        <div className="portal-mobile-select-layer lg:hidden">
+          <button
+            aria-label="Close Select Panel"
+            className="portal-mobile-select-backdrop"
+            onClick={() => {
+              setMobileGateDrawerOpen(false);
+              mobileGateTriggerRef.current?.focus();
+            }}
+            type="button"
+          />
+          <aside
+            aria-label="Select Panel"
+            aria-modal="true"
+            className="control-surface-soft portal-mobile-select-drawer border border-cyan-100/18 p-4"
+            id="portal-mobile-select-drawer"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-50">
+                Select Panel
+              </div>
+              <button
+                className="console-key-button portal-mobile-select-close"
+                onClick={() => {
+                  setMobileGateDrawerOpen(false);
+                  mobileGateTriggerRef.current?.focus();
+                }}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <div className="grid justify-items-center gap-3">
+              {gateReadouts.map((gate) => (
+                <button
+                  aria-pressed={selectedGate === gate.key}
+                  className={`console-key-button portal-gate-button portal-mobile-select-chip ${
+                    selectedGate === gate.key
+                      ? "portal-gate-button--selected"
+                      : ""
+                  } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
+                  key={gate.key}
+                  onClick={() => {
+                    selectGate(gate.key);
+                    setMobileGateDrawerOpen(false);
+                  }}
+                  type="button"
+                >
+                  <span>{gate.label}</span>
+                  <small>{gate.value}</small>
+                </button>
+              ))}
+            </div>
+          </aside>
+        </div>
+      )}
     </main>
   );
 }
