@@ -42,6 +42,8 @@ const navLinks = [
   ["Litepaper", "/whitepaper"],
 ] as const;
 
+const mobileNavLinks = [["Home", "/"], ...navLinks, ["Developer", "/developer"]] as const;
+
 const whyThisMatters = [
   {
     body: "The Deed is your Genesis Character. It contains stats that remain with your profile whether you sell it or give it away.",
@@ -108,6 +110,7 @@ export default function HomePage() {
   const isExitingPage = useRef(false);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
 
   useEffect(() => {
@@ -140,16 +143,16 @@ export default function HomePage() {
 
       if (!isMobile) {
         setMobileHeaderHidden(false);
+        setMobileMenuOpen(false);
         lastScrollY.current = currentScrollY;
         return;
       }
 
       if (currentScrollY < 24) {
         setMobileHeaderHidden(false);
-      } else if (currentScrollY > lastScrollY.current + 8 && currentScrollY > 80) {
+      } else {
         setMobileHeaderHidden(true);
-      } else if (currentScrollY < lastScrollY.current - 8) {
-        setMobileHeaderHidden(false);
+        setMobileMenuOpen(false);
       }
 
       lastScrollY.current = currentScrollY;
@@ -298,10 +301,19 @@ export default function HomePage() {
             />
             <span>Sovereign Engine</span>
           </Link>
-          <nav className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/72 md:gap-3 md:text-sm">
+          <button
+            aria-controls="mobile-command-drawer"
+            aria-expanded={mobileMenuOpen}
+            className="chamfer-nav-link chamfer-nav-link--opposite sm:hidden"
+            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+            type="button"
+          >
+            Menu
+          </button>
+          <nav className="hidden flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/72 sm:flex md:gap-3 md:text-sm">
             {navLinks.map(([label, href]) => (
               <Link
-                className="chamfer-nav-link max-sm:!h-11 max-sm:!min-h-11 max-sm:!w-[5.65rem] max-sm:!text-[0.66rem]"
+                className="chamfer-nav-link"
                 href={href}
                 key={href}
               >
@@ -311,6 +323,55 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
+
+      <button
+        aria-label="Close mobile navigation"
+        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 sm:hidden ${
+          mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+        type="button"
+      />
+      <aside
+        aria-label="Mobile navigation"
+        id="mobile-command-drawer"
+        className={`mobile-command-drawer fixed bottom-0 right-0 top-0 z-50 w-[min(19rem,84vw)] border-l border-cyan-200/24 bg-black/92 px-5 py-5 shadow-[-22px_0_70px_rgba(0,0,0,0.62)] backdrop-blur-2xl transition duration-300 sm:hidden ${
+          mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+        }`}
+      >
+        <div className="mb-7 flex items-center justify-between gap-3 border-b border-cyan-200/14 pb-4">
+          <div className="min-w-0">
+            <p className="text-[0.58rem] uppercase tracking-[0.28em] text-cyan-200/58">
+              Command Drawer
+            </p>
+            <p className="mt-1 truncate text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50">
+              Sovereign Engine
+            </p>
+          </div>
+          <button
+            aria-label="Close menu"
+            className="chamfer-nav-link chamfer-nav-link--compact"
+            onClick={() => setMobileMenuOpen(false)}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+        <nav className="grid gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-white/72">
+          {mobileNavLinks.map(([label, href], index) => (
+            <Link
+              className={`chamfer-nav-link mobile-drawer-link ${
+                index % 2 === 0 ? "chamfer-nav-link--opposite" : ""
+              }`}
+              href={href}
+              key={href}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
 
       <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
         <video

@@ -97,6 +97,20 @@ body {
   clip-path: polygon(6px 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
 }
 
+.mobile-command-drawer {
+  background:
+    linear-gradient(180deg, rgba(8, 36, 45, 0.22), rgba(0, 0, 0, 0) 34%),
+    rgba(0, 0, 0, 0.92);
+}
+
+.mobile-drawer-link {
+  height: 2.75rem !important;
+  justify-content: flex-start;
+  min-height: 2.75rem !important;
+  padding-left: 1rem;
+  width: 100% !important;
+}
+
 .chamfer-hero-link {
   align-items: center;
   background: rgba(4, 18, 24, 0.86);
@@ -1102,6 +1116,91 @@ body {
   background:
     linear-gradient(120deg, rgba(71, 85, 105, 0.16), transparent 48%),
     rgba(11, 18, 24, 0.9);
+}
+
+.portal-gate-button {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.2rem;
+  height: 2.9rem;
+  min-height: 2.9rem;
+  padding: 0.42rem 0.62rem;
+  width: 100%;
+}
+
+.portal-gate-button small {
+  color: rgba(236, 254, 255, 0.58);
+  display: block;
+  font-size: 0.52rem;
+  line-height: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.portal-gate-button--selected {
+  min-height: 4rem;
+  transform: translateY(-1px);
+}
+
+.portal-gate-button--selected::before {
+  background: rgba(254, 240, 138, 0.72);
+}
+
+.portal-gate-button--selected::after {
+  background:
+    linear-gradient(120deg, rgba(254, 240, 138, 0.14), transparent 46%),
+    rgba(18, 25, 20, 0.94);
+}
+
+.portal-gate-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-console-enter {
+  border: 0;
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+  font-size: clamp(1rem, 3.2vw, 1.75rem);
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  min-height: 4.2rem;
+  padding: 0.9rem;
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  width: 100%;
+}
+
+.portal-console-enter--ready {
+  background: rgba(128, 28, 28, 0.92);
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 202, 202, 0.24),
+    0 0 28px rgba(248, 113, 113, 0.3);
+  color: rgb(254, 242, 242);
+  cursor: pointer;
+}
+
+.portal-console-enter--ready:hover,
+.portal-console-enter--ready:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 226, 226, 0.42),
+    0 0 44px rgba(248, 113, 113, 0.5);
+  filter: brightness(1.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.portal-console-enter--locked {
+  background: rgba(45, 18, 22, 0.7);
+  box-shadow:
+    inset 0 0 0 1px rgba(252, 165, 165, 0.1),
+    0 0 18px rgba(248, 113, 113, 0.1);
+  color: rgba(254, 202, 202, 0.48);
+  cursor: not-allowed;
 }
 
 .console-key-button:disabled:hover,
