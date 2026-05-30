@@ -67,19 +67,19 @@ export default function CoinbaseEntryPage() {
               </p>
             </div>
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              Sovereign Engine creates Genesis Soul Deed artifacts for real
-              participants on Base. The Coinbase/Base entry page explains the
-              path, then routes you into the official Portal for eligibility,
-              checkout, generation, and minting.
+              Your first Artifact is more than a mint. It is the Engine&apos;s
+              record of your origin, your humanity, and the future paths
+              attached to you. Early supporters can claim before Day One begins
+              Monday, June 1, 2026.
             </p>
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/portal"
+              href="/"
               className="chamfer-hero-link chamfer-hero-link--primary max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0"
             >
-              Enter Portal
+              Enter SovEngine
             </Link>
             <Link
               href="/whitepaper"
@@ -168,15 +168,15 @@ export default function CoinbaseEntryPage() {
 
         <section className="chamfer-panel chamfer-panel--wide mb-12 px-6 py-7 text-center md:px-9 md:py-8">
           <p className="mx-auto max-w-2xl text-sm leading-6 text-cyan-50/70 md:text-base">
-            Ready users continue to the Portal. The Portal will connect the
-            wallet, check eligibility, show the deed, collect checkout, and
-            submit the mint through the existing backend.
+            Continue to the Sovereign Engine front page to see what is built,
+            what is coming, and how the first Artifact opens Access and future
+            Progeny paths.
           </p>
           <Link
-            href="/portal"
+            href="/"
             className="chamfer-hero-link chamfer-hero-link--primary mx-auto mt-6 max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0"
           >
-            Continue
+            Enter SovEngine
           </Link>
         </section>
 
