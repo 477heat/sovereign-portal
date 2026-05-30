@@ -355,7 +355,7 @@ body {
 
 .chamfer-panel--hero-copy {
   background: rgba(0, 0, 0, 0.42);
-  clip-path: polygon(18px 0, calc(100% - 96px) 0, 100% 60px, 100% 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+  clip-path: polygon(18px 0, calc(100% - 60px) 0, 100% 60px, 100% 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
 }
 
 .chamfer-panel--hero-copy::after {
@@ -445,6 +445,23 @@ body {
 .hero-clear-stage {
   background: transparent;
   clip-path: polygon(28px 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%, 0 28px);
+}
+
+@media (max-width: 640px) {
+  .home-hero-section {
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    max-width: none;
+    min-height: 100svh;
+    width: 100vw;
+  }
+
+  .home-hero-video {
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+  }
 }
 
 .chamfer-panel--interactive {

@@ -6,7 +6,7 @@ import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 4, 29, 12, 0, 0);
+const dayOneLaunchAt = Date.UTC(2026, 5, 1, 0, 0, 0);
 const heroLoopEnd = 4;
 const heroLinkExitStartAt = 4.58;
 const heroLinkExitPlaySeconds = 1;
@@ -392,7 +392,7 @@ export default function HomePage() {
           playsInline
           preload="auto"
           ref={heroVideoRef}
-          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-100"
+          className="home-hero-video pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-100"
           src="/media/command-console.mp4"
         />
         <div className="pointer-events-none absolute inset-0 z-0 bg-black/35" />
@@ -437,7 +437,7 @@ export default function HomePage() {
                   Day 1 Countdown
                 </div>
                 <div className="mt-1 text-[8px] uppercase tracking-[0.12em] text-cyan-100/62">
-                  29 May 2026 / 12:00 UTC
+                  01 Jun 2026 / 00:00 UTC
                 </div>
               </Link>
               <Link

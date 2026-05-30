@@ -70,6 +70,8 @@ const previewShellEnabled =
   process.env.VERCEL_ENV === "preview";
 const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
+const coinbaseEasUrl =
+  "https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification";
 
 const portalGlossaryTerms: GlossaryTermKey[] = [
   "Coinbase EAS",
@@ -511,6 +513,11 @@ function PortalContent() {
     }
 
     if (selectedGate === "eas") {
+      if (account?.address && !verification?.eligible) {
+        window.open(coinbaseEasUrl, "_blank", "noopener,noreferrer");
+        return;
+      }
+
       await refreshWalletAttestation();
       return;
     }
@@ -657,7 +664,7 @@ function PortalContent() {
       : verification?.eligible
         ? "Wallet has Coinbase Verified Account attestation."
         : account?.address
-          ? "Press ENTER to verify the connected wallet."
+          ? "Open Coinbase EAS to connect verification to this wallet."
           : "Wallet must be connected before EAS can verify.",
     identity: hasIdentity
       ? "Identity input has been confirmed for this session."
@@ -691,7 +698,11 @@ function PortalContent() {
   }[selectedGate];
   const gateEnterLabel = {
     wallet: isConnecting ? "Connecting" : "Enter Wallet",
-    eas: checkingAttestation ? "Checking" : "Verify EAS",
+    eas: checkingAttestation
+      ? "Checking"
+      : verification?.eligible
+        ? "Refresh EAS"
+        : "Open Coinbase EAS",
     identity: hasIdentity ? "Confirmed" : "Enter Identity",
     terms: deedAccepted ? "Continue" : "Enter Terms",
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
@@ -779,7 +790,7 @@ function PortalContent() {
                         <div className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                           Select Panel
                         </div>
-                        <div className="grid justify-items-center grid-cols-2 gap-2 lg:grid-cols-1">
+                        <div className="grid justify-items-center grid-cols-2 gap-3 lg:grid-cols-1">
                           {gateReadouts.map((gate) => (
                             <button
                               aria-pressed={selectedGate === gate.key}
@@ -908,10 +919,17 @@ function PortalContent() {
                                     verified human account.
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
-                                    This check uses the wallet you connect. It
-                                    does not read a typed wallet address. When
-                                    the Portal finds the right verification, the
-                                    EAS chip turns green.
+                                    This check uses the wallet you connect. If
+                                    this wallet already had the right Coinbase
+                                    EAS verification, it would show here and the
+                                    EAS chip would turn green.
+                                  </p>
+                                  <p className="mt-3 text-base leading-7 text-white/66">
+                                    If your Coinbase account is verified but
+                                    this wallet is not green yet, Coinbase still
+                                    needs to know this is your wallet. Use the
+                                    button below to open Coinbase EAS and attach
+                                    verification to the current connected wallet.
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
                                     Every chip in the Select Panel must be green
@@ -926,7 +944,7 @@ function PortalContent() {
                                   <div className="mt-4 flex flex-wrap gap-2">
                                     <a
                                       className="console-key-button"
-                                      href="https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification"
+                                      href={coinbaseEasUrl}
                                       rel="noreferrer"
                                       target="_blank"
                                     >
