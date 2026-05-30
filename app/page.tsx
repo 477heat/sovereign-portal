@@ -119,7 +119,7 @@ export default function HomePage() {
   const isPointerActive = useRef(false);
   const isExitingPage = useRef(false);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
-  const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
+  const [mobileHeaderHidden, setMobileHeaderHidden] = useState(true);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
 
   useEffect(() => {
@@ -156,11 +156,11 @@ export default function HomePage() {
         return;
       }
 
-      if (currentScrollY < 24) {
-        setMobileHeaderHidden(false);
-      } else if (currentScrollY > lastScrollY.current + 8 && currentScrollY > 80) {
+      if (currentScrollY < 96) {
         setMobileHeaderHidden(true);
-      } else if (currentScrollY < lastScrollY.current - 8) {
+      } else if (currentScrollY > lastScrollY.current + 6) {
+        setMobileHeaderHidden(true);
+      } else if (currentScrollY < lastScrollY.current - 12) {
         setMobileHeaderHidden(false);
       }
 
@@ -288,7 +288,7 @@ export default function HomePage() {
       onPointerMove={handlePointerMove}
     >
       <header
-        className={`fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-300 max-sm:will-change-transform ${
+        className={`fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-700 ease-out max-sm:will-change-transform ${
           mobileHeaderHidden
             ? "max-sm:-translate-y-full max-sm:opacity-0"
             : "max-sm:translate-y-0 max-sm:opacity-100"

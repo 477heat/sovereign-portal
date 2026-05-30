@@ -10,6 +10,7 @@ const vanguardGlossaryTerms: GlossaryTermKey[] = [
   "Marketplace",
   "Mint",
   "Royalty",
+  "Sovereign Engine",
   "Token",
   "Traceable",
   "Vanguard",

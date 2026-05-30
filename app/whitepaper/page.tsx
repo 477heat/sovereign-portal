@@ -14,6 +14,7 @@ const litepaperGlossaryTerms: GlossaryTermKey[] = [
   "Metadata",
   "Progeny",
   "Royalty",
+  "Sovereign Engine",
   "Traceable",
   "Vanguard",
   "Wallet",

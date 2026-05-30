@@ -1,158 +1,158 @@
 export const glossary = {
   "Access Token":
-    "A token used to prove access rights for a Sovereign Engine feature, launch, or future project branch.",
+    "A digital pass that lets a wallet use a part of the project.",
   Alienation:
-    "A legal-style term for transferring, selling, assigning, or otherwise giving up an ownership interest.",
+    "A formal word for giving, selling, or trading something you own.",
   Artifact:
-    "A generated digital object in the Sovereign Engine system. The Genesis Soul Deed is the first live artifact path.",
+    "A digital creation made by the project, such as a deed, character, item, or future game asset.",
   "Artifact Engine":
-    "The prototype console for exploring profile-derived stats and future generated asset types before they are wired into the live mint path.",
+    "The preview console where users can test possible stats and future creations.",
   Attestation:
-    "A verifiable statement made onchain or through an attestation service. Here it mainly refers to Coinbase EAS eligibility.",
+    "A trusted proof. Here it means Coinbase has confirmed the connected account.",
   Attester:
-    "The entity that issues an attestation. For the Portal gate, Coinbase is the relevant attester.",
+    "The group that gives the proof. For this site, that group is Coinbase.",
   "Attribute Tree":
-    "A project-specific structure that decides which traits, stats, categories, or inheritances a generated asset can receive.",
+    "The list of traits and stats a project chooses for its characters, items, or other creations.",
   "Base-native":
-    "Built for Base rather than treated as a later add-on. The Portal mint path is designed around Base wallet and contract behavior.",
+    "Built to work on Base from the start, not added later.",
   Backend:
-    "The server-side code that checks eligibility, requests Engine metadata, and prepares or submits mint actions.",
+    "The private part of the site that checks rules and prepares the mint.",
   "Backend Mint":
-    "A mint initiated by the protected server path rather than by raw frontend-only contract calls.",
+    "A mint started by the private part of the site, not only by the button you see.",
   Barter:
     "A trade or exchange of value that may not use ordinary currency.",
   Base:
-    "Coinbase's Ethereum Layer 2 network. The Sovereign Portal targets Base for the live mint path.",
+    "Coinbase's network where this project plans to mint.",
   "Base Mainnet":
-    "The production Base network where real assets, payments, and contract transactions occur.",
+    "The real Base network where live tokens and payments happen.",
   Blacklist:
-    "A contract or admin-level restriction list used to block specific marketplace operators or addresses when enabled.",
+    "A block list that can stop certain wallets or marketplaces from being used.",
   Blockchain:
-    "A public transaction ledger. In this project, it records mints, ownership, token IDs, and contract interactions.",
+    "A public record book for digital ownership and actions.",
   Burn:
-    "The action of destroying or permanently removing a token from circulation when the contract allows it.",
+    "To destroy a token so it is no longer usable.",
   "Burn Fee":
-    "A fee that may be required if a burn path is later enabled by the contract or project terms.",
+    "A possible fee for destroying a token if that option is ever turned on.",
   Checkout:
-    "The payment step used when the Portal is configured to require payment before minting.",
+    "The payment step before minting, when payment is required.",
   "Coinbase EAS":
-    "Coinbase's attestation path used by the Portal to check whether the connected wallet has a Verified Account attestation.",
+    "The Coinbase check used by the Portal to confirm the connected wallet belongs to a verified Coinbase account.",
   "Contract Address":
-    "The unique blockchain address where a deployed smart contract lives.",
+    "The public address for a project program on the network.",
   "Covenant Mark":
-    "The shortened public mark derived from entered identity fields for display on the deed path.",
+    "A short public mark made from the name fields.",
   Conveyance:
-    "A legal-style word for transfer. The Portal uses it as part of the ceremonial deed language.",
+    "A formal word for transfer.",
   "Deed of Spiritual Conveyance":
-    "The ceremonial contract-language framing for the Soul Deed artifact and its transfer language.",
+    "A formal title for the Soul Deed and its transfer language.",
   "Deterministic Profile":
-    "A profile generated from stable inputs so the same source produces the same core result instead of a random roll.",
+    "A profile that gives the same person the same core stats every time.",
   "Dynamic URI":
-    "A token metadata URI that can change or reveal different metadata before it is frozen or finalized.",
+    "A token link that can show updated information before it is locked.",
   DynamoDB:
-    "AWS database storage used for server-side records such as mint orders when configured.",
+    "A database service that can store site records like mint orders.",
   "ERC-721":
-    "The NFT token standard used for unique one-of-one tokens such as the Genesis Soul Deed.",
+    "A common kind of NFT made for unique one-of-one tokens.",
   "Founder Share":
-    "The portion of royalty or project revenue intended for the founder or designated project wallet when supported.",
+    "The part of a payment meant for the founder or project wallet.",
   Genesis:
-    "The origin stage of the Sovereign Engine system. It starts the profile layer before later branches open.",
+    "The beginning stage of the project, where the first personal profile and access path are created.",
   "Genesis Character":
-    "The first character/profile anchor created from the Genesis mint. It keeps its stats tied to the profile origin.",
+    "The first character-style profile created from the first mint. Its stats stay tied to the original person.",
   "Genesis Mint":
-    "The first one-person mint path for the Sovereign Engine profile layer. It creates the Genesis access artifact tied to the user's origin profile.",
+    "The first one-person mint. It creates the user's starting deed and profile access.",
   Grantor:
-    "The party described as conveying rights or title in the ceremonial deed language.",
+    "The person or side giving something in formal deed language.",
   Grantee:
-    "The recipient or holder described as receiving rights or title in the ceremonial deed language.",
+    "The person or side receiving something in formal deed language.",
   Hash:
-    "A fixed fingerprint of data used to verify integrity or reference content without exposing the full content.",
+    "A digital fingerprint for checking that data has not changed.",
   Indexer:
-    "A service that reads blockchain or attestation data and makes it easier for apps to query.",
+    "A service that organizes network records so apps can find them faster.",
   IPFS:
-    "A decentralized file storage network often used to store NFT images and metadata.",
+    "A file storage network often used for NFT images and information.",
   Lambda:
-    "An AWS serverless function. Project backend workers may run in this kind of environment.",
+    "A small cloud function that runs backend tasks when needed.",
   Lineage:
-    "The traceable parent/source relationship between a profile and the characters, children, or assets generated from it.",
+    "The family line between a source profile and the characters, children, or items made from it.",
   Marketplace:
-    "A trading venue such as OpenSea. Royalty behavior depends on whether the marketplace honors the collection flow.",
+    "A place like OpenSea where people can buy and sell digital items.",
   Metadata:
-    "The token's public descriptive data, usually including name, image, description, and attributes.",
+    "The public information attached to a token, usually its name, image, description, and traits.",
   Mint:
-    "The action of creating a token onchain and assigning it to a recipient wallet.",
+    "The action of creating a digital asset and sending it to a wallet.",
   "Mint Order":
-    "The Portal's server-side checkout and mint readiness record for a connected wallet.",
+    "The Portal's record that tracks whether a connected wallet is ready to mint.",
   "Mint Worker":
-    "The protected backend process that can prepare metadata and submit or coordinate mint requests.",
+    "The private process that helps prepare and send mint requests.",
   Minting:
-    "The active process of creating a token onchain.",
+    "The process of creating a token.",
   "One-wallet mint claim":
-    "A protection record intended to keep the Genesis mint to one eligible wallet claim per person or account path.",
+    "A rule record meant to stop one person from claiming the first mint more than once.",
   "Operator Filter":
-    "A contract-level marketplace control used to restrict or permit certain operators when trading rules require it.",
+    "A rule that can control which marketplaces or tools may move a token.",
   Pinata:
-    "An IPFS pinning service used to keep NFT files available through IPFS.",
+    "A service that helps keep NFT files available online.",
   "Placeholder URI":
-    "Temporary metadata shown before final reveal or final metadata publication.",
+    "A temporary token link used before the final information is ready.",
   "Platform Vault":
-    "A project-controlled vault or treasury destination for platform revenue when configured.",
+    "A project wallet or vault that can receive project funds.",
   "Proxy (contract)":
-    "A contract pattern where users interact with a stable proxy address while implementation logic can be upgraded.",
+    "A setup where the public address stays the same even if the project code is upgraded.",
   Progeny:
-    "Future generated children, characters, items, creatures, weapons, armor, transports, paths, or other assets derived from a source profile.",
+    "Future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
   "Public Mark":
-    "A shortened public display mark used in the Portal so raw identity inputs are not shown as ordinary public metadata.",
+    "A short public label so the site does not show full private name details.",
   Recipient:
     "The wallet that receives the minted token.",
   Royalty:
-    "A creator or origin payment requested on secondary sales when the contract and marketplace route support it.",
+    "A payment meant to go back to the creator or origin wallet when an item is resold, if the marketplace supports it.",
   "Royalty Splitter":
-    "A contract or payment route that divides royalty funds between configured recipients.",
+    "A payment tool that divides money between the right wallets.",
   RPC:
-    "A network endpoint that lets the app read from or submit requests to a blockchain.",
+    "A connection point the site uses to talk to the network.",
   "Schema UID":
-    "The unique identifier for an attestation schema, used to know what kind of attestation is being checked.",
+    "An ID number that tells the site what kind of proof it is checking.",
   Signature:
-    "A cryptographic approval from a wallet proving that the wallet owner authorized a specific action.",
+    "A wallet approval that proves the wallet owner said yes.",
   "Smart Contract":
-    "Code deployed onchain that defines token behavior, minting rules, ownership, royalties, and admin controls.",
+    "A program on the network that follows set rules for tokens.",
   Soul:
-    "The project origin concept for a unique living individual, used as the basis for the Genesis profile idea.",
+    "The project idea for a unique living person.",
   Soulbound:
-    "A token behavior where transfers are disabled or restricted so the token stays attached to a wallet.",
+    "A token that cannot be moved, or can only be moved in limited ways.",
   "Soul Deed":
-    "The Genesis access artifact that represents the user's certificate/title path in the Sovereign Engine system.",
+    "The first deed-style artifact that gives a user their starting profile and access path.",
   "Sovereign Engine":
-    "The broader system for deterministic profiles, Genesis access, Progeny structures, and future project integrations.",
+    "The system that helps users create profiles and artifacts from their own source, while keeping authority over themselves and what they create.",
   Token:
-    "A blockchain asset. In this project, the Genesis Soul Deed is an ERC-721 token.",
+    "A digital asset recorded on the network.",
   "Token Address":
-    "The contract address for a token or payment asset.",
+    "The public address for a token or payment asset.",
   "Token ID":
     "The unique number identifying a specific token inside a contract.",
   "Token URI":
-    "The metadata link for a token. It usually points to JSON that describes the token and its image.",
+    "The link that tells apps where to find a token's public information and image.",
   Traceable:
-    "Designed so the origin of a generated asset can be followed back to its source profile, wallet, or parent.",
+    "Designed so a creation can be followed back to the profile, wallet, or parent it came from.",
   "Trading (contract toggle)":
-    "A contract setting that can allow, restrict, or disable token transfers depending on published rules.",
+    "A setting that can turn token trading on, limit it, or turn it off.",
   "Upgradeable (contract)":
-    "A contract design that allows authorized upgrades to future implementation logic under controlled rules.",
+    "A setup that lets approved project owners update the contract code later.",
   UUPS:
-    "An upgradeable smart contract pattern where upgrade logic is managed through the implementation contract.",
+    "A common upgrade setup for smart contracts.",
   Vanguard:
-    "The Day One supporter status intended to carry forward into future Sovereign Engine launches and benefits.",
+    "The Day One supporter status intended to carry forward into future project launches and benefits.",
   "Verified Account":
-    "A Coinbase attestation signal used to support human-account eligibility for the Portal.",
+    "A Coinbase account signal used to help confirm the Portal is dealing with a real eligible account.",
   Wallet:
-    "The user's blockchain account. The Portal uses the connected Base wallet for eligibility, payment, and mint recipient checks.",
+    "The user's digital account. The Portal uses the connected wallet for access checks, payment, and receiving the mint.",
   "Wallet Address":
     "The public address of a wallet. It can receive tokens and appears in onchain records.",
   Webhook:
     "A server callback used to notify the app that an external event, such as payment status, has changed.",
   "wallet-linked":
-    "Tied to a connected wallet address so access, attribution, and mint state can follow the wallet path.",
+    "Connected to a wallet so access, ownership, and project credit can follow that wallet.",
 } as const;
 
 export type GlossaryTermKey = keyof typeof glossary;
