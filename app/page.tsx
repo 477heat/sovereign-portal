@@ -416,13 +416,13 @@ export default function HomePage() {
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"
-                className="chamfer-hero-link chamfer-hero-link--primary max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
+                className="chamfer-hero-link chamfer-hero-link--primary home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
                 Enter Portal
               </Link>
               <Link
                 href="/engine"
-                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
+                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
                 Artifact Engine
               </Link>
@@ -430,7 +430,7 @@ export default function HomePage() {
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 aria-label="Open Access page for Day 1 countdown details"
-                className="chamfer-countdown-label-link max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
+                className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
                 href="/economics"
               >
                 <div className="text-[9px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
@@ -442,7 +442,7 @@ export default function HomePage() {
               </Link>
               <Link
                 aria-label="Open Access page for Day 1 countdown timer"
-                className="chamfer-countdown-link max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
+                className="chamfer-countdown-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
                 href="/economics"
               >
                 <div className="grid grid-cols-4 gap-1">

@@ -453,7 +453,17 @@ body {
     margin-right: calc(50% - 50vw);
     max-width: none;
     min-height: 100svh;
+    padding-top: 7.25rem;
     width: 100vw;
+  }
+
+  .home-hero-controls {
+    margin-top: 1.35rem;
+  }
+
+  .home-hero-mobile-button {
+    height: 3.95rem !important;
+    min-height: 3.95rem !important;
   }
 
   .home-hero-video {
@@ -1443,6 +1453,173 @@ body {
   --portal-surface-corner: 17px;
 }
 
+.portal-control-page .portal-gate-view--matrix {
+  --portal-surface-border: rgba(165, 243, 252, 0.56);
+  --portal-surface-fill: rgba(0, 0, 0, 0.22);
+}
+
+.portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft, .control-input-surface) {
+  --portal-surface-fill: rgba(0, 0, 0, 0);
+  background-color: transparent !important;
+}
+
+.portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::after {
+  background: transparent !important;
+}
+
+.portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft)::before {
+  filter: drop-shadow(0 0 5px rgba(103, 232, 249, 0.24));
+}
+
+.portal-control-page .portal-gate-view--matrix :where(.portal-surface-cyan, .portal-surface-gold, .portal-surface-red, .portal-surface-red-soft, .console-status-tile--entered, .console-status-tile--waiting) {
+  --portal-surface-fill: rgba(0, 0, 0, 0);
+}
+
+.portal-gate-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.portal-step-strip {
+  display: grid;
+  gap: 0.45rem;
+  grid-template-columns: repeat(3, 2.7rem);
+  justify-content: end;
+  min-width: max-content;
+}
+
+@media (min-width: 720px) {
+  .portal-step-strip {
+    grid-template-columns: repeat(6, 2.7rem);
+  }
+}
+
+@media (max-width: 580px) {
+  .portal-gate-header {
+    flex-direction: column;
+  }
+
+  .portal-step-strip {
+    gap: 0.35rem;
+    grid-template-columns: repeat(3, minmax(2.25rem, 1fr)) !important;
+    justify-content: stretch !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+.portal-step-icon {
+  --portal-step-icon-shape: polygon(28% 0, 72% 0, 100% 28%, 100% 72%, 72% 100%, 28% 100%, 0 72%, 0 28%);
+  align-items: center;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 38%),
+    rgba(0, 0, 0, 0.72);
+  clip-path: var(--portal-step-icon-shape);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  justify-content: center;
+  min-height: 2.7rem;
+  opacity: 0.98;
+  padding: 0.28rem 0.16rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.portal-step-icon::before,
+.portal-step-icon::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.portal-step-icon::before {
+  background: currentColor;
+  inset: 0;
+  opacity: 0.98;
+  z-index: -2;
+}
+
+.portal-step-icon::after {
+  background:
+    radial-gradient(circle at 50% 42%, currentColor 0, transparent 55%),
+    rgba(0, 0, 0, 0.96);
+  inset: 2px;
+  opacity: 0.68;
+  z-index: -1;
+}
+
+.portal-step-icon-svg {
+  filter: drop-shadow(0 0 6px currentColor);
+  height: 1.08rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.25;
+  width: 1.08rem;
+}
+
+.portal-step-icon span {
+  font-size: 0.38rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  text-shadow: 0 0 7px currentColor;
+}
+
+.portal-control-page .portal-step-icon--current {
+  color: rgb(165, 243, 252) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(165, 243, 252, 0.5),
+    0 0 22px rgba(103, 232, 249, 0.38);
+}
+
+.portal-control-page .portal-step-icon--complete {
+  color: rgb(134, 239, 172) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(134, 239, 172, 0.48),
+    0 0 20px rgba(34, 197, 94, 0.34);
+}
+
+.portal-control-page .portal-step-icon--available {
+  animation: portal-step-available-pulse 1.25s ease-in-out infinite;
+  color: rgb(254, 240, 138) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(254, 240, 138, 0.58),
+    0 0 24px rgba(234, 179, 8, 0.38);
+}
+
+.portal-control-page .portal-step-icon--locked {
+  color: rgb(252, 165, 165) !important;
+  opacity: 0.82;
+  box-shadow:
+    inset 0 0 0 2px rgba(252, 165, 165, 0.3),
+    0 0 16px rgba(248, 113, 113, 0.2);
+}
+
+@keyframes portal-step-available-pulse {
+  0%,
+  100% {
+    filter: brightness(0.92);
+    transform: translateZ(0) scale(1);
+  }
+
+  50% {
+    filter: brightness(1.28);
+    transform: translateZ(0) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-control-page .portal-step-icon--available {
+    animation: none;
+  }
+}
+
 .portal-mobile-select-trigger {
   --portal-gate-chip-corner: 9px;
   bottom: auto;
@@ -1973,6 +2150,64 @@ body {
 .home-control-page .chamfer-panel--interactive:hover::after,
 .home-control-page .chamfer-panel--interactive:focus-visible::after {
   background: rgba(4, 18, 22, 0.86);
+}
+
+@media (max-width: 640px) {
+  .home-control-page .home-hero-section {
+    padding-bottom: 1rem !important;
+    padding-top: 5.25rem !important;
+  }
+
+  .home-control-page .chamfer-panel--hero-copy {
+    padding: 1rem !important;
+  }
+
+  .home-control-page .chamfer-panel--hero-copy p:first-child {
+    margin-bottom: 0.55rem !important;
+  }
+
+  .home-control-page .chamfer-panel--hero-copy h1 {
+    font-size: 1.35rem !important;
+  }
+
+  .home-control-page .chamfer-panel--hero-copy p:last-child {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+    margin-top: 1rem !important;
+  }
+
+  .home-control-page .home-hero-controls {
+    margin-top: 1rem !important;
+  }
+
+  .home-control-page .home-hero-mobile-button {
+    height: 4rem !important;
+    min-height: 4rem !important;
+  }
+
+  .home-control-page .chamfer-countdown-label-link div:first-child {
+    font-size: 0.43rem !important;
+    line-height: 1.35 !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .home-control-page .chamfer-countdown-label-link div:last-child {
+    font-size: 0.38rem !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .home-control-page .chamfer-countdown-cell {
+    padding: 0.32rem 0.18rem !important;
+  }
+
+  .home-control-page .chamfer-countdown-cell div:first-child {
+    font-size: 0.72rem !important;
+  }
+
+  .home-control-page .chamfer-countdown-cell div:last-child {
+    font-size: 0.36rem !important;
+    letter-spacing: 0.04em !important;
+  }
 }
 
 .home-lower-clickables .chamfer-panel--interactive {

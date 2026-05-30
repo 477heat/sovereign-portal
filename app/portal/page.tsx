@@ -71,6 +71,70 @@ type MintOrderState = {
 type PortalGate = "wallet" | "eas" | "identity" | "terms" | "payment" | "mint";
 type IdentityField = "firstName" | "lastName" | "dob";
 
+function PortalGateIcon({ gate }: { gate: PortalGate }) {
+  const sharedProps = {
+    "aria-hidden": true,
+    className: "portal-step-icon-svg",
+    fill: "none",
+    viewBox: "0 0 24 24",
+  };
+
+  if (gate === "wallet") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M4 7.5h14.5a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4.5a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2H17" />
+        <path d="M15.5 13h5" />
+        <path d="M16.75 13h.01" />
+      </svg>
+    );
+  }
+
+  if (gate === "eas") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M12 3.5 19 6v5.4c0 4.2-2.8 7.2-7 9.1-4.2-1.9-7-4.9-7-9.1V6l7-2.5Z" />
+        <path d="m8.8 12 2.1 2.1 4.5-4.7" />
+      </svg>
+    );
+  }
+
+  if (gate === "identity") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M12 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
+        <path d="M5.5 20c.8-3.4 3.1-5.2 6.5-5.2s5.7 1.8 6.5 5.2" />
+      </svg>
+    );
+  }
+
+  if (gate === "terms") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M7 3.5h7l3 3V20H7V3.5Z" />
+        <path d="M14 3.5V7h3" />
+        <path d="M9.5 11h5" />
+        <path d="M9.5 14h5" />
+      </svg>
+    );
+  }
+
+  if (gate === "payment") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M4 7h16v10H4V7Z" />
+        <path d="M4 10h16" />
+        <path d="M7 14h4" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...sharedProps}>
+      <path d="M12 3.5 14.4 9l5.6.5-4.2 3.8 1.3 5.5L12 15.9l-5.1 2.9 1.3-5.5L4 9.5 9.6 9 12 3.5Z" />
+    </svg>
+  );
+}
+
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
@@ -679,6 +743,19 @@ function PortalContent() {
       : "portal-wallet-status--empty";
   const selectedGateReadout =
     gateReadouts.find((gate) => gate.key === selectedGate) ?? gateReadouts[0];
+  const gateIconState = (gate: (typeof gateReadouts)[number]) => {
+    if (gate.key === selectedGate) {
+      return "portal-step-icon--current";
+    }
+
+    if (gate.complete) {
+      return "portal-step-icon--complete";
+    }
+
+    return gate.enabled
+      ? "portal-step-icon--available"
+      : "portal-step-icon--locked";
+  };
   const selectedGateTitle = {
     wallet: account?.address ? "Wallet Connected" : "Wallet Entry",
     eas: verification?.eligible ? "Human Verified" : "EAS Verification",
@@ -878,7 +955,7 @@ function PortalContent() {
 
                     <div className="mt-4 grid gap-4">
                       <div
-                        className={`control-surface-soft portal-gate-view portal-gate-view--soft min-h-[26rem] border p-4 ${
+                        className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
                           selectedGateReadout.complete
                             ? "console-status-tile--entered"
                             : selectedGate === "mint"
@@ -886,22 +963,45 @@ function PortalContent() {
                               : "portal-surface-cyan"
                         }`}
                       >
-                        <div className="flex min-h-full flex-col gap-4">
-                          <div>
-                            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                              Active Entry
-                            </div>
-                            <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
-                              {selectedGateTitle}
-                            </h2>
-                            <p className="mt-3 text-sm leading-6 text-white/66">
-                              {selectedGateStatus}
-                            </p>
-                            {selectedGateReadout.complete && (
-                              <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
-                                This gate is already confirmed. Editing may reset current values or require later gates to be checked again.
+                        <div className="engine-screen-grid absolute inset-0 opacity-60" aria-hidden="true" />
+                        <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
+                        <div className="absolute inset-x-5 top-1/2 h-px bg-cyan-100/20 shadow-[0_0_24px_rgba(165,243,252,0.38)]" aria-hidden="true" />
+                        <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-px bg-cyan-100/10" aria-hidden="true" />
+                        <div className="relative z-10 flex min-h-full flex-col gap-4">
+                          <div className="portal-gate-header">
+                            <div className="min-w-0 flex-1">
+                              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                Active Entry
+                              </div>
+                              <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
+                                {selectedGateTitle}
+                              </h2>
+                              <p className="mt-3 text-sm leading-6 text-white/66">
+                                {selectedGateStatus}
                               </p>
-                            )}
+                              {selectedGateReadout.complete && (
+                                <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
+                                  This gate is already confirmed. Editing may reset current values or require later gates to be checked again.
+                                </p>
+                              )}
+                            </div>
+                            <div
+                              aria-label="Mint sequence status"
+                              className="portal-step-strip"
+                              role="list"
+                            >
+                              {gateReadouts.map((gate) => (
+                                <div
+                                  className={`portal-step-icon ${gateIconState(gate)}`}
+                                  key={gate.key}
+                                  role="listitem"
+                                  title={`${gate.label}: ${gate.value}`}
+                                >
+                                  <PortalGateIcon gate={gate.key} />
+                                  <span>{gate.label}</span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
 
                           <div className="grid flex-1 content-start gap-3">
@@ -975,10 +1075,9 @@ function PortalContent() {
                                     />
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
-                                    <GlossaryText
-                                      terms={portalEasGlossaryTerms}
-                                      text="If you are verified on Coinbase but this wallet is not green, open Coinbase EAS and connect this wallet to your account."
-                                    />
+                                    If you are verified on Coinbase but this
+                                    wallet is not green, open Coinbase EAS and
+                                    connect this wallet to your account.
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
                                     Every chip in the Select Panel must turn
