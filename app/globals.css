@@ -931,6 +931,7 @@ body {
 
 .portal-pay-button--ready {
   cursor: pointer;
+  justify-self: center;
 }
 
 .portal-pay-button--ready:not(:disabled):hover,
@@ -1345,7 +1346,7 @@ body {
 .portal-gate-button.console-key-button--active::before,
 .portal-gate-button.console-key-button--disabled::before,
 .portal-gate-button.portal-gate-button--selected::before {
-  background: rgba(103, 232, 249, 0.68);
+  background: rgba(254, 240, 138, 0.68);
 }
 
 .portal-gate-button::after,
@@ -1354,13 +1355,13 @@ body {
 .portal-gate-button.console-key-button--disabled::after,
 .portal-gate-button.portal-gate-button--selected::after {
   background:
-    linear-gradient(120deg, rgba(14, 165, 233, 0.1), transparent 48%),
-    rgba(4, 18, 24, 0.88);
+    linear-gradient(120deg, rgba(254, 240, 138, 0.12), transparent 48%),
+    rgba(24, 22, 9, 0.9);
 }
 
 .portal-gate-button.console-key-button--entered::before,
 .portal-gate-button.console-key-button--active.console-key-button--entered::before {
-  background: rgba(74, 222, 128, 0.46);
+  background: rgba(74, 222, 128, 0.64);
 }
 
 .portal-gate-button.console-key-button--entered::after,
@@ -1368,6 +1369,34 @@ body {
   background:
     linear-gradient(120deg, rgba(22, 101, 52, 0.18), transparent 48%),
     rgba(8, 28, 18, 0.92);
+}
+
+.portal-gate-button.console-key-button--disabled::before {
+  background: rgba(248, 113, 113, 0.68);
+}
+
+.portal-gate-button.console-key-button--disabled::after {
+  background:
+    linear-gradient(120deg, rgba(248, 113, 113, 0.18), transparent 48%),
+    rgba(45, 15, 18, 0.92);
+}
+
+.portal-gate-button.portal-gate-button--selected::before,
+.portal-gate-button.portal-gate-button--selected.console-key-button--entered::before,
+.portal-gate-button.portal-gate-button--selected.console-key-button--complete::before,
+.portal-gate-button.portal-gate-button--selected.console-key-button--active::before,
+.portal-gate-button.portal-gate-button--selected.console-key-button--disabled::before {
+  background: rgba(103, 232, 249, 0.82);
+}
+
+.portal-gate-button.portal-gate-button--selected::after,
+.portal-gate-button.portal-gate-button--selected.console-key-button--entered::after,
+.portal-gate-button.portal-gate-button--selected.console-key-button--complete::after,
+.portal-gate-button.portal-gate-button--selected.console-key-button--active::after,
+.portal-gate-button.portal-gate-button--selected.console-key-button--disabled::after {
+  background:
+    linear-gradient(120deg, rgba(103, 232, 249, 0.2), transparent 48%),
+    rgba(5, 25, 32, 0.95);
 }
 
 .portal-control-page .portal-gate-chip-shell {
@@ -1396,21 +1425,23 @@ body {
 
 .portal-mobile-select-trigger {
   --portal-gate-chip-corner: 9px;
-  bottom: 1rem;
+  bottom: auto;
   clip-path: polygon(var(--portal-gate-chip-corner) 0, calc(100% - var(--portal-gate-chip-corner)) 0, 100% var(--portal-gate-chip-corner), 100% 100%, var(--portal-gate-chip-corner) 100%, 0 calc(100% - var(--portal-gate-chip-corner)), 0 var(--portal-gate-chip-corner));
   flex-direction: column;
-  gap: 0.18rem;
-  height: 3.35rem;
+  font-size: 0.78rem;
+  gap: 0.25rem;
+  height: 5rem;
   left: 0.75rem;
-  min-width: 7.2rem;
+  min-width: 10.8rem;
   position: fixed;
+  top: 1rem;
   z-index: 70;
 }
 
 .portal-mobile-select-trigger small {
   color: rgba(254, 240, 138, 0.78);
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   line-height: 1;
 }
 
@@ -1435,6 +1466,8 @@ body {
   --portal-surface-fill: rgba(4, 18, 24, 0.92);
   animation: portal-select-drawer-enter 180ms ease-out both;
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+  display: flex;
+  flex-direction: column;
   height: 100%;
   max-width: min(18rem, 86vw);
   overflow-y: auto;
@@ -1453,11 +1486,68 @@ body {
 }
 
 .portal-mobile-select-chip {
-  width: 82%;
+  aspect-ratio: 1 / 1;
+  box-shadow:
+    0 0 18px rgba(254, 240, 138, 0.12),
+    0 12px 22px rgba(0, 0, 0, 0.36);
+  height: auto;
+  margin-right: 1px;
+  min-height: 0;
+  padding: 0.62rem 0.48rem;
+  width: 100%;
 }
 
 .portal-mobile-select-chip.portal-gate-button--selected {
+  box-shadow:
+    inset -3px 0 0 rgba(165, 243, 252, 0.88),
+    inset 0 -3px 0 rgba(165, 243, 252, 0.88),
+    0 0 28px rgba(103, 232, 249, 0.34),
+    8px 22px 38px rgba(0, 0, 0, 0.6);
+  transform: translateY(-0.18rem) scale(1.1);
   width: 100%;
+  z-index: 2;
+}
+
+.portal-mobile-drawer-home {
+  align-self: center;
+  margin-top: auto;
+  min-height: 2.8rem;
+  width: 82%;
+}
+
+.portal-terms-layer {
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(250, 204, 21, 0.14), transparent 42%),
+    rgba(0, 0, 0, 0.84);
+  backdrop-filter: blur(10px);
+  inset: 0;
+  overflow-y: auto;
+  padding: 1rem;
+  position: fixed;
+  z-index: 82;
+}
+
+.portal-terms-panel {
+  --portal-surface-border: rgba(250, 204, 21, 0.62);
+  --portal-surface-corner: 22px;
+  --portal-surface-fill: rgba(8, 15, 18, 0.9);
+  margin: 0 auto;
+  max-width: 72rem;
+  min-height: calc(100svh - 2rem);
+}
+
+.portal-terms-certificate {
+  max-height: min(58vh, 34rem);
+}
+
+@media (min-width: 768px) {
+  .portal-terms-layer {
+    padding: 1.5rem;
+  }
+
+  .portal-terms-panel {
+    min-height: calc(100svh - 3rem);
+  }
 }
 
 @keyframes portal-select-drawer-enter {
@@ -1502,6 +1592,14 @@ body {
   box-shadow:
     inset 0 0 0 1px rgba(187, 247, 208, 0.34),
     0 0 28px rgba(34, 197, 94, 0.26) !important;
+}
+
+.portal-artifact-marker-value {
+  font-size: clamp(2rem, 9vw, 4rem);
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  line-height: 0.95;
+  text-transform: uppercase;
 }
 
 .portal-connect-wallet-button {

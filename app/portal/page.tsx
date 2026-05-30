@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { createThirdwebClient } from "thirdweb";
 import { base } from "thirdweb/chains";
 import {
@@ -20,9 +19,7 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
-import type { GlossaryTermKey } from "@/lib/glossary";
 import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
 
 type VerificationState = {
@@ -68,21 +65,8 @@ const previewShellEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
   process.env.NODE_ENV === "development" ||
   process.env.VERCEL_ENV === "preview";
-const architectOpenSeaUrl =
-  "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
 const coinbaseEasUrl =
   "https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification";
-
-const portalGlossaryTerms: GlossaryTermKey[] = [
-  "Coinbase EAS",
-  "Genesis",
-  "Mint",
-  "Progeny",
-  "Soul Deed",
-  "Vanguard",
-  "Wallet",
-  "wallet-linked",
-];
 
 const portalAppMetadata = {
   name: "Sovereign Portal",
@@ -183,10 +167,6 @@ function PortalContent() {
     () => buildPublicMark(firstName, lastName),
     [firstName, lastName],
   );
-  const deedName =
-    publicMark === "_. ___"
-      ? "Certificate of Title for Soul Ownership"
-      : `Certificate of Title for Soul Ownership of ${publicMark}`;
   const identityInputReady =
     Boolean(firstName.trim()) &&
     Boolean(lastName.trim()) &&
@@ -737,6 +717,93 @@ function PortalContent() {
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
     mint: minting ? "Minting" : canMint ? "Mint" : "Mint Locked",
   }[selectedGate];
+  const closeTermsOverlay = () =>
+    setSelectedGate(deedAccepted ? "payment" : "identity");
+  const termsContent = (
+    <div className="grid gap-4">
+      <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
+        <label
+          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+            contractAccepted
+              ? "console-status-tile--entered"
+              : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
+          } ${certificateOpened ? "" : "cursor-not-allowed opacity-70"}`}
+        >
+          <input
+            checked={contractAccepted}
+            onChange={(event) => setContractAccepted(event.target.checked)}
+            disabled={!certificateOpened}
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-yellow-300 disabled:cursor-not-allowed"
+          />
+          <span className="text-[10px] leading-4">
+            Read and agree to the Certificate.
+          </span>
+        </label>
+        <label
+          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+            accuracyAccepted
+              ? "console-status-tile--entered"
+              : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
+          }`}
+        >
+          <input
+            checked={accuracyAccepted}
+            onChange={(event) => setAccuracyAccepted(event.target.checked)}
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
+          />
+          <span className="text-[10px] leading-4">
+            Name and DOB match Coinbase/EAS.
+          </span>
+        </label>
+        <label
+          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+            publicMarkAccepted
+              ? "console-status-tile--entered"
+              : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
+          }`}
+        >
+          <input
+            checked={publicMarkAccepted}
+            onChange={(event) => setPublicMarkAccepted(event.target.checked)}
+            type="checkbox"
+            className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
+          />
+          <span className="text-[10px] leading-4">
+            Public deed uses shortened mark.
+          </span>
+        </label>
+      </div>
+      {!certificateOpened && (
+        <button
+          className="console-key-button console-key-button--gold w-fit"
+          onClick={() => setCertificateOpened(true)}
+          type="button"
+        >
+          Open Certificate
+        </button>
+      )}
+      {certificateOpened && (
+        <div className="control-surface-soft portal-terms-certificate space-y-3 overflow-y-auto border border-yellow-300/25 bg-black/55 p-4 text-xs leading-6 text-white/65">
+          {contractLanguage.map((paragraph, index) => {
+            const isHeading = index === 0 || paragraph.startsWith("SECTION ");
+
+            return (
+              <p
+                key={`${paragraph.slice(0, 24)}-${index}`}
+                className={
+                  isHeading ? "text-yellow-100 uppercase tracking-[0.18em]" : ""
+                }
+              >
+                {paragraph}
+              </p>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <main className="info-control-page portal-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 text-white md:px-8 md:py-8">
@@ -746,21 +813,7 @@ function PortalContent() {
         variant="right"
       />
 
-      <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-[358px] flex-col gap-5 sm:mx-auto sm:max-w-6xl">
-        <nav className="engine-top-nav portal-quiet-nav control-surface flex min-w-0 flex-wrap items-center justify-between gap-4 overflow-hidden border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
-          <div className="engine-nav-links flex min-w-0 flex-wrap gap-4">
-            <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact chamfer-nav-link--opposite chamfer-nav-link--return">
-              Return Home
-            </Link>
-            <Link href="/engine" className="chamfer-nav-link chamfer-nav-link--compact chamfer-nav-link--opposite">
-              Artifacts
-            </Link>
-          </div>
-          <span className="engine-nav-title min-w-0 max-w-full truncate text-[11px] tracking-[0.28em] text-cyan-100/72">
-            Sovereign Portal // Live Mint Path
-          </span>
-        </nav>
-
+      <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-[358px] flex-col gap-5 pt-28 sm:mx-auto sm:max-w-6xl md:pt-32">
         <section className="flex flex-1 flex-col gap-5">
           {previewShellActive && (
             <div className="control-surface portal-surface-cyan border border-cyan-100/30 bg-cyan-100/[0.06] px-4 py-3 text-sm leading-6 text-cyan-50/78">
@@ -776,22 +829,8 @@ function PortalContent() {
           )}
 
           <section className="min-w-0">
-            <div className="control-surface control-surface-large relative min-w-0 overflow-hidden border border-white/10 bg-black/65 p-4 shadow-[0_0_70px_rgba(72,220,255,0.08)] backdrop-blur-[2px] md:p-5">
-              <div className="engine-screen-grid pointer-events-none absolute inset-0 opacity-12" aria-hidden="true" />
-              <div className="relative z-10">
-                <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(280px,0.56fr)_minmax(0,1fr)]">
-                  <aside className="control-surface-soft min-w-0 overflow-hidden border border-cyan-100/18 bg-white/[0.025] p-4">
-                    <div className="min-w-0">
-                      <p className="text-[11px] uppercase tracking-[0.35em] text-yellow-300/70">
-                        Genesis Soul Registry | ONE PERSON, ONE MINT
-                      </p>
-                      <h1 className="mt-3 max-w-full overflow-wrap-anywhere text-base font-light uppercase tracking-[0.08em] sm:text-lg md:text-2xl md:tracking-[0.1em]">
-                        {deedName}
-                      </h1>
-                    </div>
-                  </aside>
-
-                  <div className="min-w-0">
+            <div className="relative min-w-0">
+              <div className="min-w-0">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
@@ -805,7 +844,7 @@ function PortalContent() {
                         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                           Artifact Marker
                         </div>
-                        <div className="mt-1 truncate text-lg tracking-[0.14em] text-green-50">
+                        <div className="portal-artifact-marker-value mt-1 truncate text-green-50">
                           {publicMark}
                         </div>
                         <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
@@ -814,31 +853,7 @@ function PortalContent() {
                       </div>
                     )}
 
-                    <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(120px,0.24fr)_minmax(0,1fr)]">
-                      <div className="control-surface-soft portal-gate-chip-shell min-w-0 border border-cyan-100/18 p-3 max-lg:hidden">
-                        <div className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                          Select Panel
-                        </div>
-                        <div className="grid justify-items-center grid-cols-2 gap-3 lg:grid-cols-1">
-                          {gateReadouts.map((gate) => (
-                            <button
-                              aria-pressed={selectedGate === gate.key}
-                              className={`console-key-button portal-gate-button ${
-                                selectedGate === gate.key
-                                  ? "portal-gate-button--selected"
-                                  : ""
-                              } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
-                              key={gate.key}
-                              onClick={() => selectGate(gate.key)}
-                              type="button"
-                            >
-                              <span>{gate.label}</span>
-                              <small>{gate.value}</small>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
+                    <div className="mt-4 grid gap-4">
                       <div
                         className={`control-surface-soft portal-gate-view portal-gate-view--soft min-h-[26rem] border p-4 ${
                           selectedGateReadout.complete
@@ -1057,74 +1072,11 @@ function PortalContent() {
 
                             {selectedGate === "terms" && (
                               <div className="grid gap-3">
-                                <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
-                                  <label
-                                    className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-                                      contractAccepted
-                                        ? "console-status-tile--entered"
-                                        : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-                                    } ${certificateOpened ? "" : "cursor-not-allowed opacity-70"}`}
-                                  >
-                                    <input
-                                      checked={contractAccepted}
-                                      onChange={(event) =>
-                                        setContractAccepted(event.target.checked)
-                                      }
-                                      disabled={!certificateOpened}
-                                      type="checkbox"
-                                      className="mt-1 h-4 w-4 shrink-0 accent-yellow-300 disabled:cursor-not-allowed"
-                                    />
-                                    <span className="text-[10px] leading-4">
-                                      Read and agree to the Certificate.
-                                    </span>
-                                  </label>
-                                  <label
-                                    className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-                                      accuracyAccepted
-                                        ? "console-status-tile--entered"
-                                        : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-                                    }`}
-                                  >
-                                    <input
-                                      checked={accuracyAccepted}
-                                      onChange={(event) =>
-                                        setAccuracyAccepted(event.target.checked)
-                                      }
-                                      type="checkbox"
-                                      className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
-                                    />
-                                    <span className="text-[10px] leading-4">
-                                      Name and DOB match Coinbase/EAS.
-                                    </span>
-                                  </label>
-                                  <label
-                                    className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-                                      publicMarkAccepted
-                                        ? "console-status-tile--entered"
-                                        : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-                                    }`}
-                                  >
-                                    <input
-                                      checked={publicMarkAccepted}
-                                      onChange={(event) =>
-                                        setPublicMarkAccepted(event.target.checked)
-                                      }
-                                      type="checkbox"
-                                      className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
-                                    />
-                                    <span className="text-[10px] leading-4">
-                                      Public deed uses shortened mark.
-                                    </span>
-                                  </label>
+                                <div className="control-surface-soft border border-yellow-300/25 bg-black/45 p-4 text-sm leading-6 text-white/68">
+                                  Terms are open in full-page console mode.
+                                  Complete the certificate review and agreement
+                                  checks there, then return to the mint console.
                                 </div>
-                                {!certificateOpened && (
-                                  <a
-                                    href="#portal-disclosures"
-                                    className="console-key-button console-key-button--gold w-fit"
-                                  >
-                                    Open Certificate
-                                  </a>
-                                )}
                               </div>
                             )}
 
@@ -1152,12 +1104,8 @@ function PortalContent() {
                                     onClick={createOrder}
                                     type="button"
                                   >
-                                    <span>
-                                      {orderBusy
-                                        ? "Preparing Checkout"
-                                        : `Pay $${paymentAmount}`}
-                                    </span>
-                                    <small>confirm payment then Mint</small>
+                                    <span>Order</span>
+                                    <small>$5 we cover the gas fees</small>
                                   </button>
                                 ) : (
                                   <div className="portal-pay-button portal-pay-button--waiting mt-4">
@@ -1297,189 +1245,67 @@ function PortalContent() {
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
           </section>
 
-          <section
-            id="portal-disclosures"
-            className="control-surface control-surface-strong border border-white/10 bg-black/55 p-4 backdrop-blur-[2px]"
-          >
-            <div className="grid gap-3 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]">
-              <div className="grid gap-3">
-                <details
-                  id="one-person-one-mint"
-                  className="control-surface-soft portal-surface-gold border border-yellow-300/45 bg-yellow-300/[0.08]"
-                >
-                  <summary className="cursor-pointer list-none px-4 py-3 text-[11px] uppercase tracking-[0.26em] text-yellow-100 transition hover:bg-yellow-300/[0.12]">
-                    Why one per person
-                  </summary>
-                  <div className="space-y-3 border-t border-white/10 bg-black/45 p-4 text-sm leading-6 text-white/68">
-                    <p>
-                      <GlossaryText
-                        terms={portalGlossaryTerms}
-                        text="The Genesis mint treats a soul as unique to life, not automation. Each Soul carries deterministic stats, not random rolls, and the wallet-linked Coinbase EAS gate helps protect against bots, duplicate wallets, and empty-wallet farming."
-                      />
-                    </p>
-                    <p>
-                      The goal is a future where Engine spaces are populated by
-                      real people, not hidden competitors or automated accounts
-                      pretending to be community.
-                    </p>
-                    <p>
-                      <GlossaryText
-                        terms={portalGlossaryTerms}
-                        text="Raw name and DOB details are used only to generate the mint request, then purged after mint completion. The Certificate also functions as a Soul Deed Access token for future Progeny access."
-                      />
-                    </p>
-                  </div>
-                </details>
-
-                <details
-                  className="control-surface-soft portal-surface-gold border border-yellow-300/45 bg-yellow-300/[0.08]"
-                  onToggle={(event) => {
-                    if (event.currentTarget.open) {
-                      setCertificateOpened(true);
-                    }
-                  }}
-                >
-                  <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 px-4 py-3 text-[11px] uppercase tracking-[0.26em] text-yellow-100 transition hover:bg-yellow-300/[0.12]">
-                    <span>Certificate Text</span>
-                    <span className="text-[9px] tracking-[0.22em] text-yellow-100/70">
-                      Required Review
-                    </span>
-                  </summary>
-                  <div className="max-h-72 space-y-3 overflow-y-auto border-t border-white/10 bg-black/70 p-4 text-xs leading-6 text-white/65">
-                    {contractLanguage.map((paragraph, index) => {
-                      const isHeading =
-                        index === 0 || paragraph.startsWith("SECTION ");
-
-                      return (
-                        <p
-                          key={`${paragraph.slice(0, 24)}-${index}`}
-                          className={
-                            isHeading
-                              ? "text-yellow-100 uppercase tracking-[0.18em]"
-                              : ""
-                          }
-                        >
-                          {paragraph}
-                        </p>
-                      );
-                    })}
-                  </div>
-                </details>
-              </div>
-
-              <div className="grid gap-3 text-sm leading-6 text-white/68 md:grid-cols-3">
-                <Link
-                  href="/whitepaper#genesis-access"
-                  className="control-surface-soft portal-clickable-surface block border border-white/10 bg-white/[0.03] p-3 transition hover:text-cyan-50"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/42">
-                    Product
-                  </div>
-                  <p className="mt-2">
-                    Genesis ERC-721 access artifact for the Engine profile layer.
-                  </p>
-                  <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-cyan-100/62">
-                    Read Genesis
-                  </div>
-                </Link>
-                <Link
-                  href="/whitepaper#privacy-practices"
-                  className="control-surface-soft portal-clickable-surface block border border-white/10 bg-white/[0.03] p-3 transition hover:text-cyan-50"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/42">
-                    Public Data
-                  </div>
-                  <p className="mt-2">
-                    Minted metadata and deed artwork become public records.
-                  </p>
-                  <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-cyan-100/62">
-                    Read Boundaries
-                  </div>
-                </Link>
-                <Link
-                  href="/economics#royalty-routing"
-                  className="control-surface-soft portal-clickable-surface block border border-white/10 bg-white/[0.03] p-3 transition hover:text-cyan-50"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/42">
-                    Royalties
-                  </div>
-                  <p className="mt-2">
-                    Routing depends on contract terms and marketplace support.
-                  </p>
-                  <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-cyan-100/62">
-                    Open Routing
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          <p className="control-surface-soft portal-surface-gold border border-yellow-300/20 bg-yellow-300/[0.06] p-3 text-xs leading-5 text-yellow-50/78">
-            <GlossaryText
-              terms={portalGlossaryTerms}
-              text="Creative product, not legal, religious, medical, or financial advice. Royalties depend on marketplace support, and public NFT metadata is effectively permanent."
-            />
-          </p>
-
-          <section className="control-surface grid gap-5 border border-white/10 bg-black/60 p-4 backdrop-blur-[2px] lg:grid-cols-[220px_minmax(0,1fr)]">
-            <div className="control-surface-soft portal-surface-gold relative min-h-[300px] overflow-hidden border border-yellow-300/20 bg-black/45">
-              <Image
-                src="/architect_deed.jpg"
-                alt="The Architect Soul Deed listed on OpenSea"
-                fill
-                sizes="(max-width: 1024px) 100vw, 220px"
-                className="object-contain"
-                priority
-              />
-            </div>
-            <div className="flex flex-col justify-center">
-              <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
-                The Architect&apos;s Soul
-              </div>
-              <h2 className="mt-3 text-2xl font-light uppercase tracking-[0.14em] text-white md:text-3xl">
-                Selling mine to continue a dream...
-              </h2>
-              <p className="mt-4 max-w-3xl text-sm leading-6 text-white/68">
-                I am a lifelong taxi dispatcher who recently became a solo Web3
-                developer. For years, my idea of building online meant Wix and
-                drag-and-drop tools; now I am learning the machinery underneath.
-                After 46 years of ordinary 9-to-5 work, I was given a rare
-                three-month window to study, build, and chase the strange,
-                ambitious projects I kept carrying around in my head. This is
-                where that work begins, alongside other ongoing projects at
-                Anthologies.xyz.
-              </p>
-              <Link
-                href={architectOpenSeaUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="console-key-button console-key-button--gold mt-5"
-              >
-                View The Listing
-              </Link>
-            </div>
-          </section>
         </section>
       </div>
 
       <button
         aria-controls="portal-mobile-select-drawer"
         aria-expanded={mobileGateDrawerOpen}
-        className="console-key-button portal-mobile-select-trigger lg:hidden"
+        className="console-key-button portal-mobile-select-trigger"
         onClick={() => setMobileGateDrawerOpen(true)}
         ref={mobileGateTriggerRef}
         type="button"
       >
-        <span>Select</span>
+        <span>Console Control</span>
         <small>{selectedGateReadout.label}</small>
       </button>
 
+      {selectedGate === "terms" && (
+        <div className="portal-terms-layer">
+          <section
+            aria-label="Terms agreement"
+            aria-modal="true"
+            className="control-surface-soft portal-terms-panel border border-yellow-300/25 p-4 md:p-6"
+            role="dialog"
+          >
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.26em] text-yellow-200/72">
+                  Full Page Review
+                </div>
+                <h2 className="mt-2 text-2xl font-black uppercase tracking-[0.12em] text-yellow-50 md:text-4xl">
+                  Terms Agreement
+                </h2>
+              </div>
+              <button
+                className="console-key-button console-key-button--gold"
+                onClick={closeTermsOverlay}
+                type="button"
+              >
+                Back To Console
+              </button>
+            </div>
+            {termsContent}
+            <button
+              className={`portal-console-enter mt-5 ${
+                gateEnterEnabled
+                  ? "portal-console-enter--ready"
+                  : "portal-console-enter--locked"
+              }`}
+              disabled={!gateEnterEnabled}
+              onClick={() => void handleGateEnter()}
+              type="button"
+            >
+              {gateEnterLabel}
+            </button>
+          </section>
+        </div>
+      )}
+
       {mobileGateDrawerOpen && (
-        <div className="portal-mobile-select-layer lg:hidden">
+        <div className="portal-mobile-select-layer">
           <button
             aria-label="Close Select Panel"
             className="portal-mobile-select-backdrop"
@@ -1511,7 +1337,7 @@ function PortalContent() {
                 Close
               </button>
             </div>
-            <div className="grid justify-items-center gap-3">
+            <div className="grid grid-cols-2 justify-items-center gap-3">
               {gateReadouts.map((gate) => (
                 <button
                   aria-pressed={selectedGate === gate.key}
@@ -1532,6 +1358,13 @@ function PortalContent() {
                 </button>
               ))}
             </div>
+            <Link
+              className="console-key-button portal-mobile-drawer-home mt-6"
+              href="/"
+              onClick={() => setMobileGateDrawerOpen(false)}
+            >
+              Home
+            </Link>
           </aside>
         </div>
       )}
