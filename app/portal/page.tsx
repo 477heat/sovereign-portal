@@ -53,7 +53,7 @@ const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
   : null;
-const paymentAmount = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "2.50";
+const paymentAmount = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "5.00";
 const paymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
 const paymentTokenAddress =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;

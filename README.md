@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Portal mint commerce
 
-The portal keeps mint execution backend-funded so the user can pay a small
+The portal keeps mint execution backend-funded so early users can pay a $5.00
 checkout fee while the backend wallet pays Base mint gas.
 
 - `NEXT_PUBLIC_PORTAL_PAYMENT_MODE=checkout` shows the thirdweb checkout block.
