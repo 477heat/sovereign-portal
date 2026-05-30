@@ -19,6 +19,8 @@ import { formatEther, parseEther } from "ethers";
 
 const CONTRACT_ADDRESS = "0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65";
 const ADDRESS_PATTERN = /^0x[a-fA-F0-9]{40}$/;
+const SETTINGS_REFRESH_ATTEMPTS = 6;
+const SETTINGS_REFRESH_DELAY_MS = 1200;
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
@@ -64,6 +66,17 @@ type TokenLookup = {
 };
 
 type WriteParam = string | boolean | bigint;
+type LoadSettingsOptions = {
+  quiet?: boolean;
+  syncInputs?: boolean;
+};
+type WriteOptions = {
+  expected?: (settings: ContractSettings) => boolean;
+};
+
+function wait(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
 
 function isAddress(value: string) {
   return ADDRESS_PATTERN.test(value.trim());
@@ -255,13 +268,27 @@ function AdminContent() {
 
   const busy = Boolean(pendingAction);
 
-  const loadSettings = useCallback(async () => {
+  const syncFormFields = useCallback((nextSettings: ContractSettings) => {
+    setMintPrice(formatEther(nextSettings.mintPriceWei));
+    setBurnFee(formatEther(nextSettings.burnFeeWei));
+    setPlatformVault(nextSettings.platformVault);
+    setBackendMinter(nextSettings.backendMinter);
+    setBackendBurner(nextSettings.backendBurner);
+    setFounderWallet(nextSettings.founderWallet);
+    setSplitterImplementation(nextSettings.splitterImplementation);
+    setPlaceholderURI(nextSettings.placeholderURI);
+    setDynamicURIEndpoint(nextSettings.dynamicURIEndpoint);
+  }, []);
+
+  const loadSettings = useCallback(async (options: LoadSettingsOptions = {}) => {
     if (!soulContract) {
-      return;
+      return null;
     }
 
     setLoading(true);
-    setError("");
+    if (!options.quiet) {
+      setError("");
+    }
 
     try {
       const [
@@ -386,21 +413,20 @@ function AdminContent() {
       };
 
       setSettings(nextSettings);
-      setMintPrice(formatEther(nextSettings.mintPriceWei));
-      setBurnFee(formatEther(nextSettings.burnFeeWei));
-      setPlatformVault(nextSettings.platformVault);
-      setBackendMinter(nextSettings.backendMinter);
-      setBackendBurner(nextSettings.backendBurner);
-      setFounderWallet(nextSettings.founderWallet);
-      setSplitterImplementation(nextSettings.splitterImplementation);
-      setPlaceholderURI(nextSettings.placeholderURI);
-      setDynamicURIEndpoint(nextSettings.dynamicURIEndpoint);
+      if (options.syncInputs !== false) {
+        syncFormFields(nextSettings);
+      }
+
+      return nextSettings;
     } catch {
-      setError("Could not load the admin contract state from Base.");
+      if (!options.quiet) {
+        setError("Could not load the admin contract state from Base.");
+      }
+      return null;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [syncFormFields]);
 
   async function openAdmin() {
     if (!soulContract || !account?.address) {
@@ -435,17 +461,46 @@ function AdminContent() {
     }
   }
 
+  async function refreshSettingsAfterConfirmation(
+    label: string,
+    expected?: (settings: ContractSettings) => boolean,
+  ) {
+    for (let attempt = 1; attempt <= SETTINGS_REFRESH_ATTEMPTS; attempt++) {
+      const nextSettings = await loadSettings({
+        quiet: attempt > 1,
+        syncInputs: !expected,
+      });
+
+      if (nextSettings && (!expected || expected(nextSettings))) {
+        if (expected) {
+          syncFormFields(nextSettings);
+        }
+        setNotice(`${label} confirmed. Live state refreshed.`);
+        return;
+      }
+
+      if (attempt < SETTINGS_REFRESH_ATTEMPTS) {
+        await wait(SETTINGS_REFRESH_DELAY_MS);
+      }
+    }
+
+    setNotice(
+      `${label} confirmed on Base. Live reads are still catching up; refresh live state in a moment.`,
+    );
+  }
+
   async function writeContract(
     label: string,
     method: `function ${string}`,
     params: WriteParam[] = [],
+    options: WriteOptions = {},
   ) {
     if (!soulContract || !account || !ownerConnected) {
       return;
     }
 
     setPendingAction(label);
-    setNotice("");
+    setNotice(`${label}: confirm in your wallet, then wait for Base confirmation.`);
     setError("");
 
     try {
@@ -460,8 +515,8 @@ function AdminContent() {
       });
 
       setLastTransactionHash(receipt.transactionHash);
-      setNotice(`${label} confirmed.`);
-      await loadSettings();
+      setNotice(`${label} confirmed on Base. Refreshing live state...`);
+      await refreshSettingsAfterConfirmation(label, options.expected);
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
@@ -475,16 +530,44 @@ function AdminContent() {
 
   async function handleMintPrice(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    await writeContract("Mint price update", "function setMintPrice(uint256 newPrice)", [
-      parsePositiveEth(mintPrice, "Mint price"),
-    ]);
+    try {
+      const nextMintPrice = parsePositiveEth(mintPrice, "Mint price");
+      await writeContract(
+        "Mint price update",
+        "function setMintPrice(uint256 newPrice)",
+        [nextMintPrice],
+        {
+          expected: (nextSettings) => nextSettings.mintPriceWei === nextMintPrice,
+        },
+      );
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Mint price update could not be prepared.",
+      );
+    }
   }
 
   async function handleBurnFee(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    await writeContract("Burn fee update", "function setBurnFee(uint256 newFee)", [
-      parsePositiveEth(burnFee, "Burn fee"),
-    ]);
+    try {
+      const nextBurnFee = parsePositiveEth(burnFee, "Burn fee");
+      await writeContract(
+        "Burn fee update",
+        "function setBurnFee(uint256 newFee)",
+        [nextBurnFee],
+        {
+          expected: (nextSettings) => nextSettings.burnFeeWei === nextBurnFee,
+        },
+      );
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Burn fee update could not be prepared.",
+      );
+    }
   }
 
   async function handleAddressUpdate(
@@ -678,6 +761,16 @@ function AdminContent() {
                 Open Admin
               </button>
             )}
+            {ownerConnected && (
+              <button
+                className="min-h-11 border border-cyan-200/45 bg-cyan-200/10 px-4 text-xs font-medium uppercase tracking-[0.22em] text-cyan-100 transition hover:bg-cyan-200/20 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/30"
+                disabled={busy || loading}
+                onClick={() => void loadSettings()}
+                type="button"
+              >
+                {loading ? "Refreshing" : "Refresh Live State"}
+              </button>
+            )}
           </div>
         </section>
 
@@ -692,6 +785,15 @@ function AdminContent() {
         )}
 
         {ownerConnected && notice && <StatusLine tone="ok">{notice}</StatusLine>}
+        {ownerConnected && busy && (
+          <StatusLine tone="idle">
+            {pendingAction} in progress. Keep the wallet prompt open, confirm it,
+            then wait for the Base confirmation.
+          </StatusLine>
+        )}
+        {ownerConnected && loading && !busy && (
+          <StatusLine tone="idle">Refreshing live contract state from Base...</StatusLine>
+        )}
         {error && <StatusLine tone="warn">{error}</StatusLine>}
 
         {ownerConnected && lastTransactionHash && (
@@ -755,68 +857,99 @@ function AdminContent() {
                     active={!settings.paused}
                     disabled={busy}
                     label="Contract Active"
-                    onClick={() =>
+                    onClick={() => {
+                      const nextPaused = !settings.paused;
                       writeContract(
                         settings.paused ? "Contract unpause" : "Contract pause",
                         settings.paused ? "function unpause()" : "function pause()",
-                      )
-                    }
+                        [],
+                        {
+                          expected: (nextSettings) =>
+                            nextSettings.paused === nextPaused,
+                        },
+                      );
+                    }}
                   />
                   <ToggleButton
                     active={settings.burnActive}
                     disabled={busy}
                     label="Burn Enabled"
-                    onClick={() =>
+                    onClick={() => {
+                      const nextBurnActive = !settings.burnActive;
                       writeContract("Burn toggle", "function setBurnActive(bool active)", [
-                        !settings.burnActive,
-                      ])
-                    }
+                        nextBurnActive,
+                      ], {
+                        expected: (nextSettings) =>
+                          nextSettings.burnActive === nextBurnActive,
+                      });
+                    }}
                   />
                   <ToggleButton
                     active={settings.publicMintActive}
                     disabled={busy}
                     label="Public Mint Flag"
-                    onClick={() =>
+                    onClick={() => {
+                      const nextPublicMintActive = !settings.publicMintActive;
                       writeContract(
                         "Public mint toggle",
                         "function setPublicMintActive(bool active)",
-                        [!settings.publicMintActive],
-                      )
-                    }
+                        [nextPublicMintActive],
+                        {
+                          expected: (nextSettings) =>
+                            nextSettings.publicMintActive === nextPublicMintActive,
+                        },
+                      );
+                    }}
                   />
                   <ToggleButton
                     active={settings.tradingAllowed}
                     disabled={busy}
                     label="Trading Allowed"
-                    onClick={() =>
+                    onClick={() => {
+                      const nextTradingAllowed = !settings.tradingAllowed;
                       writeContract(
                         "Trading toggle",
                         "function setTradingAllowed(bool allowed)",
-                        [!settings.tradingAllowed],
-                      )
-                    }
+                        [nextTradingAllowed],
+                        {
+                          expected: (nextSettings) =>
+                            nextSettings.tradingAllowed === nextTradingAllowed,
+                        },
+                      );
+                    }}
                   />
                   <ToggleButton
                     active={settings.isSoulbound}
                     disabled={busy}
                     label="Soulbound"
-                    onClick={() =>
+                    onClick={() => {
+                      const nextSoulbound = !settings.isSoulbound;
                       writeContract("Soulbound toggle", "function setSoulbound(bool soulbound)", [
-                        !settings.isSoulbound,
-                      ])
-                    }
+                        nextSoulbound,
+                      ], {
+                        expected: (nextSettings) =>
+                          nextSettings.isSoulbound === nextSoulbound,
+                      });
+                    }}
                   />
                   <ToggleButton
                     active={settings.operatorFilterEnabled}
                     disabled={busy}
                     label="Operator Filter"
-                    onClick={() =>
+                    onClick={() => {
+                      const nextOperatorFilterEnabled =
+                        !settings.operatorFilterEnabled;
                       writeContract(
                         "Operator filter toggle",
                         "function setOperatorFilterEnabled(bool enabled)",
-                        [!settings.operatorFilterEnabled],
-                      )
-                    }
+                        [nextOperatorFilterEnabled],
+                        {
+                          expected: (nextSettings) =>
+                            nextSettings.operatorFilterEnabled ===
+                            nextOperatorFilterEnabled,
+                        },
+                      );
+                    }}
                   />
                 </div>
               </Panel>

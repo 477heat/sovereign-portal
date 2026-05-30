@@ -62,7 +62,6 @@ const paymentTokenAddress =
 const checkoutEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout" &&
   Boolean(paymentSeller && paymentTokenAddress);
-const devPaymentBypassEnabled = process.env.NODE_ENV === "development";
 const previewShellEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
   process.env.NODE_ENV === "development" ||
@@ -397,50 +396,6 @@ function PortalContent() {
         caughtError instanceof Error
           ? caughtError.message
           : "Could not refresh payment status.",
-      );
-    } finally {
-      setOrderBusy(false);
-    }
-  }
-
-  async function bypassPaymentForLocalTest() {
-    if (!activeOrder || !account?.address || !devPaymentBypassEnabled) {
-      return;
-    }
-
-    setOrderBusy(true);
-    setError("");
-    setPaymentNotice("");
-
-    try {
-      const response = await fetch("/api/dev/mark-mint-order-paid", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderId: activeOrder.orderId,
-          publicMark,
-          wallet: account.address,
-        }),
-      });
-      const result = (await response.json()) as MintOrderState & {
-        message?: string;
-      };
-
-      if (!response.ok) {
-        throw new Error(result.message ?? "Could not run local payment bypass.");
-      }
-
-      setMintOrder(result);
-      setPaymentNotice(
-        "Local dev payment bypass synced to the current public mark. This did not charge a card or send funds.",
-      );
-    } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Could not run local payment bypass.",
       );
     } finally {
       setOrderBusy(false);
@@ -1175,18 +1130,6 @@ function PortalContent() {
                                       >
                                         Refresh Status
                                       </button>
-                                      {devPaymentBypassEnabled && (
-                                        <button
-                                          className="console-key-button"
-                                          disabled={orderBusy}
-                                          onClick={bypassPaymentForLocalTest}
-                                          type="button"
-                                        >
-                                          {orderPaid
-                                            ? "Dev Sync Order"
-                                            : "Dev Bypass Payment"}
-                                        </button>
-                                      )}
                                     </div>
                                     {paymentNotice && (
                                       <p className="text-sm leading-6 text-cyan-50/72">
