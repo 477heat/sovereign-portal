@@ -2,7 +2,20 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
+
+const artifactGlossaryTerms: GlossaryTermKey[] = [
+  "Artifact",
+  "Artifact Engine",
+  "Covenant Mark",
+  "Genesis",
+  "Hash",
+  "Metadata",
+  "Mint",
+  "Soul",
+];
 
 const limitedStats = ["Pulse", "Vector", "Signal", "Gravity"];
 const leftGlyphs = ["Moon", "Wheel", "Compass", "Tide", "Horn", "Star"];
@@ -97,9 +110,10 @@ export default function ArtifactPage() {
                     Limited Engine Preview
                   </h1>
                   <p className="mt-5 max-w-xl text-sm leading-7 text-white/62">
-                    Enter a birth date to generate an alternate public-facing
-                    readout. This preview is intentionally limited and is not
-                    the Soul Contract stat table.
+                    <GlossaryText
+                      terms={artifactGlossaryTerms}
+                      text="Enter a birth date to generate an alternate public-facing readout. This preview is intentionally limited and is not the Soul Contract stat table."
+                    />
                   </p>
                 </div>
 
@@ -182,8 +196,10 @@ export default function ArtifactPage() {
                 </div>
 
                 <div className="mt-5 border-t border-white/10 pt-4 text-xs leading-6 text-white/50">
-                  The full mint uses the protected Genesis Engine output,
-                  encrypted hash, deed image, and metadata pipeline.
+                  <GlossaryText
+                    terms={artifactGlossaryTerms}
+                    text="The full mint uses the protected Genesis Engine output, encrypted hash, deed image, and metadata pipeline."
+                  />
                 </div>
               </aside>
             </div>

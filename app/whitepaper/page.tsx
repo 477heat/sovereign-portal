@@ -1,5 +1,24 @@
 import Link from "next/link";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
+
+const litepaperGlossaryTerms: GlossaryTermKey[] = [
+  "Artifact",
+  "Base-native",
+  "Deterministic Profile",
+  "Genesis",
+  "Genesis Character",
+  "Genesis Mint",
+  "Lineage",
+  "Metadata",
+  "Progeny",
+  "Royalty",
+  "Traceable",
+  "Vanguard",
+  "Wallet",
+  "wallet-linked",
+];
 
 const operatorPanels = [
   {
@@ -122,9 +141,10 @@ export default function ExecutiveSummaryPage() {
               </h1>
             </div>
             <p className="max-w-xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              Sovereign Engine turns deterministic personal data into persistent
-              character stats, Genesis access, and future Progeny structures that
-              can carry traceable origin and wallet-linked royalty routing.
+              <GlossaryText
+                terms={litepaperGlossaryTerms}
+                text="Sovereign Engine turns deterministic personal data into persistent character stats, Genesis access, and future Progeny structures that can carry traceable origin and wallet-linked royalty routing."
+              />
             </p>
           </div>
         </header>
@@ -155,12 +175,10 @@ export default function ExecutiveSummaryPage() {
               </h2>
             </div>
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              The Deed is the first artifact in a broader Engine. It introduces
-              the user profile, the Vanguard launch class, and the future
-              pattern for Progeny generation. The full policy layer belongs in
-              detailed terms, but the front-facing promise is simple: stable
-              identity-derived stats, clear lineage, and no empty-wallet
-              community theater.
+              <GlossaryText
+                terms={litepaperGlossaryTerms}
+                text="The Deed is the first artifact in a broader Engine. It introduces the user profile, the Vanguard launch class, and the future pattern for Progeny generation. The full policy layer belongs in detailed terms, but the front-facing promise is simple: stable identity-derived stats, clear lineage, and no empty-wallet community theater."
+              />
             </p>
           </div>
         </section>
@@ -185,7 +203,12 @@ export default function ExecutiveSummaryPage() {
                   </h2>
                   <div className="space-y-3 text-sm leading-6 text-cyan-50/68 md:text-base">
                     {section.copy.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
+                      <p key={paragraph}>
+                        <GlossaryText
+                          terms={litepaperGlossaryTerms}
+                          text={paragraph}
+                        />
+                      </p>
                     ))}
                   </div>
                 </div>

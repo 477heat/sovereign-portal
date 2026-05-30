@@ -60,8 +60,11 @@ export default function CoinbaseEntryPage() {
                 Sovereign Engine
               </p>
               <h1 className="max-w-3xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 md:text-5xl">
-                You are human. Humans have souls. Mint the deed to yours.
+                Your Origin, Your Creation, Your Artifact.
               </h1>
+              <p className="mt-5 max-w-2xl text-sm font-semibold uppercase leading-6 tracking-[0.18em] text-yellow-100/82 md:text-base">
+                Deterministic, Unique, Identifiably Yours.
+              </p>
             </div>
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
               Sovereign Engine creates Genesis Soul Deed artifacts for real

@@ -19,7 +19,9 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
 import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
 
 type VerificationState = {
@@ -66,6 +68,32 @@ const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
 
 const steps = ["Wallet", "EAS", "Identity", "Terms", "Payment", "Mint"];
+const portalGlossaryTerms: GlossaryTermKey[] = [
+  "Attestation",
+  "Base",
+  "Base Mainnet",
+  "Checkout",
+  "Coinbase EAS",
+  "Covenant Mark",
+  "ERC-721",
+  "Genesis",
+  "Genesis Mint",
+  "Metadata",
+  "Mint",
+  "Mint Order",
+  "Progeny",
+  "Public Mark",
+  "Recipient",
+  "Soul",
+  "Soul Deed",
+  "Token",
+  "Token URI",
+  "Vanguard",
+  "Verified Account",
+  "Wallet",
+  "Wallet Address",
+  "wallet-linked",
+];
 const portalAppMetadata = {
   name: "Sovereign Portal",
   url: "https://sovengine.xyz",
@@ -138,9 +166,10 @@ function PortalWalletGate() {
           Connect to enter the Portal
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/62">
-          The Portal uses your connected Base wallet for Coinbase EAS
-          eligibility, checkout order ownership, and the final mint recipient.
-          Typed wallet addresses are not accepted for the live mint path.
+          <GlossaryText
+            terms={portalGlossaryTerms}
+            text="The Portal uses your connected Base wallet for Coinbase EAS eligibility, checkout order ownership, and the final mint recipient. Typed wallet addresses are not accepted for the live mint path."
+          />
         </p>
         <div className="mt-6 flex justify-center">
           {thirdwebClient ? (
@@ -707,8 +736,14 @@ function PortalContent() {
                             </span>
                           </div>
                           <p className="mt-2 text-sm leading-6 text-white/62">
-                            {verification?.message ??
-                              "The connected Base wallet is checked for Coinbase Verified Account attestation. Name and DOB fields must match your identity records, but the wallet attestation is the live eligibility gate."}
+                            {verification?.message ? (
+                              verification.message
+                            ) : (
+                              <GlossaryText
+                                terms={portalGlossaryTerms}
+                                text="The connected Base wallet is checked for Coinbase Verified Account attestation. Name and DOB fields must match your identity records, but the wallet attestation is the live eligibility gate."
+                              />
+                            )}
                           </p>
                           {verification?.mode === "mock" && (
                             <p className="mt-3 text-xs uppercase tracking-[0.18em] text-yellow-200/70">
@@ -1005,11 +1040,10 @@ function PortalContent() {
                   </summary>
                   <div className="space-y-3 border-t border-white/10 bg-black/45 p-4 text-sm leading-6 text-white/68">
                     <p>
-                      The Genesis mint treats a soul as unique to life, not
-                      automation. Each Soul carries deterministic stats, not
-                      random rolls, and the wallet-linked Coinbase EAS gate helps
-                      protect against bots, duplicate wallets, and empty-wallet
-                      farming.
+                      <GlossaryText
+                        terms={portalGlossaryTerms}
+                        text="The Genesis mint treats a soul as unique to life, not automation. Each Soul carries deterministic stats, not random rolls, and the wallet-linked Coinbase EAS gate helps protect against bots, duplicate wallets, and empty-wallet farming."
+                      />
                     </p>
                     <p>
                       The goal is a future where Engine spaces are populated by
@@ -1017,10 +1051,10 @@ function PortalContent() {
                       pretending to be community.
                     </p>
                     <p>
-                      Raw name and DOB details are used only to generate the mint
-                      request, then purged after mint completion. The Certificate
-                      also functions as a Soul Deed Access token for future
-                      Progeny access.
+                      <GlossaryText
+                        terms={portalGlossaryTerms}
+                        text="Raw name and DOB details are used only to generate the mint request, then purged after mint completion. The Certificate also functions as a Soul Deed Access token for future Progeny access."
+                      />
                     </p>
                   </div>
                 </details>
@@ -1109,9 +1143,10 @@ function PortalContent() {
           </section>
 
           <p className="control-surface-soft portal-surface-gold border border-yellow-300/20 bg-yellow-300/[0.06] p-3 text-xs leading-5 text-yellow-50/78">
-            Creative product, not legal, religious, medical, or financial
-            advice. Royalties depend on marketplace support, and public NFT
-            metadata is effectively permanent.
+            <GlossaryText
+              terms={portalGlossaryTerms}
+              text="Creative product, not legal, religious, medical, or financial advice. Royalties depend on marketplace support, and public NFT metadata is effectively permanent."
+            />
           </p>
 
           <section className="control-surface grid gap-5 border border-white/10 bg-black/60 p-4 backdrop-blur-[2px] lg:grid-cols-[220px_minmax(0,1fr)]">

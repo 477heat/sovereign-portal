@@ -3,12 +3,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
+import { GlossaryText } from "@/components/GlossaryTerm";
+import type { GlossaryTermKey } from "@/lib/glossary";
 
 const dayOneLaunchAt = Date.UTC(2026, 4, 29, 12, 0, 0);
 const heroLoopEnd = 4;
 const heroLinkExitStartAt = 4.58;
 const heroLinkExitPlaySeconds = 1;
 const heroPointerIdleMs = 420;
+const homeGlossaryTerms: GlossaryTermKey[] = [
+  "Artifact Engine",
+  "Attribute Tree",
+  "Genesis",
+  "Genesis Mint",
+  "Mint",
+  "Progeny",
+  "Vanguard",
+  "Wallet",
+];
 
 const protocolCards = [
   {
@@ -285,7 +297,7 @@ export default function HomePage() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
           <Link
             aria-current="page"
-            className="home-brand-link flex min-h-11 items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0"
+            className="home-brand-link flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0"
             href="/"
           >
             <Image
@@ -301,7 +313,7 @@ export default function HomePage() {
           <nav className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/72 md:gap-3 md:text-sm">
             {navLinks.map(([label, href]) => (
               <Link
-                className="chamfer-nav-link max-sm:!h-11 max-sm:!min-h-11 max-sm:!w-[5.65rem] max-sm:!text-[0.66rem]"
+                className="chamfer-nav-link max-sm:!h-11 max-sm:!min-h-11 max-sm:!w-[5.65rem] max-sm:!text-[0.7rem]"
                 href={href}
                 key={href}
               >
@@ -325,15 +337,17 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-0 z-0 bg-black/35" />
         <div className="relative z-10">
           <div className="chamfer-panel chamfer-panel--hero-copy max-w-[22.5rem] px-5 py-5 md:px-7 md:py-6">
-            <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cyan-200/80">
+            <p className="mb-4 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80">
               Registry Initializing
             </p>
             <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
               Sovereign Engine
             </h1>
-            <p className="mt-7 max-w-2xl text-base leading-8 text-white/68">
-              One person, one Genesis mint. No bot farms, no prize harvesting,
-              no empty wallets pretending to be a community.
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-white/68">
+              <GlossaryText
+                terms={homeGlossaryTerms}
+                text="One person, one Genesis mint. No bot farms, no prize harvesting, no empty wallets pretending to be a community."
+              />
             </p>
           </div>
 
@@ -341,13 +355,13 @@ export default function HomePage() {
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"
-                className="chamfer-hero-link chamfer-hero-link--primary max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.64rem]"
+                className="chamfer-hero-link chamfer-hero-link--primary max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
                 Enter Portal
               </Link>
               <Link
                 href="/engine"
-                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.64rem]"
+                className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
                 Artifact Engine
               </Link>
@@ -358,10 +372,10 @@ export default function HomePage() {
                 className="chamfer-countdown-label-link max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
                 href="/economics"
               >
-                <div className="text-[8px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
+                <div className="text-[9px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
                   Day 1 Countdown
                 </div>
-                <div className="mt-1 text-[7px] uppercase tracking-[0.12em] text-cyan-100/62">
+                <div className="mt-1 text-[8px] uppercase tracking-[0.12em] text-cyan-100/62">
                   29 May 2026 / 12:00 UTC
                 </div>
               </Link>
@@ -376,10 +390,10 @@ export default function HomePage() {
                       className="chamfer-countdown-cell px-1 py-1.5 text-center backdrop-blur-sm"
                       key={label}
                     >
-                      <div className="font-mono text-sm leading-none text-yellow-100">
+                      <div className="font-mono text-base leading-none text-yellow-100">
                         {value}
                       </div>
-                      <div className="mt-1 text-[6px] uppercase tracking-[0.08em] text-white/62">
+                      <div className="mt-1 text-[7px] uppercase tracking-[0.08em] text-white/62">
                         {label}
                       </div>
                     </div>
@@ -421,14 +435,14 @@ export default function HomePage() {
               className="chamfer-panel chamfer-panel--card chamfer-panel--interactive block p-5"
               href={card.href}
             >
-              <div className="text-[10px] uppercase tracking-[0.3em] text-cyan-200/60">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-cyan-200/60">
                 {card.label}
               </div>
-              <h2 className="mt-4 text-lg uppercase tracking-[0.14em] text-white">
+              <h2 className="mt-4 text-xl uppercase tracking-[0.14em] text-white">
                 {card.title}
               </h2>
-              <p className="mt-3 text-sm leading-6 text-white/55">{card.body}</p>
-              <div className="mt-4 text-[10px] uppercase tracking-[0.24em] text-cyan-200/55">
+              <p className="mt-3 text-base leading-7 text-white/55">{card.body}</p>
+              <div className="mt-4 text-[11px] uppercase tracking-[0.24em] text-cyan-200/55">
                 Open {card.destination}
               </div>
             </Link>
@@ -438,19 +452,19 @@ export default function HomePage() {
 
       <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="chamfer-panel chamfer-panel--frame p-6 backdrop-blur-md md:p-8">
-          <p className="text-center text-[11px] uppercase tracking-[0.36em] text-cyan-200/70">
+          <p className="text-center text-xs uppercase tracking-[0.36em] text-cyan-200/70">
             THE REASONING
           </p>
-          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-xs leading-5 text-white/62">
-            Developers can choose which Progeny structure they want for their
-            games, request a specific Character Attribute Tree for users to
-            generate a profile from, or purchase from a Vanguard&apos;s
-            Collection.
+          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-sm leading-6 text-white/62">
+            <GlossaryText
+              terms={homeGlossaryTerms}
+              text="Developers can choose which Progeny structure they want for their games, request a specific Character Attribute Tree for users to generate a profile from, or purchase from a Vanguard's Collection. Each creation is unique to the user's original stats."
+            />
           </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {whyThisMatters.map((item) => (
               <Link
-                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-sm leading-6 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
+                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-base leading-7 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
                 href={item.href}
                 key={item.body}
               >
@@ -461,7 +475,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-cyan-100/10 px-5 pb-10 pt-6 text-center text-[0.62rem] uppercase tracking-[0.24em] text-cyan-100/35 md:flex-row md:px-8 md:text-left">
+      <footer className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-cyan-100/10 px-5 pb-10 pt-6 text-center text-xs uppercase tracking-[0.24em] text-cyan-100/35 md:flex-row md:px-8 md:text-left">
         <span>Sovereign Engine // Builder access</span>
         <Link href="/developer" className="chamfer-nav-link">
           Developer

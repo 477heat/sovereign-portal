@@ -1,5 +1,22 @@
 import Link from "next/link";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
+
+const developerGlossaryTerms: GlossaryTermKey[] = [
+  "Attribute Tree",
+  "Deterministic Profile",
+  "Lineage",
+  "Metadata",
+  "Progeny",
+  "Royalty",
+  "Sovereign Engine",
+  "Token ID",
+  "Traceable",
+  "Vanguard",
+  "Wallet",
+  "wallet-linked",
+];
 
 const builderPanels = [
   {
@@ -118,9 +135,10 @@ export default function DeveloperPage() {
               </h1>
             </div>
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              Sovereign Engine is built around deterministic profile inputs
-              that can serve as a stable origin layer for profiles, characters,
-              items, creatures, and lineage systems.
+              <GlossaryText
+                terms={developerGlossaryTerms}
+                text="Sovereign Engine is built around deterministic profile inputs that can serve as a stable origin layer for profiles, characters, items, creatures, and lineage systems."
+              />
             </p>
           </div>
         </header>
@@ -136,11 +154,10 @@ export default function DeveloperPage() {
               </h2>
             </div>
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              The stat-generation method is not exactly secret, but it is being
-              held back while the Engine matures. Approved developer partners
-              may receive deeper disclosure about how profile inputs are
-              interpreted, how stats are derived, and how project-specific
-              Progeny trees can be mapped from them.
+              <GlossaryText
+                terms={developerGlossaryTerms}
+                text="The stat-generation method is not exactly secret, but it is being held back while the Engine matures. Approved developer partners may receive deeper disclosure about how profile inputs are interpreted, how stats are derived, and how project-specific Progeny trees can be mapped from them."
+              />
             </p>
           </div>
         </section>
@@ -174,11 +191,10 @@ export default function DeveloperPage() {
               </h2>
             </div>
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              A developer can build around stable profile stats, choose a
-              Progeny structure, request a custom attribute tree, and design
-              assets that carry source lineage. Open integration is not live
-              yet; this page defines the developer-facing model before partner
-              tooling is exposed.
+              <GlossaryText
+                terms={developerGlossaryTerms}
+                text="A developer can build around stable profile stats, choose a Progeny structure, request a custom attribute tree, and design assets that carry source lineage. Open integration is not live yet; this page defines the developer-facing model before partner tooling is exposed."
+              />
             </p>
           </div>
         </section>
@@ -202,7 +218,10 @@ export default function DeveloperPage() {
                     {section.title}
                   </h2>
                   <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
-                    {section.body}
+                    <GlossaryText
+                      terms={developerGlossaryTerms}
+                      text={section.body}
+                    />
                   </p>
                 </div>
                 <Link
