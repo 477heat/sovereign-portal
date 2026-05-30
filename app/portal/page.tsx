@@ -19,8 +19,29 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
 import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
+
+const portalEasGlossaryTerms: GlossaryTermKey[] = [
+  "Attestation",
+  "Coinbase EAS",
+  "Wallet",
+];
+
+const plainEnglishCertificateSummary = [
+  "This certificate was built around the human story behind the Genesis Soul Registry mint. It is meant for real people with real lives, not bots, machines, or automated processes trying to participate without a human behind them.",
+  "The token can show a public marker and basic contract information, but the private identity details used by the Portal are not meant to be blasted out as ordinary public metadata. The point is to prove the mint came from a real person without turning that person's private details into decoration.",
+  "Before the mint, the Portal gathers the required name, date, wallet, and agreement steps so the mint can be tied to the correct person and wallet. That process is what helps make sure the user is recorded as the Original Minter and that the user's wallet is used as the royalty receiver where the contract and marketplace routing support it.",
+  "If you transfer the token, the new holder gets the token and the access tied to it. That does not mean anyone owns your actual life, body, choices, or soul in the real world. I know the formal language gets wild, but the practical point is that the token itself can move.",
+  "The formal contract makes a huge theatrical joke about afterlife ownership and eternal servitude. It is supposed to feel comically intense. Part of the joke is also a warning: do not casually sell this like a random collectible, because it is also an access token for the project.",
+  "The real smart contract does normal blockchain things. It can mint an ERC-721 token, remember the original minter wallet, manage metadata, show royalty information, and use project controls like pause, reveal, freeze, blacklist, and burn settings if those features are turned on.",
+  "Vanguard status simply means the original wallet was here early in the Genesis phase. I want early supporters to matter, but future benefits need to be written down in published project terms, not promised through vague hype.",
+  "When a user creates Artifacts, the intended setup gives that user's originating wallet a 3.5% royalty share when supported marketplaces route royalties correctly. After an Artifact is minted, the first sale price or listing price is up to the user who controls it.",
+  "Royalties are not magic. The contract can point to them, but marketplaces still have to honor the routing. In some cases there may also be claim, withdrawal, or splitter steps before money actually reaches a wallet.",
+  "This Plain English Summary is here so people can understand the idea without needing to decode every joke and legal-sounding phrase. The Formal Terms are still the version used for the agreement.",
+];
 
 type VerificationState = {
   eligible: boolean;
@@ -153,6 +174,8 @@ function PortalContent() {
   const [publicMarkAccepted, setPublicMarkAccepted] = useState(false);
   const [contractAccepted, setContractAccepted] = useState(false);
   const [certificateOpened, setCertificateOpened] = useState(false);
+  const [termsReviewOpen, setTermsReviewOpen] = useState(false);
+  const [plainEnglishTermsOpen, setPlainEnglishTermsOpen] = useState(false);
   const [minting, setMinting] = useState(false);
   const [receipt, setReceipt] = useState<MintReceipt | null>(null);
   const [mintOrder, setMintOrder] = useState<MintOrderState | null>(null);
@@ -717,8 +740,25 @@ function PortalContent() {
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
     mint: minting ? "Minting" : canMint ? "Mint" : "Mint Locked",
   }[selectedGate];
-  const closeTermsOverlay = () =>
-    setSelectedGate(deedAccepted ? "payment" : "identity");
+  function downloadFormalTerms() {
+    const termsText = [
+      `Sovereign Engine Certificate Terms`,
+      `Version: ${contractLanguageVersion}`,
+      "",
+      ...contractLanguage,
+    ].join("\n\n");
+    const file = new Blob([termsText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `sovereign-engine-certificate-terms-${contractLanguageVersion}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
   const termsContent = (
     <div className="grid gap-4">
       <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
@@ -775,33 +815,16 @@ function PortalContent() {
           </span>
         </label>
       </div>
-      {!certificateOpened && (
-        <button
-          className="console-key-button console-key-button--gold w-fit"
-          onClick={() => setCertificateOpened(true)}
-          type="button"
-        >
-          Open Certificate
-        </button>
-      )}
-      {certificateOpened && (
-        <div className="control-surface-soft portal-terms-certificate space-y-3 overflow-y-auto border border-yellow-300/25 bg-black/55 p-4 text-xs leading-6 text-white/65">
-          {contractLanguage.map((paragraph, index) => {
-            const isHeading = index === 0 || paragraph.startsWith("SECTION ");
-
-            return (
-              <p
-                key={`${paragraph.slice(0, 24)}-${index}`}
-                className={
-                  isHeading ? "text-yellow-100 uppercase tracking-[0.18em]" : ""
-                }
-              >
-                {paragraph}
-              </p>
-            );
-          })}
-        </div>
-      )}
+      <button
+        className="console-key-button console-key-button--gold w-fit"
+        onClick={() => {
+          setCertificateOpened(true);
+          setTermsReviewOpen(true);
+        }}
+        type="button"
+      >
+        Read Terms
+      </button>
     </div>
   );
 
@@ -946,28 +969,20 @@ function PortalContent() {
                                     </span>
                                   </div>
                                   <p className="mt-4 text-lg leading-8 text-white/76">
-                                    Attestation is a trusted note attached to your
-                                    wallet. Here, Coinbase EAS helps the Portal
-                                    check that the connected wallet belongs to a
-                                    verified human account.
+                                    <GlossaryText
+                                      terms={portalEasGlossaryTerms}
+                                      text="Coinbase EAS checks whether your connected wallet belongs to a verified human account. If this wallet was already verified, this gate would be green."
+                                    />
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
-                                    This check uses the wallet you connect. If
-                                    this wallet already had the right Coinbase
-                                    EAS verification, it would show here and the
-                                    EAS chip would turn green.
+                                    <GlossaryText
+                                      terms={portalEasGlossaryTerms}
+                                      text="If you are verified on Coinbase but this wallet is not green, open Coinbase EAS and connect this wallet to your account."
+                                    />
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
-                                    If your Coinbase account is verified but
-                                    this wallet is not green yet, Coinbase still
-                                    needs to know this is your wallet. Use the
-                                    button below to open Coinbase EAS and attach
-                                    verification to the current connected wallet.
-                                  </p>
-                                  <p className="mt-3 text-base leading-7 text-white/66">
-                                    Every chip in the Select Panel must be green
-                                    before minting can open: Wallet, EAS,
-                                    Identity, Terms, Order, and Mint.
+                                    Every chip in the Select Panel must turn
+                                    green before minting can open.
                                   </p>
                                   {verification?.message && (
                                     <p className="mt-4 text-sm leading-6 text-cyan-50/72">
@@ -1072,11 +1087,17 @@ function PortalContent() {
 
                             {selectedGate === "terms" && (
                               <div className="grid gap-3">
-                                <div className="control-surface-soft border border-yellow-300/25 bg-black/45 p-4 text-sm leading-6 text-white/68">
-                                  Terms are open in full-page console mode.
-                                  Complete the certificate review and agreement
-                                  checks there, then return to the mint console.
+                                <div className="control-surface-soft border border-yellow-300/25 bg-black/45 p-4">
+                                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-100">
+                                    Terms Agreement
+                                  </div>
+                                  <p className="mt-3 text-sm leading-6 text-white/68">
+                                    Read the terms first, then confirm each
+                                    agreement item. The full contract opens only
+                                    when you choose Read Terms.
+                                  </p>
                                 </div>
+                                {termsContent}
                               </div>
                             )}
 
@@ -1090,7 +1111,7 @@ function PortalContent() {
 
                                 {orderPaid ? (
                                   <div className="portal-pay-button portal-pay-button--confirmed mt-4">
-                                    <span>Payment Confirmed</span>
+                                    <span>Completed</span>
                                     <small>Mint control armed.</small>
                                   </div>
                                 ) : checkoutPrerequisitesComplete ? (
@@ -1109,9 +1130,7 @@ function PortalContent() {
                                   </button>
                                 ) : (
                                   <div className="portal-pay-button portal-pay-button--waiting mt-4">
-                                    <span>
-                                      Confirm Previous Completion of previous steps
-                                    </span>
+                                    <span>Sequence Not Completed</span>
                                     <small>
                                       Wallet, EAS, identity, and terms must be green first.
                                     </small>
@@ -1262,10 +1281,10 @@ function PortalContent() {
         <small>{selectedGateReadout.label}</small>
       </button>
 
-      {selectedGate === "terms" && (
+      {termsReviewOpen && (
         <div className="portal-terms-layer">
           <section
-            aria-label="Terms agreement"
+            aria-label="Certificate terms"
             aria-modal="true"
             className="control-surface-soft portal-terms-panel border border-yellow-300/25 p-4 md:p-6"
             role="dialog"
@@ -1276,30 +1295,76 @@ function PortalContent() {
                   Full Page Review
                 </div>
                 <h2 className="mt-2 text-2xl font-black uppercase tracking-[0.12em] text-yellow-50 md:text-4xl">
-                  Terms Agreement
+                  Certificate Terms
                 </h2>
               </div>
               <button
-                className="console-key-button console-key-button--gold"
-                onClick={closeTermsOverlay}
+                className="console-key-button portal-terms-action-button portal-terms-close-button"
+                onClick={() => {
+                  setTermsReviewOpen(false);
+                  setPlainEnglishTermsOpen(false);
+                }}
                 type="button"
               >
-                Back To Console
+                Close Review
               </button>
             </div>
-            {termsContent}
-            <button
-              className={`portal-console-enter mt-5 ${
-                gateEnterEnabled
-                  ? "portal-console-enter--ready"
-                  : "portal-console-enter--locked"
-              }`}
-              disabled={!gateEnterEnabled}
-              onClick={() => void handleGateEnter()}
-              type="button"
-            >
-              {gateEnterLabel}
-            </button>
+            <div className="control-surface-soft portal-terms-certificate space-y-3 overflow-y-auto border border-yellow-300/25 bg-black/55 p-4 text-xs leading-6 text-white/65">
+              {plainEnglishTermsOpen ? (
+                <>
+                  <p className="portal-terms-priority text-yellow-100 uppercase tracking-[0.18em]">
+                    Plain English Summary
+                  </p>
+                  {plainEnglishCertificateSummary.map((paragraph) => (
+                    <p
+                      className="portal-terms-priority"
+                      key={paragraph.slice(0, 32)}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </>
+              ) : (
+                contractLanguage.map((paragraph, index) => {
+                  const isHeading =
+                    index === 0 || paragraph.startsWith("SECTION ");
+                  const isPriorityTerms =
+                    index <
+                    contractLanguage.findIndex((entry) =>
+                      entry.startsWith("SECTION IV"),
+                    );
+
+                  return (
+                    <p
+                      key={`${paragraph.slice(0, 24)}-${index}`}
+                      className={`${isPriorityTerms ? "portal-terms-priority" : ""} ${
+                        isHeading
+                          ? "text-yellow-100 uppercase tracking-[0.18em]"
+                          : ""
+                      }`}
+                    >
+                      {paragraph}
+                    </p>
+                  );
+                })
+              )}
+            </div>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <button
+                className="console-key-button portal-terms-action-button"
+                onClick={() => setPlainEnglishTermsOpen((current) => !current)}
+                type="button"
+              >
+                {plainEnglishTermsOpen ? "Formal Terms" : "Plain English Summary"}
+              </button>
+              <button
+                className="console-key-button portal-terms-action-button"
+                onClick={downloadFormalTerms}
+                type="button"
+              >
+                Download Formal Terms
+              </button>
+            </div>
           </section>
         </div>
       )}
@@ -1345,6 +1410,12 @@ function PortalContent() {
                     selectedGate === gate.key
                       ? "portal-gate-button--selected"
                       : ""
+                  } ${
+                    gate.key === "wallet" ||
+                    gate.key === "identity" ||
+                    gate.key === "payment"
+                      ? "portal-gate-button--right-chamfer"
+                      : "portal-gate-button--left-chamfer"
                   } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
                   key={gate.key}
                   onClick={() => {
