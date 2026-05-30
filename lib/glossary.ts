@@ -1,0 +1,162 @@
+export const glossary = {
+  "Access Token":
+    "A digital pass that lets a wallet use a part of the project.",
+  Alienation:
+    "A formal word for giving, selling, or trading something you own.",
+  Artifact:
+    "A digital creation made by the project, such as a deed, character, item, or future game asset.",
+  "Artifact Engine":
+    "The preview console where users can test possible stats and future creations.",
+  Attestation:
+    "A trusted proof. Here it means Coinbase has confirmed the connected account.",
+  Attester:
+    "The group that gives the proof. For this site, that group is Coinbase.",
+  "Attribute Tree":
+    "The list of traits and stats a project chooses for its characters, items, or other creations.",
+  "Base-native":
+    "Built to work on Base from the start, not added later.",
+  Backend:
+    "The private part of the site that checks rules and prepares the mint.",
+  "Backend Mint":
+    "A mint started by the private part of the site, not only by the button you see.",
+  Barter:
+    "A trade or exchange of value that may not use ordinary currency.",
+  Base:
+    "Coinbase's network where this project plans to mint.",
+  "Base Mainnet":
+    "The real Base network where live tokens and payments happen.",
+  Blacklist:
+    "A block list that can stop certain wallets or marketplaces from being used.",
+  Blockchain:
+    "A public record book for digital ownership and actions.",
+  Burn:
+    "To destroy a token so it is no longer usable.",
+  "Burn Fee":
+    "A possible fee for destroying a token if that option is ever turned on.",
+  Checkout:
+    "The payment step before minting, when payment is required.",
+  "Coinbase EAS":
+    "The Coinbase check used by the Portal to confirm the connected wallet belongs to a verified Coinbase account.",
+  "Contract Address":
+    "The public address for a project program on the network.",
+  "Covenant Mark":
+    "A short public mark made from the name fields.",
+  Conveyance:
+    "A formal word for transfer.",
+  "Deed of Spiritual Conveyance":
+    "A formal title for the Soul Deed and its transfer language.",
+  "Deterministic Profile":
+    "A profile that gives the same person the same core stats every time.",
+  "Dynamic URI":
+    "A token link that can show updated information before it is locked.",
+  DynamoDB:
+    "A database service that can store site records like mint orders.",
+  "ERC-721":
+    "A common kind of NFT made for unique one-of-one tokens.",
+  "Founder Share":
+    "The part of a payment meant for the founder or project wallet.",
+  Genesis:
+    "The beginning stage of the project, where the first personal profile and access path are created.",
+  "Genesis Character":
+    "The first character-style profile created from the first mint. Its stats stay tied to the original person.",
+  "Genesis Mint":
+    "The first one-person mint. It creates the user's starting deed and profile access.",
+  Grantor:
+    "The person or side giving something in formal deed language.",
+  Grantee:
+    "The person or side receiving something in formal deed language.",
+  Hash:
+    "A digital fingerprint for checking that data has not changed.",
+  Indexer:
+    "A service that organizes network records so apps can find them faster.",
+  IPFS:
+    "A file storage network often used for NFT images and information.",
+  Lambda:
+    "A small cloud function that runs backend tasks when needed.",
+  Lineage:
+    "The family line between a source profile and the characters, children, or items made from it.",
+  Marketplace:
+    "A place like OpenSea where people can buy and sell digital items.",
+  Metadata:
+    "The public information attached to a token, usually its name, image, description, and traits.",
+  Mint:
+    "The action of creating a digital asset and sending it to a wallet.",
+  "Mint Order":
+    "The Portal's record that tracks whether a connected wallet is ready to mint.",
+  "Mint Worker":
+    "The private process that helps prepare and send mint requests.",
+  Minting:
+    "The process of creating a token.",
+  "One-wallet mint claim":
+    "A rule record meant to stop one person from claiming the first mint more than once.",
+  "Operator Filter":
+    "A rule that can control which marketplaces or tools may move a token.",
+  Pinata:
+    "A service that helps keep NFT files available online.",
+  "Placeholder URI":
+    "A temporary token link used before the final information is ready.",
+  "Platform Vault":
+    "A project wallet or vault that can receive project funds.",
+  "Proxy (contract)":
+    "A setup where the public address stays the same even if the project code is upgraded.",
+  Progeny:
+    "Future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
+  "Public Mark":
+    "A short public label so the site does not show full private name details.",
+  Recipient:
+    "The wallet that receives the minted token.",
+  Royalty:
+    "A payment meant to go back to the creator or origin wallet when an item is resold, if the marketplace supports it.",
+  "Royalty Splitter":
+    "A payment tool that divides money between the right wallets.",
+  RPC:
+    "A connection point the site uses to talk to the network.",
+  "Schema UID":
+    "An ID number that tells the site what kind of proof it is checking.",
+  Signature:
+    "A wallet approval that proves the wallet owner said yes.",
+  "Smart Contract":
+    "A program on the network that follows set rules for tokens.",
+  Soul:
+    "The project idea for a unique living person.",
+  Soulbound:
+    "A token that cannot be moved, or can only be moved in limited ways.",
+  "Soul Deed":
+    "The first deed-style artifact that gives a user their starting profile and access path.",
+  "Sovereign Engine":
+    "The system that helps users create profiles and artifacts from their own source, while keeping authority over themselves and what they create.",
+  Token:
+    "A digital asset recorded on the network.",
+  "Token Address":
+    "The public address for a token or payment asset.",
+  "Token ID":
+    "The unique number identifying a specific token inside a contract.",
+  "Token URI":
+    "The link that tells apps where to find a token's public information and image.",
+  Traceable:
+    "Designed so a creation can be followed back to the profile, wallet, or parent it came from.",
+  "Trading (contract toggle)":
+    "A setting that can turn token trading on, limit it, or turn it off.",
+  "Upgradeable (contract)":
+    "A setup that lets approved project owners update the contract code later.",
+  UUPS:
+    "A common upgrade setup for smart contracts.",
+  Vanguard:
+    "The Day One supporter status intended to carry forward into future project launches and benefits.",
+  "Verified Account":
+    "A Coinbase account signal used to help confirm the Portal is dealing with a real eligible account.",
+  Wallet:
+    "The user's digital account. The Portal uses the connected wallet for access checks, payment, and receiving the mint.",
+  "Wallet Address":
+    "The public address of a wallet. It can receive tokens and appears in onchain records.",
+  Webhook:
+    "A server callback used to notify the app that an external event, such as payment status, has changed.",
+  "wallet-linked":
+    "Connected to a wallet so access, ownership, and project credit can follow that wallet.",
+} as const;
+
+export type GlossaryTermKey = keyof typeof glossary;
+
+export function getGlossaryDefinition(term: GlossaryTermKey) {
+  return glossary[term];
+}

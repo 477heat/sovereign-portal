@@ -14,7 +14,7 @@ export function getServerPaymentConfig() {
   const amount =
     process.env.PORTAL_PAYMENT_AMOUNT ??
     process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ??
-    "2.50";
+    "5.00";
   const decimals = Number.parseInt(
     process.env.PORTAL_PAYMENT_TOKEN_DECIMALS ?? "6",
     10,

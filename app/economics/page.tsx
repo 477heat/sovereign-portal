@@ -1,5 +1,24 @@
 import Link from "next/link";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
+
+const economicsGlossaryTerms: GlossaryTermKey[] = [
+  "Access Token",
+  "Attribute Tree",
+  "Contract Address",
+  "Genesis",
+  "Genesis Mint",
+  "Lineage",
+  "Marketplace",
+  "Mint",
+  "Progeny",
+  "Royalty",
+  "Traceable",
+  "Vanguard",
+  "Wallet",
+  "wallet-linked",
+];
 
 const accessPanels = [
   {
@@ -112,10 +131,10 @@ export default function EconomicsPage() {
               </h1>
             </div>
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              This page explains how Vanguard access, Progeny creation, and
-              royalty routing connect. The practical rule is simple: source
-              profiles create traceable assets, and approved routes preserve
-              wallet-linked benefits where supported.
+              <GlossaryText
+                terms={economicsGlossaryTerms}
+                text="This page explains how Vanguard access, Progeny creation, and royalty routing connect. The practical rule is simple: source profiles create traceable assets, and approved routes preserve wallet-linked benefits where supported."
+              />
             </p>
           </div>
         </header>
@@ -149,9 +168,10 @@ export default function EconomicsPage() {
               </h2>
             </div>
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              Users should understand what carries forward, what can be
-              generated from their profile, and where marketplace support matters.
-              This is the short version before reading the full policy layer.
+              <GlossaryText
+                terms={economicsGlossaryTerms}
+                text="Users should understand what carries forward, what can be generated from their profile, and where marketplace support matters. This is the short version before reading the full policy layer."
+              />
             </p>
           </div>
         </section>
@@ -169,10 +189,10 @@ export default function EconomicsPage() {
                 One Genesis. Many Future Builds.
               </h2>
               <p className="mt-4 text-sm leading-6 text-cyan-50/66 md:text-base">
-                Early users should think of Genesis as the origin deed, not the
-                entire Engine. Progeny is planned to become the layer where
-                characters, gear, vehicles, creatures, and project-specific
-                assets can be generated from that origin.
+                <GlossaryText
+                  terms={economicsGlossaryTerms}
+                  text="Early users should think of Genesis as the origin deed, not the entire Engine. Progeny is planned to become the layer where characters, gear, vehicles, creatures, and project-specific assets can be generated from that origin."
+                />
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-3">
@@ -185,18 +205,20 @@ export default function EconomicsPage() {
                     {item.label}
                   </div>
                   <p className="mt-3 text-sm leading-6 text-cyan-50/66">
-                    {item.body}
+                    <GlossaryText
+                      terms={economicsGlossaryTerms}
+                      text={item.body}
+                    />
                   </p>
                 </div>
               ))}
             </div>
           </div>
           <div className="mt-6 border-t border-cyan-100/10 pt-5 text-sm leading-6 text-cyan-50/64 md:text-base">
-            In a later release, Vanguard inventory may let users compare
-            generated Progeny by type or game, request a mint from a
-            Vanguard-generated asset, or purchase through approved routes where
-            the contract and marketplace support the flow. These mechanics are
-            roadmap direction until published in live terms.
+            <GlossaryText
+              terms={economicsGlossaryTerms}
+              text="In a later release, Vanguard inventory may let users compare generated Progeny by type or game, request a mint from a Vanguard-generated asset, or purchase through approved routes where the contract and marketplace support the flow. These mechanics are roadmap direction until published in live terms."
+            />
           </div>
         </section>
 
@@ -219,7 +241,10 @@ export default function EconomicsPage() {
                     {panel.title}
                   </h2>
                   <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
-                    {panel.body}
+                    <GlossaryText
+                      terms={economicsGlossaryTerms}
+                      text={panel.body}
+                    />
                   </p>
                 </div>
                 <Link

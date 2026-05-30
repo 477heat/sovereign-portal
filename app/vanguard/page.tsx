@@ -1,5 +1,22 @@
 import Link from "next/link";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
+
+const vanguardGlossaryTerms: GlossaryTermKey[] = [
+  "Access Token",
+  "Genesis",
+  "Genesis Mint",
+  "Marketplace",
+  "Mint",
+  "Royalty",
+  "Sovereign Engine",
+  "Token",
+  "Traceable",
+  "Vanguard",
+  "Wallet",
+  "wallet-linked",
+];
 
 const statusPanels = [
   {
@@ -90,9 +107,10 @@ export default function VanguardPrivilegesPage() {
               </h1>
             </div>
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              Vanguards are the Day One supporter class for Sovereign Engine:
-              wallet-linked origin wallets with planned recognition across
-              future creations, access systems, and published project terms.
+              <GlossaryText
+                terms={vanguardGlossaryTerms}
+                text="Vanguards are the Day One supporter class for Sovereign Engine: wallet-linked origin wallets with planned recognition across future creations, access systems, and published project terms."
+              />
             </p>
           </div>
         </header>
@@ -126,9 +144,10 @@ export default function VanguardPrivilegesPage() {
               </h2>
             </div>
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              Vanguard status is not generic affiliate language. It is the
-              named early-supporter layer for wallets that enter the Engine at
-              the Genesis stage, with future benefits defined by each launch.
+              <GlossaryText
+                terms={vanguardGlossaryTerms}
+                text="Vanguard status is not generic affiliate language. It is the named early-supporter layer for wallets that enter the Engine at the Genesis stage, with future benefits defined by each launch."
+              />
             </p>
           </div>
         </section>
@@ -152,7 +171,10 @@ export default function VanguardPrivilegesPage() {
                     {panel.title}
                   </h2>
                   <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
-                    {panel.body}
+                    <GlossaryText
+                      terms={vanguardGlossaryTerms}
+                      text={panel.body}
+                    />
                   </p>
                 </div>
                 <Link

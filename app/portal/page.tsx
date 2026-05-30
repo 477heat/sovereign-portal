@@ -20,7 +20,9 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import type { GlossaryTermKey } from "@/lib/glossary";
 import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
 
 type VerificationState = {
@@ -55,7 +57,7 @@ const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
   : null;
-const paymentAmount = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "2.50";
+const paymentAmount = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "5.00";
 const paymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
 const paymentTokenAddress =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;
@@ -68,6 +70,17 @@ const previewShellEnabled =
   process.env.VERCEL_ENV === "preview";
 const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0";
+
+const portalGlossaryTerms: GlossaryTermKey[] = [
+  "Coinbase EAS",
+  "Genesis",
+  "Mint",
+  "Progeny",
+  "Soul Deed",
+  "Vanguard",
+  "Wallet",
+  "wallet-linked",
+];
 
 const portalAppMetadata = {
   name: "Sovereign Portal",
@@ -1230,11 +1243,10 @@ function PortalContent() {
                   </summary>
                   <div className="space-y-3 border-t border-white/10 bg-black/45 p-4 text-sm leading-6 text-white/68">
                     <p>
-                      The Genesis mint treats a soul as unique to life, not
-                      automation. Each Soul carries deterministic stats, not
-                      random rolls, and the wallet-linked Coinbase EAS gate helps
-                      protect against bots, duplicate wallets, and empty-wallet
-                      farming.
+                      <GlossaryText
+                        terms={portalGlossaryTerms}
+                        text="The Genesis mint treats a soul as unique to life, not automation. Each Soul carries deterministic stats, not random rolls, and the wallet-linked Coinbase EAS gate helps protect against bots, duplicate wallets, and empty-wallet farming."
+                      />
                     </p>
                     <p>
                       The goal is a future where Engine spaces are populated by
@@ -1242,10 +1254,10 @@ function PortalContent() {
                       pretending to be community.
                     </p>
                     <p>
-                      Raw name and DOB details are used only to generate the mint
-                      request, then purged after mint completion. The Certificate
-                      also functions as a Soul Deed Access token for future
-                      Progeny access.
+                      <GlossaryText
+                        terms={portalGlossaryTerms}
+                        text="Raw name and DOB details are used only to generate the mint request, then purged after mint completion. The Certificate also functions as a Soul Deed Access token for future Progeny access."
+                      />
                     </p>
                   </div>
                 </details>
@@ -1334,9 +1346,10 @@ function PortalContent() {
           </section>
 
           <p className="control-surface-soft portal-surface-gold border border-yellow-300/20 bg-yellow-300/[0.06] p-3 text-xs leading-5 text-yellow-50/78">
-            Creative product, not legal, religious, medical, or financial
-            advice. Royalties depend on marketplace support, and public NFT
-            metadata is effectively permanent.
+            <GlossaryText
+              terms={portalGlossaryTerms}
+              text="Creative product, not legal, religious, medical, or financial advice. Royalties depend on marketplace support, and public NFT metadata is effectively permanent."
+            />
           </p>
 
           <section className="control-surface grid gap-5 border border-white/10 bg-black/60 p-4 backdrop-blur-[2px] lg:grid-cols-[220px_minmax(0,1fr)]">
