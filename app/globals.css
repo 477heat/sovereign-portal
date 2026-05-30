@@ -1114,6 +1114,22 @@ body {
   justify-content: center;
 }
 
+.portal-quiet-nav {
+  background: rgba(0, 0, 0, 0.18) !important;
+  border-color: rgba(103, 232, 249, 0.05) !important;
+  box-shadow: none !important;
+  padding-bottom: 0.55rem !important;
+  padding-top: 0.55rem !important;
+}
+
+.portal-quiet-nav .engine-nav-title {
+  color: rgba(207, 250, 254, 0.24) !important;
+}
+
+.portal-quiet-nav .engine-nav-links .chamfer-nav-link {
+  color: rgba(236, 254, 255, 0.94);
+}
+
 @media (max-width: 639px) {
   .engine-top-nav {
     align-items: stretch;

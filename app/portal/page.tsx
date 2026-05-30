@@ -747,7 +747,7 @@ function PortalContent() {
       />
 
       <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-[358px] flex-col gap-5 sm:mx-auto sm:max-w-6xl">
-        <nav className="engine-top-nav control-surface flex min-w-0 flex-wrap items-center justify-between gap-4 overflow-hidden border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
+        <nav className="engine-top-nav portal-quiet-nav control-surface flex min-w-0 flex-wrap items-center justify-between gap-4 overflow-hidden border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
           <div className="engine-nav-links flex min-w-0 flex-wrap gap-4">
             <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact chamfer-nav-link--opposite chamfer-nav-link--return">
               Return Home
