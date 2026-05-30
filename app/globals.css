@@ -777,20 +777,20 @@ body {
 }
 
 .portal-control-page .control-surface {
-  --portal-surface-border: rgba(165, 243, 252, 0.24);
-  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-border: rgba(165, 243, 252, 0.42);
+  --portal-surface-fill: rgba(8, 35, 42, 0.26);
   --portal-surface-corner: 18px;
 }
 
 .portal-control-page .control-surface-strong {
-  --portal-surface-border: rgba(165, 243, 252, 0.3);
-  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-border: rgba(165, 243, 252, 0.48);
+  --portal-surface-fill: rgba(8, 35, 42, 0.26);
   --portal-surface-corner: 22px;
 }
 
 .portal-control-page .control-surface-large {
-  --portal-surface-border: rgba(165, 243, 252, 0.34);
-  --portal-surface-fill: rgba(8, 35, 42, 0.4);
+  --portal-surface-border: rgba(165, 243, 252, 0.56);
+  --portal-surface-fill: rgba(8, 35, 42, 0.24);
   --portal-surface-corner: 30px;
 }
 
@@ -1284,6 +1284,76 @@ body {
   min-height: 2.9rem;
   padding: 0.42rem 0.62rem;
   width: 100%;
+}
+
+.portal-control-page .portal-gate-chip-shell {
+  --portal-surface-fill: rgba(8, 35, 42, 0.16);
+}
+
+.portal-wallet-recipient {
+  --portal-surface-border: rgba(96, 165, 250, 0.46);
+  --portal-surface-fill: rgba(11, 32, 58, 0.42);
+}
+
+.portal-wallet-status--pending .portal-wallet-recipient {
+  --portal-surface-border: rgba(254, 240, 138, 0.54);
+  --portal-surface-fill: rgba(48, 42, 14, 0.48);
+}
+
+.portal-wallet-status--ready .portal-wallet-recipient {
+  --portal-surface-border: rgba(134, 239, 172, 0.58);
+  --portal-surface-fill: rgba(12, 44, 26, 0.54);
+}
+
+.portal-wallet-action :where(button, [role="button"]) {
+  box-shadow:
+    inset 0 0 0 1px rgba(147, 197, 253, 0.28),
+    0 0 24px rgba(59, 130, 246, 0.18) !important;
+}
+
+.portal-wallet-status--pending .portal-wallet-action :where(button, [role="button"]) {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.34),
+    0 0 26px rgba(234, 179, 8, 0.22) !important;
+}
+
+.portal-wallet-status--ready .portal-wallet-action :where(button, [role="button"]) {
+  box-shadow:
+    inset 0 0 0 1px rgba(187, 247, 208, 0.34),
+    0 0 28px rgba(34, 197, 94, 0.26) !important;
+}
+
+.portal-connect-wallet-button {
+  background:
+    linear-gradient(120deg, rgba(37, 99, 235, 0.28), transparent 48%),
+    rgba(7, 27, 52, 0.94) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(147, 197, 253, 0.34),
+    0 0 26px rgba(59, 130, 246, 0.22) !important;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)) !important;
+  color: rgba(219, 234, 254, 0.96) !important;
+  font-family: inherit !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  height: 3.05rem !important;
+  letter-spacing: 0.1em !important;
+  min-height: 3.05rem !important;
+  min-width: 10.5rem !important;
+  padding: 0 0.9rem !important;
+  text-transform: uppercase !important;
+}
+
+.portal-connect-wallet-button:hover,
+.portal-connect-wallet-button:focus-visible {
+  background:
+    linear-gradient(120deg, rgba(96, 165, 250, 0.34), transparent 48%),
+    rgba(10, 41, 77, 0.96) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(191, 219, 254, 0.48),
+    0 0 34px rgba(59, 130, 246, 0.34) !important;
+  outline: none !important;
 }
 
 .portal-gate-button small {

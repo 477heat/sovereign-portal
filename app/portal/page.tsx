@@ -103,6 +103,7 @@ const portalWallets = [
   walletConnect(),
 ];
 const portalConnectButton = {
+  className: "portal-connect-wallet-button",
   label: "Connect Base Wallet",
 };
 const portalSwitchButton = {
@@ -632,6 +633,11 @@ function PortalContent() {
     stateClass: string;
   }>;
 
+  const walletStatusClass = account?.address
+    ? "portal-wallet-status--ready"
+    : isConnecting
+      ? "portal-wallet-status--pending"
+      : "portal-wallet-status--empty";
   const selectedGateReadout =
     gateReadouts.find((gate) => gate.key === selectedGate) ?? gateReadouts[0];
   const selectedGateTitle = {
@@ -731,8 +737,7 @@ function PortalContent() {
 
           <section className="min-w-0">
             <div className="control-surface control-surface-large relative min-w-0 overflow-hidden border border-white/10 bg-black/65 p-4 shadow-[0_0_70px_rgba(72,220,255,0.08)] backdrop-blur-[2px] md:p-5">
-              <div className="engine-screen-grid pointer-events-none absolute inset-0 opacity-25" aria-hidden="true" />
-              <div className="engine-sweep pointer-events-none absolute inset-x-0 top-0 h-24" aria-hidden="true" />
+              <div className="engine-screen-grid pointer-events-none absolute inset-0 opacity-12" aria-hidden="true" />
               <div className="relative z-10">
                 <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(280px,0.56fr)_minmax(0,1fr)]">
                   <aside className="control-surface-soft min-w-0 overflow-hidden border border-cyan-100/18 bg-white/[0.025] p-4">
@@ -771,7 +776,7 @@ function PortalContent() {
                     </div>
 
                     <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(172px,0.38fr)_minmax(0,1fr)]">
-                      <div className="control-surface-soft min-w-0 border border-cyan-100/18 p-3">
+                      <div className="control-surface-soft portal-gate-chip-shell min-w-0 border border-cyan-100/18 p-3">
                         <div className="mb-3 text-[10px] uppercase tracking-[0.28em] text-cyan-100/52">
                           Gate Chips
                         </div>
@@ -830,8 +835,8 @@ function PortalContent() {
 
                           <div className="grid flex-1 content-start gap-3">
                             {selectedGate === "wallet" && (
-                              <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                                <div className="control-surface-soft border border-white/10 p-3">
+                              <div className={`grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] ${walletStatusClass}`}>
+                                <div className="control-surface-soft portal-wallet-recipient border p-3">
                                   <div className="text-[10px] uppercase tracking-[0.24em] text-white/42">
                                     Recipient
                                   </div>
@@ -839,7 +844,7 @@ function PortalContent() {
                                     {account?.address ?? "No wallet connected"}
                                   </div>
                                 </div>
-                                <div className="flex items-center">
+                                <div className="portal-wallet-action flex items-center">
                                   {thirdwebClient ? (
                                     account?.address ? (
                                       <button
