@@ -598,7 +598,7 @@ function PortalContent() {
     },
     {
       key: "payment",
-      label: "Payment",
+      label: "Order",
       value: paymentAwaitingTerms
         ? "Waiting"
         : checkoutEnabled
@@ -760,27 +760,26 @@ function PortalContent() {
                       </div>
                     </div>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <a
-                        href="#one-person-one-mint"
-                        className="console-key-button console-key-button--gold"
-                      >
-                        Rule Logic
-                      </a>
-                      <a
-                        href="#portal-disclosures"
-                        className="console-key-button"
-                      >
-                        Disclosures
-                      </a>
-                    </div>
-
-                    <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(172px,0.38fr)_minmax(0,1fr)]">
-                      <div className="control-surface-soft portal-gate-chip-shell min-w-0 border border-cyan-100/18 p-3">
-                        <div className="mb-3 text-[10px] uppercase tracking-[0.28em] text-cyan-100/52">
-                          Gate Chips
+                    {hasIdentity && (
+                      <div className="control-surface-soft console-status-tile--entered mt-4 min-w-0 border p-3">
+                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                          Artifact Marker
                         </div>
-                        <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
+                        <div className="mt-1 truncate text-lg tracking-[0.14em] text-green-50">
+                          {publicMark}
+                        </div>
+                        <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
+                          Do not mint duplicates or incorrect info. Failed eligibility or identity checks may block minting after checkout begins.
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(120px,0.24fr)_minmax(0,1fr)]">
+                      <div className="control-surface-soft portal-gate-chip-shell min-w-0 border border-cyan-100/18 p-3">
+                        <div className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                          Select Panel
+                        </div>
+                        <div className="grid justify-items-center grid-cols-2 gap-2 lg:grid-cols-1">
                           {gateReadouts.map((gate) => (
                             <button
                               aria-pressed={selectedGate === gate.key}
@@ -812,7 +811,7 @@ function PortalContent() {
                       </div>
 
                       <div
-                        className={`control-surface-soft portal-gate-view min-h-[26rem] border p-4 ${
+                        className={`control-surface-soft portal-gate-view portal-gate-view--soft min-h-[26rem] border p-4 ${
                           selectedGateReadout.complete
                             ? "console-status-tile--entered"
                             : selectedGate === "mint"
@@ -822,7 +821,7 @@ function PortalContent() {
                       >
                         <div className="flex min-h-full flex-col gap-4">
                           <div>
-                            <div className="text-[10px] uppercase tracking-[0.3em] text-white/46">
+                            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                               Active Entry
                             </div>
                             <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
@@ -831,13 +830,18 @@ function PortalContent() {
                             <p className="mt-3 text-sm leading-6 text-white/66">
                               {selectedGateStatus}
                             </p>
+                            {selectedGateReadout.complete && (
+                              <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
+                                This gate is already confirmed. Editing may reset current values or require later gates to be checked again.
+                              </p>
+                            )}
                           </div>
 
                           <div className="grid flex-1 content-start gap-3">
                             {selectedGate === "wallet" && (
                               <div className={`grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] ${walletStatusClass}`}>
                                 <div className="control-surface-soft portal-wallet-recipient border p-3">
-                                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/42">
+                                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                     Recipient
                                   </div>
                                   <div className="mt-2 break-all font-mono text-sm text-cyan-50/78">
@@ -884,12 +888,12 @@ function PortalContent() {
 
                             {selectedGate === "eas" && (
                               <div className="grid gap-3">
-                                <div className="control-surface-soft border border-white/10 p-3">
+                                <div className="control-surface-soft border border-white/10 p-4">
                                   <div className="flex flex-wrap items-center justify-between gap-3">
-                                    <span className="text-[11px] uppercase tracking-[0.3em] text-white/45">
+                                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                       Coinbase EAS
                                     </span>
-                                    <span className="text-[10px] uppercase tracking-[0.2em] text-yellow-200/80">
+                                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                       {checkingAttestation
                                         ? "Checking"
                                         : verification?.eligible
@@ -897,13 +901,49 @@ function PortalContent() {
                                           : "Verify"}
                                     </span>
                                   </div>
-                                  <p className="mt-3 text-sm leading-6 text-white/62">
-                                    {verification?.message ??
-                                      "The connected Base wallet is checked for Coinbase Verified Account attestation. Name and DOB fields must match your identity records, but the wallet attestation is the live eligibility gate."}
+                                  <p className="mt-4 text-lg leading-8 text-white/76">
+                                    Attestation is a trusted note attached to your
+                                    wallet. Here, Coinbase EAS helps the Portal
+                                    check that the connected wallet belongs to a
+                                    verified human account.
                                   </p>
+                                  <p className="mt-3 text-base leading-7 text-white/66">
+                                    This check uses the wallet you connect. It
+                                    does not read a typed wallet address. When
+                                    the Portal finds the right verification, the
+                                    EAS chip turns green.
+                                  </p>
+                                  <p className="mt-3 text-base leading-7 text-white/66">
+                                    Every chip in the Select Panel must be green
+                                    before minting can open: Wallet, EAS,
+                                    Identity, Terms, Order, and Mint.
+                                  </p>
+                                  {verification?.message && (
+                                    <p className="mt-4 text-sm leading-6 text-cyan-50/72">
+                                      {verification.message}
+                                    </p>
+                                  )}
+                                  <div className="mt-4 flex flex-wrap gap-2">
+                                    <a
+                                      className="console-key-button"
+                                      href="https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification"
+                                      rel="noreferrer"
+                                      target="_blank"
+                                    >
+                                      Coinbase EAS
+                                    </a>
+                                    <a
+                                      className="console-key-button"
+                                      href="https://www.coinbase.com/wallet/getting-started-mobile"
+                                      rel="noreferrer"
+                                      target="_blank"
+                                    >
+                                      Get Wallet
+                                    </a>
+                                  </div>
                                 </div>
                                 {verification?.mode === "mock" && (
-                                  <p className="text-xs uppercase tracking-[0.18em] text-yellow-200/70">
+                                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                     Mock attestation mode
                                   </p>
                                 )}
@@ -928,7 +968,7 @@ function PortalContent() {
                                       onKeyDown={(event) =>
                                         handleIdentityKeyDown(event, "firstName")
                                       }
-                                      className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-3 text-xs text-white outline-none transition focus:border-yellow-300/60"
+                                      className="control-input-surface w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                       placeholder="As it Appears on Coinbase Acct."
                                     />
                                   </label>
@@ -948,7 +988,7 @@ function PortalContent() {
                                       onKeyDown={(event) =>
                                         handleIdentityKeyDown(event, "lastName")
                                       }
-                                      className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-3 text-xs text-white outline-none transition focus:border-yellow-300/60"
+                                      className="control-input-surface w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                       placeholder="As it Appears on Coinbase Acct."
                                     />
                                   </label>
@@ -969,21 +1009,13 @@ function PortalContent() {
                                         handleIdentityKeyDown(event, "dob")
                                       }
                                       type="date"
-                                      className="control-input-surface w-full border border-white/10 bg-black px-2.5 py-3 text-xs text-white outline-none transition focus:border-yellow-300/60"
+                                      className="control-input-surface w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                     />
                                   </label>
                                 </div>
-                                <div className="control-surface-soft portal-surface-gold min-w-0 border border-yellow-300/30 p-3">
-                                  <div className="text-[10px] uppercase tracking-[0.2em] text-yellow-200/80">
-                                    Artifact Marker
-                                  </div>
-                                  <div className="mt-1 truncate text-lg tracking-[0.14em] text-yellow-100">
-                                    {publicMark}
-                                  </div>
-                                  <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-white/42">
-                                    Name and DOB should match your Coinbase identity records.
-                                  </p>
-                                </div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                  Name and DOB should match your Coinbase identity records.
+                                </p>
                               </div>
                             )}
 
@@ -1064,7 +1096,7 @@ function PortalContent() {
                               <div
                                 className={`control-surface-soft min-h-full border p-4 ${checkoutPanelState}`}
                               >
-                                <div className="text-[11px] uppercase tracking-[0.28em] text-white/60">
+                                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Checkout
                                 </div>
 
@@ -1161,7 +1193,7 @@ function PortalContent() {
 
                             {selectedGate === "mint" && (
                               <div className="control-surface-soft border border-white/10 p-4">
-                                <div className="text-[11px] uppercase tracking-[0.28em] text-white/48">
+                                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Final Authorization
                                 </div>
                                 <p className="mt-3 text-sm leading-6 text-white/62">
