@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 5, 1, 0, 0, 0);
+const dayOneLaunchAt = Date.UTC(2026, 5, 3, 12, 0, 0);
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Artifact Engine",
   "Attribute Tree",
