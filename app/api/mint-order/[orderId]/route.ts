@@ -69,6 +69,8 @@ export async function GET(
       orderId: order.orderId,
       status: order.status,
       wallet: order.wallet,
+      paymentKind: order.paymentKind,
+      paymentAmount: order.paymentAmount,
       paymentId: order.paymentId,
       mintTransactionId: order.mintTransactionId,
       mintTransactionHash: order.mintTransactionHash,

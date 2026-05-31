@@ -6,6 +6,7 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
+  TransactWriteCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
@@ -23,10 +24,18 @@ export type MintOrder = {
   status: MintOrderStatus;
   createdAt: string;
   updatedAt: string;
+  paymentKind?: "checkout" | "complimentary";
+  paymentAmount?: string;
+  paymentMinAmount?: string;
+  paymentSeller?: string;
+  paymentTokenAddress?: string;
+  paymentTokenDecimals?: number;
+  paymentChainId?: number;
   paymentId?: string;
   paymentTransactionHash?: string;
   mintTransactionId?: string;
   mintTransactionHash?: string;
+  compReason?: string;
 };
 
 type MintClaim = {
@@ -38,6 +47,7 @@ type MintClaim = {
 type LocalLedger = {
   orders: Map<string, MintOrder>;
   mintClaims: Map<string, MintClaim>;
+  complimentaryOrders: Map<string, string>;
 };
 
 declare global {
@@ -50,6 +60,7 @@ const localLedger =
   (globalThis.portalMintLedger = {
     orders: new Map<string, MintOrder>(),
     mintClaims: new Map<string, MintClaim>(),
+    complimentaryOrders: new Map<string, string>(),
   });
 
 let documentClient: DynamoDBDocumentClient | null = null;
@@ -76,6 +87,10 @@ function walletClaimKey(wallet: string) {
   return `MINTED_WALLET#${wallet.toLowerCase()}`;
 }
 
+function complimentaryOrderKey(wallet: string) {
+  return `COMP_ORDER#${wallet.toLowerCase()}`;
+}
+
 function orderFromItem(value: Record<string, unknown> | undefined) {
   if (!value || value.entity !== "mint-order") {
     return null;
@@ -87,9 +102,18 @@ function orderFromItem(value: Record<string, unknown> | undefined) {
 export async function createMintOrder({
   wallet,
   publicMark,
+  payment,
 }: {
   wallet: string;
   publicMark: string;
+  payment: {
+    amount: string;
+    minAmount: bigint;
+    seller: string;
+    tokenAddress: string;
+    decimals: number;
+    chainId: number;
+  };
 }) {
   requireLedger();
 
@@ -101,6 +125,13 @@ export async function createMintOrder({
     status: "pending_payment",
     createdAt: now,
     updatedAt: now,
+    paymentKind: "checkout",
+    paymentAmount: payment.amount,
+    paymentMinAmount: payment.minAmount.toString(),
+    paymentSeller: payment.seller,
+    paymentTokenAddress: payment.tokenAddress,
+    paymentTokenDecimals: payment.decimals,
+    paymentChainId: payment.chainId,
   };
 
   if (!tableName) {
@@ -132,6 +163,131 @@ export async function createMintOrder({
   return order;
 }
 
+export async function createComplimentaryMintOrder({
+  wallet,
+  publicMark,
+  reason,
+}: {
+  wallet: string;
+  publicMark: string;
+  reason?: string;
+}) {
+  requireLedger();
+
+  const normalizedWallet = wallet.toLowerCase();
+  const now = new Date().toISOString();
+  const order: MintOrder = {
+    orderId: randomUUID(),
+    wallet: normalizedWallet,
+    publicMark,
+    status: "paid",
+    createdAt: now,
+    updatedAt: now,
+    paymentKind: "complimentary",
+    paymentId: `admin-comp:${randomUUID()}`,
+    compReason: reason?.trim() || undefined,
+  };
+
+  if (!tableName) {
+    if (localLedger.mintClaims.has(normalizedWallet)) {
+      throw new Error("This wallet already has a submitted mint.");
+    }
+
+    if (localLedger.complimentaryOrders.has(normalizedWallet)) {
+      throw new Error("This wallet already has a complimentary mint order.");
+    }
+
+    localLedger.orders.set(order.orderId, order);
+    localLedger.complimentaryOrders.set(normalizedWallet, order.orderId);
+    return order;
+  }
+
+  await getDocumentClient().send(
+    new TransactWriteCommand({
+      TransactItems: [
+        {
+          ConditionCheck: {
+            TableName: tableName,
+            Key: { pk: walletClaimKey(normalizedWallet) },
+            ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+        {
+          Put: {
+            TableName: tableName,
+            Item: {
+              pk: orderKey(order.orderId),
+              entity: "mint-order",
+              ...order,
+            },
+            ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+        {
+          Put: {
+            TableName: tableName,
+            Item: {
+              pk: complimentaryOrderKey(normalizedWallet),
+              entity: "complimentary-mint-order",
+              orderId: order.orderId,
+              wallet: normalizedWallet,
+              publicMark,
+              createdAt: now,
+              updatedAt: now,
+            },
+            ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+      ],
+    }),
+  );
+
+  return order;
+}
+
+export async function getComplimentaryMintOrder(
+  wallet: string,
+  publicMark: string,
+) {
+  requireLedger();
+
+  const normalizedWallet = wallet.toLowerCase();
+
+  if (!tableName) {
+    const orderId = localLedger.complimentaryOrders.get(normalizedWallet);
+    const order = orderId ? localLedger.orders.get(orderId) : null;
+
+    if (!order || order.publicMark !== publicMark) {
+      return null;
+    }
+
+    return order;
+  }
+
+  const pointerResult = await getDocumentClient().send(
+    new GetCommand({
+      TableName: tableName,
+      Key: { pk: complimentaryOrderKey(normalizedWallet) },
+    }),
+  );
+  const orderId =
+    typeof pointerResult.Item?.orderId === "string"
+      ? pointerResult.Item.orderId
+      : null;
+
+  if (!orderId) {
+    return null;
+  }
+
+  const order = await getMintOrder(orderId);
+
+  if (!order || order.publicMark !== publicMark) {
+    return null;
+  }
+
+  return order;
+}
+
 export async function getMintOrder(orderId: string) {
   requireLedger();
 
@@ -153,16 +309,32 @@ export async function markMintOrderPaid({
   orderId,
   paymentId,
   paymentTransactionHash,
+  receivedAmount,
+  fallbackMinimumAmount,
 }: {
   orderId: string;
   paymentId: string;
   paymentTransactionHash?: string;
+  receivedAmount?: bigint;
+  fallbackMinimumAmount?: bigint;
 }) {
   requireLedger();
 
   const current = await getMintOrder(orderId);
   if (!current) {
     return null;
+  }
+
+  const requiredAmount = current.paymentMinAmount
+    ? BigInt(current.paymentMinAmount)
+    : fallbackMinimumAmount;
+
+  if (
+    requiredAmount !== undefined &&
+    receivedAmount !== undefined &&
+    receivedAmount < requiredAmount
+  ) {
+    throw new Error("Payment amount is lower than this mint order requires.");
   }
 
   if (current.status === "minting" || current.status === "mint_submitted") {

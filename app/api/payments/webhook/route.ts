@@ -29,6 +29,20 @@ function getTransactionHash(
   return payload.data.transactionHash;
 }
 
+function getReceivedAmount(
+  payload: Awaited<ReturnType<typeof Bridge.Webhook.parse>>,
+) {
+  if ("destinationAmount" in payload.data) {
+    return payload.data.destinationAmount;
+  }
+
+  if ("amount" in payload.data) {
+    return payload.data.amount;
+  }
+
+  return undefined;
+}
+
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.THIRDWEB_PAYMENTS_WEBHOOK_SECRET;
 
@@ -41,7 +55,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.text();
-    const config = getServerPaymentConfig();
+    const config = await getServerPaymentConfig();
     const payload = await Bridge.Webhook.parse(
       body,
       asHeaders(request),
@@ -50,7 +64,6 @@ export async function POST(request: NextRequest) {
       {
         destinationChainId: config.chainId,
         destinationTokenAddress: config.tokenAddress,
-        minDestinationAmount: config.minAmount,
         receiverAddress: config.seller,
       },
     );
@@ -67,6 +80,8 @@ export async function POST(request: NextRequest) {
           ? payload.data.paymentId
           : payload.data.id,
       paymentTransactionHash: getTransactionHash(payload),
+      receivedAmount: getReceivedAmount(payload),
+      fallbackMinimumAmount: config.minAmount,
     });
 
     return NextResponse.json({

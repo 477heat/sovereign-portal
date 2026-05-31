@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createMintOrder } from "@/lib/portalOrders";
+import {
+  createMintOrder,
+  getComplimentaryMintOrder,
+} from "@/lib/portalOrders";
+import { getServerPaymentConfig } from "@/lib/portalPayments";
 import {
   checkRateLimit,
   getClientIp,
@@ -48,15 +52,34 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const complimentaryOrder = await getComplimentaryMintOrder(
+      payload.wallet!,
+      publicMark,
+    );
+
+    if (complimentaryOrder) {
+      return NextResponse.json({
+        orderId: complimentaryOrder.orderId,
+        status: complimentaryOrder.status,
+        wallet: complimentaryOrder.wallet,
+        paymentKind: complimentaryOrder.paymentKind,
+        paymentAmount: complimentaryOrder.paymentAmount,
+      });
+    }
+
+    const payment = await getServerPaymentConfig();
     const order = await createMintOrder({
       wallet: payload.wallet!,
       publicMark,
+      payment,
     });
 
     return NextResponse.json({
       orderId: order.orderId,
       status: order.status,
       wallet: order.wallet,
+      paymentKind: order.paymentKind,
+      paymentAmount: order.paymentAmount,
     });
   } catch (error) {
     return NextResponse.json(

@@ -65,6 +65,21 @@ type TokenLookup = {
   royaltyAmountWei: bigint;
 };
 
+type PortalMintSettings = {
+  paymentAmount: string;
+  updatedAt?: string;
+  updatedBy?: string;
+};
+
+type ComplimentaryOrder = {
+  orderId: string;
+  status: string;
+  wallet: string;
+  publicMark: string;
+  paymentKind?: string;
+  paymentId?: string;
+};
+
 type WriteParam = string | boolean | bigint;
 type LoadSettingsOptions = {
   quiet?: boolean;
@@ -88,6 +103,19 @@ function shortAddress(address: string) {
 
 function formatNativeAmount(value: bigint) {
   return `${formatEther(value)} ETH`;
+}
+
+function buildPublicMark(firstName: string, lastName: string) {
+  const firstInitial = firstName.trim().charAt(0).toUpperCase();
+  const surnameRoot = lastName.replace(/[^a-z]/gi, "").slice(0, 3);
+
+  if (!firstInitial || !surnameRoot) {
+    return "_. ___";
+  }
+
+  return `${firstInitial}. ${
+    surnameRoot.charAt(0).toUpperCase() + surnameRoot.slice(1).toLowerCase()
+  }`;
 }
 
 function parsePositiveEth(value: string, label: string) {
@@ -238,6 +266,8 @@ function AdminContent() {
   const account = useActiveAccount();
   const [owner, setOwner] = useState("");
   const [settings, setSettings] = useState<ContractSettings | null>(null);
+  const [portalMintSettings, setPortalMintSettings] =
+    useState<PortalMintSettings | null>(null);
   const [loading, setLoading] = useState(false);
   const [pendingAction, setPendingAction] = useState("");
   const [notice, setNotice] = useState("");
@@ -259,6 +289,13 @@ function AdminContent() {
   const [tokenId, setTokenId] = useState("0");
   const [salePrice, setSalePrice] = useState("1");
   const [tokenLookup, setTokenLookup] = useState<TokenLookup | null>(null);
+  const [portalPaymentAmount, setPortalPaymentAmount] = useState("");
+  const [compWallet, setCompWallet] = useState("");
+  const [compFirstName, setCompFirstName] = useState("");
+  const [compLastName, setCompLastName] = useState("");
+  const [compReason, setCompReason] = useState("");
+  const [complimentaryOrder, setComplimentaryOrder] =
+    useState<ComplimentaryOrder | null>(null);
 
   const ownerConnected = Boolean(
     owner &&
@@ -267,6 +304,7 @@ function AdminContent() {
   );
 
   const busy = Boolean(pendingAction);
+  const compPublicMark = buildPublicMark(compFirstName, compLastName);
 
   const syncFormFields = useCallback((nextSettings: ContractSettings) => {
     setMintPrice(formatEther(nextSettings.mintPriceWei));
@@ -428,6 +466,23 @@ function AdminContent() {
     }
   }, [syncFormFields]);
 
+  async function loadPortalMintSettings() {
+    const response = await fetch("/api/admin/mint-settings", {
+      cache: "no-store",
+    });
+    const result = (await response.json()) as PortalMintSettings & {
+      message?: string;
+    };
+
+    if (!response.ok) {
+      throw new Error(result.message ?? "Could not load Portal mint settings.");
+    }
+
+    setPortalMintSettings(result);
+    setPortalPaymentAmount(result.paymentAmount);
+    return result;
+  }
+
   async function openAdmin() {
     if (!soulContract || !account?.address) {
       return;
@@ -437,7 +492,9 @@ function AdminContent() {
     setError("");
     setNotice("");
     setSettings(null);
+    setPortalMintSettings(null);
     setTokenLookup(null);
+    setComplimentaryOrder(null);
 
     try {
       const nextOwner = await readContract({
@@ -453,6 +510,7 @@ function AdminContent() {
       }
 
       await loadSettings();
+      await loadPortalMintSettings();
       setNotice("Owner wallet confirmed.");
     } catch {
       setError("Could not open the admin state from Base.");
@@ -567,6 +625,110 @@ function AdminContent() {
           ? caughtError.message
           : "Burn fee update could not be prepared.",
       );
+    }
+  }
+
+  async function handlePortalMintPrice(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!ownerConnected) {
+      return;
+    }
+
+    setPendingAction("Portal mint price update");
+    setNotice("");
+    setError("");
+
+    try {
+      const response = await fetch("/api/admin/mint-settings", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paymentAmount: portalPaymentAmount,
+        }),
+      });
+      const result = (await response.json()) as PortalMintSettings & {
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "Portal mint price could not be updated.");
+      }
+
+      setPortalMintSettings(result);
+      setPortalPaymentAmount(result.paymentAmount);
+      setNotice(`Portal checkout price updated to $${result.paymentAmount}.`);
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Portal mint price could not be updated.",
+      );
+    } finally {
+      setPendingAction("");
+    }
+  }
+
+  async function handleComplimentaryMint(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!ownerConnected) {
+      return;
+    }
+
+    if (!isAddress(compWallet)) {
+      setError("Complimentary mint wallet must be a valid wallet address.");
+      return;
+    }
+
+    if (compPublicMark === "_. ___") {
+      setError("First and last name are required to create the public mark.");
+      return;
+    }
+
+    setPendingAction("Complimentary mint order");
+    setNotice("");
+    setError("");
+    setComplimentaryOrder(null);
+
+    try {
+      const response = await fetch("/api/admin/comp-mint-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          wallet: compWallet,
+          publicMark: compPublicMark,
+          reason: compReason,
+        }),
+      });
+      const result = (await response.json()) as ComplimentaryOrder & {
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(
+          result.message ?? "Complimentary mint order could not be created.",
+        );
+      }
+
+      setComplimentaryOrder(result);
+      setNotice(
+        `Complimentary mint order created for ${result.publicMark}. The user must connect ${shortAddress(
+          result.wallet,
+        )} and enter the same name mark.`,
+      );
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Complimentary mint order could not be created.",
+      );
+    } finally {
+      setPendingAction("");
     }
   }
 
@@ -824,6 +986,74 @@ function AdminContent() {
                 <StatRow label="Splitter implementation" value={settings.splitterImplementation} />
                 <StatRow label="Placeholder URI" value={settings.placeholderURI || "Empty"} />
                 <StatRow label="Dynamic URI" value={settings.dynamicURIEndpoint || "Empty"} />
+              </div>
+            </Panel>
+
+            <Panel title="Portal Checkout And Comp Mints">
+              <div className="grid gap-5 xl:grid-cols-2">
+                <form className="grid gap-3" onSubmit={handlePortalMintPrice}>
+                  <div className="grid gap-2">
+                    <Field
+                      label="User checkout price in USDC"
+                      onChange={setPortalPaymentAmount}
+                      placeholder="5.00"
+                      type="number"
+                      value={portalPaymentAmount}
+                    />
+                    <p className="text-xs leading-5 text-white/50">
+                      This changes the Portal checkout amount for future mint
+                      orders. It does not change the on-chain ETH mint price
+                      below.
+                    </p>
+                    {portalMintSettings?.updatedAt && (
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/35">
+                        Last updated {portalMintSettings.updatedAt}
+                      </p>
+                    )}
+                  </div>
+                  <SubmitButton disabled={busy || loading} label="Set Portal Price" />
+                </form>
+
+                <form className="grid gap-3" onSubmit={handleComplimentaryMint}>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Field
+                      label="First name"
+                      onChange={setCompFirstName}
+                      value={compFirstName}
+                    />
+                    <Field
+                      label="Last name"
+                      onChange={setCompLastName}
+                      value={compLastName}
+                    />
+                  </div>
+                  <Field
+                    label="Recipient wallet"
+                    onChange={setCompWallet}
+                    placeholder="0x..."
+                    value={compWallet}
+                  />
+                  <Field
+                    label="Admin note"
+                    onChange={setCompReason}
+                    placeholder="Optional reason"
+                    value={compReason}
+                  />
+                  <div className="border border-white/10 bg-white/[0.03] px-3 py-3 text-sm text-white/65">
+                    Public mark:{" "}
+                    <span className="font-semibold text-yellow-100">
+                      {compPublicMark}
+                    </span>
+                  </div>
+                  <SubmitButton disabled={busy || loading} label="Give Mint Away" />
+                  {complimentaryOrder && (
+                    <div className="border border-emerald-300/30 bg-emerald-300/10 px-3 py-3 text-sm leading-6 text-emerald-100">
+                      Complimentary order {complimentaryOrder.orderId} is paid
+                      for {complimentaryOrder.publicMark}. The user still has
+                      to pass wallet, EAS, identity, and terms.
+                    </div>
+                  )}
+                </form>
               </div>
             </Panel>
 

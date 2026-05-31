@@ -66,6 +66,15 @@ type MintOrderState = {
   orderId: string;
   status: "pending_payment" | "paid" | "minting" | "mint_submitted";
   wallet: string;
+  paymentAmount?: string;
+  paymentKind?: "checkout" | "complimentary";
+};
+
+type PortalPaymentSettings = {
+  checkoutEnabled: boolean;
+  paymentAmount: string;
+  paymentSeller?: string;
+  paymentTokenAddress?: string;
 };
 
 type PortalGate = "wallet" | "eas" | "identity" | "terms" | "payment" | "mint";
@@ -139,13 +148,14 @@ const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
   : null;
-const paymentAmount = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "5.00";
-const paymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
-const paymentTokenAddress =
+const defaultPaymentAmount =
+  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "5.00";
+const defaultPaymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
+const defaultPaymentTokenAddress =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;
-const checkoutEnabled =
+const defaultCheckoutEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout" &&
-  Boolean(paymentSeller && paymentTokenAddress);
+  Boolean(defaultPaymentSeller && defaultPaymentTokenAddress);
 const previewShellEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
   process.env.NODE_ENV === "development" ||
@@ -243,6 +253,12 @@ function PortalContent() {
   const [minting, setMinting] = useState(false);
   const [receipt, setReceipt] = useState<MintReceipt | null>(null);
   const [mintOrder, setMintOrder] = useState<MintOrderState | null>(null);
+  const [paymentSettings, setPaymentSettings] = useState<PortalPaymentSettings>({
+    checkoutEnabled: defaultCheckoutEnabled,
+    paymentAmount: defaultPaymentAmount,
+    paymentSeller: defaultPaymentSeller,
+    paymentTokenAddress: defaultPaymentTokenAddress,
+  });
   const [orderBusy, setOrderBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
   const [error, setError] = useState("");
@@ -264,6 +280,10 @@ function PortalContent() {
     accuracyAccepted && publicMarkAccepted && contractAccepted;
   const activeOrder =
     mintOrder?.wallet === account?.address?.toLowerCase() ? mintOrder : null;
+  const checkoutEnabled = paymentSettings.checkoutEnabled;
+  const paymentAmount = activeOrder?.paymentAmount ?? paymentSettings.paymentAmount;
+  const paymentSeller = paymentSettings.paymentSeller;
+  const paymentTokenAddress = paymentSettings.paymentTokenAddress;
   const checkoutReady =
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
@@ -298,6 +318,37 @@ function PortalContent() {
     );
 
     return () => window.clearTimeout(previewShellTimer);
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadPaymentSettings() {
+      try {
+        const response = await fetch("/api/portal-settings", {
+          cache: "no-store",
+        });
+        const result = (await response.json()) as PortalPaymentSettings;
+
+        if (!ignore && response.ok) {
+          setPaymentSettings({
+            checkoutEnabled: Boolean(result.checkoutEnabled),
+            paymentAmount: result.paymentAmount || defaultPaymentAmount,
+            paymentSeller: result.paymentSeller || defaultPaymentSeller,
+            paymentTokenAddress:
+              result.paymentTokenAddress || defaultPaymentTokenAddress,
+          });
+        }
+      } catch {
+        // Keep build-time defaults if runtime settings are unavailable.
+      }
+    }
+
+    loadPaymentSettings();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -1210,8 +1261,16 @@ function PortalContent() {
 
                                 {orderPaid ? (
                                   <div className="portal-pay-button portal-pay-button--confirmed mt-4">
-                                    <span>Completed</span>
-                                    <small>Mint control armed.</small>
+                                    <span>
+                                      {activeOrder?.paymentKind === "complimentary"
+                                        ? "Comped"
+                                        : "Completed"}
+                                    </span>
+                                    <small>
+                                      {activeOrder?.paymentKind === "complimentary"
+                                        ? "Admin-issued mint order armed."
+                                        : "Mint control armed."}
+                                    </small>
                                   </div>
                                 ) : checkoutPrerequisitesComplete ? (
                                   <button
@@ -1224,8 +1283,8 @@ function PortalContent() {
                                     onClick={createOrder}
                                     type="button"
                                   >
-                                    <span>Order</span>
-                                    <small>$5 we cover the gas fees</small>
+                                    <span>Pay ${paymentAmount}</span>
+                                    <small>We cover the gas fees</small>
                                   </button>
                                 ) : (
                                   <div className="portal-pay-button portal-pay-button--waiting mt-4">
@@ -1262,6 +1321,7 @@ function PortalContent() {
                                           }}
                                           purchaseData={{
                                             orderId: activeOrder.orderId,
+                                            paymentAmount,
                                             publicMark,
                                             wallet: account?.address,
                                           }}
@@ -1273,6 +1333,9 @@ function PortalContent() {
                                     <div className="control-surface-soft flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
                                       <span className="break-all">
                                         Order {activeOrder.orderId} / {activeOrder.status}
+                                        {activeOrder.paymentKind === "complimentary"
+                                          ? " / complimentary"
+                                          : ""}
                                       </span>
                                       <button
                                         className="console-key-button"
