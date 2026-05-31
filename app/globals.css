@@ -466,7 +466,7 @@ body {
     min-height: 3.95rem !important;
   }
 
-  .home-hero-video {
+  .home-hero-backdrop {
     height: 100%;
     object-fit: cover;
     object-position: center center;
