@@ -979,6 +979,16 @@ function PortalContent() {
             </div>
           )}
 
+          <div className="control-surface portal-surface-gold border border-yellow-200/35 bg-yellow-200/[0.06] px-4 py-3 text-sm leading-6 text-yellow-50/82">
+            <div className="text-[10px] uppercase tracking-[0.28em] text-yellow-200/85">
+              Active Mint Path
+            </div>
+            <p className="mt-2">
+              This Portal is the live Genesis Soul Registry mint path. Review
+              each entry carefully before checkout and mint.
+            </p>
+          </div>
+
           <section className="min-w-0">
             <div className="relative min-w-0">
               <div className="min-w-0">
