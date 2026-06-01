@@ -258,9 +258,9 @@ export default function HomePage() {
         </nav>
       </aside>
 
-      <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-2 pt-40 md:px-8 md:pb-3 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
+      <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-9 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
         <div className="home-hero-command-stack relative z-10 lg:col-span-2">
-          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[28rem] px-5 py-4 md:max-w-[50rem] md:px-7 md:py-3">
+          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[28rem] px-5 py-4 md:w-[35vw] md:max-w-none md:px-7 md:py-3">
             <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80 md:mb-1">
               Registry Initializing
             </p>
@@ -351,7 +351,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-1 md:px-8 md:pt-2">
+      <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-3 md:px-8 md:pt-6">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link
