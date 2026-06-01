@@ -1326,7 +1326,7 @@ function PortalContent() {
                                           client={thirdwebClient}
                                           description="Verified mint order for the Sovereign Portal deed."
                                           feePayer="seller"
-                                          name="Certificate of Title for Soul Ownership"
+                                          name="Certificate of Title for Spiritual Ownership"
                                           onSuccess={() => {
                                             setPaymentNotice(
                                               "Checkout completed. Refresh until the verified webhook marks this mint order paid.",

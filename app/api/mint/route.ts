@@ -378,7 +378,7 @@ export async function POST(request: NextRequest) {
       mode: mintMode,
       chainId: BASE_MAINNET_CHAIN_ID,
       contractAddress: GENESIS_CONTRACT_ADDRESS,
-      deedName: `Certificate of Title for Soul Ownership of ${payload.publicMark}`,
+      deedName: `Certificate of Title for Spiritual Ownership of ${payload.publicMark}`,
       contractLanguageVersion: payload.contractLanguageVersion,
       transactionId: data?.transactionId,
       transactionHash: data?.transactionHash,
@@ -393,7 +393,7 @@ export async function POST(request: NextRequest) {
     chainId: BASE_MAINNET_CHAIN_ID,
     contractAddress: GENESIS_CONTRACT_ADDRESS,
     tokenId: "LOCAL-PREVIEW-001",
-    deedName: `Certificate of Title for Soul Ownership of ${payload.publicMark}`,
+    deedName: `Certificate of Title for Spiritual Ownership of ${payload.publicMark}`,
     contractLanguageVersion: payload.contractLanguageVersion,
   });
 }
