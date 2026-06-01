@@ -10,6 +10,10 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  SOUL_DEED_CONTRACT_ADDRESS,
+  SOUL_DEED_LEDGER_SCOPE,
+} from "@/lib/soulContract";
 
 export type MintOrderStatus =
   | "pending_payment"
@@ -19,6 +23,7 @@ export type MintOrderStatus =
 
 export type MintOrder = {
   orderId: string;
+  contractAddress: string;
   wallet: string;
   publicMark: string;
   status: MintOrderStatus;
@@ -40,6 +45,7 @@ export type MintOrder = {
 
 type MintClaim = {
   orderId: string;
+  contractAddress: string;
   wallet: string;
   createdAt: string;
 };
@@ -84,11 +90,11 @@ function orderKey(orderId: string) {
 }
 
 function walletClaimKey(wallet: string) {
-  return `MINTED_WALLET#${wallet.toLowerCase()}`;
+  return `MINTED_WALLET#${SOUL_DEED_LEDGER_SCOPE}#${wallet.toLowerCase()}`;
 }
 
 function complimentaryOrderKey(wallet: string) {
-  return `COMP_ORDER#${wallet.toLowerCase()}`;
+  return `COMP_ORDER#${SOUL_DEED_LEDGER_SCOPE}#${wallet.toLowerCase()}`;
 }
 
 function orderFromItem(value: Record<string, unknown> | undefined) {
@@ -97,6 +103,10 @@ function orderFromItem(value: Record<string, unknown> | undefined) {
   }
 
   return value as MintOrder;
+}
+
+function isCurrentContractOrder(order: MintOrder) {
+  return order.contractAddress?.toLowerCase() === SOUL_DEED_LEDGER_SCOPE;
 }
 
 export async function createMintOrder({
@@ -120,6 +130,7 @@ export async function createMintOrder({
   const now = new Date().toISOString();
   const order: MintOrder = {
     orderId: randomUUID(),
+    contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
     wallet: wallet.toLowerCase(),
     publicMark,
     status: "pending_payment",
@@ -178,6 +189,7 @@ export async function createComplimentaryMintOrder({
   const now = new Date().toISOString();
   const order: MintOrder = {
     orderId: randomUUID(),
+    contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
     wallet: normalizedWallet,
     publicMark,
     status: "paid",
@@ -230,6 +242,7 @@ export async function createComplimentaryMintOrder({
               pk: complimentaryOrderKey(normalizedWallet),
               entity: "complimentary-mint-order",
               orderId: order.orderId,
+              contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
               wallet: normalizedWallet,
               publicMark,
               createdAt: now,
@@ -281,7 +294,7 @@ export async function getComplimentaryMintOrder(
 
   const order = await getMintOrder(orderId);
 
-  if (!order || order.publicMark !== publicMark) {
+  if (!order || !isCurrentContractOrder(order) || order.publicMark !== publicMark) {
     return null;
   }
 
@@ -389,6 +402,10 @@ export async function claimMintOrder(
     throw new Error("Mint order does not match this wallet.");
   }
 
+  if (!isCurrentContractOrder(order)) {
+    throw new Error("Mint order belongs to a previous contract.");
+  }
+
   if (order.publicMark !== publicMark) {
     throw new Error("Mint order does not match this public covenant mark.");
   }
@@ -400,6 +417,7 @@ export async function claimMintOrder(
   const now = new Date().toISOString();
   const claim: MintClaim = {
     orderId,
+    contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
     wallet: normalizedWallet,
     createdAt: now,
   };

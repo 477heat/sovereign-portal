@@ -16,8 +16,9 @@ import {
   useActiveAccount,
 } from "thirdweb/react";
 import { formatEther, parseEther } from "ethers";
+import { SOUL_DEED_CONTRACT_ADDRESS } from "@/lib/soulContract";
 
-const CONTRACT_ADDRESS = "0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65";
+const CONTRACT_ADDRESS = SOUL_DEED_CONTRACT_ADDRESS;
 const ADDRESS_PATTERN = /^0x[a-fA-F0-9]{40}$/;
 const SETTINGS_REFRESH_ATTEMPTS = 6;
 const SETTINGS_REFRESH_DELAY_MS = 1200;

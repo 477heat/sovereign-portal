@@ -14,9 +14,10 @@ import {
   getClientIp,
   rateLimitResponse,
 } from "@/lib/rateLimit";
+import { SOUL_DEED_CONTRACT_ADDRESS } from "@/lib/soulContract";
 
 const BASE_MAINNET_CHAIN_ID = 8453;
-const GENESIS_CONTRACT_ADDRESS = "0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65";
+const GENESIS_CONTRACT_ADDRESS = SOUL_DEED_CONTRACT_ADDRESS;
 
 type MintRequest = {
   wallet?: string;
