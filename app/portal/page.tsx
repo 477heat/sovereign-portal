@@ -19,7 +19,7 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import { GlossaryText } from "@/components/GlossaryTerm";
+import { GlossaryTerm, GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import type { GlossaryTermKey } from "@/lib/glossary";
 import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
@@ -979,14 +979,10 @@ function PortalContent() {
             </div>
           )}
 
-          <div className="control-surface portal-surface-gold border border-yellow-200/35 bg-yellow-200/[0.06] px-4 py-3 text-sm leading-6 text-yellow-50/82">
-            <div className="text-[10px] uppercase tracking-[0.28em] text-yellow-200/85">
-              Active Mint Path
+          <div className="control-surface portal-surface-red-soft portal-active-mint-notice border border-red-200/35 bg-red-200/[0.045] px-4 py-3 text-sm leading-6 text-red-50/82">
+            <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
+              Warning Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
             </div>
-            <p className="mt-2">
-              This Portal is the live Genesis Soul Registry mint path. Review
-              each entry carefully before checkout and mint.
-            </p>
           </div>
 
           <section className="min-w-0">
@@ -1053,13 +1049,20 @@ function PortalContent() {
                             >
                               {gateReadouts.map((gate) => (
                                 <div
-                                  className={`portal-step-icon ${gateIconState(gate)}`}
                                   key={gate.key}
                                   role="listitem"
-                                  title={`${gate.label}: ${gate.value}`}
                                 >
-                                  <PortalGateIcon gate={gate.key} />
-                                  <span>{gate.label}</span>
+                                  <button
+                                    aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+                                    className={`portal-step-icon ${gateIconState(gate)}`}
+                                    disabled={!gate.enabled && !gate.complete}
+                                    onClick={() => selectGate(gate.key)}
+                                    title={`${gate.label}: ${gate.value}`}
+                                    type="button"
+                                  >
+                                    <PortalGateIcon gate={gate.key} />
+                                    <span>{gate.label}</span>
+                                  </button>
                                 </div>
                               ))}
                             </div>
@@ -1444,13 +1447,13 @@ function PortalContent() {
       <button
         aria-controls="portal-mobile-select-drawer"
         aria-expanded={mobileGateDrawerOpen}
-        className="console-key-button portal-mobile-select-trigger"
+        className="console-key-button portal-mobile-select-trigger portal-mobile-select-trigger--attention"
         onClick={() => setMobileGateDrawerOpen(true)}
         ref={mobileGateTriggerRef}
         type="button"
       >
-        <span>Console Control</span>
-        <small>{selectedGateReadout.label}</small>
+        <span>Console</span>
+        <span>Controls</span>
       </button>
 
       {termsReviewOpen && (
@@ -1574,7 +1577,7 @@ function PortalContent() {
                 Close
               </button>
             </div>
-            <div className="grid grid-cols-2 justify-items-center gap-3">
+            <div className="portal-mobile-select-grid">
               {gateReadouts.map((gate) => (
                 <button
                   aria-pressed={selectedGate === gate.key}
@@ -1601,13 +1604,22 @@ function PortalContent() {
                 </button>
               ))}
             </div>
-            <Link
-              className="console-key-button portal-mobile-drawer-home mt-6"
-              href="/"
-              onClick={() => setMobileGateDrawerOpen(false)}
-            >
-              Home
-            </Link>
+            <div className="portal-mobile-drawer-actions">
+              <Link
+                className="console-key-button portal-mobile-drawer-action"
+                href="/"
+                onClick={() => setMobileGateDrawerOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                className="console-key-button portal-mobile-drawer-action"
+                href="/engine"
+                onClick={() => setMobileGateDrawerOpen(false)}
+              >
+                Engine Room
+              </Link>
+            </div>
           </aside>
         </div>
       )}

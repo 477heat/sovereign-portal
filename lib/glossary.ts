@@ -83,6 +83,8 @@ export const glossary = {
     "The action of creating a digital asset and sending it to a wallet.",
   "Mint Order":
     "The Portal's record that tracks whether a connected wallet is ready to mint.",
+  "Mint Path":
+    "Completing Console Verification leads into the final mint. Your wallet may still ask for confirmation, but that is the normal approval notice before the mint completes.",
   "Mint Worker":
     "The private process that helps prepare and send mint requests.",
   Minting:
