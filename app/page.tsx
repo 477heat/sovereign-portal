@@ -162,6 +162,7 @@ export default function HomePage() {
 
   return (
     <main className="home-control-page relative isolate min-h-screen overflow-hidden bg-black text-white">
+      <div aria-hidden="true" className="home-page-fixed-backdrop" />
       <header
         className={`fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-700 ease-out max-sm:will-change-transform ${
           mobileHeaderHidden
@@ -257,25 +258,16 @@ export default function HomePage() {
         </nav>
       </aside>
 
-      <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-8 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
-        <Image
-          alt=""
-          className="home-hero-backdrop pointer-events-none absolute inset-0 z-0 object-cover opacity-100"
-          fill
-          priority
-          sizes="100vw"
-          src="/media/dopest_image.jpeg"
-        />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-black/35" />
-        <div className="relative z-10">
-          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[22.5rem] px-5 py-5 md:px-7 md:py-6">
-            <p className="mb-4 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80">
+      <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-2 pt-40 md:px-8 md:pb-3 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
+        <div className="home-hero-command-stack relative z-10 lg:col-span-2">
+          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[28rem] px-5 py-4 md:max-w-[50rem] md:px-7 md:py-3">
+            <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80 md:mb-1">
               Registry Initializing
             </p>
             <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
               Sovereign Engine
             </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-white/68">
+            <p className="mt-5 max-w-[24rem] text-lg leading-7 text-white/68 md:mt-3 md:max-w-[46rem] md:text-base md:leading-6">
               <GlossaryText
                 terms={homeGlossaryTerms}
                 text="One person, one Genesis mint. No bot farms, no prize harvesting, no empty wallets pretending to be a community."
@@ -283,19 +275,19 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="home-hero-controls mt-8 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-4">
+          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-4">
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"
                 className="chamfer-hero-link chamfer-hero-link--primary home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
-                Enter Portal
+                Mint Path
               </Link>
               <Link
                 href="/engine"
                 className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
-                Artifact Engine
+                Engine Room
               </Link>
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
@@ -359,7 +351,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-5 md:px-8 md:pt-7">
+      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-1 md:px-8 md:pt-2">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link

@@ -350,16 +350,47 @@ body {
 }
 
 .chamfer-panel--hero-copy::before {
-  background: rgba(165, 243, 252, 0.3);
+  --hero-copy-border: rgba(165, 243, 252, 0.74);
+  background-color: transparent;
+  background-image:
+    linear-gradient(var(--hero-copy-border), var(--hero-copy-border)),
+    linear-gradient(var(--hero-copy-border), var(--hero-copy-border)),
+    linear-gradient(var(--hero-copy-border), var(--hero-copy-border)),
+    linear-gradient(var(--hero-copy-border), var(--hero-copy-border)),
+    linear-gradient(135deg, transparent calc(50% - 1.5px), var(--hero-copy-border) calc(50% - 1.5px), var(--hero-copy-border) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(45deg, transparent calc(50% - 1.5px), var(--hero-copy-border) calc(50% - 1.5px), var(--hero-copy-border) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(45deg, transparent calc(50% - 1.5px), var(--hero-copy-border) calc(50% - 1.5px), var(--hero-copy-border) calc(50% + 1.5px), transparent calc(50% + 1.5px));
+  background-position:
+    top left 18px,
+    right top 60px,
+    bottom left 18px,
+    left top 18px,
+    left top,
+    right top,
+    left bottom;
+  background-repeat: no-repeat;
+  background-size:
+    calc(100% - 78px) 3px,
+    3px calc(100% - 60px),
+    calc(100% - 18px) 3px,
+    3px calc(100% - 36px),
+    18px 18px,
+    60px 60px,
+    18px 18px;
+  inset: 0;
 }
 
 .chamfer-panel--hero-copy {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.01);
   clip-path: polygon(18px 0, calc(100% - 60px) 0, 100% 60px, 100% 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
 }
 
 .chamfer-panel--hero-copy::after {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.chamfer-panel--hero-copy :where(p, h1) {
+  margin-left: -0.35rem;
 }
 
 .chamfer-panel--frame::before {
@@ -447,6 +478,34 @@ body {
   clip-path: polygon(28px 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%, 0 28px);
 }
 
+.home-page-fixed-backdrop {
+  background-color: #000;
+  background-image: url("/media/dopest_image.jpeg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 0;
+}
+
+.home-page-fixed-backdrop::after {
+  background: rgba(0, 0, 0, 0.35);
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+@media (min-width: 768px) {
+  .home-hero-command-stack {
+    margin-left: -1.25rem;
+  }
+}
+
 @media (max-width: 640px) {
   .home-hero-section {
     margin-left: calc(50% - 50vw);
@@ -466,11 +525,8 @@ body {
     min-height: 3.95rem !important;
   }
 
-  .home-hero-backdrop {
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
-    width: 100%;
+  .home-page-fixed-backdrop {
+    background-size: contain;
   }
 }
 
