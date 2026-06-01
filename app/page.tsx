@@ -88,10 +88,10 @@ const whyThisMatters = [
 function getCountdownParts(milliseconds: number | null) {
   if (milliseconds === null) {
     return [
-      ["--", "days"],
-      ["--", "hrs"],
-      ["--", "min"],
-      ["--", "sec"],
+      ["--", "D"],
+      ["--", "H"],
+      ["--", "M"],
+      ["--", "S"],
     ] as const;
   }
 
@@ -102,10 +102,10 @@ function getCountdownParts(milliseconds: number | null) {
   const seconds = totalSeconds % 60;
 
   return [
-    [String(days).padStart(2, "0"), "days"],
-    [String(hours).padStart(2, "0"), "hrs"],
-    [String(minutes).padStart(2, "0"), "min"],
-    [String(seconds).padStart(2, "0"), "sec"],
+    [String(days).padStart(2, "0"), "D"],
+    [String(hours).padStart(2, "0"), "H"],
+    [String(minutes).padStart(2, "0"), "M"],
+    [String(seconds).padStart(2, "0"), "S"],
   ] as const;
 }
 
@@ -296,10 +296,10 @@ export default function HomePage() {
                 className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
                 href="/economics"
               >
-                <div className="text-[9px] uppercase leading-4 tracking-[0.18em] text-yellow-200/80">
+                <div className="home-countdown-title text-[0.68rem] uppercase leading-4 tracking-[0.16em] text-neutral-950">
                   Day 1 Countdown
                 </div>
-                <div className="mt-1 text-[8px] uppercase tracking-[0.12em] text-cyan-100/62">
+                <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
                   01 Jun 2026 / 00:00 UTC
                 </div>
               </Link>
@@ -314,10 +314,10 @@ export default function HomePage() {
                       className="chamfer-countdown-cell px-1 py-1.5 text-center backdrop-blur-sm"
                       key={label}
                     >
-                      <div className="font-mono text-base leading-none text-yellow-100">
+                      <div className="home-countdown-value font-mono text-sm leading-none text-yellow-100">
                         {value}
                       </div>
-                      <div className="mt-1 text-[7px] uppercase tracking-[0.08em] text-white/62">
+                      <div className="home-countdown-unit mt-1 text-[0.42rem] uppercase tracking-[0.06em] text-cyan-50/80">
                         {label}
                       </div>
                     </div>
@@ -351,7 +351,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-1 md:px-8 md:pt-2">
+      <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-1 md:px-8 md:pt-2">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link
@@ -382,7 +382,7 @@ export default function HomePage() {
           <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-sm leading-6 text-white/62">
             <GlossaryText
               terms={homeGlossaryTerms}
-              text="Developers can choose which Progeny structure they want for their games, request a specific Character Attribute Tree for users to generate a profile from, or purchase from a Vanguard's Collection. Each creation is unique to the user's original stats."
+              text="Developers choose which attribute structure they want for their games, request a specific Character Attribute Tree for users to generate a profile from, or purchase from a Vanguard's Collection. Each creation is unique to the user's original stats."
             />
           </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">

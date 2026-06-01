@@ -170,27 +170,27 @@ body {
 }
 
 .chamfer-hero-link--primary {
-  background: rgba(254, 240, 138, 0.5);
+  background: rgba(254, 240, 138, 0.23);
   color: rgb(8, 16, 18);
 }
 
 .chamfer-hero-link--primary::before {
-  background: rgba(254, 240, 138, 0.85);
+  background: rgba(254, 240, 138, 0.38);
 }
 
 .chamfer-hero-link--primary::after {
-  background: rgba(254, 240, 138, 0.5);
+  background: rgba(254, 240, 138, 0.23);
 }
 
 .chamfer-hero-link--primary:hover,
 .chamfer-hero-link--primary:focus-visible {
-  box-shadow: 0 0 30px rgba(254, 240, 138, 0.2);
+  box-shadow: 0 0 30px rgba(254, 240, 138, 0.09);
   color: black;
 }
 
 .chamfer-hero-link--primary:hover::after,
 .chamfer-hero-link--primary:focus-visible::after {
-  background: rgba(254, 249, 195, 0.92);
+  background: rgba(254, 249, 195, 0.41);
 }
 
 .chamfer-hero-link--secondary:hover::before,
@@ -2347,14 +2347,12 @@ body {
 }
 
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive)::before {
-  background: rgba(254, 240, 138, 0.72);
+  background: rgba(254, 240, 138, 1);
 }
 
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive) {
-  box-shadow:
-    inset 0 0 0 1px rgba(254, 240, 138, 0.08),
-    0 0 14px rgba(254, 240, 138, 0.035);
-  text-shadow: 0 0 8px rgba(254, 240, 138, 0.08);
+  box-shadow: 0 0 14px rgba(254, 240, 138, 0.016);
+  text-shadow: 0 0 8px rgba(254, 240, 138, 0.036);
 }
 
 .home-control-page .chamfer-nav-link {
@@ -2371,14 +2369,12 @@ body {
 
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):hover::before,
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):focus-visible::before {
-  background: rgba(254, 240, 138, 0.9);
+  background: rgba(254, 240, 138, 1);
 }
 
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):hover,
 .home-control-page :where(.chamfer-hero-link, .chamfer-countdown-label-link, .chamfer-countdown-link, .chamfer-panel--interactive):focus-visible {
-  box-shadow:
-    inset 0 0 0 1px rgba(254, 240, 138, 0.12),
-    0 0 18px rgba(254, 240, 138, 0.06);
+  box-shadow: 0 0 18px rgba(254, 240, 138, 0.027);
 }
 
 .home-control-page .chamfer-panel--interactive:hover::after,
@@ -2411,35 +2407,44 @@ body {
   }
 
   .home-control-page .home-hero-controls {
-    margin-top: 1rem !important;
+    gap: 0.55rem !important;
+    margin-top: 0.75rem !important;
   }
 
   .home-control-page .home-hero-mobile-button {
-    height: 4rem !important;
-    min-height: 4rem !important;
+    height: 2.85rem !important;
+    min-height: 2.85rem !important;
   }
 
-  .home-control-page .chamfer-countdown-label-link div:first-child {
-    font-size: 0.43rem !important;
-    line-height: 1.35 !important;
-    letter-spacing: 0.12em !important;
+  .home-control-page .home-countdown-title {
+    color: rgba(10, 10, 8, 0.98) !important;
+    font-size: 0.58rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.1em !important;
   }
 
-  .home-control-page .chamfer-countdown-label-link div:last-child {
-    font-size: 0.38rem !important;
-    letter-spacing: 0.08em !important;
+  .home-control-page .home-countdown-date {
+    color: rgba(10, 10, 8, 0.88) !important;
+    font-size: 0.42rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
   }
 
   .home-control-page .chamfer-countdown-cell {
-    padding: 0.32rem 0.18rem !important;
+    padding: 0.18rem 0.12rem !important;
   }
 
-  .home-control-page .chamfer-countdown-cell div:first-child {
-    font-size: 0.72rem !important;
+  .home-control-page .home-countdown-value {
+    color: rgba(254, 249, 195, 0.98) !important;
+    font-size: 0.58rem !important;
+    font-weight: 900 !important;
   }
 
-  .home-control-page .chamfer-countdown-cell div:last-child {
-    font-size: 0.36rem !important;
+  .home-control-page .home-countdown-unit {
+    color: rgba(236, 254, 255, 0.82) !important;
+    font-size: 0.32rem !important;
+    font-weight: 800 !important;
     letter-spacing: 0.04em !important;
   }
 }
@@ -2469,6 +2474,51 @@ body {
   background:
     linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(14, 165, 233, 0.018)),
     rgba(0, 0, 0, 0.86);
+}
+
+.home-protocol-section .chamfer-panel--interactive {
+  background: rgba(0, 0, 0, 0);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.025);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+}
+
+.home-protocol-section .chamfer-panel--interactive::before,
+.home-protocol-section .chamfer-panel--interactive:hover::before,
+.home-protocol-section .chamfer-panel--interactive:focus-visible::before {
+  --protocol-card-border: rgba(125, 211, 252, 1);
+  background-color: transparent;
+  background-image:
+    linear-gradient(var(--protocol-card-border), var(--protocol-card-border)),
+    linear-gradient(var(--protocol-card-border), var(--protocol-card-border)),
+    linear-gradient(var(--protocol-card-border), var(--protocol-card-border)),
+    linear-gradient(var(--protocol-card-border), var(--protocol-card-border)),
+    linear-gradient(135deg, transparent calc(50% - 0.75px), var(--protocol-card-border) calc(50% - 0.75px), var(--protocol-card-border) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(135deg, transparent calc(50% - 0.75px), var(--protocol-card-border) calc(50% - 0.75px), var(--protocol-card-border) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+  background-position:
+    top left 16px,
+    right top,
+    bottom left,
+    left top 16px,
+    left top,
+    right bottom;
+  background-repeat: no-repeat;
+  background-size:
+    calc(100% - 16px) 1px,
+    1px calc(100% - 16px),
+    calc(100% - 16px) 1px,
+    1px calc(100% - 16px),
+    16px 16px,
+    16px 16px;
+  inset: 0;
+}
+
+.home-protocol-section .chamfer-panel--interactive::after,
+.home-protocol-section .chamfer-panel--interactive:hover::after,
+.home-protocol-section .chamfer-panel--interactive:focus-visible::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.035), rgba(14, 165, 233, 0.012)),
+    rgba(0, 0, 0, 0.36);
+  inset: 0;
 }
 
 @keyframes hash-fall {
