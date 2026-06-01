@@ -2,23 +2,23 @@ export const glossary = {
   "Access Token":
     "A digital pass that lets a wallet use a part of the project.",
   "Actual Supply":
-    "General meaning: the real number of usable items or characters available. Here, it means each verified user adds one real starting profile instead of unlimited rerolls.",
+    "The real number of usable items or characters available. Here, it means each verified user adds one real starting profile instead of unlimited rerolls.",
   Alienation:
     "A formal word for giving, selling, or trading something you own.",
   Artifact:
-    "General meaning: a made object or item. Here, it means a digital creation made by the project, such as a deed, character, item, or future game asset.",
+    "A made object or item. Here, it means a digital creation made by the project, such as a deed, character, item, or future game asset.",
   "Artifact Engine":
     "The preview console where users can test possible stats and future creations.",
   Attestation:
-    "General meaning: a trusted proof from another source. Here, it means Coinbase has confirmed the connected wallet belongs to a verified account.",
+    "A trusted proof from another source. Here, it means Coinbase has confirmed the connected wallet belongs to a verified account.",
   Attester:
     "The group that gives the proof. For this site, that group is Coinbase.",
   "Attribute Tree":
     "The list of traits and stats a project chooses for its characters, items, or other creations.",
   Attributes:
-    "General meaning: traits or qualities. Here, attributes are the starting stats and qualities used by the Engine for Genesis Mints and future Progeny.",
+    "Traits or qualities. Here, attributes are the starting stats and qualities used by the Engine for Genesis Mints and future Progeny.",
   "Base-native":
-    "General meaning: built on Base, the network built by Coinbase. Here, Base is the network where Sovereign Engine tokens are made.",
+    "Built on Base, the network built by Coinbase. Here, Base is the network where Sovereign Engine tokens are made.",
   Backend:
     "The private part of the site that checks rules and prepares the mint.",
   "Backend Mint":
@@ -26,9 +26,9 @@ export const glossary = {
   Barter:
     "A trade or exchange of value that may not use ordinary currency.",
   Base:
-    "General meaning: the blockchain network built by Coinbase. Here, it is the network where this project mints tokens.",
+    "The blockchain network built by Coinbase. Here, it is the network where this project mints tokens.",
   "Base Mainnet":
-    "General meaning: the live version of the Base network. Here, it is where real Sovereign Engine tokens and payments happen.",
+    "The live version of the Base network. Here, it is where real Sovereign Engine tokens and payments happen.",
   Blacklist:
     "A block list that can stop certain wallets or marketplaces from being used.",
   Blockchain:
@@ -40,9 +40,9 @@ export const glossary = {
   Checkout:
     "The payment step before minting, when payment is required.",
   "Coinbase EAS":
-    "General meaning: Coinbase's proof system for verified accounts. Here, the Portal uses it to check whether the connected wallet belongs to a verified Coinbase account.",
+    "Coinbase's proof system for verified accounts. Here, the Portal uses it to check whether the connected wallet belongs to a verified Coinbase account.",
   "Contract Address":
-    "General meaning: the public address for a blockchain program. Here, it points to the Sovereign Engine contract users and tools can check.",
+    "The public address for a blockchain program. Here, it points to the Sovereign Engine contract users and tools can check.",
   "Covenant Mark":
     "A short public mark made from the name fields.",
   Conveyance:
@@ -50,7 +50,7 @@ export const glossary = {
   "Deed of Spiritual Conveyance":
     "A formal title for the Soul Deed and its transfer language.",
   "Deterministic Profile":
-    "General meaning: a profile made from fixed inputs instead of random rolls. Here, it means the same person keeps the same core stats every time.",
+    "A profile made from fixed inputs instead of random rolls. Here, it means the same person keeps the same core stats every time.",
   DOB:
     "Date of birth. Here, it is used by the Engine as part of the fixed input for astrological sign and attribute origin.",
   "Dynamic URI":
@@ -62,7 +62,7 @@ export const glossary = {
   EAS:
     "Ethereum Attestation Service. Here, Coinbase EAS is used to help confirm a single verified human mint.",
   "Engine Room":
-    "General meaning: the place where a machine is watched and controlled. Here, it is the mock console where users test Sovereign Engine inputs, stat types, and future artifact ideas before the live mint path.",
+    "The place where a machine is watched and controlled. Here, it is the mock console where users test Sovereign Engine inputs, stat types, and future artifact ideas before the live mint path.",
   "Founder Share":
     "The part of a payment meant for the founder or project wallet.",
   Genesis:
@@ -88,9 +88,9 @@ export const glossary = {
   Marketplace:
     "A place like OpenSea where people can buy and sell digital items.",
   Metadata:
-    "General meaning: information that describes a digital item. Here, it is the public token information, usually name, image, description, and traits.",
+    "Information that describes a digital item. Here, it is the public token information, usually name, image, description, and traits.",
   Mint:
-    "General meaning: creating a token on a blockchain. Here, it creates the user's Sovereign Engine asset and sends it to the connected wallet.",
+    "Creating a token on a blockchain. Here, it creates the user's Sovereign Engine asset and sends it to the connected wallet.",
   "Mint Order":
     "The Portal's record that tracks whether a connected wallet is ready to mint.",
   "Mint Path":
@@ -112,15 +112,15 @@ export const glossary = {
   "Proxy (contract)":
     "A setup where the public address stays the same even if the project code is upgraded.",
   Progeny:
-    "General meaning: something that comes from an original source. Here, it means future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
+    "Something that comes from an original source. Here, it means future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
   "Progeny Projects":
-    "General meaning: later creations that come from an original source. Here, they are future mints shaped by the user's Genesis attributes.",
+    "Later creations that come from an original source. Here, they are future mints shaped by the user's Genesis attributes.",
   "Public Mark":
     "A short public label so the site does not show full private name details.",
   Recipient:
     "The wallet that receives the minted token.",
   Royalty:
-    "General meaning: a payment that returns to a creator when something is resold. Here, it can route back to the origin wallet when an artifact is resold, if the marketplace supports it.",
+    "A payment that returns to a creator when something is resold. Here, it can route back to the origin wallet when an artifact is resold, if the marketplace supports it.",
   "Royalty Splitter":
     "A payment tool that divides money between the right wallets.",
   RPC:
@@ -130,7 +130,7 @@ export const glossary = {
   Signature:
     "A wallet approval that proves the wallet owner said yes.",
   "Smart Contract":
-    "General meaning: a program on a blockchain that follows set rules. Here, it controls token minting, ownership records, and royalty rules.",
+    "A program on a blockchain that follows set rules. Here, it controls token minting, ownership records, and royalty rules.",
   Soul:
     "The project idea for a unique living person.",
   Soulbound:
@@ -150,7 +150,7 @@ export const glossary = {
   "Token URI":
     "The link that tells apps where to find a token's public information and image.",
   "Title of Ownership":
-    "General meaning: a certificate showing who owns something. Here, it means the Soul ownership title minted to the user's wallet as the Genesis Artifact.",
+    "A certificate showing who owns something. Here, it means the Soul ownership title minted to the user's wallet as the Genesis Artifact.",
   Traceable:
     "Designed so a creation can be followed back to the profile, wallet, or parent it came from.",
   "Trading (contract toggle)":
@@ -160,13 +160,13 @@ export const glossary = {
   UUPS:
     "A common upgrade setup for smart contracts.",
   Vanguard:
-    "The Day One supporter status intended to carry forward into future project launches and benefits.",
+    "The Initial Supporters status intended to carry forward into future project launches and benefits.",
   "Verified Account":
     "A Coinbase account signal used to help confirm the Portal is dealing with a real eligible account.",
   Wallet:
-    "General meaning: a digital account for blockchain tokens. Here, the Portal uses the connected wallet for access checks, payment, and receiving the mint.",
+    "A digital account for blockchain tokens. Here, the Portal uses the connected wallet for access checks, payment, and receiving the mint.",
   "Wallet Address":
-    "General meaning: the public address of a wallet. Here, it receives tokens and appears in Sovereign Engine onchain records.",
+    "The public address of a wallet. Here, it receives tokens and appears in Sovereign Engine onchain records.",
   Webhook:
     "A server callback used to notify the app that an external event, such as payment status, has changed.",
   "wallet-linked":

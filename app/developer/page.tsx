@@ -82,7 +82,7 @@ const developerSections = [
     id: "vanguard-collections",
     number: "05",
     title: "Vanguard Collections",
-    body: "Developers may design systems where users generate from their own profile or acquire assets from a Vanguard collection. Some categories can stay volume-friendly, while game-critical characters can be stricter when balance requires it. Vanguard status is the Day One legacy access tier, with benefits defined by each published launch.",
+    body: "Developers may design systems where users generate from their own profile or acquire assets from a Vanguard collection. Some categories can stay volume-friendly, while game-critical characters can be stricter when balance requires it. Vanguard status is the Initial Supporters legacy access tier, with benefits defined by each published launch.",
     link: { href: "/vanguard", label: "Vanguard" },
   },
   {

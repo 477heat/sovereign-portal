@@ -70,7 +70,7 @@ const detailSections = [
     index: "03",
     title: "Vanguard Status",
     copy: [
-      "Day One supporters are introduced as Vanguards. Vanguard status is intended to carry forward through legacy creations and later Sovereign Engine projects.",
+      "Initial Supporters are introduced as Vanguards. Vanguard status is intended to carry forward through legacy creations and later Sovereign Engine projects.",
       "Benefits tied to future systems will depend on published terms for each launch, but the design goal is persistent recognition for origin wallets.",
     ],
     link: { href: "/vanguard", label: "Read Vanguard" },

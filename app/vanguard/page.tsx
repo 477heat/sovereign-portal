@@ -20,10 +20,10 @@ const vanguardGlossaryTerms: GlossaryTermKey[] = [
 
 const statusPanels = [
   {
-    href: "#day-one",
-    label: "Day One",
+    href: "#initial-supporters",
+    label: "Initial Supporters",
     value: "Origin",
-    body: "Day One supporters are introduced as Vanguards: the first public access class for the Engine.",
+    body: "Pre-launch supporters enter as Vanguards, the first public access class for the Engine.",
   },
   {
     href: "#wallet-linked",
@@ -35,7 +35,7 @@ const statusPanels = [
     href: "#legacy",
     label: "Legacy",
     value: "Carry-forward",
-    body: "Vanguard status is intended to remain visible through later creations and project systems.",
+    body: "Vanguard status carries into planned Progeny drops, in-house discounts, and future project systems.",
   },
   {
     href: "#royalty-routing",
@@ -47,31 +47,31 @@ const statusPanels = [
 
 const policyPanels = [
   {
-    id: "day-one",
+    id: "initial-supporters",
     number: "01",
-    title: "Legacy Access Tier",
-    body: "Vanguard is a legacy access tier. As new Access Token variants launch, Vanguard benefits carry forward, keep pace with current rewards, and include eligible future project access by default.",
+    title: "Launch Day Progeny",
+    body: "The first planned Progeny mint is the Kindred Creature Mint on Launch Day. Pre-launch supporters are planned to receive it for $0.02 plus Base network gas, currently estimated around $0.04-$0.06 but subject to network conditions.",
     link: { href: "/whitepaper#vanguard", label: "Read Vanguard" },
   },
   {
     id: "wallet-linked",
     number: "02",
-    title: "Wallet-linked Status",
-    body: "The access model is built around one Genesis mint per person and a wallet-linked origin. The goal is to keep the community layer human, traceable, and resistant to empty-wallet harvesting.",
+    title: "Included Engine Mints",
+    body: "Vanguards are also planned to receive the Full Natal Chart Mint when the Engine is ready, plus an Artifact Item Mint at the same early-supporter rate.",
     link: { href: "/whitepaper#genesis-access", label: "Open Access" },
   },
   {
     id: "legacy",
     number: "03",
-    title: "Legacy Recognition",
-    body: "Vanguards keep the royalty rate assigned to their tier. Future tiers may launch with lower rates, but Vanguard royalty terms are protected from reduction and may only improve.",
+    title: "Future Progeny Discounts",
+    body: "Future Progeny mints are planned to stay discounted for Vanguards, with final rates set by each project's published specs. In-house Progeny is planned at 50% off, and most in-house Progeny is expected to cost less than a dollar.",
     link: { href: "/economics#developer-access", label: "Builder Use" },
   },
   {
     id: "royalty-routing",
     number: "04",
-    title: "Routing Limits",
-    body: "Not every marketplace honors royalty routing. To protect Vanguard benefits, use approved marketplaces that support the collection's royalty flow; OpenSea is one approved option when creator earnings are supported.",
+    title: "Third-party Progeny",
+    body: "Third-party Progeny pricing will be set by the developer building that project. Vanguard discounts may still apply, but each outside launch will publish its own pricing, access rules, and mint details.",
     link: { href: "/economics#royalty-routing", label: "Open Routing" },
   },
 ];
@@ -91,7 +91,7 @@ export default function VanguardPrivilegesPage() {
 
         <header className="chamfer-panel chamfer-panel--command mb-8 px-6 py-7 md:px-10 md:py-9">
           <div className="mb-5 flex flex-wrap items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-            <span>Day One</span>
+            <span>Initial Supporters</span>
             <span className="h-px w-10 bg-cyan-100/20" />
             <span>wallet-linked</span>
             <span className="h-px w-10 bg-cyan-100/20" />
@@ -109,7 +109,7 @@ export default function VanguardPrivilegesPage() {
             <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
               <GlossaryText
                 terms={vanguardGlossaryTerms}
-                text="Vanguards are the Day One supporter class for Sovereign Engine: wallet-linked origin wallets with planned recognition across future creations, access systems, and published project terms."
+                text="Vanguards are the Initial Supporters class for Sovereign Engine: wallet-linked origin wallets with planned Launch Day Progeny access, future Engine mints, and discounted project benefits."
               />
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function VanguardPrivilegesPage() {
             <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
               <GlossaryText
                 terms={vanguardGlossaryTerms}
-                text="Vanguard status is not generic affiliate language. It is the named early-supporter layer for wallets that enter the Engine at the Genesis stage, with future benefits defined by each launch."
+                text="Vanguard status is the named early-supporter layer for wallets that enter the Engine before Launch Day. The goal is simple: early supporters keep visible access, receive planned Progeny opportunities, and get better pricing on in-house creations as the Engine expands."
               />
             </p>
           </div>

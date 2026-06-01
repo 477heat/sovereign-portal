@@ -23,7 +23,7 @@ const economicsGlossaryTerms: GlossaryTermKey[] = [
 const accessPanels = [
   {
     href: "/vanguard",
-    label: "Day One",
+    label: "Initial Supporters",
     value: "Vanguard",
     body: "Vanguard is the legacy access tier. Benefits carry forward as new Access Token variants launch.",
   },

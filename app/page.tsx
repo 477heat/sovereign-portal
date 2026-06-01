@@ -314,7 +314,7 @@ export default function HomePage() {
                 </div>
               </Link>
               <Link
-                aria-label="Open Access page for Day 1 countdown timer"
+                aria-label="Open Access page for Launch Day countdown timer"
                 className="chamfer-countdown-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
                 href="/economics"
               >
