@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 5, 3, 12, 0, 0);
+const dayOneLaunchAt = Date.UTC(2026, 5, 5, 23, 0, 0);
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Artifact Engine",
   "Attribute Tree",
@@ -409,9 +409,22 @@ export default function HomePage() {
 
       <footer className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-cyan-100/10 px-5 pb-10 pt-6 text-center text-xs uppercase tracking-[0.24em] text-cyan-100/35 md:flex-row md:px-8 md:text-left">
         <span>Sovereign Engine // Builder access</span>
-        <Link href="/developer" className="chamfer-nav-link">
-          Developer
-        </Link>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <Link href="/dictionary" className="chamfer-nav-link">
+            Dictionary
+          </Link>
+          <Link href="/developer" className="chamfer-nav-link">
+            Developers
+          </Link>
+          <a
+            className="chamfer-nav-link"
+            href="https://discord.com/channels/1510790887125291138/1510791200234406040"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Contact
+          </a>
+        </div>
       </footer>
     </main>
   );
