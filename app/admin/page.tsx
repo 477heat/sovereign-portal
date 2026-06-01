@@ -284,6 +284,8 @@ function AdminContent() {
   const [dynamicURIEndpoint, setDynamicURIEndpoint] = useState("");
   const [tokenURIId, setTokenURIId] = useState("");
   const [tokenURIValue, setTokenURIValue] = useState("");
+  const [loadedTokenURIId, setLoadedTokenURIId] = useState("");
+  const [loadedTokenURIValue, setLoadedTokenURIValue] = useState("");
   const [blacklistAddress, setBlacklistAddress] = useState("");
   const [blacklistBlocked, setBlacklistBlocked] = useState(true);
   const [tokenId, setTokenId] = useState("0");
@@ -772,6 +774,46 @@ function AdminContent() {
           ? caughtError.message
           : "Token URI update could not be prepared.",
       );
+    }
+  }
+
+  function handleTokenURIIdChange(value: string) {
+    setTokenURIId(value);
+    setLoadedTokenURIId("");
+    setLoadedTokenURIValue("");
+  }
+
+  async function readCurrentTokenURI() {
+    if (!soulContract || !ownerConnected) {
+      return;
+    }
+
+    setPendingAction("Token URI read");
+    setError("");
+    setNotice("");
+
+    try {
+      const nextTokenId = parseTokenId(tokenURIId);
+      const currentTokenURI = await readContract({
+        contract: soulContract,
+        method: "function tokenURI(uint256 tokenId) view returns (string)",
+        params: [nextTokenId],
+      });
+
+      setTokenURIValue(currentTokenURI);
+      setLoadedTokenURIId(nextTokenId.toString());
+      setLoadedTokenURIValue(currentTokenURI);
+      setNotice(`Current Token URI loaded for token ${nextTokenId.toString()}. Review before updating.`);
+    } catch (caughtError) {
+      setLoadedTokenURIId("");
+      setLoadedTokenURIValue("");
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Current Token URI could not be loaded.",
+      );
+    } finally {
+      setPendingAction("");
     }
   }
 
@@ -1330,10 +1372,33 @@ function AdminContent() {
                     <SubmitButton disabled={busy || settings.metadataFrozen} label="Set Dynamic URI" />
                   </form>
                   <form className="grid gap-3" onSubmit={handleTokenURI}>
-                    <div className="grid gap-3 sm:grid-cols-[150px_minmax(0,1fr)]">
-                      <Field label="Token ID" onChange={setTokenURIId} type="number" value={tokenURIId} />
+                    <div className="grid gap-3 sm:grid-cols-[150px_auto_minmax(0,1fr)]">
+                      <Field
+                        label="Token ID"
+                        onChange={handleTokenURIIdChange}
+                        type="number"
+                        value={tokenURIId}
+                      />
+                      <button
+                        className="min-h-11 self-end border border-cyan-200/45 bg-cyan-200/10 px-4 text-xs font-medium uppercase tracking-[0.18em] text-cyan-100 transition hover:bg-cyan-200/20 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/30"
+                        disabled={busy || !tokenURIId.trim()}
+                        onClick={readCurrentTokenURI}
+                        type="button"
+                      >
+                        Read Current URI
+                      </button>
                       <Field label="Token URI" onChange={setTokenURIValue} value={tokenURIValue} />
                     </div>
+                    {loadedTokenURIId && (
+                      <div className="border border-cyan-200/20 bg-cyan-200/[0.06] px-3 py-3 text-sm text-cyan-50/75">
+                        <span className="block text-[11px] uppercase tracking-[0.18em] text-cyan-100/55">
+                          Loaded current URI for token {loadedTokenURIId}
+                        </span>
+                        <span className="mt-1 block break-all text-white/70">
+                          {loadedTokenURIValue || "Empty"}
+                        </span>
+                      </div>
+                    )}
                     <SubmitButton disabled={busy || settings.metadataFrozen} label="Set Token URI" />
                   </form>
                 </div>
