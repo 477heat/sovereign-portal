@@ -4,17 +4,17 @@ export const glossary = {
   Alienation:
     "A formal word for giving, selling, or trading something you own.",
   Artifact:
-    "A digital creation made by the project, such as a deed, character, item, or future game asset.",
+    "General meaning: a made object or item. Here, it means a digital creation made by the project, such as a deed, character, item, or future game asset.",
   "Artifact Engine":
     "The preview console where users can test possible stats and future creations.",
   Attestation:
-    "A trusted proof. Here it means Coinbase has confirmed the connected account.",
+    "General meaning: a trusted proof from another source. Here, it means Coinbase has confirmed the connected wallet belongs to a verified account.",
   Attester:
     "The group that gives the proof. For this site, that group is Coinbase.",
   "Attribute Tree":
     "The list of traits and stats a project chooses for its characters, items, or other creations.",
   "Base-native":
-    "Built to work on Base from the start, not added later.",
+    "General meaning: built on Base, the network built by Coinbase. Here, Base is the network where Sovereign Engine tokens are made.",
   Backend:
     "The private part of the site that checks rules and prepares the mint.",
   "Backend Mint":
@@ -22,9 +22,9 @@ export const glossary = {
   Barter:
     "A trade or exchange of value that may not use ordinary currency.",
   Base:
-    "Coinbase's network where this project plans to mint.",
+    "General meaning: the blockchain network built by Coinbase. Here, it is the network where this project mints tokens.",
   "Base Mainnet":
-    "The real Base network where live tokens and payments happen.",
+    "General meaning: the live version of the Base network. Here, it is where real Sovereign Engine tokens and payments happen.",
   Blacklist:
     "A block list that can stop certain wallets or marketplaces from being used.",
   Blockchain:
@@ -36,9 +36,9 @@ export const glossary = {
   Checkout:
     "The payment step before minting, when payment is required.",
   "Coinbase EAS":
-    "The Coinbase check used by the Portal to confirm the connected wallet belongs to a verified Coinbase account.",
+    "General meaning: Coinbase's proof system for verified accounts. Here, the Portal uses it to check whether the connected wallet belongs to a verified Coinbase account.",
   "Contract Address":
-    "The public address for a project program on the network.",
+    "General meaning: the public address for a blockchain program. Here, it points to the Sovereign Engine contract users and tools can check.",
   "Covenant Mark":
     "A short public mark made from the name fields.",
   Conveyance:
@@ -46,13 +46,15 @@ export const glossary = {
   "Deed of Spiritual Conveyance":
     "A formal title for the Soul Deed and its transfer language.",
   "Deterministic Profile":
-    "A profile that gives the same person the same core stats every time.",
+    "General meaning: a profile made from fixed inputs instead of random rolls. Here, it means the same person keeps the same core stats every time.",
   "Dynamic URI":
     "A token link that can show updated information before it is locked.",
   DynamoDB:
     "A database service that can store site records like mint orders.",
   "ERC-721":
     "A common kind of NFT made for unique one-of-one tokens.",
+  "Engine Room":
+    "General meaning: the place where a machine is watched and controlled. Here, it is the mock console where users test Sovereign Engine inputs, stat types, and future artifact ideas before the live mint path.",
   "Founder Share":
     "The part of a payment meant for the founder or project wallet.",
   Genesis:
@@ -78,9 +80,9 @@ export const glossary = {
   Marketplace:
     "A place like OpenSea where people can buy and sell digital items.",
   Metadata:
-    "The public information attached to a token, usually its name, image, description, and traits.",
+    "General meaning: information that describes a digital item. Here, it is the public token information, usually name, image, description, and traits.",
   Mint:
-    "The action of creating a digital asset and sending it to a wallet.",
+    "General meaning: creating a token on a blockchain. Here, it creates the user's Sovereign Engine asset and sends it to the connected wallet.",
   "Mint Order":
     "The Portal's record that tracks whether a connected wallet is ready to mint.",
   "Mint Path":
@@ -102,13 +104,13 @@ export const glossary = {
   "Proxy (contract)":
     "A setup where the public address stays the same even if the project code is upgraded.",
   Progeny:
-    "Future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
+    "General meaning: something that comes from an original source. Here, it means future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
   "Public Mark":
     "A short public label so the site does not show full private name details.",
   Recipient:
     "The wallet that receives the minted token.",
   Royalty:
-    "A payment meant to go back to the creator or origin wallet when an item is resold, if the marketplace supports it.",
+    "General meaning: a payment that returns to a creator when something is resold. Here, it can route back to the origin wallet when an artifact is resold, if the marketplace supports it.",
   "Royalty Splitter":
     "A payment tool that divides money between the right wallets.",
   RPC:
@@ -118,7 +120,7 @@ export const glossary = {
   Signature:
     "A wallet approval that proves the wallet owner said yes.",
   "Smart Contract":
-    "A program on the network that follows set rules for tokens.",
+    "General meaning: a program on a blockchain that follows set rules. Here, it controls token minting, ownership records, and royalty rules.",
   Soul:
     "The project idea for a unique living person.",
   Soulbound:
@@ -148,9 +150,9 @@ export const glossary = {
   "Verified Account":
     "A Coinbase account signal used to help confirm the Portal is dealing with a real eligible account.",
   Wallet:
-    "The user's digital account. The Portal uses the connected wallet for access checks, payment, and receiving the mint.",
+    "General meaning: a digital account for blockchain tokens. Here, the Portal uses the connected wallet for access checks, payment, and receiving the mint.",
   "Wallet Address":
-    "The public address of a wallet. It can receive tokens and appears in onchain records.",
+    "General meaning: the public address of a wallet. Here, it receives tokens and appears in Sovereign Engine onchain records.",
   Webhook:
     "A server callback used to notify the app that an external event, such as payment status, has changed.",
   "wallet-linked":

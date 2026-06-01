@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { BackgroundHashStream } from "@/components/DATA_STREAM";
+import { GlossaryTerm } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   buildEngineProfile,
@@ -491,7 +491,6 @@ export default function EnginePage() {
   return (
     <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black text-white">
       <TunnelBackdrop layer="page" variant="diffused" />
-      <BackgroundHashStream className="z-0" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col px-4 py-5 md:px-8">
         <nav className="engine-top-nav control-surface flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
@@ -514,7 +513,7 @@ export default function EnginePage() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/65">
-                      Bridge Console
+                      <GlossaryTerm term="Engine Room">Engine Room</GlossaryTerm>
                     </div>
                     <h1 className="mt-3 text-xl font-light uppercase tracking-[0.14em] text-white md:text-2xl">
                       Mock Input Console

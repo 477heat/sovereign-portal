@@ -401,6 +401,41 @@ body {
   background: rgba(0, 0, 0, 0.72);
 }
 
+.home-reasoning-frame {
+  background: transparent;
+}
+
+.home-reasoning-frame::before {
+  --reasoning-frame-border: rgba(125, 211, 252, 0.96);
+  background-color: transparent;
+  background-image:
+    linear-gradient(var(--reasoning-frame-border), var(--reasoning-frame-border)),
+    linear-gradient(var(--reasoning-frame-border), var(--reasoning-frame-border)),
+    linear-gradient(var(--reasoning-frame-border), var(--reasoning-frame-border)),
+    linear-gradient(var(--reasoning-frame-border), var(--reasoning-frame-border)),
+    linear-gradient(135deg, transparent calc(50% - 1.5px), var(--reasoning-frame-border) calc(50% - 1.5px), var(--reasoning-frame-border) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(135deg, transparent calc(50% - 1.5px), var(--reasoning-frame-border) calc(50% - 1.5px), var(--reasoning-frame-border) calc(50% + 1.5px), transparent calc(50% + 1.5px));
+  background-position:
+    top left 16px,
+    right top,
+    bottom left,
+    left top 16px,
+    left top,
+    right bottom;
+  background-repeat: no-repeat;
+  background-size:
+    calc(100% - 16px) 3px,
+    3px calc(100% - 16px),
+    calc(100% - 16px) 3px,
+    3px calc(100% - 16px),
+    16px 16px,
+    16px 16px;
+}
+
+.home-reasoning-frame::after {
+  background: transparent;
+}
+
 .chamfer-panel--command {
   clip-path: polygon(32px 0, 100% 0, 100% calc(100% - 32px), calc(100% - 32px) 100%, 0 100%, 0 32px);
 }

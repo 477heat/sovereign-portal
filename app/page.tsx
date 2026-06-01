@@ -375,7 +375,7 @@ export default function HomePage() {
       </section>
 
       <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
-        <div className="chamfer-panel chamfer-panel--frame p-6 backdrop-blur-md md:p-8">
+        <div className="chamfer-panel chamfer-panel--frame home-reasoning-frame p-6 md:p-8">
           <p className="text-center text-xs uppercase tracking-[0.36em] text-cyan-200/70">
             THE REASONING
           </p>
