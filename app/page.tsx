@@ -8,35 +8,45 @@ import type { GlossaryTermKey } from "@/lib/glossary";
 
 const dayOneLaunchAt = Date.UTC(2026, 5, 5, 23, 0, 0);
 const homeGlossaryTerms: GlossaryTermKey[] = [
+  "Access Token",
+  "Actual Supply",
   "Artifact Engine",
   "Attribute Tree",
+  "Attributes",
+  "Coinbase EAS",
+  "DOB",
+  "EAS",
   "Genesis",
   "Genesis Mint",
   "Mint",
   "Progeny",
+  "Progeny Projects",
+  "Soul",
+  "Soul Mint",
+  "Title of Ownership",
   "Vanguard",
   "Wallet",
 ];
 
 const protocolCards = [
   {
-    label: "Wallet-linked",
-    title: "Day One",
-    body: "Day One wallets become Vanguards, carrying early status into future creations and projects.",
+    label: "Checklist",
+    title: "Pre-Flight Check",
+    body: "Any early support is welcome while we continue to iron out the website and other details. Read the litepaper for more info.",
     href: "/vanguard",
     destination: "Vanguard status",
   },
   {
     label: "Base-native",
-    title: "Artifact on Base",
-    body: "Create the Genesis artifact on Base. Every Vanguard-created artifact keeps its origin wallet attached for royalty routing.",
+    title: "Genesis Artifact",
+    body: "If you're human, you have a Soul. The Genesis Artifact is an Access Token. Mint your Title of Ownership directly into your possession.",
     href: "/portal",
     destination: "Soul Registry Portal",
   },
   {
-    label: "Progeny",
-    title: "The Future",
-    body: "Your Genesis profile branches into children, items, creatures, transport, and project-specific attribute trees.",
+    label: "Coinbase EAS",
+    title: "1 Soul, 1 Mint",
+    body: "We use Coinbase EAS to help confirm each participant is a verified human. Once a Genesis mint is claimed, the contract blocks a second one, helping make this community unusually focused on real people.",
     href: "/economics",
     destination: "Access and Progeny",
   },
@@ -44,43 +54,43 @@ const protocolCards = [
 
 const navLinks = [
   ["Portal", "/portal"],
-  ["ARTIFACTS", "/engine"],
+  ["Engine", "/engine"],
   ["Vanguard", "/vanguard"],
   ["Access", "/economics"],
   ["Litepaper", "/whitepaper"],
 ] as const;
 
-const mobileNavLinks = [["Home", "/"], ...navLinks, ["Developer", "/developer"]] as const;
+const mobileNavLinks = [["Home", "/"], ...navLinks] as const;
 
 const whyThisMatters = [
   {
-    body: "The Deed is your Genesis Character. It contains stats that remain with your profile whether you sell it or give it away.",
-    href: "/whitepaper",
+    body: "Your Title of Ownership carries attributes that affect each Progeny project. The contract uses heavy legal language to discourage resale while preserving each user's autonomy.",
     featured: false,
     opposite: false,
   },
   {
-    body: "Vanguards retain a special status that carries on through legacy creations and projects.",
-    href: "/vanguard",
+    body: "Vanguard is an access title granted to initial holders of this Access Token, carrying rights and recognition under that title.",
     featured: false,
     opposite: true,
   },
   {
-    body: "Your Progeny (children) are embedded with your qualities and characteristics, so each child can be traced back to its parents.",
-    href: "/economics",
+    body: "Progeny Projects are individual mints, including characters, creatures, items, weapons, and more, imbued with attributes that correlate to your initial Genesis Mint.",
     featured: false,
     opposite: true,
   },
   {
     body: "Material items are also Progeny: clothing, armor, weapons, creatures, adversarial constructs, modes of transport, and more.",
-    href: "/engine",
     featured: false,
     opposite: false,
   },
   {
-    body: "The Engine has a very distinct algorithm that can attribute 479,001,600 possibilities completely unique to you for each Progeny Project.",
-    href: "/engine",
-    featured: true,
+    body: "Developers choose which attribute structure they want for their games, request a specific Character Attribute Tree for users to generate a profile from, or have their users purchase from a Vanguard's Collection. Each creation is unique to the user's original stats.",
+    featured: false,
+    opposite: false,
+  },
+  {
+    body: "For developers, one verified mint per project creates Actual Supply. Players cannot reroll until they get an overpowered build; each user works with their own attributes, giving games controlled variety without rewarding exploit-driven play.",
+    featured: false,
     opposite: false,
   },
 ] as const;
@@ -292,15 +302,15 @@ export default function HomePage() {
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
-                aria-label="Open Access page for Day 1 countdown details"
+                aria-label="Open Access page for Launch Day countdown details"
                 className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
                 href="/economics"
               >
                 <div className="home-countdown-title text-[0.68rem] uppercase leading-4 tracking-[0.16em] text-neutral-950">
-                  Day 1 Countdown
+                  Launch Day
                 </div>
                 <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
-                  01 Jun 2026 / 00:00 UTC
+                  05 Jun 2026 / 23:00 UTC
                 </div>
               </Link>
               <Link
@@ -365,7 +375,9 @@ export default function HomePage() {
               <h2 className="mt-4 text-xl uppercase tracking-[0.14em] text-white">
                 {card.title}
               </h2>
-              <p className="mt-3 text-base leading-7 text-white/55">{card.body}</p>
+              <p className="mt-3 text-base leading-7 text-white/55">
+                <GlossaryText terms={homeGlossaryTerms} text={card.body} />
+              </p>
               <div className="mt-4 text-[11px] uppercase tracking-[0.24em] text-cyan-200/55">
                 Open {card.destination}
               </div>
@@ -379,27 +391,67 @@ export default function HomePage() {
           <p className="text-center text-xs uppercase tracking-[0.36em] text-cyan-200/70">
             THE REASONING
           </p>
-          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-sm leading-6 text-white/62">
+          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-base leading-7 text-white/68 md:text-lg md:leading-8">
             <GlossaryText
               terms={homeGlossaryTerms}
-              text="Developers choose which attribute structure they want for their games, request a specific Character Attribute Tree for users to generate a profile from, or purchase from a Vanguard's Collection. Each creation is unique to the user's original stats."
+              text="We use your DOB to determine 1 of 60 Chinese and 1 of 24 Western astrological signs, which are fused to establish your unique attribute origin. 12 initial attributes are embedded in your Soul Mint and direct every future Progeny branch. EAS ensures a single verified mint only."
             />
           </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {whyThisMatters.map((item) => (
-              <Link
-                className={`chamfer-panel chamfer-panel--readout chamfer-panel--interactive block px-4 py-3 text-base leading-7 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
-                href={item.href}
+              <div
+                className={`chamfer-panel chamfer-panel--readout block px-4 py-3 text-base leading-7 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
                 key={item.body}
               >
-                {item.body}
-              </Link>
+                <GlossaryText terms={homeGlossaryTerms} text={item.body} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-cyan-100/10 px-5 pb-10 pt-6 text-center text-xs uppercase tracking-[0.24em] text-cyan-100/35 md:flex-row md:px-8 md:text-left">
+      <section className="relative z-10 mx-auto flex max-w-7xl items-start justify-start gap-4 px-5 pb-6 md:gap-6 md:px-8">
+        <Link
+          aria-label="Open Archive page for the Architect artifact"
+          className="home-deed-preview chamfer-panel chamfer-panel--all-corners block w-1/2 p-1.5 md:w-1/4"
+          href="/archive"
+        >
+          <Image
+            alt="T. Bre Soul Deed artifact display"
+            className="block aspect-square w-full object-cover"
+            height={1960}
+            src="/media/t-bre-soul-deed.jpg"
+            width={1960}
+          />
+        </Link>
+        <div className="home-architect-artifact chamfer-panel chamfer-panel--readout chamfer-panel--all-corners w-[calc(50%-1rem)] px-4 py-3 md:w-fit md:px-5 md:py-4">
+          <h2 className="text-xs uppercase leading-5 tracking-[0.14em] text-white md:text-sm md:leading-6">
+            Title 0000
+            <span className="block">The Architect</span>
+          </h2>
+          <p className="mt-4 text-xs leading-5 text-white/58 md:text-sm md:leading-6">
+            View the Archive for details.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">
+            <Link
+              className="chamfer-nav-link chamfer-nav-link--compact"
+              href="/archive"
+            >
+              Archive
+            </Link>
+            <a
+              className="chamfer-nav-link chamfer-nav-link--compact"
+              href="https://ipfs.io/ipfs/QmQeCXtBJyTyvypYQEFo24woEP3q1kEgBq9ebvC8eCHSk4"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Metadata IPFS
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer className="home-footer relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-cyan-100/10 px-5 pb-10 pt-6 text-center text-xs uppercase tracking-[0.24em] text-cyan-100/35 md:flex-row md:px-8 md:text-left">
         <span>Sovereign Engine // Builder access</span>
         <div className="flex flex-wrap items-center justify-center gap-2">
           <Link href="/dictionary" className="chamfer-nav-link">
@@ -407,6 +459,9 @@ export default function HomePage() {
           </Link>
           <Link href="/developer" className="chamfer-nav-link">
             Developers
+          </Link>
+          <Link href="/archive" className="chamfer-nav-link">
+            Archive
           </Link>
           <a
             className="chamfer-nav-link"

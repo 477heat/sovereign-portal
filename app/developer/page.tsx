@@ -4,8 +4,12 @@ import TunnelBackdrop from "@/components/TunnelBackdrop";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
 const developerGlossaryTerms: GlossaryTermKey[] = [
+  "Actual Supply",
+  "Attributes",
   "Attribute Tree",
+  "Coinbase EAS",
   "Deterministic Profile",
+  "Genesis Mint",
   "Lineage",
   "Metadata",
   "Progeny",
@@ -101,6 +105,13 @@ const developerSections = [
     title: "Privacy And Metadata",
     body: "Game integrations should use derived stats, lineage references, token IDs, wallet-linked ownership state, and approved metadata. Raw personal intake data should not be exposed in game clients, analytics, public URLs, or ordinary NFT metadata.",
     link: { href: "/whitepaper#privacy-practices", label: "Privacy" },
+  },
+  {
+    id: "actual-supply",
+    number: "09",
+    title: "Actual Supply",
+    body: "A single verified mint per participant gives developers a cleaner supply model. Players cannot spam new profiles until an overpowered character appears, so each user has to build around their own attributes. That creates variety without turning balance into a reroll contest. It also avoids the flat feeling of every player starting from identical base stats, while still giving designers a predictable progression curve to tune around.",
+    link: { href: "/portal", label: "Mint Path" },
   },
 ];
 

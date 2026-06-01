@@ -1,6 +1,8 @@
 export const glossary = {
   "Access Token":
     "A digital pass that lets a wallet use a part of the project.",
+  "Actual Supply":
+    "General meaning: the real number of usable items or characters available. Here, it means each verified user adds one real starting profile instead of unlimited rerolls.",
   Alienation:
     "A formal word for giving, selling, or trading something you own.",
   Artifact:
@@ -13,6 +15,8 @@ export const glossary = {
     "The group that gives the proof. For this site, that group is Coinbase.",
   "Attribute Tree":
     "The list of traits and stats a project chooses for its characters, items, or other creations.",
+  Attributes:
+    "General meaning: traits or qualities. Here, attributes are the starting stats and qualities used by the Engine for Genesis Mints and future Progeny.",
   "Base-native":
     "General meaning: built on Base, the network built by Coinbase. Here, Base is the network where Sovereign Engine tokens are made.",
   Backend:
@@ -47,12 +51,16 @@ export const glossary = {
     "A formal title for the Soul Deed and its transfer language.",
   "Deterministic Profile":
     "General meaning: a profile made from fixed inputs instead of random rolls. Here, it means the same person keeps the same core stats every time.",
+  DOB:
+    "Date of birth. Here, it is used by the Engine as part of the fixed input for astrological sign and attribute origin.",
   "Dynamic URI":
     "A token link that can show updated information before it is locked.",
   DynamoDB:
     "A database service that can store site records like mint orders.",
   "ERC-721":
     "A common kind of NFT made for unique one-of-one tokens.",
+  EAS:
+    "Ethereum Attestation Service. Here, Coinbase EAS is used to help confirm a single verified human mint.",
   "Engine Room":
     "General meaning: the place where a machine is watched and controlled. Here, it is the mock console where users test Sovereign Engine inputs, stat types, and future artifact ideas before the live mint path.",
   "Founder Share":
@@ -105,6 +113,8 @@ export const glossary = {
     "A setup where the public address stays the same even if the project code is upgraded.",
   Progeny:
     "General meaning: something that comes from an original source. Here, it means future creations made from a user's original profile, such as children, characters, items, creatures, weapons, armor, or transport.",
+  "Progeny Projects":
+    "General meaning: later creations that come from an original source. Here, they are future mints shaped by the user's Genesis attributes.",
   "Public Mark":
     "A short public label so the site does not show full private name details.",
   Recipient:
@@ -127,6 +137,8 @@ export const glossary = {
     "A token that cannot be moved, or can only be moved in limited ways.",
   "Soul Deed":
     "The first deed-style artifact that gives a user their starting profile and access path.",
+  "Soul Mint":
+    "The user's Genesis mint for the Soul ownership title and starting attribute profile.",
   "Sovereign Engine":
     "The system that helps users create profiles and artifacts from their own source, while keeping authority over themselves and what they create.",
   Token:
@@ -137,6 +149,8 @@ export const glossary = {
     "The unique number identifying a specific token inside a contract.",
   "Token URI":
     "The link that tells apps where to find a token's public information and image.",
+  "Title of Ownership":
+    "General meaning: a certificate showing who owns something. Here, it means the Soul ownership title minted to the user's wallet as the Genesis Artifact.",
   Traceable:
     "Designed so a creation can be followed back to the profile, wallet, or parent it came from.",
   "Trading (contract toggle)":
