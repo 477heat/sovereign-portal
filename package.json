@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify:portal": "node scripts/verify-live-portal.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1052.0",

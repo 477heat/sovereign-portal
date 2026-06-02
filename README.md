@@ -26,6 +26,17 @@ environment value as the live price without checking `/api/portal-settings`.
 Local mock mode uses an in-memory order ledger for development. Never use that
 fallback for a live mint deployment.
 
+Run the live integrity verifier after production deploys:
+
+```bash
+npm run verify:portal
+```
+
+The verifier checks the live Portal, protected admin/recovery routes, active
+payment settings, Base contract state, current token metadata/images, royalty
+math, and a known Coinbase EAS eligible wallet. It uses public endpoints and
+does not need secrets.
+
 ## Getting Started
 
 First, run the development server:
