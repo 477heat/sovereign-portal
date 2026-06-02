@@ -55,6 +55,16 @@ PORTAL_VERIFY_REQUIRE_SIGNED_RECOVERY=1 \
 npm run verify:portal
 ```
 
+Run the local mint-order lifecycle verifier before deploys that touch order,
+payment, receipt, or mint state:
+
+```bash
+npm run verify:orders
+```
+
+That verifier uses the in-memory ledger path only. It does not touch DynamoDB,
+AWS, payment providers, or production mint orders.
+
 ## Getting Started
 
 First, run the development server:
