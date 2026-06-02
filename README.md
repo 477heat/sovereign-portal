@@ -2,8 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Portal mint commerce
 
-The portal keeps mint execution backend-funded so early users can pay a $5.00
-checkout fee while the backend wallet pays Base mint gas.
+The portal keeps mint execution backend-funded so users pay the configured
+checkout fee while the backend wallet pays Base mint gas. The checkout amount is
+runtime-configurable from the private admin panel; do not treat the fallback
+environment value as the live price without checking `/api/portal-settings`.
 
 - `NEXT_PUBLIC_PORTAL_PAYMENT_MODE=checkout` shows the thirdweb checkout block.
 - `PORTAL_PAYMENT_MODE=required` makes live `/api/mint` calls require a paid mint
@@ -15,6 +17,11 @@ checkout fee while the backend wallet pays Base mint gas.
 - Mint orders use a DynamoDB table named by `PORTAL_LEDGER_TABLE`. The table only
   needs a string partition key named `pk`; it stores the order record and the
   one-wallet mint claim.
+- Submitted mint orders store receipt recovery fields when the mint succeeds:
+  transaction identifiers, token URI, image URI, deed name, and chain details.
+- Users can recover the latest submitted mint receipt for their connected wallet
+  through a signed wallet recovery request. The private admin operations page can
+  look up orders by order ID or wallet for support triage.
 
 Local mock mode uses an in-memory order ledger for development. Never use that
 fallback for a live mint deployment.
