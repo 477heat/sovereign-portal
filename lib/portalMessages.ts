@@ -11,3 +11,10 @@ export function buildMintOrderStatusMessage({
     `Order: ${orderId}`,
   ].join("\n");
 }
+
+export function buildMintRecoveryMessage({ wallet }: { wallet: string }) {
+  return [
+    "Sovereign Portal mint receipt recovery",
+    `Wallet: ${wallet.toLowerCase()}`,
+  ].join("\n");
+}

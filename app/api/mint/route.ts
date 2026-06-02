@@ -381,11 +381,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const deedName = `Certificate of Title for Spiritual Ownership of ${payload.publicMark}`;
+    const tokenURI = data?.tokenURI;
+    const metadataUrl = ipfsGatewayUrl(tokenURI);
+    const imageURI = metadata.image;
+    const imageUrl = ipfsGatewayUrl(imageURI);
+
     if (claimedOrder && payload.orderId) {
       await markMintOrderSubmitted({
         orderId: payload.orderId,
         mintTransactionId: data?.transactionId,
         mintTransactionHash: data?.transactionHash,
+        chainId: BASE_MAINNET_CHAIN_ID,
+        deedName,
+        contractLanguageVersion: payload.contractLanguageVersion,
+        tokenURI,
+        metadataUrl,
+        ipfsHash: data?.ipfsHash,
+        imageURI,
+        imageUrl,
       });
     }
 
@@ -394,15 +408,16 @@ export async function POST(request: NextRequest) {
       mode: mintMode,
       chainId: BASE_MAINNET_CHAIN_ID,
       contractAddress: GENESIS_CONTRACT_ADDRESS,
-      deedName: `Certificate of Title for Spiritual Ownership of ${payload.publicMark}`,
+      deedName,
       contractLanguageVersion: payload.contractLanguageVersion,
       transactionId: data?.transactionId,
       transactionHash: data?.transactionHash,
-      tokenURI: data?.tokenURI,
-      metadataUrl: ipfsGatewayUrl(data?.tokenURI),
+      tokenURI,
+      metadataUrl,
       ipfsHash: data?.ipfsHash,
-      imageURI: metadata.image,
-      imageUrl: ipfsGatewayUrl(metadata.image),
+      imageURI,
+      imageUrl,
+      orderId: payload.orderId,
     });
   }
 

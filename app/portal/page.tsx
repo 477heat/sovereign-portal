@@ -23,7 +23,10 @@ import { BackgroundHashStream } from "@/components/DATA_STREAM";
 import { GlossaryTerm, GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import type { GlossaryTermKey } from "@/lib/glossary";
-import { buildMintOrderStatusMessage } from "@/lib/portalMessages";
+import {
+  buildMintOrderStatusMessage,
+  buildMintRecoveryMessage,
+} from "@/lib/portalMessages";
 
 const portalEasGlossaryTerms: GlossaryTermKey[] = [
   "Attestation",
@@ -54,6 +57,7 @@ type VerificationState = {
 type MintReceipt = {
   tokenId?: string;
   status: string;
+  orderId?: string;
   deedName: string;
   mode?: "mock" | "live";
   chainId?: number;
@@ -73,6 +77,8 @@ type MintOrderState = {
   wallet: string;
   paymentAmount?: string;
   paymentKind?: "checkout" | "complimentary";
+  mintTransactionId?: string;
+  mintTransactionHash?: string;
 };
 
 type PortalPaymentSettings = {
@@ -300,6 +306,8 @@ function PortalContent() {
   });
   const [orderBusy, setOrderBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const [recoveryNotice, setRecoveryNotice] = useState("");
   const [receiptCopied, setReceiptCopied] = useState(false);
   const [error, setError] = useState("");
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
@@ -578,6 +586,14 @@ function PortalContent() {
 
       const result = (await response.json()) as MintReceipt;
       setReceipt(result);
+      if (activeOrder) {
+        setMintOrder({
+          ...activeOrder,
+          status: "mint_submitted",
+          mintTransactionId: result.transactionId,
+          mintTransactionHash: result.transactionHash,
+        });
+      }
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
@@ -668,6 +684,65 @@ function PortalContent() {
       );
     } finally {
       setOrderBusy(false);
+    }
+  }
+
+  async function recoverMintReceipt() {
+    if (!account?.address) {
+      await handleWalletChipConnect();
+      return;
+    }
+
+    setRecoveryBusy(true);
+    setRecoveryNotice("");
+    setError("");
+
+    try {
+      const signature = await account.signMessage({
+        message: buildMintRecoveryMessage({
+          wallet: account.address,
+        }),
+      });
+      const params = new URLSearchParams({
+        wallet: account.address,
+        signature,
+      });
+      const response = await fetch(`/api/mint-order/recover?${params}`, {
+        cache: "no-store",
+      });
+      const result = (await response.json()) as {
+        message?: string;
+        order?: MintOrderState;
+        receipt?: MintReceipt | null;
+      };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "Could not recover a mint receipt.");
+      }
+
+      if (result.order) {
+        setMintOrder(result.order);
+      }
+
+      if (result.receipt) {
+        setReceipt(result.receipt);
+        setSelectedGate("mint");
+        setRecoveryNotice("Receipt restored. Save or copy it before leaving.");
+        return;
+      }
+
+      setRecoveryNotice(
+        result.message ??
+          "Latest order found, but no submitted mint receipt is available yet.",
+      );
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Could not recover a mint receipt.",
+      );
+    } finally {
+      setRecoveryBusy(false);
     }
   }
 
@@ -1282,9 +1357,9 @@ function PortalContent() {
                   </h1>
                   <p className="mt-4 max-w-3xl text-sm leading-6 text-yellow-50/72">
                     Save or copy these details now. This receipt is displayed
-                    for this session only; if you close or leave this screen,
-                    the Portal will not bring you back to this exact return
-                    panel.
+                    for this session first; if you close or leave this screen,
+                    connect the same wallet later and use Receipt Recovery to
+                    restore the latest recorded mint receipt.
                   </p>
                 </div>
 
@@ -1296,8 +1371,9 @@ function PortalContent() {
                   </div>
                   <p className="mt-2">
                     Your token, metadata, image, and transaction stay public on
-                    chain/IPFS, but this exact confirmation screen is not stored
-                    for replay. Save the receipt before returning home.
+                    chain/IPFS. The Portal can recover the latest receipt for
+                    this wallet, but saving a copy now is still the cleanest
+                    record.
                   </p>
                 </div>
 
@@ -1352,6 +1428,33 @@ function PortalContent() {
             <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
               Warning Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
             </div>
+          </div>
+
+          <div className="control-surface portal-surface-cyan border border-cyan-100/20 bg-cyan-100/[0.04] px-4 py-3 text-sm leading-6 text-cyan-50/72">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="max-w-2xl">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-100/75">
+                  Receipt Recovery
+                </div>
+                <p className="mt-1">
+                  Already minted or lost the final screen? Connect the same
+                  wallet and recover the latest receipt recorded for it.
+                </p>
+              </div>
+              <button
+                className="console-key-button"
+                disabled={recoveryBusy}
+                onClick={() => void recoverMintReceipt()}
+                type="button"
+              >
+                {recoveryBusy ? "Recovering" : "Recover Receipt"}
+              </button>
+            </div>
+            {recoveryNotice && (
+              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-yellow-100/78">
+                {recoveryNotice}
+              </p>
+            )}
           </div>
 
           <section className="min-w-0">

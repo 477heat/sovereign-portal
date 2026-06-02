@@ -21,6 +21,21 @@ export type MintOrderStatus =
   | "minting"
   | "mint_submitted";
 
+export type MintOrderEventType =
+  | "order_created"
+  | "complimentary_order_created"
+  | "payment_recorded"
+  | "mint_claimed"
+  | "mint_released"
+  | "mint_submitted";
+
+export type MintOrderEvent = {
+  id: string;
+  type: MintOrderEventType;
+  at: string;
+  message: string;
+};
+
 export type MintOrder = {
   orderId: string;
   contractAddress: string;
@@ -40,7 +55,16 @@ export type MintOrder = {
   paymentTransactionHash?: string;
   mintTransactionId?: string;
   mintTransactionHash?: string;
+  chainId?: number;
+  deedName?: string;
+  contractLanguageVersion?: string;
+  tokenURI?: string;
+  metadataUrl?: string;
+  ipfsHash?: string;
+  imageURI?: string;
+  imageUrl?: string;
   compReason?: string;
+  events?: MintOrderEvent[];
 };
 
 type MintClaim = {
@@ -54,6 +78,7 @@ type LocalLedger = {
   orders: Map<string, MintOrder>;
   mintClaims: Map<string, MintClaim>;
   complimentaryOrders: Map<string, string>;
+  latestOrdersByWallet: Map<string, string>;
 };
 
 declare global {
@@ -67,6 +92,7 @@ const localLedger =
     orders: new Map<string, MintOrder>(),
     mintClaims: new Map<string, MintClaim>(),
     complimentaryOrders: new Map<string, string>(),
+    latestOrdersByWallet: new Map<string, string>(),
   });
 
 let documentClient: DynamoDBDocumentClient | null = null;
@@ -93,6 +119,10 @@ function walletClaimKey(wallet: string) {
   return `MINTED_WALLET#${SOUL_DEED_LEDGER_SCOPE}#${wallet.toLowerCase()}`;
 }
 
+function latestWalletOrderKey(wallet: string) {
+  return `WALLET_ORDER#${SOUL_DEED_LEDGER_SCOPE}#${wallet.toLowerCase()}`;
+}
+
 function complimentaryOrderKey(wallet: string) {
   return `COMP_ORDER#${SOUL_DEED_LEDGER_SCOPE}#${wallet.toLowerCase()}`;
 }
@@ -107,6 +137,29 @@ function orderFromItem(value: Record<string, unknown> | undefined) {
 
 function isCurrentContractOrder(order: MintOrder) {
   return order.contractAddress?.toLowerCase() === SOUL_DEED_LEDGER_SCOPE;
+}
+
+function makeOrderEvent(type: MintOrderEventType, message: string) {
+  return {
+    id: randomUUID(),
+    type,
+    at: new Date().toISOString(),
+    message,
+  } satisfies MintOrderEvent;
+}
+
+function withOrderEvent(order: MintOrder, event: MintOrderEvent) {
+  return {
+    ...order,
+    events: [...(order.events ?? []), event].slice(-40),
+  } satisfies MintOrder;
+}
+
+function eventUpdateExpression(extraSetters: string) {
+  return [
+    `SET ${extraSetters}`,
+    "#events = list_append(if_not_exists(#events, :emptyEvents), :events)",
+  ].join(", ");
 }
 
 export async function createMintOrder({
@@ -128,6 +181,10 @@ export async function createMintOrder({
   requireLedger();
 
   const now = new Date().toISOString();
+  const orderCreatedEvent = makeOrderEvent(
+    "order_created",
+    "Checkout order created.",
+  );
   const order: MintOrder = {
     orderId: randomUUID(),
     contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
@@ -143,6 +200,7 @@ export async function createMintOrder({
     paymentTokenAddress: payment.tokenAddress,
     paymentTokenDecimals: payment.decimals,
     paymentChainId: payment.chainId,
+    events: [orderCreatedEvent],
   };
 
   if (!tableName) {
@@ -151,23 +209,47 @@ export async function createMintOrder({
     }
 
     localLedger.orders.set(order.orderId, order);
+    localLedger.latestOrdersByWallet.set(order.wallet, order.orderId);
     return order;
   }
 
-  const existingClaim = await getMintClaim(order.wallet);
-  if (existingClaim) {
-    throw new Error("This wallet already has a submitted mint.");
-  }
-
   await getDocumentClient().send(
-    new PutCommand({
-      TableName: tableName,
-      Item: {
-        pk: orderKey(order.orderId),
-        entity: "mint-order",
-        ...order,
-      },
-      ConditionExpression: "attribute_not_exists(pk)",
+    new TransactWriteCommand({
+      TransactItems: [
+        {
+          ConditionCheck: {
+            TableName: tableName,
+            Key: { pk: walletClaimKey(order.wallet) },
+            ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+        {
+          Put: {
+            TableName: tableName,
+            Item: {
+              pk: orderKey(order.orderId),
+              entity: "mint-order",
+              ...order,
+            },
+            ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+        {
+          Put: {
+            TableName: tableName,
+            Item: {
+              pk: latestWalletOrderKey(order.wallet),
+              entity: "wallet-mint-order-pointer",
+              orderId: order.orderId,
+              contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
+              wallet: order.wallet,
+              publicMark,
+              createdAt: now,
+              updatedAt: now,
+            },
+          },
+        },
+      ],
     }),
   );
 
@@ -187,6 +269,10 @@ export async function createComplimentaryMintOrder({
 
   const normalizedWallet = wallet.toLowerCase();
   const now = new Date().toISOString();
+  const complimentaryEvent = makeOrderEvent(
+    "complimentary_order_created",
+    "Admin complimentary order created.",
+  );
   const order: MintOrder = {
     orderId: randomUUID(),
     contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
@@ -198,6 +284,7 @@ export async function createComplimentaryMintOrder({
     paymentKind: "complimentary",
     paymentId: `admin-comp:${randomUUID()}`,
     compReason: reason?.trim() || undefined,
+    events: [complimentaryEvent],
   };
 
   if (!tableName) {
@@ -211,6 +298,7 @@ export async function createComplimentaryMintOrder({
 
     localLedger.orders.set(order.orderId, order);
     localLedger.complimentaryOrders.set(normalizedWallet, order.orderId);
+    localLedger.latestOrdersByWallet.set(normalizedWallet, order.orderId);
     return order;
   }
 
@@ -249,6 +337,21 @@ export async function createComplimentaryMintOrder({
               updatedAt: now,
             },
             ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+        {
+          Put: {
+            TableName: tableName,
+            Item: {
+              pk: latestWalletOrderKey(normalizedWallet),
+              entity: "wallet-mint-order-pointer",
+              orderId: order.orderId,
+              contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
+              wallet: normalizedWallet,
+              publicMark,
+              createdAt: now,
+              updatedAt: now,
+            },
           },
         },
       ],
@@ -355,15 +458,22 @@ export async function markMintOrderPaid({
   }
 
   const updatedAt = new Date().toISOString();
+  const paymentEvent = makeOrderEvent(
+    "payment_recorded",
+    "Payment webhook recorded.",
+  );
 
   if (!tableName) {
-    const nextOrder: MintOrder = {
-      ...current,
-      status: "paid",
-      updatedAt,
-      paymentId,
-      paymentTransactionHash,
-    };
+    const nextOrder: MintOrder = withOrderEvent(
+      {
+        ...current,
+        status: "paid",
+        updatedAt,
+        paymentId,
+        paymentTransactionHash,
+      },
+      paymentEvent,
+    );
     localLedger.orders.set(orderId, nextOrder);
     return nextOrder;
   }
@@ -372,14 +482,17 @@ export async function markMintOrderPaid({
     new UpdateCommand({
       TableName: tableName,
       Key: { pk: orderKey(orderId) },
-      UpdateExpression:
-        "SET #status = :status, updatedAt = :updatedAt, paymentId = :paymentId, paymentTransactionHash = :paymentTransactionHash",
-      ExpressionAttributeNames: { "#status": "status" },
+      UpdateExpression: eventUpdateExpression(
+        "#status = :status, updatedAt = :updatedAt, paymentId = :paymentId, paymentTransactionHash = :paymentTransactionHash",
+      ),
+      ExpressionAttributeNames: { "#status": "status", "#events": "events" },
       ExpressionAttributeValues: {
         ":status": "paid",
         ":updatedAt": updatedAt,
         ":paymentId": paymentId,
         ":paymentTransactionHash": paymentTransactionHash ?? "",
+        ":emptyEvents": [],
+        ":events": [paymentEvent],
       },
       ReturnValues: "ALL_NEW",
     }),
@@ -421,6 +534,10 @@ export async function claimMintOrder(
     wallet: normalizedWallet,
     createdAt: now,
   };
+  const mintClaimedEvent = makeOrderEvent(
+    "mint_claimed",
+    "Paid order claimed for mint submission.",
+  );
 
   if (!tableName) {
     if (localLedger.mintClaims.has(normalizedWallet)) {
@@ -428,7 +545,10 @@ export async function claimMintOrder(
     }
 
     localLedger.mintClaims.set(normalizedWallet, claim);
-    const nextOrder: MintOrder = { ...order, status: "minting", updatedAt: now };
+    const nextOrder: MintOrder = withOrderEvent(
+      { ...order, status: "minting", updatedAt: now },
+      mintClaimedEvent,
+    );
     localLedger.orders.set(orderId, nextOrder);
     return nextOrder;
   }
@@ -449,11 +569,15 @@ export async function claimMintOrder(
     new UpdateCommand({
       TableName: tableName,
       Key: { pk: orderKey(orderId) },
-      UpdateExpression: "SET #status = :status, updatedAt = :updatedAt",
-      ExpressionAttributeNames: { "#status": "status" },
+      UpdateExpression: eventUpdateExpression(
+        "#status = :status, updatedAt = :updatedAt",
+      ),
+      ExpressionAttributeNames: { "#status": "status", "#events": "events" },
       ExpressionAttributeValues: {
         ":status": "minting",
         ":updatedAt": now,
+        ":emptyEvents": [],
+        ":events": [mintClaimedEvent],
       },
       ReturnValues: "ALL_NEW",
     }),
@@ -473,10 +597,17 @@ export async function releaseMintOrder(orderId: string, wallet: string) {
   }
 
   const now = new Date().toISOString();
+  const mintReleasedEvent = makeOrderEvent(
+    "mint_released",
+    "Mint lock released after a failed mint attempt.",
+  );
 
   if (!tableName) {
     localLedger.mintClaims.delete(normalizedWallet);
-    const nextOrder: MintOrder = { ...order, status: "paid", updatedAt: now };
+    const nextOrder: MintOrder = withOrderEvent(
+      { ...order, status: "paid", updatedAt: now },
+      mintReleasedEvent,
+    );
     localLedger.orders.set(orderId, nextOrder);
     return nextOrder;
   }
@@ -492,11 +623,15 @@ export async function releaseMintOrder(orderId: string, wallet: string) {
     new UpdateCommand({
       TableName: tableName,
       Key: { pk: orderKey(orderId) },
-      UpdateExpression: "SET #status = :status, updatedAt = :updatedAt",
-      ExpressionAttributeNames: { "#status": "status" },
+      UpdateExpression: eventUpdateExpression(
+        "#status = :status, updatedAt = :updatedAt",
+      ),
+      ExpressionAttributeNames: { "#status": "status", "#events": "events" },
       ExpressionAttributeValues: {
         ":status": "paid",
         ":updatedAt": now,
+        ":emptyEvents": [],
+        ":events": [mintReleasedEvent],
       },
       ReturnValues: "ALL_NEW",
     }),
@@ -509,10 +644,26 @@ export async function markMintOrderSubmitted({
   orderId,
   mintTransactionId,
   mintTransactionHash,
+  chainId,
+  deedName,
+  contractLanguageVersion,
+  tokenURI,
+  metadataUrl,
+  ipfsHash,
+  imageURI,
+  imageUrl,
 }: {
   orderId: string;
   mintTransactionId?: string;
   mintTransactionHash?: string;
+  chainId?: number;
+  deedName?: string;
+  contractLanguageVersion?: string;
+  tokenURI?: string;
+  metadataUrl?: string;
+  ipfsHash?: string;
+  imageURI?: string;
+  imageUrl?: string;
 }) {
   requireLedger();
 
@@ -522,15 +673,30 @@ export async function markMintOrderSubmitted({
   }
 
   const updatedAt = new Date().toISOString();
+  const mintSubmittedEvent = makeOrderEvent(
+    "mint_submitted",
+    "Mint submitted to Base.",
+  );
 
   if (!tableName) {
-    const nextOrder: MintOrder = {
-      ...order,
-      status: "mint_submitted",
-      updatedAt,
-      mintTransactionId,
-      mintTransactionHash,
-    };
+    const nextOrder: MintOrder = withOrderEvent(
+      {
+        ...order,
+        status: "mint_submitted",
+        updatedAt,
+        mintTransactionId,
+        mintTransactionHash,
+        chainId,
+        deedName,
+        contractLanguageVersion,
+        tokenURI,
+        metadataUrl,
+        ipfsHash,
+        imageURI,
+        imageUrl,
+      },
+      mintSubmittedEvent,
+    );
     localLedger.orders.set(orderId, nextOrder);
     return nextOrder;
   }
@@ -539,20 +705,129 @@ export async function markMintOrderSubmitted({
     new UpdateCommand({
       TableName: tableName,
       Key: { pk: orderKey(orderId) },
-      UpdateExpression:
-        "SET #status = :status, updatedAt = :updatedAt, mintTransactionId = :mintTransactionId, mintTransactionHash = :mintTransactionHash",
-      ExpressionAttributeNames: { "#status": "status" },
+      UpdateExpression: eventUpdateExpression(
+        "#status = :status, updatedAt = :updatedAt, mintTransactionId = :mintTransactionId, mintTransactionHash = :mintTransactionHash, chainId = :chainId, deedName = :deedName, contractLanguageVersion = :contractLanguageVersion, tokenURI = :tokenURI, metadataUrl = :metadataUrl, ipfsHash = :ipfsHash, imageURI = :imageURI, imageUrl = :imageUrl",
+      ),
+      ExpressionAttributeNames: { "#status": "status", "#events": "events" },
       ExpressionAttributeValues: {
         ":status": "mint_submitted",
         ":updatedAt": updatedAt,
         ":mintTransactionId": mintTransactionId ?? "",
         ":mintTransactionHash": mintTransactionHash ?? "",
+        ":chainId": chainId ?? 8453,
+        ":deedName": deedName ?? "",
+        ":contractLanguageVersion": contractLanguageVersion ?? "",
+        ":tokenURI": tokenURI ?? "",
+        ":metadataUrl": metadataUrl ?? "",
+        ":ipfsHash": ipfsHash ?? "",
+        ":imageURI": imageURI ?? "",
+        ":imageUrl": imageUrl ?? "",
+        ":emptyEvents": [],
+        ":events": [mintSubmittedEvent],
       },
       ReturnValues: "ALL_NEW",
     }),
   );
 
   return orderFromItem(result.Attributes);
+}
+
+export async function getLatestMintOrderForWallet(wallet: string) {
+  requireLedger();
+
+  const normalizedWallet = wallet.toLowerCase();
+  const claim = await getMintClaim(normalizedWallet);
+
+  if (claim) {
+    const claimedOrder = await getMintOrder(claim.orderId);
+
+    if (claimedOrder && isCurrentContractOrder(claimedOrder)) {
+      return claimedOrder;
+    }
+  }
+
+  if (!tableName) {
+    const pointedOrderId = localLedger.latestOrdersByWallet.get(normalizedWallet);
+    const pointedOrder = pointedOrderId
+      ? localLedger.orders.get(pointedOrderId)
+      : null;
+
+    if (pointedOrder && isCurrentContractOrder(pointedOrder)) {
+      return pointedOrder;
+    }
+
+    return (
+      [...localLedger.orders.values()]
+        .filter(
+          (order) =>
+            order.wallet === normalizedWallet && isCurrentContractOrder(order),
+        )
+        .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
+        .at(0) ?? null
+    );
+  }
+
+  const pointerResult = await getDocumentClient().send(
+    new GetCommand({
+      TableName: tableName,
+      Key: { pk: latestWalletOrderKey(normalizedWallet) },
+    }),
+  );
+  const orderId =
+    typeof pointerResult.Item?.orderId === "string"
+      ? pointerResult.Item.orderId
+      : null;
+
+  if (!orderId) {
+    return null;
+  }
+
+  const order = await getMintOrder(orderId);
+
+  if (!order || !isCurrentContractOrder(order)) {
+    return null;
+  }
+
+  return order;
+}
+
+export function buildMintReceiptFromOrder(order: MintOrder) {
+  if (order.status !== "mint_submitted") {
+    return null;
+  }
+
+  return {
+    status: "submitted",
+    mode: "live",
+    chainId: order.chainId ?? 8453,
+    contractAddress: order.contractAddress,
+    deedName:
+      order.deedName ??
+      `Certificate of Title for Spiritual Ownership of ${order.publicMark}`,
+    contractLanguageVersion: order.contractLanguageVersion,
+    transactionId: order.mintTransactionId,
+    transactionHash: order.mintTransactionHash,
+    tokenURI: order.tokenURI,
+    metadataUrl: order.metadataUrl,
+    ipfsHash: order.ipfsHash,
+    imageURI: order.imageURI,
+    imageUrl: order.imageUrl,
+    orderId: order.orderId,
+  };
+}
+
+export function toPublicMintOrder(order: MintOrder) {
+  return {
+    orderId: order.orderId,
+    status: order.status,
+    wallet: order.wallet,
+    paymentKind: order.paymentKind,
+    paymentAmount: order.paymentAmount,
+    paymentId: order.paymentId,
+    mintTransactionId: order.mintTransactionId,
+    mintTransactionHash: order.mintTransactionHash,
+    events: order.events ?? [],
+  };
 }
 
 async function getMintClaim(wallet: string) {

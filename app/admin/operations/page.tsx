@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminMintLookup } from "@/components/AdminMintLookup";
 
 const operationPanels = [
   {
@@ -84,6 +85,8 @@ export default function AdminOperationsPage() {
             </article>
           ))}
         </section>
+
+        <AdminMintLookup />
 
         <section className="border border-white/10 bg-black/50 p-5 md:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
