@@ -180,10 +180,10 @@ export default function HomePage() {
             : "max-sm:translate-y-0 max-sm:opacity-100"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
+        <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-2 px-4 py-3 sm:flex-wrap sm:gap-4 sm:px-5 md:px-8">
           <Link
             aria-current="page"
-            className="home-brand-link flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0"
+            className="home-brand-link flex min-h-11 min-w-0 flex-1 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0 sm:flex-none"
             href="/"
           >
             <Image
@@ -194,7 +194,7 @@ export default function HomePage() {
               className="h-7 w-7 object-contain"
               priority
             />
-            <span>Sovereign Engine</span>
+            <span className="truncate">Sovereign Engine</span>
           </Link>
           <button
             aria-controls="mobile-command-drawer"
@@ -277,7 +277,7 @@ export default function HomePage() {
             <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
               Sovereign Engine
             </h1>
-            <p className="mt-5 max-w-[24rem] text-lg leading-7 text-white/68 md:mt-3 md:max-w-[46rem] md:text-base md:leading-6">
+            <p className="mt-5 max-w-[24rem] text-lg leading-7 text-white/84 md:mt-3 md:max-w-[46rem] md:text-base md:leading-6">
               <GlossaryText
                 terms={homeGlossaryTerms}
                 text="One person, one Genesis mint. No bot farms, no prize harvesting, no empty wallets pretending to be a community."
@@ -285,7 +285,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-4">
+          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-2">
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"
@@ -361,7 +361,7 @@ export default function HomePage() {
         </aside>
       </section>
 
-      <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-3 md:px-8 md:pt-6">
+      <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-0 md:px-8 md:pt-2">
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link
@@ -369,16 +369,16 @@ export default function HomePage() {
               className="chamfer-panel chamfer-panel--card chamfer-panel--interactive block p-5"
               href={card.href}
             >
-              <div className="text-[11px] uppercase tracking-[0.3em] text-cyan-200/60">
+              <div className="text-[11px] uppercase tracking-[0.3em] text-cyan-100/85">
                 {card.label}
               </div>
               <h2 className="mt-4 text-xl uppercase tracking-[0.14em] text-white">
                 {card.title}
               </h2>
-              <p className="mt-3 text-base leading-7 text-white/55">
+              <p className="mt-3 text-base leading-7 text-white/82">
                 <GlossaryText terms={homeGlossaryTerms} text={card.body} />
               </p>
-              <div className="mt-4 text-[11px] uppercase tracking-[0.24em] text-cyan-200/55">
+              <div className="mt-4 text-[11px] uppercase tracking-[0.24em] text-cyan-100/80">
                 Open {card.destination}
               </div>
             </Link>
@@ -388,10 +388,10 @@ export default function HomePage() {
 
       <section className="home-lower-clickables relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="chamfer-panel chamfer-panel--frame home-reasoning-frame p-6 md:p-8">
-          <p className="text-center text-xs uppercase tracking-[0.36em] text-cyan-200/70">
+          <p className="text-center text-xs uppercase tracking-[0.36em] text-cyan-100/90">
             THE REASONING
           </p>
-          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-base leading-7 text-white/68 md:text-lg md:leading-8">
+          <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-base leading-7 text-white/84 md:text-lg md:leading-8">
             <GlossaryText
               terms={homeGlossaryTerms}
               text="We use your DOB to determine 1 of 60 Chinese and 1 of 24 Western astrological signs, which are fused to establish your unique attribute origin. 12 initial attributes are embedded in your Soul Mint and direct every future Progeny branch. EAS ensures a single verified mint only."
@@ -400,7 +400,7 @@ export default function HomePage() {
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             {whyThisMatters.map((item) => (
               <div
-                className={`chamfer-panel chamfer-panel--readout block px-4 py-3 text-base leading-7 text-white/68 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
+                className={`chamfer-panel chamfer-panel--readout block px-4 py-3 text-base leading-7 text-white/84 ${item.opposite ? "chamfer-panel--opposite-corners" : ""} ${item.featured ? "md:col-span-2 md:mx-auto md:max-w-2xl" : ""}`}
                 key={item.body}
               >
                 <GlossaryText terms={homeGlossaryTerms} text={item.body} />
@@ -429,7 +429,7 @@ export default function HomePage() {
             Title 0000
             <span className="block">The Architect</span>
           </h2>
-          <p className="mt-4 text-xs leading-5 text-white/58 md:text-sm md:leading-6">
+          <p className="mt-4 text-xs leading-5 text-white/80 md:text-sm md:leading-6">
             View the Archive for details.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">

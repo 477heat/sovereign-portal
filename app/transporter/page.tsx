@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   buildEngineProfile,
@@ -50,27 +51,59 @@ const nativeMatrixLines = [
 ];
 
 function NativeMatrixScanner({
-  activeLabel,
-  allFieldsConfirmed,
+  activeInput,
   readout,
   revealed,
   subject,
 }: {
-  activeLabel: string;
-  allFieldsConfirmed: boolean;
+  activeInput: ReactNode;
   readout: EngineReadout;
   revealed: boolean;
   subject: string;
 }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (revealed) return;
+
+    let idleTimer: number | undefined;
+
+    const pauseVideo = () => {
+      videoRef.current?.pause();
+    };
+
+    const handlePointerMotion = () => {
+      const video = videoRef.current;
+      if (!video) return;
+
+      if (video.paused) {
+        void video.play().catch(() => {});
+      }
+
+      if (idleTimer) {
+        window.clearTimeout(idleTimer);
+      }
+      idleTimer = window.setTimeout(pauseVideo, 700);
+    };
+
+    window.addEventListener("pointermove", handlePointerMotion, { passive: true });
+    pauseVideo();
+
+    return () => {
+      if (idleTimer) {
+        window.clearTimeout(idleTimer);
+      }
+      window.removeEventListener("pointermove", handlePointerMotion);
+      pauseVideo();
+    };
+  }, [revealed]);
+
   return (
     <section className="control-surface control-surface-large relative min-h-[34rem] overflow-hidden border border-cyan-200/30 bg-black/60 p-5 shadow-[0_0_90px_rgba(80,190,255,0.14)] md:p-6">
       <div className="engine-screen-grid absolute inset-0 opacity-55" aria-hidden="true" />
-      <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
-      <div className="absolute inset-x-6 top-1/2 h-px bg-cyan-100/25 shadow-[0_0_24px_rgba(165,243,252,0.45)]" />
-      <div className="absolute left-1/2 top-6 h-[calc(100%-3rem)] w-px bg-cyan-100/10" />
 
       <div className="relative z-10 flex min-h-[31rem] flex-col">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-cyan-100/10 pb-4">
+        <div className="border-b border-cyan-100/10 pb-3">
           <div>
             <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/72">
               Native Matrix
@@ -78,14 +111,6 @@ function NativeMatrixScanner({
             <h1 className="mt-4 text-3xl font-light uppercase leading-tight tracking-[0.12em] text-cyan-50 md:text-5xl">
               {revealed ? "Mock Stats" : "Scanning"}
             </h1>
-          </div>
-          <div className="control-surface-soft min-w-36 border border-cyan-100/20 bg-cyan-100/[0.05] p-3 text-right">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">
-              System
-            </div>
-            <div className="mt-2 text-sm uppercase tracking-[0.18em] text-cyan-100">
-              {revealed ? "Revealed" : allFieldsConfirmed ? "Ready" : "Listening"}
-            </div>
           </div>
         </div>
 
@@ -137,41 +162,138 @@ function NativeMatrixScanner({
           </div>
         ) : (
           <>
-            <div className="grid flex-1 content-center gap-5 py-8">
-              <div className="mx-auto aspect-square w-full max-w-[18rem] rounded-full border border-cyan-100/10 bg-[radial-gradient(circle,rgba(165,243,252,0.12),rgba(0,0,0,0)_62%)] opacity-80 shadow-[0_0_80px_rgba(80,190,255,0.16)]" />
-              <div className="mx-auto max-w-xl text-center">
-                <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-                  Subject
-                </div>
-                <div className="mt-2 truncate text-xl uppercase tracking-[0.14em] text-cyan-50">
-                  {subject}
-                </div>
-                <p className="mt-4 text-sm leading-6 text-white/54">
-                  Native Matrix panel intentionally withholds the stat reveal until the
-                  prototype sequence is confirmed.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              {nativeMatrixLines.map((line, index) => (
-                <div
-                  key={line}
-                  className="control-surface-soft border border-white/10 bg-white/[0.025] px-3 py-2"
+            <div className="grid flex-1 content-start gap-5 py-6">
+              <div className="relative mx-auto flex min-h-[20rem] w-full max-w-[24rem] items-end justify-center overflow-hidden border border-cyan-100/30 bg-black/70 shadow-[0_0_70px_rgba(80,190,255,0.22)]">
+                <video
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover opacity-80"
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  ref={videoRef}
                 >
-                  <div className="flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.2em] text-white/48">
-                    <span>{line}</span>
-                    <span className={index % 2 === 0 ? "text-cyan-100/70" : "text-yellow-100/60"}>
-                      {index === 0 ? activeLabel : "scan"}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                  <source
+                    media="(min-width: 768px)"
+                    src="/media/excited_avatar_reveal.mp4"
+                    type="video/mp4"
+                  />
+                  <source src="/media/transporter-matrix.MOV" type="video/quicktime" />
+                </video>
+                <div className="engine-screen-grid absolute inset-0 opacity-65" aria-hidden="true" />
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/78 via-black/38 to-transparent" />
+              </div>
             </div>
           </>
         )}
+        <div className="mt-1">
+          {activeInput}
+        </div>
       </div>
     </section>
+  );
+}
+
+function NativeMatrixStatusLines({ activeLabel }: { activeLabel: string }) {
+  return (
+    <section className="control-surface border border-white/10 bg-black/58 p-4 md:p-5">
+      <div className="grid grid-cols-3 gap-2">
+        {nativeMatrixLines.map((line, index) => (
+          <div
+            key={line}
+            className="control-surface-soft border border-white/10 bg-white/[0.025] px-2 py-1.5"
+          >
+            <div className="flex min-h-10 items-center justify-between gap-2 text-[8px] uppercase leading-3 tracking-[0.14em] text-white/48 sm:text-[9px]">
+              <span className="max-w-[8.5rem]">{line}</span>
+              <span className={index % 2 === 0 ? "text-cyan-100/70" : "text-yellow-100/60"}>
+                {index === 0 ? activeLabel : "scan"}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TransporterFieldDrawer({
+  activeField,
+  fieldConfirmed,
+  isOpen,
+  onClose,
+  onOpen,
+  onSelect,
+}: {
+  activeField: ActiveConsoleField;
+  fieldConfirmed: Record<ActiveConsoleField, boolean>;
+  isOpen: boolean;
+  onClose: () => void;
+  onOpen: () => void;
+  onSelect: (field: ActiveConsoleField) => void;
+}) {
+  return (
+    <>
+      <button
+        aria-controls="transporter-select-drawer"
+        aria-expanded={isOpen}
+        className="console-key-button portal-mobile-select-trigger portal-mobile-select-trigger--attention transporter-select-trigger"
+        onClick={onOpen}
+        type="button"
+      >
+        <span>Transporter</span>
+        <span>Controls</span>
+      </button>
+
+      {isOpen && (
+        <div className="portal-mobile-select-layer transporter-select-layer">
+          <button
+            aria-label="Close transporter controls"
+            className="portal-mobile-select-backdrop"
+            onClick={onClose}
+            type="button"
+          />
+          <aside
+            aria-label="Transporter Controls"
+            aria-modal="true"
+            className="control-surface-soft portal-mobile-select-drawer transporter-select-drawer border border-cyan-100/18 p-4"
+            id="transporter-select-drawer"
+            role="dialog"
+          >
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-50">
+                Transporter Controls
+              </div>
+              <button
+                className="console-key-button portal-mobile-select-close"
+                onClick={onClose}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <div className="portal-mobile-select-grid transporter-select-grid">
+              {consoleFields.map((field) => (
+                <button
+                  aria-pressed={activeField === field.id}
+                  key={field.id}
+                  onClick={() => {
+                    onSelect(field.id);
+                    onClose();
+                  }}
+                  className={`console-key-button console-key-button--field transporter-select-chip ${
+                    activeField === field.id ? "console-key-button--active" : ""
+                  } ${fieldConfirmed[field.id] ? "console-key-button--entered" : ""}`}
+                  type="button"
+                >
+                  <span className="mr-2 inline-block h-1.5 w-1.5 bg-current shadow-[0_0_10px_currentColor]" />
+                  {field.shortLabel}
+                </button>
+              ))}
+            </div>
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -291,17 +413,17 @@ function SubjectSystems({
         </div>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid grid-cols-3 gap-2">
         {consoleLamps.map((lamp, index) => (
           <div
             key={lamp}
-            className="control-surface-soft flex min-h-12 items-center justify-between gap-3 border border-white/10 bg-white/[0.03] px-3"
+            className="control-surface-soft flex min-h-9 items-center justify-between gap-2 border border-white/10 bg-white/[0.03] px-2"
           >
-            <span className="text-[10px] uppercase tracking-[0.24em] text-white/48">
+            <span className="text-[8px] uppercase leading-3 tracking-[0.14em] text-white/48 sm:text-[9px]">
               {lamp}
             </span>
             <span
-              className={`h-3 w-3 border ${
+              className={`h-2.5 w-2.5 shrink-0 border ${
                 index < 2
                   ? "border-cyan-100/65 bg-cyan-100 shadow-[0_0_18px_rgba(184,245,255,0.8)]"
                   : "border-yellow-100/45 bg-yellow-100/35"
@@ -331,7 +453,7 @@ export default function TransporterPage() {
   const [wallet, setWallet] = useState("");
   const [mode, setMode] = useState<ReadoutMode>("sovereign");
   const [activeField, setActiveField] = useState<ActiveConsoleField>("mark");
-  const [shareState, setShareState] = useState<"idle" | "copied">("idle");
+  const [transporterDrawerOpen, setTransporterDrawerOpen] = useState(false);
   const [mockWalletConnected, setMockWalletConnected] = useState(false);
   const [confirmedSignatures, setConfirmedSignatures] = useState<Record<ActiveConsoleField, string>>({
     mark: "",
@@ -412,19 +534,19 @@ export default function TransporterPage() {
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  async function copyShareLink() {
-    const params = new URLSearchParams();
+  useEffect(() => {
+    if (!transporterDrawerOpen) return;
 
-    if (dob) params.set("dob", dob);
-    if (firstName) params.set("firstName", firstName);
-    if (lastName) params.set("lastName", lastName);
-    if (wallet) params.set("wallet", wallet);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setTransporterDrawerOpen(false);
+      }
+    };
 
-    const nextUrl = `${window.location.origin}/transporter${params.size ? `?${params}` : ""}`;
-    await navigator.clipboard.writeText(nextUrl);
-    setShareState("copied");
-    window.setTimeout(() => setShareState("idle"), 1800);
-  }
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [transporterDrawerOpen]);
 
   function armPreview() {
     setArmedSignature(currentConsoleSignature);
@@ -487,6 +609,172 @@ export default function TransporterPage() {
     setArmedSignature("");
   }
 
+  const activeInputPanel = (
+    <div className={`control-surface control-surface-strong border border-cyan-100/20 bg-black/55 p-4 ${activeFieldConfirmed ? "console-active-field--entered" : ""}`}>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
+            Active Input
+          </div>
+          <div className="mt-2 text-sm uppercase tracking-[0.2em] text-cyan-50">
+            {activeFieldLabel}
+          </div>
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-100/70">
+          {activeFieldConfirmed
+            ? "Signal Stored"
+            : activeFieldHasInput
+              ? "Ready To Enter"
+              : "Awaiting Input"}
+        </div>
+      </div>
+
+      {activeField === "mark" && (
+        <div className="grid gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block">
+              <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
+                First Name
+              </span>
+              <input
+                value={firstName}
+                onChange={(event) => setFirstName(event.target.value)}
+                autoFocus
+                maxLength={32}
+                placeholder="First"
+                className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
+                Last Name
+              </span>
+              <input
+                value={lastName}
+                onChange={(event) => setLastName(event.target.value)}
+                maxLength={32}
+                placeholder="Last"
+                className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
+              />
+            </label>
+          </div>
+        </div>
+      )}
+
+      {activeField === "dob" && (
+        <label className="block">
+          <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
+            Date Of Birth
+          </span>
+          <input
+            value={dob}
+            onChange={(event) => setDob(event.target.value)}
+            type="date"
+            autoFocus
+            className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
+          />
+        </label>
+      )}
+
+      {activeField === "wallet" && (
+        <div className="grid gap-3">
+          <label className="block">
+            <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
+              Wallet Marker
+              <span className="ml-2 text-[9px] tracking-[0.16em] text-cyan-100/42">
+                mock only
+              </span>
+            </span>
+            <input
+              value={wallet}
+              onChange={(event) => setWallet(event.target.value)}
+              autoFocus
+              disabled={!mockWalletConnected}
+              placeholder="7777"
+              className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition disabled:cursor-not-allowed disabled:opacity-45 focus:border-cyan-100/65"
+            />
+          </label>
+          <button
+            className={`console-key-button w-full ${
+              mockWalletConnected ? "console-key-button--active" : "console-key-button--gold"
+            }`}
+            onClick={connectMockWallet}
+            type="button"
+          >
+            {mockWalletConnected ? "Mock Wallet Connected" : "Connect Mock Wallet"}
+          </button>
+          <div className="console-field-note console-field-note--warning">
+            Mock marker only. Real Portal uses connected wallet + Coinbase EAS. Vanguard marker: 7777.
+          </div>
+        </div>
+      )}
+
+      {activeField === "statType" && (
+        <div className="grid gap-3">
+          <div className="console-field-note">
+            Prototype categories. Future asset types are not wired.
+          </div>
+          <div className="grid gap-2 sm:grid-cols-5">
+            <button
+              className="console-key-button console-key-button--category-selected w-full"
+              disabled
+              type="button"
+            >
+              Character
+            </button>
+            {["Armor", "Weapons", "Transports", "Paths"].map((category) => (
+              <button
+                key={category}
+                className="console-key-button console-key-button--disabled w-full"
+                disabled
+                type="button"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+          <div className="grid gap-2 sm:grid-cols-5">
+            {readouts.map((readout) => (
+              <button
+                key={readout.id}
+                onClick={() => setMode(readout.id)}
+                className={`console-key-button w-full ${
+                  mode === readout.id ? "console-key-button--active" : ""
+                }`}
+                type="button"
+              >
+                {readout.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-4">
+        {allConsoleFieldsConfirmed ? (
+          <button
+            className="console-launch-button w-full"
+            onClick={armPreview}
+            type="button"
+          >
+            {previewArmed ? "Mock Mint Armed" : "Mock Mint"}
+          </button>
+        ) : (
+          activeFieldHasInput &&
+          !activeFieldConfirmed && (
+            <button
+              className="console-enter-button w-full"
+              onClick={confirmActiveField}
+              type="button"
+            >
+              Enter
+            </button>
+          )
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black text-white">
       <TunnelBackdrop layer="page" variant="diffused" />
@@ -504,214 +792,9 @@ export default function TransporterPage() {
           <span className="engine-nav-title text-[11px] tracking-[0.28em] text-cyan-100/72">Transporter Page // Instance 01</span>
         </nav>
 
-        <section className="engine-two-column-layout grid flex-1 gap-5 py-5">
-          <div className="grid gap-5">
+        <section className="transporter-single-column-layout grid flex-1 gap-5 py-5">
+          <div className="transporter-input-column grid gap-5">
           <section className="control-surface control-surface-large border border-cyan-200/20 bg-black/58 p-4 shadow-[0_0_70px_rgba(72,220,255,0.09)] md:p-5">
-            <div className="grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)] xl:items-stretch">
-              <div className="grid gap-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/65">
-                      Transporter Page
-                    </div>
-                    <h1 className="mt-3 text-xl font-light uppercase tracking-[0.14em] text-white md:text-2xl">
-                      Mock Transporter Console
-                    </h1>
-                  </div>
-                  <button
-                    onClick={copyShareLink}
-                    className="console-key-button console-key-button--gold"
-                    type="button"
-                  >
-                    {shareState === "copied" ? "Copied" : "Share"}
-                  </button>
-                </div>
-
-                <div className="engine-field-button-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {consoleFields.map((field) => (
-                    <button
-                      key={field.id}
-                      onClick={() => resetConfirmedField(field.id)}
-                      className={`console-key-button console-key-button--field w-full ${
-                        activeField === field.id ? "console-key-button--active" : ""
-                      } ${fieldConfirmed[field.id] ? "console-key-button--entered" : ""}`}
-                      type="button"
-                    >
-                      <span className="mr-2 inline-block h-1.5 w-1.5 bg-current shadow-[0_0_10px_currentColor]" />
-                      {field.shortLabel}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className={`control-surface control-surface-strong border border-cyan-100/20 bg-black/55 p-4 ${activeFieldConfirmed ? "console-active-field--entered" : ""}`}>
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-                      Active Input
-                    </div>
-                    <div className="mt-2 text-sm uppercase tracking-[0.2em] text-cyan-50">
-                      {activeFieldLabel}
-                    </div>
-                  </div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-100/70">
-                    {activeFieldConfirmed
-                      ? "Signal Stored"
-                      : activeFieldHasInput
-                        ? "Ready To Enter"
-                        : "Awaiting Input"}
-                  </div>
-                </div>
-
-                {activeField === "mark" && (
-                  <div className="grid gap-3">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <label className="block">
-                        <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                          First Name
-                        </span>
-                        <input
-                          value={firstName}
-                          onChange={(event) => setFirstName(event.target.value)}
-                          autoFocus
-                          maxLength={32}
-                          placeholder="First"
-                          className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
-                        />
-                      </label>
-                      <label className="block">
-                        <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                          Last Name
-                        </span>
-                        <input
-                          value={lastName}
-                          onChange={(event) => setLastName(event.target.value)}
-                          maxLength={32}
-                          placeholder="Last"
-                          className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
-                        />
-                      </label>
-                    </div>
-                    <div className="console-field-note">
-                      Prototype identity details. Real Portal fields should match Coinbase/EAS records.
-                    </div>
-                  </div>
-                )}
-
-                {activeField === "dob" && (
-                  <label className="block">
-                    <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                      Date Of Birth
-                    </span>
-                    <input
-                      value={dob}
-                      onChange={(event) => setDob(event.target.value)}
-                      type="date"
-                      autoFocus
-                      className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
-                    />
-                  </label>
-                )}
-
-                {activeField === "wallet" && (
-                  <div className="grid gap-3">
-                    <label className="block">
-                      <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                        Wallet Marker
-                        <span className="ml-2 text-[9px] tracking-[0.16em] text-cyan-100/42">
-                          mock only
-                        </span>
-                      </span>
-                      <input
-                        value={wallet}
-                        onChange={(event) => setWallet(event.target.value)}
-                        autoFocus
-                        disabled={!mockWalletConnected}
-                        placeholder="7777"
-                        className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition disabled:cursor-not-allowed disabled:opacity-45 focus:border-cyan-100/65"
-                      />
-                    </label>
-                    <button
-                      className={`console-key-button w-full ${
-                        mockWalletConnected ? "console-key-button--active" : "console-key-button--gold"
-                      }`}
-                      onClick={connectMockWallet}
-                      type="button"
-                    >
-                      {mockWalletConnected ? "Mock Wallet Connected" : "Connect Mock Wallet"}
-                    </button>
-                    <div className="console-field-note console-field-note--warning">
-                      Mock marker only. Real Portal uses connected wallet + Coinbase EAS. Vanguard marker: 7777.
-                    </div>
-                  </div>
-                )}
-
-                {activeField === "statType" && (
-                  <div className="grid gap-3">
-                    <div className="console-field-note">
-                      Prototype categories. Future asset types are not wired.
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-5">
-                      <button
-                        className="console-key-button console-key-button--category-selected w-full"
-                        disabled
-                        type="button"
-                      >
-                        Character
-                      </button>
-                      {["Armor", "Weapons", "Transports", "Paths"].map((category) => (
-                        <button
-                          key={category}
-                          className="console-key-button console-key-button--disabled w-full"
-                          disabled
-                          type="button"
-                        >
-                          {category}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-5">
-                      {readouts.map((readout) => (
-                        <button
-                          key={readout.id}
-                          onClick={() => setMode(readout.id)}
-                          className={`console-key-button w-full ${
-                            mode === readout.id ? "console-key-button--active" : ""
-                          }`}
-                          type="button"
-                        >
-                          {readout.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-4">
-                  {allConsoleFieldsConfirmed ? (
-                    <button
-                      className="console-launch-button w-full"
-                      onClick={armPreview}
-                      type="button"
-                    >
-                      {previewArmed ? "Mock Mint Armed" : "Mock Mint"}
-                    </button>
-                  ) : (
-                    activeFieldHasInput &&
-                    !activeFieldConfirmed && (
-                      <button
-                        className="console-enter-button w-full"
-                        onClick={confirmActiveField}
-                        type="button"
-                      >
-                        Enter
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
-
             <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
               <div className={`control-surface-soft min-h-[4rem] border border-cyan-200/20 bg-cyan-200/[0.035] px-3 py-2 ${fieldConfirmed.mark ? "console-status-tile--entered" : ""}`}>
                 <div className="text-[9px] uppercase tracking-[0.22em] text-cyan-100/48">
@@ -754,17 +837,27 @@ export default function TransporterPage() {
             <SubjectSystems alignment={profile.alignment} profileMark={profile.mark} />
           </div>
 
-          <div className="grid gap-5">
+          <div className="transporter-matrix-column grid gap-5">
             <NativeMatrixScanner
-              activeLabel={activeFieldLabel}
-              allFieldsConfirmed={allConsoleFieldsConfirmed}
+              activeInput={activeInputPanel}
               readout={activeReadout}
               revealed={previewArmed}
               subject={profile.mark}
             />
-            <ReadoutBus shareCode={profile.shareCode} />
           </div>
         </section>
+        <TransporterFieldDrawer
+          activeField={activeField}
+          fieldConfirmed={fieldConfirmed}
+          isOpen={transporterDrawerOpen}
+          onClose={() => setTransporterDrawerOpen(false)}
+          onOpen={() => setTransporterDrawerOpen(true)}
+          onSelect={resetConfirmedField}
+        />
+        <div className="grid gap-5 pb-8">
+          <NativeMatrixStatusLines activeLabel={activeFieldLabel} />
+          <ReadoutBus shareCode={profile.shareCode} />
+        </div>
       </div>
     </main>
   );
