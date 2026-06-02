@@ -178,12 +178,16 @@ function Field({
   onChange,
   placeholder,
   type = "text",
+  min,
+  step,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   type?: "text" | "number";
+  min?: string;
+  step?: string;
 }) {
   return (
     <label className="grid gap-2 text-xs uppercase tracking-[0.18em] text-white/45">
@@ -191,8 +195,10 @@ function Field({
       <input
         className="min-h-11 w-full border border-white/15 bg-black/70 px-3 text-sm tracking-normal text-white outline-none transition focus:border-yellow-200/70"
         inputMode={type === "number" ? "decimal" : undefined}
+        min={min}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
+        step={step}
         type={type}
         value={value}
       />
@@ -1040,13 +1046,15 @@ function AdminContent() {
                       label="User checkout price in USDC"
                       onChange={setPortalPaymentAmount}
                       placeholder="5.00"
+                      step="0.01"
                       type="number"
                       value={portalPaymentAmount}
                     />
                     <p className="text-xs leading-5 text-white/50">
                       This changes the Portal checkout amount for future mint
                       orders. It does not change the on-chain ETH mint price
-                      below.
+                      below. Sub-dollar crypto checkout tests are allowed, but
+                      card/onramp routes may still enforce provider minimums.
                     </p>
                     {portalMintSettings?.updatedAt && (
                       <p className="text-xs uppercase tracking-[0.18em] text-white/35">
@@ -1107,6 +1115,7 @@ function AdminContent() {
                     <Field
                       label="Mint price in ETH"
                       onChange={setMintPrice}
+                      step="any"
                       type="number"
                       value={mintPrice}
                     />
@@ -1116,6 +1125,7 @@ function AdminContent() {
                     <Field
                       label="Burn fee in ETH"
                       onChange={setBurnFee}
+                      step="any"
                       type="number"
                       value={burnFee}
                     />
