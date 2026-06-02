@@ -35,8 +35,18 @@ function getDocumentClient() {
   return documentClient;
 }
 
-export function parsePaymentUnits(amount: string, decimals: number) {
+export function normalizePaymentAmount(amount: string) {
   const trimmed = amount.trim();
+
+  if (trimmed.startsWith(".")) {
+    return `0${trimmed}`;
+  }
+
+  return trimmed;
+}
+
+export function parsePaymentUnits(amount: string, decimals: number) {
+  const trimmed = normalizePaymentAmount(amount);
 
   if (!Number.isInteger(decimals) || decimals < 0) {
     throw new Error("Token decimals must be a non-negative integer.");
@@ -111,7 +121,7 @@ export async function updatePortalMintSettings({
 }) {
   const updatedAt = new Date().toISOString();
   const nextSettings = {
-    paymentAmount: paymentAmount.trim(),
+    paymentAmount: normalizePaymentAmount(paymentAmount),
     updatedAt,
     updatedBy,
   } satisfies PortalMintSettings;

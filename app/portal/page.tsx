@@ -555,6 +555,18 @@ function PortalContent() {
     }
   }
 
+  function discardPendingOrder() {
+    if (activeOrder?.status !== "pending_payment") {
+      return;
+    }
+
+    setMintOrder(null);
+    setError("");
+    setPaymentNotice(
+      "Pending order cleared. Create a fresh order to use the current checkout price.",
+    );
+  }
+
   async function handleWalletChipConnect() {
     if (!thirdwebClient) {
       setError("Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live wallet connector.");
@@ -1358,6 +1370,16 @@ function PortalContent() {
                                       >
                                         Refresh Status
                                       </button>
+                                      {activeOrder.status === "pending_payment" && (
+                                        <button
+                                          className="console-key-button"
+                                          disabled={orderBusy}
+                                          onClick={discardPendingOrder}
+                                          type="button"
+                                        >
+                                          Start New Order
+                                        </button>
+                                      )}
                                     </div>
                                     {paymentNotice && (
                                       <p className="text-sm leading-6 text-cyan-50/72">
