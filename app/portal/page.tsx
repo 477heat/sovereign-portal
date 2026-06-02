@@ -300,6 +300,7 @@ function PortalContent() {
     hasIdentity &&
     deedAccepted &&
     orderPaid &&
+    !receipt &&
     !minting;
   const termsAwaitingIdentity = !hasIdentity && !deedAccepted;
   const paymentAwaitingTerms = !deedAccepted;
@@ -781,7 +782,7 @@ function PortalContent() {
     {
       key: "mint",
       label: "Mint",
-      value: canMint ? "Active" : "Locked",
+      value: receipt ? "Submitted" : canMint ? "Active" : "Locked",
       complete: Boolean(receipt),
       enabled: canMint || Boolean(receipt),
       stateClass: canMint
@@ -825,7 +826,7 @@ function PortalContent() {
     identity: hasIdentity ? "Identity Confirmed" : "Identity Entry",
     terms: deedAccepted ? "Terms Agreed" : "Terms Agreement",
     payment: orderPaid ? "Payment Confirmed" : "Payment Gate",
-    mint: canMint ? "Mint Authorization" : receipt ? "Mint Submitted" : "Mint Locked",
+    mint: receipt ? "Mint Submitted" : canMint ? "Mint Authorization" : "Mint Locked",
   }[selectedGate];
   const selectedGateStatus = {
     wallet: account?.address
@@ -851,12 +852,19 @@ function PortalContent() {
       : deedAccepted
         ? "Prepare checkout or refresh an existing order."
         : "Terms must be agreed before payment can arm.",
-    mint: canMint
-      ? "All gates are green. Mint is ready."
-      : receipt
-        ? "Mint request has returned a receipt."
+    mint: receipt
+      ? "Mint submitted. Receipt details are shown below."
+      : canMint
+        ? "All gates are green. Mint is ready."
         : "Pass all gates to mint your token.",
   }[selectedGate];
+  const selectedGateCompleteNotice = selectedGateReadout.complete
+    ? selectedGate === "mint"
+      ? "Mint submitted. Save the receipt details below for tracking."
+      : selectedGate === "payment"
+        ? "Payment recorded. Continue to mint authorization."
+        : "Gate confirmed. If you edit earlier entries, review the later steps again."
+    : null;
   const gateEnterEnabled = {
     wallet: !account?.address && Boolean(thirdwebClient) && !isConnecting,
     eas: Boolean(account?.address) && !checkingAttestation,
@@ -878,7 +886,13 @@ function PortalContent() {
     identity: hasIdentity ? "Confirmed" : "Enter Identity",
     terms: deedAccepted ? "Continue" : "Enter Terms",
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
-    mint: minting ? "Minting" : canMint ? "Mint" : "Mint Locked",
+    mint: minting
+      ? "Minting"
+      : receipt
+        ? "Mint Submitted"
+        : canMint
+          ? "Mint"
+          : "Mint Locked",
   }[selectedGate];
   function downloadFormalTerms() {
     const termsText = [
@@ -1048,9 +1062,9 @@ function PortalContent() {
                               <p className="mt-3 text-sm leading-6 text-white/66">
                                 {selectedGateStatus}
                               </p>
-                              {selectedGateReadout.complete && (
-                                <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
-                                  This gate is already confirmed. Editing may reset current values or require later gates to be checked again.
+                              {selectedGateCompleteNotice && (
+                                <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-100/72">
+                                  {selectedGateCompleteNotice}
                                 </p>
                               )}
                             </div>
@@ -1397,8 +1411,11 @@ function PortalContent() {
                                   Final Authorization
                                 </div>
                                 <p className="mt-3 text-sm leading-6 text-white/62">
-                                  The mint action remains locked until wallet, EAS,
-                                  identity, terms, and payment gates are all green.
+                                  {receipt
+                                    ? "Mint submitted. Use the receipt below to track the transaction and token metadata."
+                                    : canMint
+                                      ? "All checks are complete. Press Mint once to submit the deed."
+                                      : "Mint unlocks after wallet, EAS, identity, terms, and payment gates are green."}
                                 </p>
                               </div>
                             )}
