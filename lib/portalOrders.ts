@@ -2,10 +2,8 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import {
-  DeleteCommand,
   DynamoDBDocumentClient,
   GetCommand,
-  PutCommand,
   TransactWriteCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
@@ -554,36 +552,49 @@ export async function claimMintOrder(
   }
 
   await getDocumentClient().send(
-    new PutCommand({
-      TableName: tableName,
-      Item: {
-        pk: walletClaimKey(normalizedWallet),
-        entity: "mint-claim",
-        ...claim,
-      },
-      ConditionExpression: "attribute_not_exists(pk)",
+    new TransactWriteCommand({
+      TransactItems: [
+        {
+          Put: {
+            TableName: tableName,
+            Item: {
+              pk: walletClaimKey(normalizedWallet),
+              entity: "mint-claim",
+              ...claim,
+            },
+            ConditionExpression: "attribute_not_exists(pk)",
+          },
+        },
+        {
+          Update: {
+            TableName: tableName,
+            Key: { pk: orderKey(orderId) },
+            UpdateExpression: eventUpdateExpression(
+              "#status = :status, updatedAt = :updatedAt",
+            ),
+            ConditionExpression:
+              "#status = :expectedStatus AND wallet = :wallet AND publicMark = :publicMark AND contractAddress = :contractAddress",
+            ExpressionAttributeNames: {
+              "#status": "status",
+              "#events": "events",
+            },
+            ExpressionAttributeValues: {
+              ":status": "minting",
+              ":expectedStatus": "paid",
+              ":wallet": normalizedWallet,
+              ":publicMark": publicMark,
+              ":contractAddress": SOUL_DEED_CONTRACT_ADDRESS,
+              ":updatedAt": now,
+              ":emptyEvents": [],
+              ":events": [mintClaimedEvent],
+            },
+          },
+        },
+      ],
     }),
   );
 
-  const result = await getDocumentClient().send(
-    new UpdateCommand({
-      TableName: tableName,
-      Key: { pk: orderKey(orderId) },
-      UpdateExpression: eventUpdateExpression(
-        "#status = :status, updatedAt = :updatedAt",
-      ),
-      ExpressionAttributeNames: { "#status": "status", "#events": "events" },
-      ExpressionAttributeValues: {
-        ":status": "minting",
-        ":updatedAt": now,
-        ":emptyEvents": [],
-        ":events": [mintClaimedEvent],
-      },
-      ReturnValues: "ALL_NEW",
-    }),
-  );
-
-  return orderFromItem(result.Attributes);
+  return getMintOrder(orderId);
 }
 
 export async function releaseMintOrder(orderId: string, wallet: string) {
@@ -613,31 +624,43 @@ export async function releaseMintOrder(orderId: string, wallet: string) {
   }
 
   await getDocumentClient().send(
-    new DeleteCommand({
-      TableName: tableName,
-      Key: { pk: walletClaimKey(normalizedWallet) },
+    new TransactWriteCommand({
+      TransactItems: [
+        {
+          Delete: {
+            TableName: tableName,
+            Key: { pk: walletClaimKey(normalizedWallet) },
+          },
+        },
+        {
+          Update: {
+            TableName: tableName,
+            Key: { pk: orderKey(orderId) },
+            UpdateExpression: eventUpdateExpression(
+              "#status = :status, updatedAt = :updatedAt",
+            ),
+            ConditionExpression:
+              "#status = :expectedStatus AND wallet = :wallet AND contractAddress = :contractAddress",
+            ExpressionAttributeNames: {
+              "#status": "status",
+              "#events": "events",
+            },
+            ExpressionAttributeValues: {
+              ":status": "paid",
+              ":expectedStatus": "minting",
+              ":wallet": normalizedWallet,
+              ":contractAddress": SOUL_DEED_CONTRACT_ADDRESS,
+              ":updatedAt": now,
+              ":emptyEvents": [],
+              ":events": [mintReleasedEvent],
+            },
+          },
+        },
+      ],
     }),
   );
 
-  const result = await getDocumentClient().send(
-    new UpdateCommand({
-      TableName: tableName,
-      Key: { pk: orderKey(orderId) },
-      UpdateExpression: eventUpdateExpression(
-        "#status = :status, updatedAt = :updatedAt",
-      ),
-      ExpressionAttributeNames: { "#status": "status", "#events": "events" },
-      ExpressionAttributeValues: {
-        ":status": "paid",
-        ":updatedAt": now,
-        ":emptyEvents": [],
-        ":events": [mintReleasedEvent],
-      },
-      ReturnValues: "ALL_NEW",
-    }),
-  );
-
-  return orderFromItem(result.Attributes);
+  return getMintOrder(orderId);
 }
 
 export async function markMintOrderSubmitted({
