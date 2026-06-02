@@ -1,4 +1,4 @@
-import { Contract, JsonRpcProvider } from "ethers";
+import { Contract, JsonRpcProvider, Wallet } from "ethers";
 
 const baseUrl = (
   process.env.PORTAL_VERIFY_BASE_URL || "https://soulmaster.xyz"
@@ -11,6 +11,10 @@ const contractAddress =
 const easWallet =
   process.env.PORTAL_VERIFY_EAS_WALLET ||
   "0x53824EBf95007cE59e185443e74c4086482daed5";
+const recoveryWallet = process.env.PORTAL_VERIFY_RECOVERY_WALLET;
+const recoverySignature = process.env.PORTAL_VERIFY_RECOVERY_SIGNATURE;
+const requireRealRecovery =
+  process.env.PORTAL_VERIFY_REQUIRE_SIGNED_RECOVERY === "1";
 const contractTermsCid = "QmX7XvSPD1QJbv88Y8XSQKde5upKCHbhDbFgNJhgHLjwtM";
 
 const contractAbi = [
@@ -37,6 +41,10 @@ function record(name, passed, detail = "") {
 
 function assert(name, condition, detail = "") {
   record(name, Boolean(condition), detail);
+}
+
+function info(message) {
+  console.log(`INFO ${message}`);
 }
 
 async function fetchText(pathOrUrl, init) {
@@ -68,6 +76,13 @@ function ipfsGatewayUrl(uri) {
   }
 
   return `https://ipfs.io/ipfs/${uri.slice("ipfs://".length)}`;
+}
+
+function recoveryMessage(wallet) {
+  return [
+    "Sovereign Portal mint receipt recovery",
+    `Wallet: ${wallet.toLowerCase()}`,
+  ].join("\n");
 }
 
 async function verifyPortalSurface() {
@@ -227,12 +242,62 @@ async function verifyEas() {
   assert("EAS lookup is live mode", json?.mode === "live");
 }
 
+async function verifyRecoverySignatureHandling() {
+  const syntheticWallet = Wallet.createRandom();
+  const syntheticSignature = await syntheticWallet.signMessage(
+    recoveryMessage(syntheticWallet.address),
+  );
+  const synthetic = await fetchJson(
+    `/api/mint-order/recover?wallet=${encodeURIComponent(
+      syntheticWallet.address,
+    )}&signature=${encodeURIComponent(syntheticSignature)}`,
+  );
+
+  assert(
+    "signed receipt recovery verifies wallet signatures",
+    synthetic.response.status === 404 &&
+      synthetic.json?.message === "No mint order was found for this wallet.",
+    synthetic.json?.message,
+  );
+
+  if (recoveryWallet && recoverySignature) {
+    const realRecovery = await fetchJson(
+      `/api/mint-order/recover?wallet=${encodeURIComponent(
+        recoveryWallet,
+      )}&signature=${encodeURIComponent(recoverySignature)}`,
+    );
+
+    assert(
+      "real minted-wallet receipt recovery returns submitted receipt",
+      realRecovery.response.status === 200 &&
+        realRecovery.json?.receipt?.status === "submitted" &&
+        realRecovery.json?.receipt?.tokenURI?.startsWith("ipfs://"),
+      realRecovery.text,
+    );
+    return;
+  }
+
+  if (requireRealRecovery) {
+    record(
+      "real minted-wallet receipt recovery env vars are provided",
+      false,
+      "Set PORTAL_VERIFY_RECOVERY_WALLET and PORTAL_VERIFY_RECOVERY_SIGNATURE.",
+    );
+    return;
+  }
+
+  info(
+    "Real minted-wallet receipt recovery not checked. Set PORTAL_VERIFY_RECOVERY_WALLET and PORTAL_VERIFY_RECOVERY_SIGNATURE to prove it.",
+  );
+}
+
 async function main() {
   console.log(`Verifying live portal: ${baseUrl}`);
   console.log(`Verifying contract: ${contractAddress}`);
   await verifyPortalSurface();
   await verifyContract();
   await verifyEas();
+  await verifyRecoverySignatureHandling();
 
   const failed = checks.filter((check) => !check.passed);
 

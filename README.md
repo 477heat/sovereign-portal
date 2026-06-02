@@ -35,7 +35,25 @@ npm run verify:portal
 The verifier checks the live Portal, protected admin/recovery routes, active
 payment settings, Base contract state, current token metadata/images, royalty
 math, and a known Coinbase EAS eligible wallet. It uses public endpoints and
-does not need secrets.
+does not need secrets. It also signs a temporary test wallet message to prove
+the live recovery endpoint accepts valid wallet signatures.
+
+To prove full recovery for a real minted wallet, sign this exact message with
+the wallet that minted:
+
+```text
+Sovereign Portal mint receipt recovery
+Wallet: <lowercase wallet address>
+```
+
+Then run:
+
+```bash
+PORTAL_VERIFY_RECOVERY_WALLET=<wallet> \
+PORTAL_VERIFY_RECOVERY_SIGNATURE=<signature> \
+PORTAL_VERIFY_REQUIRE_SIGNED_RECOVERY=1 \
+npm run verify:portal
+```
 
 ## Getting Started
 
