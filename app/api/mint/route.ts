@@ -48,6 +48,22 @@ type MintWorkerResult = {
   error?: string;
 };
 
+function ipfsGatewayUrl(uri: string | undefined) {
+  if (!uri) {
+    return undefined;
+  }
+
+  if (uri.startsWith("ipfs://")) {
+    return `https://ipfs.io/ipfs/${uri.slice("ipfs://".length)}`;
+  }
+
+  if (uri.startsWith("https://")) {
+    return uri;
+  }
+
+  return undefined;
+}
+
 function isWalletAddress(value: string | undefined) {
   return Boolean(value?.match(/^0x[a-fA-F0-9]{40}$/));
 }
@@ -383,7 +399,10 @@ export async function POST(request: NextRequest) {
       transactionId: data?.transactionId,
       transactionHash: data?.transactionHash,
       tokenURI: data?.tokenURI,
+      metadataUrl: ipfsGatewayUrl(data?.tokenURI),
       ipfsHash: data?.ipfsHash,
+      imageURI: metadata.image,
+      imageUrl: ipfsGatewayUrl(metadata.image),
     });
   }
 

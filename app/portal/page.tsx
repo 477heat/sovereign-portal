@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { createThirdwebClient } from "thirdweb";
 import { base } from "thirdweb/chains";
@@ -60,6 +61,10 @@ type MintReceipt = {
   transactionId?: string;
   transactionHash?: string;
   tokenURI?: string;
+  metadataUrl?: string;
+  ipfsHash?: string;
+  imageURI?: string;
+  imageUrl?: string;
 };
 
 type MintOrderState = {
@@ -203,6 +208,21 @@ const portalDetailsModal = {
     allowLinkingProfiles: false,
   },
 };
+const previewReceipt: MintReceipt = {
+  status: "submitted",
+  deedName: "Certificate of Title for Spiritual Ownership of K. Mil",
+  mode: "live",
+  chainId: 8453,
+  contractAddress: "0x2df9151c4e32082a05c686bd3092180134d17deb",
+  transactionId: "a74ce28e-b3da-43d2-a821-640dea0ae3a1",
+  transactionHash:
+    "0xaa68adcf2dc5f2b2741b8f3c1df8a9ede6a52f48f2364c25424784d0ff5e1861",
+  tokenURI: "ipfs://QmcYVhohGRg1ERD5upTPQ2C54vgm4taRouDxWcFtxpL5zj",
+  metadataUrl: "https://ipfs.io/ipfs/QmcYVhohGRg1ERD5upTPQ2C54vgm4taRouDxWcFtxpL5zj",
+  ipfsHash: "QmcYVhohGRg1ERD5upTPQ2C54vgm4taRouDxWcFtxpL5zj",
+  imageURI: "ipfs://QmTM1UygFAAVQYarsQh2L5dEhqoKcaSm4adX8oGUSYW3Ap",
+  imageUrl: "https://ipfs.io/ipfs/QmTM1UygFAAVQYarsQh2L5dEhqoKcaSm4adX8oGUSYW3Ap",
+};
 
 function buildPublicMark(firstName: string, lastName: string) {
   const firstInitial = firstName.trim().charAt(0).toUpperCase();
@@ -223,6 +243,22 @@ function shortAddress(address?: string) {
   }
 
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+function ipfsToGatewayUrl(uri?: string) {
+  if (!uri) {
+    return undefined;
+  }
+
+  if (uri.startsWith("ipfs://")) {
+    return `https://ipfs.io/ipfs/${uri.slice("ipfs://".length)}`;
+  }
+
+  if (uri.startsWith("https://")) {
+    return uri;
+  }
+
+  return undefined;
 }
 
 function PortalContent() {
@@ -252,6 +288,9 @@ function PortalContent() {
   const [plainEnglishTermsOpen, setPlainEnglishTermsOpen] = useState(false);
   const [minting, setMinting] = useState(false);
   const [receipt, setReceipt] = useState<MintReceipt | null>(null);
+  const [receiptMetadataImageURI, setReceiptMetadataImageURI] = useState<
+    string | undefined
+  >();
   const [mintOrder, setMintOrder] = useState<MintOrderState | null>(null);
   const [paymentSettings, setPaymentSettings] = useState<PortalPaymentSettings>({
     checkoutEnabled: defaultCheckoutEnabled,
@@ -261,6 +300,7 @@ function PortalContent() {
   });
   const [orderBusy, setOrderBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
+  const [receiptCopied, setReceiptCopied] = useState(false);
   const [error, setError] = useState("");
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
   const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
@@ -308,13 +348,51 @@ function PortalContent() {
   const checkoutPanelState = checkoutPrerequisitesComplete
     ? "console-status-tile--entered"
     : "console-status-tile--waiting";
+  const receiptImageURI = receipt?.imageURI ?? receiptMetadataImageURI;
+  const receiptImageUrl =
+    receipt?.imageUrl ?? ipfsToGatewayUrl(receiptImageURI);
+  const receiptMetadataUrl =
+    receipt?.metadataUrl ?? ipfsToGatewayUrl(receipt?.tokenURI);
+  const receiptTxUrl = receipt?.transactionHash
+    ? `https://basescan.org/tx/${receipt.transactionHash}`
+    : undefined;
+  const receiptText = receipt
+    ? [
+        receipt.mode === "live"
+          ? "Mainnet Mint Submitted"
+          : "Mainnet Route Ready",
+        receipt.deedName,
+        `Base chain ${receipt.chainId ?? 8453}`,
+        receipt.contractAddress ? `Contract: ${receipt.contractAddress}` : "",
+        receipt.transactionHash ? `Mint Tx: ${receipt.transactionHash}` : "",
+        !receipt.transactionHash && receipt.transactionId
+          ? `Engine Tx: ${receipt.transactionId}`
+          : "",
+        receipt.tokenURI ? `Metadata URI: ${receipt.tokenURI}` : "",
+        receiptMetadataUrl ? `Metadata URL: ${receiptMetadataUrl}` : "",
+        receiptImageURI ? `Image URI: ${receiptImageURI}` : "",
+        receiptImageUrl ? `Image URL: ${receiptImageUrl}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n")
+    : "";
   useEffect(() => {
     const previewShellTimer = window.setTimeout(
-      () =>
+      () => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const requestedPreviewShell = searchParams.get("previewShell") === "1";
+        const requestedReceiptPreview =
+          searchParams.get("receiptPreview") === "1";
+
         setPreviewShellRequested(
-          new URLSearchParams(window.location.search).get("previewShell") ===
-            "1",
-        ),
+          requestedPreviewShell,
+        );
+
+        if (requestedPreviewShell && requestedReceiptPreview) {
+          setReceipt(previewReceipt);
+          setSelectedGate("mint");
+        }
+      },
       0,
     );
 
@@ -426,6 +504,43 @@ function PortalContent() {
       ignore = true;
     };
   }, [account?.address]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadReceiptImageFromMetadata() {
+      setReceiptMetadataImageURI(undefined);
+
+      if (!receipt?.tokenURI || receipt.imageURI) {
+        return;
+      }
+
+      const metadataUrl = ipfsToGatewayUrl(receipt.tokenURI);
+
+      if (!metadataUrl) {
+        return;
+      }
+
+      try {
+        const response = await fetch(metadataUrl, { cache: "force-cache" });
+        const metadata = (await response.json()) as { image?: unknown };
+
+        if (!ignore && typeof metadata.image === "string") {
+          setReceiptMetadataImageURI(metadata.image);
+        }
+      } catch {
+        if (!ignore) {
+          setReceiptMetadataImageURI(undefined);
+        }
+      }
+    }
+
+    loadReceiptImageFromMetadata();
+
+    return () => {
+      ignore = true;
+    };
+  }, [receipt?.imageURI, receipt?.tokenURI]);
 
   async function handleMint() {
     if (!canMint || !account?.address) {
@@ -913,6 +1028,156 @@ function PortalContent() {
     URL.revokeObjectURL(url);
   }
 
+  function saveMintReceipt() {
+    if (!receiptText) {
+      return;
+    }
+
+    const file = new Blob([receiptText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    const safeName = (receipt?.deedName ?? "soul-deed-receipt")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    link.href = url;
+    link.download = `${safeName || "soul-deed-receipt"}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function copyMintReceipt() {
+    if (!receiptText) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(receiptText);
+      setReceiptCopied(true);
+      window.setTimeout(() => setReceiptCopied(false), 2400);
+    } catch {
+      setError("Receipt copy failed. Use Save Receipt before leaving.");
+    }
+  }
+
+  function returnHomeAfterReceipt() {
+    const confirmed = window.confirm(
+      "Save or copy your receipt first. Once you leave this screen, the Portal will not bring you back to this exact receipt panel.",
+    );
+
+    if (confirmed) {
+      window.location.href = "/";
+    }
+  }
+
+  const receiptPanel = receipt ? (
+    <div className="control-surface-soft portal-surface-gold mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
+      <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
+        {receipt.mode === "live"
+          ? "Mainnet Mint Submitted"
+          : "Mainnet Route Ready"}
+      </div>
+      <div className="mt-3 grid gap-4 md:grid-cols-[minmax(10rem,16rem)_1fr] md:items-start">
+        {receiptImageUrl && (
+          <a
+            className="group block overflow-hidden border border-yellow-200/25 bg-black/35 p-2"
+            href={receiptImageUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Image
+              alt={`Burned Soul Deed image for ${receipt.deedName}`}
+              className="aspect-square w-full object-cover shadow-[0_0_28px_rgba(250,204,21,0.18)] transition duration-200 group-hover:scale-[1.015]"
+              decoding="async"
+              height={512}
+              loading="lazy"
+              sizes="(min-width: 768px) 16rem, 100vw"
+              src={receiptImageUrl}
+              width={512}
+            />
+          </a>
+        )}
+        <div className="min-w-0 space-y-2">
+          <div className="font-semibold text-yellow-50">
+            {receipt.deedName}
+          </div>
+          <div className="text-yellow-100/70">
+            Base chain {receipt.chainId ?? 8453}
+          </div>
+          {receipt.contractAddress && (
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
+                Contract
+              </div>
+              <div className="break-all text-yellow-100/70">
+                {receipt.contractAddress}
+              </div>
+            </div>
+          )}
+          {receipt.transactionHash && (
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
+                Mint Tx
+              </div>
+              <a
+                className="break-all text-yellow-100/80 underline decoration-yellow-200/30 underline-offset-4 hover:text-yellow-50"
+                href={receiptTxUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {receipt.transactionHash}
+              </a>
+            </div>
+          )}
+          {!receipt.transactionHash && receipt.transactionId && (
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
+                Engine Tx
+              </div>
+              <div className="break-all text-yellow-100/70">
+                {receipt.transactionId}
+              </div>
+            </div>
+          )}
+          {receipt.tokenURI && (
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
+                Metadata URI
+              </div>
+              {receiptMetadataUrl ? (
+                <a
+                  className="break-all text-yellow-100/80 underline decoration-yellow-200/30 underline-offset-4 hover:text-yellow-50"
+                  href={receiptMetadataUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {receipt.tokenURI}
+                </a>
+              ) : (
+                <div className="break-all text-yellow-100/70">
+                  {receipt.tokenURI}
+                </div>
+              )}
+            </div>
+          )}
+          {receiptImageURI && (
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
+                Image URI
+              </div>
+              <div className="break-all text-yellow-100/70">
+                {receiptImageURI}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  ) : null;
+
   const termsContent = (
     <div className="grid gap-4">
       <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
@@ -1005,6 +1270,84 @@ function PortalContent() {
             </div>
           )}
 
+          {receipt ? (
+            <section className="control-surface-large portal-surface-gold border border-yellow-300/40 bg-yellow-300/10 p-4 text-yellow-100 md:p-6">
+              <div className="grid gap-5">
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-200/70">
+                    Mint Complete
+                  </div>
+                  <h1 className="mt-3 text-3xl font-black uppercase leading-none tracking-[0.12em] text-yellow-50 md:text-5xl">
+                    Artifact Returned
+                  </h1>
+                  <p className="mt-4 max-w-3xl text-sm leading-6 text-yellow-50/72">
+                    Save or copy these details now. This receipt is displayed
+                    for this session only; if you close or leave this screen,
+                    the Portal will not bring you back to this exact return
+                    panel.
+                  </p>
+                </div>
+
+                {receiptPanel}
+
+                <div className="control-surface-soft portal-surface-red-soft border border-red-300/25 bg-red-500/[0.05] p-4 text-sm leading-6 text-red-50/82">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-100/80">
+                    Save Before Exit
+                  </div>
+                  <p className="mt-2">
+                    Your token, metadata, image, and transaction stay public on
+                    chain/IPFS, but this exact confirmation screen is not stored
+                    for replay. Save the receipt before returning home.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    className="console-key-button console-key-button--gold"
+                    onClick={saveMintReceipt}
+                    type="button"
+                  >
+                    Save Receipt
+                  </button>
+                  <button
+                    className="console-key-button"
+                    onClick={() => void copyMintReceipt()}
+                    type="button"
+                  >
+                    {receiptCopied ? "Copied" : "Copy Details"}
+                  </button>
+                  {receiptMetadataUrl && (
+                    <a
+                      className="console-key-button"
+                      href={receiptMetadataUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Open Metadata
+                    </a>
+                  )}
+                  {receiptImageUrl && (
+                    <a
+                      className="console-key-button"
+                      href={receiptImageUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Open Image
+                    </a>
+                  )}
+                  <button
+                    className="console-key-button console-key-button--active"
+                    onClick={returnHomeAfterReceipt}
+                    type="button"
+                  >
+                    Return Home
+                  </button>
+                </div>
+              </div>
+            </section>
+          ) : (
+            <>
           <div className="control-surface portal-surface-red-soft portal-active-mint-notice border border-red-200/35 bg-red-200/[0.045] px-4 py-3 text-sm leading-6 text-red-50/82">
             <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
               Warning Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
@@ -1443,46 +1786,16 @@ function PortalContent() {
                       </div>
                     )}
 
-                    {receipt && (
-                      <div className="control-surface-soft portal-surface-gold mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
-                        <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
-                          {receipt.mode === "live"
-                            ? "Mainnet Mint Submitted"
-                            : "Mainnet Route Ready"}
-                        </div>
-                        <div className="mt-2">{receipt.deedName}</div>
-                        <div className="text-yellow-100/70">
-                          Base chain {receipt.chainId ?? 8453}
-                        </div>
-                        {receipt.contractAddress && (
-                          <div className="break-all text-yellow-100/70">
-                            {receipt.contractAddress}
-                          </div>
-                        )}
-                        {receipt.transactionHash && (
-                          <div className="break-all text-yellow-100/70">
-                            {receipt.transactionHash}
-                          </div>
-                        )}
-                        {!receipt.transactionHash && receipt.transactionId && (
-                          <div className="break-all text-yellow-100/70">
-                            {receipt.transactionId}
-                          </div>
-                        )}
-                        {receipt.tokenURI && (
-                          <div className="break-all text-yellow-100/70">
-                            {receipt.tokenURI}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
           </section>
+            </>
+          )}
 
         </section>
       </div>
 
+      {!receipt && (
       <button
         aria-controls="portal-mobile-select-drawer"
         aria-expanded={mobileGateDrawerOpen}
@@ -1494,6 +1807,7 @@ function PortalContent() {
         <span>Console</span>
         <span>Controls</span>
       </button>
+      )}
 
       {termsReviewOpen && (
         <div className="portal-terms-layer">
