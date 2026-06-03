@@ -3,9 +3,30 @@ import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 export const metadata: Metadata = {
-  title: "Coinbase Entry | Sovereign Engine",
+  title: "Coinbase Entry",
   description:
-    "A Base-native entry point for Sovereign Engine.",
+    "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
+  openGraph: {
+    title: "Sovereign Engine | Coinbase/Base Entry",
+    description:
+      "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
+    url: "/coinbase",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Sovereign Engine Genesis Access preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sovereign Engine | Coinbase/Base Entry",
+    description:
+      "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
+    images: ["/twitter-image"],
+  },
 };
 
 const readinessChips = [

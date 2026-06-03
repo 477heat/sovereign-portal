@@ -1,0 +1,24 @@
+{
+  "name": "Sovereign Engine",
+  "short_name": "SovEngine",
+  "description": "A Base-native Genesis Access artifact for real participants, built for future Engine-driven Progeny creations.",
+  "start_url": "/coinbase",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#02070b",
+  "icons": [
+    {
+      "src": "/brand/sovereign-engine-site-logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/sovengine-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
