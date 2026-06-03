@@ -51,6 +51,7 @@ async function verifyCheckoutLifecycle() {
     createMintOrder,
     getLatestMintOrderForWallet,
     markMintOrderPaid,
+    markMintOrderPaidByVerifiedTransaction,
     markMintOrderSubmitted,
     releaseMintOrder,
     toPublicMintOrder,
@@ -83,6 +84,18 @@ async function verifyCheckoutLifecycle() {
 
   assert("paid order is marked paid", paid?.status === "paid");
   assert("paid order records payment event", eventTypes(paid!).includes("payment_recorded"));
+
+  await expectError(
+    "paid order rejects different direct payment hash",
+    () =>
+      markMintOrderPaidByVerifiedTransaction({
+        orderId: order.orderId,
+        paymentId: "base-direct:0xdifferent",
+        paymentTransactionHash: "0xdifferent",
+        receivedAmount: BigInt(20_000),
+      }),
+    "Mint order is not pending payment.",
+  );
 
   await expectError(
     "claim rejects wrong wallet",
@@ -166,6 +179,61 @@ async function verifyCheckoutLifecycle() {
   );
 }
 
+async function verifyDirectPaymentClaimLifecycle() {
+  const {
+    createMintOrder,
+    markMintOrderPaidByVerifiedTransaction,
+  } = portalOrders;
+  const wallet = "0x5555555555555555555555555555555555555555";
+  const duplicateWallet = "0x6666666666666666666666666666666666666666";
+  const transactionHash =
+    "0xabc0000000000000000000000000000000000000000000000000000000000001";
+  const order = await createMintOrder({
+    wallet,
+    publicMark: "D. One",
+    payment,
+  });
+
+  const paid = await markMintOrderPaidByVerifiedTransaction({
+    orderId: order.orderId,
+    paymentId: `base-direct:${transactionHash}`,
+    paymentTransactionHash: transactionHash,
+    receivedAmount: BigInt(20_000),
+  });
+
+  assert("direct payment marks order paid", paid?.status === "paid");
+  assert(
+    "direct payment stores normalized tx hash",
+    paid?.paymentTransactionHash === transactionHash.toLowerCase(),
+  );
+
+  const idempotent = await markMintOrderPaidByVerifiedTransaction({
+    orderId: order.orderId,
+    paymentId: `base-direct:${transactionHash}`,
+    paymentTransactionHash: transactionHash,
+    receivedAmount: BigInt(20_000),
+  });
+  assert("direct payment accepts same-order retry", idempotent?.orderId === order.orderId);
+
+  const duplicateOrder = await createMintOrder({
+    wallet: duplicateWallet,
+    publicMark: "D. Two",
+    payment,
+  });
+
+  await expectError(
+    "direct payment tx hash cannot be reused for another order",
+    () =>
+      markMintOrderPaidByVerifiedTransaction({
+        orderId: duplicateOrder.orderId,
+        paymentId: `base-direct:${transactionHash}`,
+        paymentTransactionHash: transactionHash,
+        receivedAmount: BigInt(20_000),
+      }),
+    "Payment transaction has already been used.",
+  );
+}
+
 async function verifyComplimentaryLifecycle() {
   const {
     claimMintOrder,
@@ -224,6 +292,7 @@ async function main() {
   portalOrders = await import("../lib/portalOrders");
 
   await verifyCheckoutLifecycle();
+  await verifyDirectPaymentClaimLifecycle();
   await verifyComplimentaryLifecycle();
 
   const failed = checks.filter((check) => !check.passed);

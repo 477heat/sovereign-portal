@@ -3,7 +3,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { createThirdwebClient } from "thirdweb";
+import {
+  createThirdwebClient,
+  prepareTransaction,
+  sendAndConfirmTransaction,
+} from "thirdweb";
 import { base } from "thirdweb/chains";
 import {
   CheckoutWidget,
@@ -22,6 +26,7 @@ import {
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
 import { GlossaryTerm, GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import { encodeErc20TransferCalldata } from "@/lib/directBuilderPayment";
 import type { GlossaryTermKey } from "@/lib/glossary";
 import {
   buildMintOrderStatusMessage,
@@ -83,11 +88,18 @@ type MintOrderState = {
 
 type PortalPaymentSettings = {
   checkoutEnabled: boolean;
+  directPaymentEnabled?: boolean;
   paymentAmount: string;
+  paymentFlow?: PortalPaymentFlow;
   paymentSeller?: string;
   paymentTokenAddress?: string;
+  paymentTokenDecimals?: number;
 };
 
+type PortalPaymentFlow =
+  | "base_usdc_direct_attributed"
+  | "disabled"
+  | "thirdweb_checkout";
 type PortalGate = "wallet" | "eas" | "identity" | "terms" | "payment" | "mint";
 type IdentityField = "firstName" | "lastName" | "dob";
 
@@ -164,9 +176,28 @@ const defaultPaymentAmount =
 const defaultPaymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
 const defaultPaymentTokenAddress =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;
+const defaultPaymentTokenDecimals = Number.parseInt(
+  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_DECIMALS ?? "6",
+  10,
+);
+const defaultBuilderCodeDataSuffix =
+  process.env.NEXT_PUBLIC_BASE_BUILDER_CODE_DATA_SUFFIX;
+const defaultPaymentFlow: PortalPaymentFlow =
+  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_FLOW === "base_usdc_direct_attributed"
+    ? "base_usdc_direct_attributed"
+    : process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout"
+      ? "thirdweb_checkout"
+      : "disabled";
 const defaultCheckoutEnabled =
-  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout" &&
+  defaultPaymentFlow === "thirdweb_checkout" &&
   Boolean(defaultPaymentSeller && defaultPaymentTokenAddress);
+const defaultDirectPaymentEnabled =
+  defaultPaymentFlow === "base_usdc_direct_attributed" &&
+  Boolean(
+    defaultPaymentSeller &&
+      defaultPaymentTokenAddress &&
+      defaultBuilderCodeDataSuffix,
+  );
 const previewShellEnabled =
   process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
   process.env.NODE_ENV === "development" ||
@@ -229,6 +260,34 @@ const previewReceipt: MintReceipt = {
   imageURI: "ipfs://QmTM1UygFAAVQYarsQh2L5dEhqoKcaSm4adX8oGUSYW3Ap",
   imageUrl: "https://ipfs.io/ipfs/QmTM1UygFAAVQYarsQh2L5dEhqoKcaSm4adX8oGUSYW3Ap",
 };
+
+function parseTokenUnits(amount: string, decimals: number) {
+  const trimmed = amount.trim().startsWith(".")
+    ? `0${amount.trim()}`
+    : amount.trim();
+
+  if (!trimmed.match(/^\d+(\.\d+)?$/)) {
+    throw new Error("Payment amount must be a positive decimal.");
+  }
+
+  if (!Number.isInteger(decimals) || decimals < 0) {
+    throw new Error("Payment token decimals are not configured.");
+  }
+
+  const [whole = "0", rawFraction = ""] = trimmed.split(".");
+
+  if (rawFraction.length > decimals) {
+    throw new Error(`Payment amount supports at most ${decimals} decimal places.`);
+  }
+
+  const units = BigInt(`${whole}${rawFraction.padEnd(decimals, "0")}`);
+
+  if (units <= BigInt(0)) {
+    throw new Error("Payment amount must be greater than zero.");
+  }
+
+  return units;
+}
 
 function buildPublicMark(firstName: string, lastName: string) {
   const firstInitial = firstName.trim().charAt(0).toUpperCase();
@@ -300,11 +359,15 @@ function PortalContent() {
   const [mintOrder, setMintOrder] = useState<MintOrderState | null>(null);
   const [paymentSettings, setPaymentSettings] = useState<PortalPaymentSettings>({
     checkoutEnabled: defaultCheckoutEnabled,
+    directPaymentEnabled: defaultDirectPaymentEnabled,
     paymentAmount: defaultPaymentAmount,
+    paymentFlow: defaultPaymentFlow,
     paymentSeller: defaultPaymentSeller,
     paymentTokenAddress: defaultPaymentTokenAddress,
+    paymentTokenDecimals: defaultPaymentTokenDecimals,
   });
   const [orderBusy, setOrderBusy] = useState(false);
+  const [directPaymentBusy, setDirectPaymentBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
   const [recoveryBusy, setRecoveryBusy] = useState(false);
   const [recoveryNotice, setRecoveryNotice] = useState("");
@@ -329,16 +392,20 @@ function PortalContent() {
   const activeOrder =
     mintOrder?.wallet === account?.address?.toLowerCase() ? mintOrder : null;
   const checkoutEnabled = paymentSettings.checkoutEnabled;
+  const directPaymentEnabled = Boolean(paymentSettings.directPaymentEnabled);
   const paymentAmount = activeOrder?.paymentAmount ?? paymentSettings.paymentAmount;
   const paymentSeller = paymentSettings.paymentSeller;
   const paymentTokenAddress = paymentSettings.paymentTokenAddress;
+  const paymentTokenDecimals =
+    paymentSettings.paymentTokenDecimals ?? defaultPaymentTokenDecimals;
+  const paymentRequired = checkoutEnabled || directPaymentEnabled;
   const checkoutReady =
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
     hasIdentity &&
     deedAccepted;
   const orderPaid =
-    !checkoutEnabled ||
+    !paymentRequired ||
     activeOrder?.status === "paid" ||
     activeOrder?.status === "minting" ||
     activeOrder?.status === "mint_submitted";
@@ -420,10 +487,14 @@ function PortalContent() {
         if (!ignore && response.ok) {
           setPaymentSettings({
             checkoutEnabled: Boolean(result.checkoutEnabled),
+            directPaymentEnabled: Boolean(result.directPaymentEnabled),
             paymentAmount: result.paymentAmount || defaultPaymentAmount,
+            paymentFlow: result.paymentFlow ?? defaultPaymentFlow,
             paymentSeller: result.paymentSeller || defaultPaymentSeller,
             paymentTokenAddress:
               result.paymentTokenAddress || defaultPaymentTokenAddress,
+            paymentTokenDecimals:
+              result.paymentTokenDecimals ?? defaultPaymentTokenDecimals,
           });
         }
       } catch {
@@ -642,6 +713,87 @@ function PortalContent() {
       );
     } finally {
       setOrderBusy(false);
+    }
+  }
+
+  async function handleDirectBuilderPayment() {
+    if (
+      !activeOrder ||
+      !account?.address ||
+      !thirdwebClient ||
+      !paymentSeller ||
+      !paymentTokenAddress ||
+      !defaultBuilderCodeDataSuffix
+    ) {
+      setError("Direct Base payment is not fully configured.");
+      return;
+    }
+
+    setDirectPaymentBusy(true);
+    setError("");
+    setPaymentNotice("Confirm the Base USDC payment in your wallet.");
+
+    try {
+      const amountUnits = parseTokenUnits(paymentAmount, paymentTokenDecimals);
+      const data = encodeErc20TransferCalldata({
+        amount: amountUnits,
+        dataSuffix: defaultBuilderCodeDataSuffix,
+        recipient: paymentSeller,
+      }) as `0x${string}`;
+      const transaction = prepareTransaction({
+        chain: base,
+        client: thirdwebClient,
+        data,
+        to: paymentTokenAddress as `0x${string}`,
+        value: BigInt(0),
+      });
+      const receipt = await sendAndConfirmTransaction({
+        account,
+        transaction,
+      });
+
+      setPaymentNotice("Base payment confirmed. Verifying mint order...");
+
+      const response = await fetch(
+        `/api/mint-order/${activeOrder.orderId}/verify-direct-payment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            publicMark,
+            transactionHash: receipt.transactionHash,
+            wallet: account.address,
+          }),
+        },
+      );
+      const result = (await response.json()) as {
+        message?: string;
+        order?: MintOrderState | null;
+        status?: MintOrderState["status"];
+      };
+
+      if (!response.ok) {
+        throw new Error(result.message ?? "Direct payment could not be verified.");
+      }
+
+      setMintOrder(
+        result.order ?? {
+          ...activeOrder,
+          status: result.status ?? "paid",
+        },
+      );
+      setPaymentNotice("Direct Base payment verified. Mint control armed.");
+      setSelectedGate("mint");
+    } catch (caughtError) {
+      setError(
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Direct payment was not confirmed.",
+      );
+    } finally {
+      setDirectPaymentBusy(false);
     }
   }
 
@@ -958,7 +1110,7 @@ function PortalContent() {
       label: "Order",
       value: paymentAwaitingTerms
         ? "Waiting"
-        : checkoutEnabled
+        : paymentRequired
           ? orderPaid
             ? "Paid"
             : "Required"
@@ -1040,7 +1192,9 @@ function PortalContent() {
     payment: orderPaid
       ? "Payment gate is clear for this environment."
       : deedAccepted
-        ? "Prepare checkout or refresh an existing order."
+        ? directPaymentEnabled
+          ? "Prepare a Base USDC payment or refresh an existing order."
+          : "Prepare checkout or refresh an existing order."
         : "Terms must be agreed before payment can arm.",
     mint: receipt
       ? "Mint submitted. Receipt details are shown below."
@@ -1761,7 +1915,7 @@ function PortalContent() {
                                   <button
                                     className="portal-pay-button portal-pay-button--ready mt-4"
                                     disabled={
-                                      !checkoutEnabled ||
+                                      !paymentRequired ||
                                       Boolean(activeOrder) ||
                                       orderBusy
                                     }
@@ -1769,7 +1923,11 @@ function PortalContent() {
                                     type="button"
                                   >
                                     <span>Pay ${paymentAmount}</span>
-                                    <small>We cover the gas fees</small>
+                                    <small>
+                                      {directPaymentEnabled
+                                        ? "Base USDC direct payment"
+                                        : "We cover the gas fees"}
+                                    </small>
                                   </button>
                                 ) : (
                                   <div className="portal-pay-button portal-pay-button--waiting mt-4">
@@ -1780,15 +1938,16 @@ function PortalContent() {
                                   </div>
                                 )}
 
-                                {checkoutPrerequisitesComplete && !checkoutEnabled && (
+                                {checkoutPrerequisitesComplete && !paymentRequired && (
                                   <p className="mt-3 text-xs uppercase tracking-[0.18em] text-yellow-100/70">
-                                    Checkout is not enabled in this environment.
+                                    Payment is not enabled in this environment.
                                   </p>
                                 )}
 
-                                {activeOrder && checkoutEnabled && (
+                                {activeOrder && paymentRequired && (
                                   <div className="mt-4 grid gap-3">
                                     {thirdwebClient &&
+                                      checkoutEnabled &&
                                       paymentSeller &&
                                       paymentTokenAddress &&
                                       !orderPaid && (
@@ -1815,6 +1974,23 @@ function PortalContent() {
                                           tokenAddress={paymentTokenAddress as `0x${string}`}
                                         />
                                       )}
+                                    {directPaymentEnabled && !orderPaid && (
+                                      <button
+                                        className="portal-pay-button portal-pay-button--ready"
+                                        disabled={directPaymentBusy || orderBusy}
+                                        onClick={handleDirectBuilderPayment}
+                                        type="button"
+                                      >
+                                        <span>
+                                          {directPaymentBusy
+                                            ? "Verifying"
+                                            : "Send Base USDC"}
+                                        </span>
+                                        <small>
+                                          Wallet pays gas. Builder Code suffix attached.
+                                        </small>
+                                      </button>
+                                    )}
                                     <div className="control-surface-soft flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
                                       <span className="break-all">
                                         Order {activeOrder.orderId} / {activeOrder.status}

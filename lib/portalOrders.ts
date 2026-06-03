@@ -72,11 +72,20 @@ type MintClaim = {
   createdAt: string;
 };
 
+type PaymentTransactionClaim = {
+  orderId: string;
+  contractAddress: string;
+  wallet: string;
+  transactionHash: string;
+  createdAt: string;
+};
+
 type LocalLedger = {
   orders: Map<string, MintOrder>;
   mintClaims: Map<string, MintClaim>;
   complimentaryOrders: Map<string, string>;
   latestOrdersByWallet: Map<string, string>;
+  paymentTransactionClaims: Map<string, PaymentTransactionClaim>;
 };
 
 declare global {
@@ -91,7 +100,12 @@ const localLedger =
     mintClaims: new Map<string, MintClaim>(),
     complimentaryOrders: new Map<string, string>(),
     latestOrdersByWallet: new Map<string, string>(),
+    paymentTransactionClaims: new Map<string, PaymentTransactionClaim>(),
   });
+
+if (!localLedger.paymentTransactionClaims) {
+  localLedger.paymentTransactionClaims = new Map<string, PaymentTransactionClaim>();
+}
 
 let documentClient: DynamoDBDocumentClient | null = null;
 
@@ -123,6 +137,10 @@ function latestWalletOrderKey(wallet: string) {
 
 function complimentaryOrderKey(wallet: string) {
   return `COMP_ORDER#${SOUL_DEED_LEDGER_SCOPE}#${wallet.toLowerCase()}`;
+}
+
+function paymentTransactionClaimKey(transactionHash: string) {
+  return `PAYMENT_TX#${SOUL_DEED_LEDGER_SCOPE}#${transactionHash.toLowerCase()}`;
 }
 
 function orderFromItem(value: Record<string, unknown> | undefined) {
@@ -497,6 +515,141 @@ export async function markMintOrderPaid({
   );
 
   return orderFromItem(result.Attributes);
+}
+
+export async function markMintOrderPaidByVerifiedTransaction({
+  orderId,
+  paymentId,
+  paymentTransactionHash,
+  receivedAmount,
+  fallbackMinimumAmount,
+}: {
+  orderId: string;
+  paymentId: string;
+  paymentTransactionHash: string;
+  receivedAmount?: bigint;
+  fallbackMinimumAmount?: bigint;
+}) {
+  requireLedger();
+
+  const current = await getMintOrder(orderId);
+  if (!current) {
+    return null;
+  }
+
+  const normalizedTransactionHash = paymentTransactionHash.toLowerCase();
+  const requiredAmount = current.paymentMinAmount
+    ? BigInt(current.paymentMinAmount)
+    : fallbackMinimumAmount;
+
+  if (
+    requiredAmount !== undefined &&
+    receivedAmount !== undefined &&
+    receivedAmount < requiredAmount
+  ) {
+    throw new Error("Payment amount is lower than this mint order requires.");
+  }
+
+  if (current.status !== "pending_payment") {
+    if (
+      current.paymentTransactionHash?.toLowerCase() === normalizedTransactionHash
+    ) {
+      return current;
+    }
+
+    throw new Error("Mint order is not pending payment.");
+  }
+
+  const updatedAt = new Date().toISOString();
+  const paymentEvent = makeOrderEvent(
+    "payment_recorded",
+    "Direct Base payment verified.",
+  );
+  const claim: PaymentTransactionClaim = {
+    orderId,
+    contractAddress: SOUL_DEED_CONTRACT_ADDRESS,
+    wallet: current.wallet,
+    transactionHash: normalizedTransactionHash,
+    createdAt: updatedAt,
+  };
+
+  if (!tableName) {
+    const claimKey = paymentTransactionClaimKey(normalizedTransactionHash);
+    const existingClaim = localLedger.paymentTransactionClaims.get(claimKey);
+
+    if (existingClaim && existingClaim.orderId !== orderId) {
+      throw new Error("Payment transaction has already been used.");
+    }
+
+    localLedger.paymentTransactionClaims.set(claimKey, claim);
+
+    const nextOrder: MintOrder = withOrderEvent(
+      {
+        ...current,
+        status: "paid",
+        updatedAt,
+        paymentId,
+        paymentTransactionHash: normalizedTransactionHash,
+      },
+      paymentEvent,
+    );
+    localLedger.orders.set(orderId, nextOrder);
+    return nextOrder;
+  }
+
+  try {
+    await getDocumentClient().send(
+      new TransactWriteCommand({
+        TransactItems: [
+          {
+            Put: {
+              TableName: tableName,
+              Item: {
+                pk: paymentTransactionClaimKey(normalizedTransactionHash),
+                entity: "payment-transaction-claim",
+                ...claim,
+              },
+              ConditionExpression: "attribute_not_exists(pk)",
+            },
+          },
+          {
+            Update: {
+              TableName: tableName,
+              Key: { pk: orderKey(orderId) },
+              UpdateExpression: eventUpdateExpression(
+                "#status = :status, updatedAt = :updatedAt, paymentId = :paymentId, paymentTransactionHash = :paymentTransactionHash",
+              ),
+              ConditionExpression: "#status = :pendingPayment",
+              ExpressionAttributeNames: {
+                "#status": "status",
+                "#events": "events",
+              },
+              ExpressionAttributeValues: {
+                ":status": "paid",
+                ":pendingPayment": "pending_payment",
+                ":updatedAt": updatedAt,
+                ":paymentId": paymentId,
+                ":paymentTransactionHash": normalizedTransactionHash,
+                ":emptyEvents": [],
+                ":events": [paymentEvent],
+              },
+            },
+          },
+        ],
+      }),
+    );
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.name === "TransactionCanceledException"
+    ) {
+      throw new Error("Payment transaction has already been used or order is no longer pending.");
+    }
+
+    throw error;
+  }
+
+  return getMintOrder(orderId);
 }
 
 export async function claimMintOrder(

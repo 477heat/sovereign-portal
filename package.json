@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "verify:portal": "node scripts/verify-live-portal.mjs",
+    "verify:direct-payment": "tsx scripts/verify-direct-builder-payment.ts",
     "verify:orders": "NODE_OPTIONS='--conditions react-server' tsx scripts/verify-order-lifecycle.ts"
   },
   "dependencies": {
