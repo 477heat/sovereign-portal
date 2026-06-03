@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Coinbase Entry",
   description:
     "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
+  alternates: {
+    canonical: "/coinbase",
+  },
   openGraph: {
     title: "Sovereign Engine | Coinbase/Base Entry",
     description:
@@ -13,7 +16,7 @@ export const metadata: Metadata = {
     url: "/coinbase",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/opengraph-image.jpg",
         width: 1200,
         height: 630,
         alt: "Sovereign Engine Genesis Access preview",
@@ -25,7 +28,7 @@ export const metadata: Metadata = {
     title: "Sovereign Engine | Coinbase/Base Entry",
     description:
       "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
-    images: ["/twitter-image"],
+    images: ["/twitter-image.jpg"],
   },
 };
 

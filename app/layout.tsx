@@ -31,19 +31,24 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/brand/sovereign-engine-site-logo-512.png",
+        url: "/coinbase-assets/app-icon-1024.png",
+        sizes: "1024x1024",
+        type: "image/png",
+      },
+      {
+        url: "/coinbase-assets/app-icon-512.png",
         sizes: "512x512",
         type: "image/png",
       },
       {
-        url: "/icon.png",
+        url: "/coinbase-assets/app-icon-192.png",
         sizes: "192x192",
         type: "image/png",
       },
     ],
     apple: [
       {
-        url: "/apple-icon.png",
+        url: "/coinbase-assets/app-icon-180.png",
         sizes: "180x180",
         type: "image/png",
       },
@@ -57,7 +62,7 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: "/opengraph-image",
+        url: "/opengraph-image.jpg",
         width: 1200,
         height: 630,
         alt: "Sovereign Engine Genesis Access preview",
@@ -68,7 +73,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/twitter-image"],
+    images: ["/twitter-image.jpg"],
   },
   other: {
     "base:app_id": "69fb33172763280abf41cd7a",

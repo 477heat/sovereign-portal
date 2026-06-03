@@ -3,7 +3,7 @@ import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Sovereign Engine",
+  title: "Privacy Policy",
   description:
     "Plain-language privacy policy for Sovereign Engine, including how Yoti identity verification may be used when enabled.",
 };
