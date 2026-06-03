@@ -463,6 +463,9 @@ export default function HomePage() {
           <Link href="/archive" className="chamfer-nav-link">
             Archive
           </Link>
+          <Link href="/privacy-policy" className="chamfer-nav-link">
+            Privacy
+          </Link>
           <a
             className="chamfer-nav-link"
             href="https://discord.com/channels/1510790887125291138/1510791200234406040"
