@@ -26,7 +26,10 @@ import {
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
 import { GlossaryTerm, GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
-import { encodeErc20TransferCalldata } from "@/lib/directBuilderPayment";
+import {
+  encodeErc20TransferCalldata,
+  isDirectPaymentWalletAllowed,
+} from "@/lib/directBuilderPayment";
 import type { GlossaryTermKey } from "@/lib/glossary";
 import {
   buildMintOrderStatusMessage,
@@ -182,6 +185,8 @@ const defaultPaymentTokenDecimals = Number.parseInt(
 );
 const defaultBuilderCodeDataSuffix =
   process.env.NEXT_PUBLIC_BASE_BUILDER_CODE_DATA_SUFFIX;
+const defaultDirectPaymentAllowedWallets =
+  process.env.NEXT_PUBLIC_PORTAL_DIRECT_PAYMENT_ALLOWED_WALLETS;
 const defaultPaymentFlow: PortalPaymentFlow =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_FLOW === "base_usdc_direct_attributed"
     ? "base_usdc_direct_attributed"
@@ -392,13 +397,22 @@ function PortalContent() {
   const activeOrder =
     mintOrder?.wallet === account?.address?.toLowerCase() ? mintOrder : null;
   const checkoutEnabled = paymentSettings.checkoutEnabled;
-  const directPaymentEnabled = Boolean(paymentSettings.directPaymentEnabled);
+  const directPaymentConfigured = Boolean(paymentSettings.directPaymentEnabled);
+  const directPaymentAllowedForWallet = isDirectPaymentWalletAllowed(
+    account?.address,
+    defaultDirectPaymentAllowedWallets,
+  );
+  const directPaymentEnabled =
+    directPaymentConfigured && directPaymentAllowedForWallet;
   const paymentAmount = activeOrder?.paymentAmount ?? paymentSettings.paymentAmount;
   const paymentSeller = paymentSettings.paymentSeller;
   const paymentTokenAddress = paymentSettings.paymentTokenAddress;
   const paymentTokenDecimals =
     paymentSettings.paymentTokenDecimals ?? defaultPaymentTokenDecimals;
-  const paymentRequired = checkoutEnabled || directPaymentEnabled;
+  const paymentRequired = checkoutEnabled || directPaymentConfigured;
+  const paymentOrderStartAllowed =
+    paymentRequired &&
+    (!directPaymentConfigured || directPaymentAllowedForWallet || checkoutEnabled);
   const checkoutReady =
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
@@ -723,7 +737,8 @@ function PortalContent() {
       !thirdwebClient ||
       !paymentSeller ||
       !paymentTokenAddress ||
-      !defaultBuilderCodeDataSuffix
+      !defaultBuilderCodeDataSuffix ||
+      !directPaymentAllowedForWallet
     ) {
       setError("Direct Base payment is not fully configured.");
       return;
@@ -1194,6 +1209,8 @@ function PortalContent() {
       : deedAccepted
         ? directPaymentEnabled
           ? "Prepare a Base USDC payment or refresh an existing order."
+          : directPaymentConfigured
+            ? "Direct Base payment is limited to approved test wallets."
           : "Prepare checkout or refresh an existing order."
         : "Terms must be agreed before payment can arm.",
     mint: receipt
@@ -1915,7 +1932,7 @@ function PortalContent() {
                                   <button
                                     className="portal-pay-button portal-pay-button--ready mt-4"
                                     disabled={
-                                      !paymentRequired ||
+                                      !paymentOrderStartAllowed ||
                                       Boolean(activeOrder) ||
                                       orderBusy
                                     }
@@ -1924,7 +1941,10 @@ function PortalContent() {
                                   >
                                     <span>Pay ${paymentAmount}</span>
                                     <small>
-                                      {directPaymentEnabled
+                                      {directPaymentConfigured &&
+                                      !directPaymentAllowedForWallet
+                                        ? "Approved test wallets only"
+                                        : directPaymentEnabled
                                         ? "Base USDC direct payment"
                                         : "We cover the gas fees"}
                                     </small>
@@ -1943,6 +1963,15 @@ function PortalContent() {
                                     Payment is not enabled in this environment.
                                   </p>
                                 )}
+
+                                {checkoutPrerequisitesComplete &&
+                                  directPaymentConfigured &&
+                                  !directPaymentAllowedForWallet &&
+                                  !activeOrder && (
+                                    <p className="mt-3 text-xs uppercase tracking-[0.18em] text-yellow-100/70">
+                                      Direct payment attribution test is limited to approved wallets.
+                                    </p>
+                                  )}
 
                                 {activeOrder && paymentRequired && (
                                   <div className="mt-4 grid gap-3">
@@ -1991,6 +2020,13 @@ function PortalContent() {
                                         </small>
                                       </button>
                                     )}
+                                    {directPaymentConfigured &&
+                                      !directPaymentEnabled &&
+                                      !orderPaid && (
+                                        <p className="text-xs uppercase tracking-[0.18em] text-yellow-100/70">
+                                          Direct payment attribution test is limited to approved wallets.
+                                        </p>
+                                      )}
                                     <div className="control-surface-soft flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
                                       <span className="break-all">
                                         Order {activeOrder.orderId} / {activeOrder.status}

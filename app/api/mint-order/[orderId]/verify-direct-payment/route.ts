@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from "ethers";
 import { NextRequest, NextResponse } from "next/server";
 import {
+  isDirectPaymentWalletAllowed,
   verifyDirectBuilderPayment,
   type DirectPaymentConfig,
 } from "@/lib/directBuilderPayment";
@@ -39,6 +40,13 @@ function getBuilderCodeDataSuffix() {
 
 function getRpcUrl() {
   return process.env.BASE_RPC_URL ?? process.env.COINBASE_EAS_RPC_URL;
+}
+
+function getAllowedDirectPaymentWallets() {
+  return (
+    process.env.PORTAL_DIRECT_PAYMENT_ALLOWED_WALLETS ??
+    process.env.NEXT_PUBLIC_PORTAL_DIRECT_PAYMENT_ALLOWED_WALLETS
+  );
 }
 
 function isWalletAddress(value: string | undefined) {
@@ -129,6 +137,16 @@ export async function POST(
           "Wallet, public covenant mark, and Base transaction hash are required.",
       },
       { status: 400 },
+    );
+  }
+
+  if (!isDirectPaymentWalletAllowed(wallet, getAllowedDirectPaymentWallets())) {
+    return NextResponse.json(
+      {
+        message:
+          "Direct Builder Code payment test is not enabled for this wallet.",
+      },
+      { status: 403 },
     );
   }
 

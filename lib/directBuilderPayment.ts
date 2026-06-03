@@ -51,6 +51,33 @@ export function normalizeAddress(address: string) {
   return getAddress(address).toLowerCase();
 }
 
+export function isDirectPaymentWalletAllowed(
+  wallet: string | undefined,
+  allowedWallets?: string,
+) {
+  const allowedList = allowedWallets
+    ?.split(/[\s,]+/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  if (!allowedList || allowedList.length === 0) {
+    return true;
+  }
+
+  try {
+    const normalizedWallet = normalizeAddress(wallet ?? "");
+    return allowedList.some((entry) => {
+      try {
+        return normalizeAddress(entry) === normalizedWallet;
+      } catch {
+        return false;
+      }
+    });
+  } catch {
+    return false;
+  }
+}
+
 export function encodeErc20TransferCalldata({
   amount,
   dataSuffix = "0x",
