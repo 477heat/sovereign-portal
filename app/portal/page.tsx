@@ -212,9 +212,9 @@ const coinbaseEasUrl =
 
 const portalAppMetadata = {
   name: "Sovereign Portal",
-  url: "https://sovengine.xyz",
+  url: "https://www.sovengine.xyz",
   description: "Genesis Soul Deed minting portal on Base.",
-  logoUrl: "https://sovengine.xyz/icon.png",
+  logoUrl: "https://www.sovengine.xyz/coinbase-assets/app-icon-512.png",
 };
 const portalWallets = [
   createWallet("org.base.account", {
