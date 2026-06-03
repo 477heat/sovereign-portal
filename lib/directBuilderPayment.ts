@@ -51,17 +51,25 @@ export function normalizeAddress(address: string) {
   return getAddress(address).toLowerCase();
 }
 
+export function getDirectPaymentAllowedWalletList(allowedWallets?: string) {
+  return allowedWallets
+    ?.split(/[\s,]+/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+export function hasDirectPaymentWalletAllowlist(allowedWallets?: string) {
+  return Boolean(getDirectPaymentAllowedWalletList(allowedWallets)?.length);
+}
+
 export function isDirectPaymentWalletAllowed(
   wallet: string | undefined,
   allowedWallets?: string,
 ) {
-  const allowedList = allowedWallets
-    ?.split(/[\s,]+/)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
+  const allowedList = getDirectPaymentAllowedWalletList(allowedWallets);
 
   if (!allowedList || allowedList.length === 0) {
-    return true;
+    return false;
   }
 
   try {

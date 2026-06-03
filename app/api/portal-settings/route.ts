@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { hasDirectPaymentWalletAllowlist } from "@/lib/directBuilderPayment";
 import { getPortalMintSettings } from "@/lib/portalMintSettings";
 
 export async function GET() {
@@ -15,6 +16,9 @@ export async function GET() {
       "6",
     10,
   );
+  const directPaymentAllowedWallets =
+    process.env.NEXT_PUBLIC_PORTAL_DIRECT_PAYMENT_ALLOWED_WALLETS ??
+    process.env.PORTAL_DIRECT_PAYMENT_ALLOWED_WALLETS;
   const paymentFlow =
     process.env.NEXT_PUBLIC_PORTAL_PAYMENT_FLOW === "base_usdc_direct_attributed"
       ? "base_usdc_direct_attributed"
@@ -29,7 +33,8 @@ export async function GET() {
     Boolean(
       paymentSeller &&
         paymentTokenAddress &&
-        process.env.NEXT_PUBLIC_BASE_BUILDER_CODE_DATA_SUFFIX,
+        process.env.NEXT_PUBLIC_BASE_BUILDER_CODE_DATA_SUFFIX &&
+        hasDirectPaymentWalletAllowlist(directPaymentAllowedWallets),
     );
 
   return NextResponse.json({

@@ -1,6 +1,7 @@
 import {
   decodeErc20TransferCalldata,
   encodeErc20TransferCalldata,
+  hasDirectPaymentWalletAllowlist,
   isDirectPaymentWalletAllowed,
   verifyDirectBuilderPayment,
   type DirectPaymentConfig,
@@ -75,10 +76,15 @@ const decoded = decodeErc20TransferCalldata(validData);
 assert("decode extracts seller recipient", decoded.recipient === seller.toLowerCase());
 assert("decode extracts amount", decoded.amount === BigInt(20000));
 assert("decode preserves builder suffix", decoded.dataSuffix === builderSuffix);
-assert("empty wallet allowlist allows direct payment", isDirectPaymentWalletAllowed(expectedWallet));
+assert("empty wallet allowlist is not configured", !hasDirectPaymentWalletAllowlist());
+assert("empty wallet allowlist blocks direct payment", !isDirectPaymentWalletAllowed(expectedWallet));
 assert(
   "wallet allowlist accepts matching wallet",
   isDirectPaymentWalletAllowed(expectedWallet, `${seller}, ${expectedWallet}`),
+);
+assert(
+  "wallet allowlist is configured when a wallet is present",
+  hasDirectPaymentWalletAllowlist(`${seller}, ${expectedWallet}`),
 );
 assert(
   "wallet allowlist rejects nonmatching wallet",
