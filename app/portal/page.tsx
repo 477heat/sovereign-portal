@@ -1324,6 +1324,38 @@ function PortalContent() {
     }
   }
 
+  async function saveReceiptScreenshot() {
+    if (!receiptImageUrl || !receipt) {
+      return;
+    }
+
+    const safeName = (receipt.deedName ?? "soul-deed-screenshot")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    try {
+      const response = await fetch(receiptImageUrl);
+
+      if (!response.ok) {
+        throw new Error("Image request failed.");
+      }
+
+      const file = await response.blob();
+      const url = URL.createObjectURL(file);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = `${safeName || "soul-deed-screenshot"}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError("Screenshot save failed. Use Open Image and save it from the browser.");
+    }
+  }
+
   function returnHomeAfterReceipt() {
     const confirmed = window.confirm(
       "Save or copy your receipt first. After you leave, you can recover the latest recorded receipt with the same wallet, but this exact completion screen will close.",
@@ -1552,7 +1584,7 @@ function PortalContent() {
                     Mint Complete
                   </div>
                   <h1 className="mt-3 text-3xl font-black uppercase leading-none tracking-[0.12em] text-yellow-50 md:text-5xl">
-                    Artifact Returned
+                    Artifact Sent
                   </h1>
                   <p className="mt-4 max-w-3xl text-sm leading-6 text-yellow-50/72">
                     Save or copy these details now. This receipt is displayed
@@ -1591,6 +1623,15 @@ function PortalContent() {
                   >
                     {receiptCopied ? "Copied" : "Copy Details"}
                   </button>
+                  {receiptImageUrl && (
+                    <button
+                      className="console-key-button"
+                      onClick={() => void saveReceiptScreenshot()}
+                      type="button"
+                    >
+                      Save Screenshot
+                    </button>
+                  )}
                   {receiptMetadataUrl && (
                     <a
                       className="console-key-button"
