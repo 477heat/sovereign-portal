@@ -256,6 +256,7 @@ const previewReceipt: MintReceipt = {
   mode: "live",
   chainId: 8453,
   contractAddress: "0x2df9151c4e32082a05c686bd3092180134d17deb",
+  orderId: "preview-order-a74ce28e",
   transactionId: "a74ce28e-b3da-43d2-a821-640dea0ae3a1",
   transactionHash:
     "0xaa68adcf2dc5f2b2741b8f3c1df8a9ede6a52f48f2364c25424784d0ff5e1861",
@@ -439,7 +440,7 @@ function PortalContent() {
     : "console-status-tile--waiting";
   const receiptImageURI = receipt?.imageURI ?? receiptMetadataImageURI;
   const receiptImageUrl =
-    receipt?.imageUrl ?? ipfsToGatewayUrl(receiptImageURI);
+    ipfsToGatewayUrl(receiptImageURI) ?? receipt?.imageUrl;
   const receiptMetadataUrl =
     receipt?.metadataUrl ?? ipfsToGatewayUrl(receipt?.tokenURI);
   const receiptTxUrl = receipt?.transactionHash
@@ -452,6 +453,8 @@ function PortalContent() {
           : "Mainnet Route Ready",
         receipt.deedName,
         `Base chain ${receipt.chainId ?? 8453}`,
+        receipt.tokenId ? `Token ID: ${receipt.tokenId}` : "",
+        receipt.orderId ? `Order ID: ${receipt.orderId}` : "",
         receipt.contractAddress ? `Contract: ${receipt.contractAddress}` : "",
         receipt.transactionHash ? `Mint Tx: ${receipt.transactionHash}` : "",
         !receipt.transactionHash && receipt.transactionId
@@ -836,13 +839,25 @@ function PortalContent() {
       });
       const result = (await response.json()) as MintOrderState & {
         message?: string;
+        order?: MintOrderState;
+        receipt?: MintReceipt | null;
       };
 
       if (!response.ok) {
         throw new Error(result.message ?? "Could not refresh payment status.");
       }
 
-      setMintOrder(result);
+      setMintOrder(result.order ?? result);
+
+      if (result.receipt) {
+        setReceipt(result.receipt);
+        setSelectedGate("mint");
+        setPaymentNotice("Mint receipt restored. Save or copy it before leaving.");
+      } else if ((result.order ?? result).status === "mint_submitted") {
+        setPaymentNotice(
+          "Mint is submitted, but receipt details are still syncing. Try Recover Receipt with the same wallet.",
+        );
+      }
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
@@ -1311,7 +1326,7 @@ function PortalContent() {
 
   function returnHomeAfterReceipt() {
     const confirmed = window.confirm(
-      "Save or copy your receipt first. Once you leave this screen, the Portal will not bring you back to this exact receipt panel.",
+      "Save or copy your receipt first. After you leave, you can recover the latest recorded receipt with the same wallet, but this exact completion screen will close.",
     );
 
     if (confirmed) {
@@ -1319,106 +1334,119 @@ function PortalContent() {
     }
   }
 
+  const receiptDetailRows = receipt
+    ? [
+        receipt.tokenId
+          ? { label: "Token ID", value: receipt.tokenId }
+          : null,
+        receipt.orderId
+          ? { label: "Order ID", value: receipt.orderId }
+          : null,
+        receipt.contractAddress
+          ? { label: "Contract", value: receipt.contractAddress }
+          : null,
+        receipt.transactionHash
+          ? {
+              href: receiptTxUrl,
+              label: "Mint Tx",
+              value: receipt.transactionHash,
+            }
+          : receipt.transactionId
+            ? { label: "Engine Tx", value: receipt.transactionId }
+            : null,
+        receipt.tokenURI
+          ? {
+              href: receiptMetadataUrl,
+              label: "Metadata URI",
+              value: receipt.tokenURI,
+            }
+          : null,
+        receiptImageURI
+          ? { label: "Image URI", value: receiptImageURI }
+          : null,
+      ].filter(
+        (
+          row,
+        ): row is {
+          href?: string;
+          label: string;
+          value: string;
+        } => Boolean(row?.value),
+      )
+    : [];
+
   const receiptPanel = receipt ? (
-    <div className="control-surface-soft portal-surface-gold mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
-      <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
-        {receipt.mode === "live"
-          ? "Mainnet Mint Submitted"
-          : "Mainnet Route Ready"}
-      </div>
-      <div className="mt-3 grid gap-4 md:grid-cols-[minmax(10rem,16rem)_1fr] md:items-start">
-        {receiptImageUrl && (
-          <a
-            className="group block overflow-hidden border border-yellow-200/25 bg-black/35 p-2"
-            href={receiptImageUrl}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Image
-              alt={`Burned Soul Deed image for ${receipt.deedName}`}
-              className="aspect-square w-full object-cover shadow-[0_0_28px_rgba(250,204,21,0.18)] transition duration-200 group-hover:scale-[1.015]"
-              decoding="async"
-              height={512}
-              loading="lazy"
-              sizes="(min-width: 768px) 16rem, 100vw"
-              src={receiptImageUrl}
-              width={512}
-            />
-          </a>
-        )}
-        <div className="min-w-0 space-y-2">
-          <div className="font-semibold text-yellow-50">
+    <div className="control-surface-soft portal-receipt-panel portal-surface-gold mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
+            {receipt.mode === "live"
+              ? "Mainnet Mint Submitted"
+              : "Mainnet Route Ready"}
+          </div>
+          <div className="mt-2 font-semibold text-yellow-50">
             {receipt.deedName}
           </div>
-          <div className="text-yellow-100/70">
-            Base chain {receipt.chainId ?? 8453}
-          </div>
-          {receipt.contractAddress && (
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
-                Contract
-              </div>
-              <div className="break-all text-yellow-100/70">
-                {receipt.contractAddress}
-              </div>
+        </div>
+        <div className="control-surface-soft portal-receipt-chain-chip border border-yellow-200/25 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-yellow-100/76">
+          Base {receipt.chainId ?? 8453}
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-[minmax(12rem,18rem)_1fr] md:items-start">
+        <div className="min-w-0">
+          {receiptImageUrl ? (
+            <a
+              className="portal-receipt-image-frame group block overflow-hidden border border-yellow-200/25 bg-black/35 p-2"
+              href={receiptImageUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Image
+                alt={`Burned Soul Deed image for ${receipt.deedName}`}
+                className="aspect-square w-full object-cover shadow-[0_0_28px_rgba(250,204,21,0.18)] transition duration-200 group-hover:scale-[1.015]"
+                decoding="async"
+                height={640}
+                priority
+                sizes="(min-width: 768px) 18rem, 100vw"
+                src={receiptImageUrl}
+                width={640}
+              />
+            </a>
+          ) : (
+            <div className="portal-receipt-image-frame flex aspect-square items-center justify-center border border-yellow-200/20 bg-black/35 p-4 text-center text-xs uppercase tracking-[0.18em] text-yellow-100/58">
+              Image link pending. Save the receipt details below.
             </div>
           )}
-          {receipt.transactionHash && (
-            <div>
+          <p className="mt-3 text-xs leading-5 text-yellow-50/62">
+            Open the image to inspect the burned artifact. Marketplaces may take
+            a few minutes to refresh their own cached preview.
+          </p>
+        </div>
+
+        <div className="min-w-0 space-y-3">
+          {receiptDetailRows.map((row) => (
+            <div
+              className="control-surface-soft border border-yellow-200/14 bg-black/25 px-3 py-2"
+              key={row.label}
+            >
               <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
-                Mint Tx
+                {row.label}
               </div>
-              <a
-                className="break-all text-yellow-100/80 underline decoration-yellow-200/30 underline-offset-4 hover:text-yellow-50"
-                href={receiptTxUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {receipt.transactionHash}
-              </a>
-            </div>
-          )}
-          {!receipt.transactionHash && receipt.transactionId && (
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
-                Engine Tx
-              </div>
-              <div className="break-all text-yellow-100/70">
-                {receipt.transactionId}
-              </div>
-            </div>
-          )}
-          {receipt.tokenURI && (
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
-                Metadata URI
-              </div>
-              {receiptMetadataUrl ? (
+              {row.href ? (
                 <a
                   className="break-all text-yellow-100/80 underline decoration-yellow-200/30 underline-offset-4 hover:text-yellow-50"
-                  href={receiptMetadataUrl}
+                  href={row.href}
                   rel="noreferrer"
                   target="_blank"
                 >
-                  {receipt.tokenURI}
+                  {row.value}
                 </a>
               ) : (
-                <div className="break-all text-yellow-100/70">
-                  {receipt.tokenURI}
-                </div>
+                <div className="break-all text-yellow-100/70">{row.value}</div>
               )}
             </div>
-          )}
-          {receiptImageURI && (
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
-                Image URI
-              </div>
-              <div className="break-all text-yellow-100/70">
-                {receiptImageURI}
-              </div>
-            </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

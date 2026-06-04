@@ -1016,6 +1016,35 @@ body {
   --portal-surface-fill: rgba(36, 31, 12, 0.66);
 }
 
+.portal-control-page .portal-receipt-panel {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.07),
+    0 0 36px rgba(250, 204, 21, 0.16),
+    0 0 90px rgba(234, 179, 8, 0.08);
+}
+
+.portal-control-page .portal-receipt-image-frame {
+  animation: portal-receipt-return 680ms ease-out both;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  position: relative;
+}
+
+.portal-control-page .portal-receipt-image-frame::after {
+  background:
+    linear-gradient(115deg, transparent 0%, rgba(254, 240, 138, 0.16) 42%, transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%);
+  content: "";
+  inset: 0;
+  opacity: 0.36;
+  pointer-events: none;
+  position: absolute;
+}
+
+.portal-control-page .portal-receipt-chain-chip {
+  --portal-surface-corner: 8px;
+  width: fit-content;
+}
+
 .portal-control-page .portal-surface-cyan {
   --portal-surface-border: rgba(165, 243, 252, 0.36);
   --portal-surface-fill: rgba(8, 35, 42, 0.65);
@@ -1861,8 +1890,32 @@ body {
   }
 }
 
+@keyframes portal-receipt-return {
+  0% {
+    filter: blur(6px) brightness(1.35);
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  60% {
+    filter: blur(0) brightness(1.12);
+    opacity: 1;
+    transform: translateY(0) scale(1.01);
+  }
+
+  100% {
+    filter: blur(0) brightness(1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .portal-control-page .portal-step-icon--available {
+    animation: none;
+  }
+
+  .portal-control-page .portal-receipt-image-frame {
     animation: none;
   }
 }
