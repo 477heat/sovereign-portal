@@ -41,14 +41,19 @@ const readinessChips = [
 ];
 
 const coinbaseGlossaryTerms: GlossaryTermKey[] = [
+  "AI",
   "Artifact",
   "Base",
   "Base-native",
   "Genesis",
   "Genesis Mint",
   "Progeny",
+  "Originality",
+  "SI",
   "Sovereign Engine",
+  "Soul Mint",
   "Verified Account",
+  "Verified Human Soul",
 ];
 
 export default function CoinbaseEntryPage() {
@@ -81,7 +86,7 @@ export default function CoinbaseEntryPage() {
             <p className="mt-7 max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
               <GlossaryText
                 terms={coinbaseGlossaryTerms}
-                text="Sovereign Engine creates one Genesis artifact for one real person. Enter the main site to see the Engine, the Portal, and the future Progeny path."
+                text="The future belonged first to AI, then to SI, then to machines that could pass for humans better than humans could. The rich bought them, digital markets absorbed them, and originality became the last scarce resource. The Soul Mint was humanity's answer: a way to certify existence, reveal individuality, and tie everything a person brings into the world to one verified human soul, not a replicated machine."
               />
             </p>
 

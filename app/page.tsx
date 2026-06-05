@@ -10,6 +10,7 @@ const dayOneLaunchAt = Date.UTC(2026, 5, 5, 23, 0, 0);
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
   "Actual Supply",
+  "AI",
   "Artifact Engine",
   "Attribute Tree",
   "Attributes",
@@ -21,10 +22,13 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
   "Mint",
   "Progeny",
   "Progeny Projects",
+  "Originality",
+  "SI",
   "Soul",
   "Soul Mint",
   "Title of Ownership",
   "Vanguard",
+  "Verified Human Soul",
   "Wallet",
 ];
 

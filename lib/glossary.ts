@@ -3,6 +3,8 @@ export const glossary = {
     "A digital pass that lets a wallet use a part of the project.",
   "Actual Supply":
     "The real number of usable items or characters available. Here, it means each verified user adds one real starting profile instead of unlimited rerolls.",
+  AI:
+    "Artificial intelligence. Here, it means software or machines that can imitate, create, or compete online without being a verified human participant.",
   Alienation:
     "A formal word for giving, selling, or trading something you own.",
   Artifact:
@@ -103,6 +105,8 @@ export const glossary = {
     "A rule record meant to stop one person from claiming the first mint more than once.",
   "Operator Filter":
     "A rule that can control which marketplaces or tools may move a token.",
+  Originality:
+    "Something that comes from a real source instead of a copy. Here, it means the unique human starting point behind a Soul Mint and future creations.",
   Pinata:
     "A service that helps keep NFT files available online.",
   "Placeholder URI":
@@ -129,6 +133,8 @@ export const glossary = {
     "An ID number that tells the site what kind of proof it is checking.",
   Signature:
     "A wallet approval that proves the wallet owner said yes.",
+  SI:
+    "Synthetic intelligence. Here, it means machine intelligence that can act like a person, but does not count as a verified human origin for the Soul Mint.",
   "Smart Contract":
     "A program on a blockchain that follows set rules. Here, it controls token minting, ownership records, and royalty rules.",
   Soul:
@@ -163,6 +169,8 @@ export const glossary = {
     "The Initial Supporters status intended to carry forward into future project launches and benefits.",
   "Verified Account":
     "A Coinbase account signal used to help confirm the Portal is dealing with a real eligible account.",
+  "Verified Human Soul":
+    "A project phrase for one real person confirmed through the approved verification path, so the mint is tied to a human origin instead of a duplicate or machine account.",
   Wallet:
     "A digital account for blockchain tokens. Here, the Portal uses the connected wallet for access checks, payment, and receiving the mint.",
   "Wallet Address":
