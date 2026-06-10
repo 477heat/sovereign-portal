@@ -1193,7 +1193,7 @@ function PortalContent() {
       : "portal-step-icon--locked";
   };
   const selectedGateTitle = {
-    wallet: account?.address ? "Wallet Connected" : "Wallet Entry",
+    wallet: account?.address ? "Wallet Connected" : "User Wallet",
     eas: verification?.eligible ? "Human Verified" : "EAS Verification",
     identity: hasIdentity ? "Identity Confirmed" : "Identity Entry",
     terms: deedAccepted ? "Terms Agreed" : "Terms Agreement",
@@ -1670,33 +1670,6 @@ function PortalContent() {
             </div>
           </div>
 
-          <div className="control-surface portal-surface-cyan border border-cyan-100/20 bg-cyan-100/[0.04] px-4 py-3 text-sm leading-6 text-cyan-50/72">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="max-w-2xl">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-100/75">
-                  Receipt Recovery
-                </div>
-                <p className="mt-1">
-                  Already minted or lost the final screen? Connect the same
-                  wallet and recover the latest receipt recorded for it.
-                </p>
-              </div>
-              <button
-                className="console-key-button"
-                disabled={recoveryBusy}
-                onClick={() => void recoverMintReceipt()}
-                type="button"
-              >
-                {recoveryBusy ? "Recovering" : "Recover Receipt"}
-              </button>
-            </div>
-            {recoveryNotice && (
-              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-yellow-100/78">
-                {recoveryNotice}
-              </p>
-            )}
-          </div>
-
           <section className="min-w-0">
             <div className="relative min-w-0">
               <div className="min-w-0">
@@ -1743,7 +1716,14 @@ function PortalContent() {
                                 Active Entry
                               </div>
                               <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
-                                {selectedGateTitle}
+                                {selectedGate === "wallet" &&
+                                !account?.address ? (
+                                  <GlossaryTerm term="User Wallet">
+                                    User Wallet
+                                  </GlossaryTerm>
+                                ) : (
+                                  selectedGateTitle
+                                )}
                               </h2>
                               <p className="mt-3 text-sm leading-6 text-white/66">
                                 {selectedGateStatus}
@@ -2173,6 +2153,33 @@ function PortalContent() {
                   </div>
                 </div>
           </section>
+
+          <div className="control-surface portal-surface-cyan border border-cyan-100/20 bg-cyan-100/[0.04] px-4 py-3 text-sm leading-6 text-cyan-50/72">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="max-w-2xl">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-100/75">
+                  Receipt Recovery
+                </div>
+                <p className="mt-1">
+                  Already minted or lost the final screen? Connect the same
+                  wallet and recover the latest receipt recorded for it.
+                </p>
+              </div>
+              <button
+                className="console-key-button"
+                disabled={recoveryBusy}
+                onClick={() => void recoverMintReceipt()}
+                type="button"
+              >
+                {recoveryBusy ? "Recovering" : "Recover Receipt"}
+              </button>
+            </div>
+            {recoveryNotice && (
+              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-yellow-100/78">
+                {recoveryNotice}
+              </p>
+            )}
+          </div>
             </>
           )}
 

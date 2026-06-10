@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 5, 8, 12, 0, 0);
+const dayOneLaunchAt = Date.UTC(2026, 5, 24, 15, 0, 0);
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
   "Actual Supply",
@@ -125,6 +125,7 @@ function getCountdownParts(milliseconds: number | null) {
 
 export default function HomePage() {
   const lastScrollY = useRef(0);
+  const mobileHeaderRevealTimer = useRef<number | null>(null);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -148,6 +149,10 @@ export default function HomePage() {
       const isMobile = window.matchMedia("(max-width: 640px)").matches;
 
       if (!isMobile) {
+        if (mobileHeaderRevealTimer.current) {
+          window.clearTimeout(mobileHeaderRevealTimer.current);
+          mobileHeaderRevealTimer.current = null;
+        }
         setMobileHeaderHidden(false);
         setMobileMenuOpen(false);
         lastScrollY.current = currentScrollY;
@@ -155,8 +160,17 @@ export default function HomePage() {
       }
 
       if (currentScrollY < 24) {
-        setMobileHeaderHidden(false);
+        if (!mobileHeaderRevealTimer.current) {
+          mobileHeaderRevealTimer.current = window.setTimeout(() => {
+            setMobileHeaderHidden(false);
+            mobileHeaderRevealTimer.current = null;
+          }, 1000);
+        }
       } else {
+        if (mobileHeaderRevealTimer.current) {
+          window.clearTimeout(mobileHeaderRevealTimer.current);
+          mobileHeaderRevealTimer.current = null;
+        }
         setMobileHeaderHidden(true);
         setMobileMenuOpen(false);
       }
@@ -169,6 +183,9 @@ export default function HomePage() {
     window.addEventListener("resize", handleScroll);
 
     return () => {
+      if (mobileHeaderRevealTimer.current) {
+        window.clearTimeout(mobileHeaderRevealTimer.current);
+      }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
@@ -184,7 +201,7 @@ export default function HomePage() {
             : "max-sm:translate-y-0 max-sm:opacity-100"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 md:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 max-sm:flex-nowrap max-sm:items-start md:px-8">
           <Link
             aria-current="page"
             className="home-brand-link flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0"
@@ -203,7 +220,7 @@ export default function HomePage() {
           <button
             aria-controls="mobile-command-drawer"
             aria-expanded={mobileMenuOpen}
-            className="chamfer-nav-link chamfer-nav-link--opposite sm:hidden"
+            className="chamfer-nav-link chamfer-nav-link--opposite ml-auto shrink-0 sm:hidden"
             onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
             type="button"
           >
@@ -314,7 +331,7 @@ export default function HomePage() {
                   Launch Day
                 </div>
                 <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
-                  05 Jun 2026 / 23:00 UTC
+                  24 Jun 2026 / 15:00 UTC
                 </div>
               </Link>
               <Link

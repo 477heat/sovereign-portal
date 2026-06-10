@@ -1936,28 +1936,57 @@ body {
 }
 
 .portal-mobile-select-trigger--attention {
+  animation: portal-console-idle-glow 3s ease-in-out infinite;
   box-shadow:
-    0 0 22px rgba(103, 232, 249, 0.22),
+    0 0 0 1px rgba(103, 232, 249, 0.54),
+    0 0 20px rgba(103, 232, 249, 0.2),
     0 10px 28px rgba(0, 0, 0, 0.42);
 }
 
 .portal-mobile-select-trigger--attention::before {
-  animation: portal-console-border-trace 1.8s linear infinite;
+  animation: portal-console-corner-pulse 3s ease-in-out infinite;
   background:
-    conic-gradient(from 0deg, transparent 0deg, transparent 250deg, rgba(254, 240, 138, 0.82) 292deg, rgba(103, 232, 249, 0.82) 326deg, transparent 360deg),
-    rgba(165, 243, 252, 0.24);
-  clip-path: none;
-  filter: blur(2px);
-  inset: -70%;
+    radial-gradient(circle at 0 0, rgba(254, 240, 138, 0.72) 0 13%, transparent 24%),
+    radial-gradient(circle at 100% 100%, rgba(254, 240, 138, 0.72) 0 13%, transparent 24%),
+    rgba(103, 232, 249, 0.28);
+  filter: none;
+  inset: 0;
+  opacity: 0.58;
 }
 
-@keyframes portal-console-border-trace {
-  to {
-    transform: rotate(1turn);
+@keyframes portal-console-idle-glow {
+  0%,
+  100% {
+    filter: brightness(0.96);
+    box-shadow:
+      0 0 0 1px rgba(103, 232, 249, 0.5),
+      0 0 18px rgba(103, 232, 249, 0.18),
+      0 10px 28px rgba(0, 0, 0, 0.42);
+  }
+
+  50% {
+    filter: brightness(1.08);
+    box-shadow:
+      0 0 0 1px rgba(165, 243, 252, 0.72),
+      0 0 28px rgba(103, 232, 249, 0.3),
+      0 12px 32px rgba(0, 0, 0, 0.48);
+  }
+}
+
+@keyframes portal-console-corner-pulse {
+  0%,
+  72%,
+  100% {
+    opacity: 0.42;
+  }
+
+  84% {
+    opacity: 0.9;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .portal-mobile-select-trigger--attention,
   .portal-mobile-select-trigger--attention::before {
     animation: none;
   }
@@ -2551,6 +2580,7 @@ body {
 
 @media (max-width: 640px) {
   .home-control-page .home-hero-section {
+    min-height: 56vh !important;
     padding-bottom: 1rem !important;
     padding-top: 5.25rem !important;
   }
@@ -2581,6 +2611,11 @@ body {
   .home-control-page .home-hero-mobile-button {
     height: 2.85rem !important;
     min-height: 2.85rem !important;
+  }
+
+  .home-control-page .home-protocol-section {
+    margin-top: -3rem !important;
+    padding-top: 0 !important;
   }
 
   .home-control-page .home-countdown-title {

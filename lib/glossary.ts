@@ -171,6 +171,8 @@ export const glossary = {
     "A Coinbase account signal used to help confirm the Portal is dealing with a real eligible account.",
   "Verified Human Soul":
     "A project phrase for one real person confirmed through the approved verification path, so the mint is tied to a human origin instead of a duplicate or machine account.",
+  "User Wallet":
+    "The wallet connected by the current user. Here, it becomes the recipient for the mint and the account used for eligibility checks.",
   Wallet:
     "A digital account for blockchain tokens. Here, the Portal uses the connected wallet for access checks, payment, and receiving the mint.",
   "Wallet Address":
