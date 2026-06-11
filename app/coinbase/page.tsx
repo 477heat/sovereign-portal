@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import type { GlossaryTermKey } from "@/lib/glossary";
+
+const originArtifactImage =
+  "/coinbase-assets/sovereign-engine-origin-artifact-mobile-hero-1080x1920.webp";
 
 export const metadata: Metadata = {
   title: "Coinbase Entry",
@@ -69,8 +73,20 @@ export default function CoinbaseEntryPage() {
           <div>Base Entry // Sovereign Engine</div>
         </nav>
 
-        <section className="flex flex-1 items-center py-8 md:py-14">
-          <div className="chamfer-panel chamfer-panel--command w-full px-6 py-8 md:px-10 md:py-10">
+        <section className="coinbase-entry-hero flex flex-1 items-center py-4 md:py-14">
+          <div className="coinbase-entry-visual" aria-hidden="true">
+            <Image
+              src={originArtifactImage}
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 767px) 100vw, 38vw"
+              className="object-cover"
+            />
+            <div className="coinbase-entry-visual-scan" />
+          </div>
+
+          <div className="chamfer-panel chamfer-panel--command coinbase-entry-copy w-full px-6 py-7 md:px-10 md:py-10">
             <p className="mb-4 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/55">
               <GlossaryText
                 terms={coinbaseGlossaryTerms}
@@ -94,7 +110,7 @@ export default function CoinbaseEntryPage() {
               {readinessChips.map((chip) => (
                 <span
                   key={chip}
-                  className="border border-cyan-100/20 bg-cyan-100/[0.04] px-3 py-2 text-[0.62rem] uppercase tracking-[0.18em] text-cyan-50/68"
+                  className="coinbase-entry-chip"
                 >
                   <GlossaryText terms={coinbaseGlossaryTerms} text={chip} />
                 </span>
@@ -103,7 +119,7 @@ export default function CoinbaseEntryPage() {
 
             <Link
               href="/"
-              className="chamfer-hero-link chamfer-hero-link--primary mt-8 max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0"
+              className="chamfer-hero-link chamfer-hero-link--primary chamfer-hero-link--opposite mt-8 max-sm:!h-14 max-sm:!max-w-none max-sm:!min-w-0"
             >
               Enter SovEngine
             </Link>
