@@ -20,7 +20,7 @@ This repo owns the public website and minting user journey:
 - identity and terms UX
 - Thirdweb checkout UI
 - mint order/status screens
-- private admin UI
+- private admin UI, including mint-order lookup and token inspection
 - Vercel deployment
 
 This repo does not own protected Engine truth. Do not recalculate zodiac stats,
@@ -98,3 +98,7 @@ curl -Ls http://localhost:3000/coinbase | rg 'og:title|og:image|twitter:card|twi
 Production deploys must ship the exact reviewed commit. If the main checkout is
 dirty, use an isolated clean worktree or deployment path rather than deploying
 unreviewed local edits.
+
+Private admin support routes currently include `/admin`, `/admin/operations`,
+and `/admin/token-inspector`. Keep those routes Basic-Auth protected in
+production and do not expose token inspection helpers on public pages.

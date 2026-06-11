@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sovereign Portal
+
+Sovereign Portal is the public Next.js app for Sovereign Engine and the Soul
+Deed / Genesis Access mint path. It owns the browser experience: public pages,
+Coinbase/Base entry, wallet connection, Coinbase EAS status display, checkout,
+mint order flow, receipt recovery, and private admin support screens.
+
+Protected generation truth lives in `/Users/thebridge/Desktop/SynthesisisZodiacEngine`.
+Planning docs live in `/Users/thebridge/Desktop/StarArtifactProgram`.
 
 ## Portal mint commerce
 
@@ -73,25 +81,30 @@ npm run verify:orders
 That verifier uses the in-memory ledger path only. It does not touch DynamoDB,
 AWS, payment providers, or production mint orders.
 
-## Getting Started
+## Local Development
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For Coinbase/Base route checks, use [http://localhost:3000/coinbase](http://localhost:3000/coinbase).
+For the live mint flow, use [http://localhost:3000/portal](http://localhost:3000/portal).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Admin And Support
+
+Private admin routes are for owner/support use only:
+
+- `/admin`: contract and portal controls.
+- `/admin/operations`: mint-order lookup and receipt support.
+- `/admin/token-inspector`: token URI, metadata, image, stats, royalty quote,
+  original minter, and splitter inspection.
+
+Keep these routes Basic-Auth protected in production. They must never expose
+secrets, private keys, or backend credentials.
 
 ## Mint Wiring
 
@@ -108,17 +121,20 @@ PORTAL_MINT_WORKER_URL=
 
 `PORTAL_MINT_WORKER_URL` should point at the NFT mint worker origin. The portal posts wallet and metadata to its `/mint` route, and that worker pins metadata through Pinata before calling the Base `backendMint` path.
 
-## Learn More
+## Deployment Notes
 
-To learn more about Next.js, take a look at the following resources:
+Production deploys must ship the exact reviewed commit. After deploying changes
+that touch payment, minting, receipt recovery, or admin support, run:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run verify:portal
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+For changes that touch local order state, payment gates, or receipt state, also
+run:
 
-## Deploy on Vercel
+```bash
+npm run verify:orders
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+These checks do not perform a real mainnet mint.
