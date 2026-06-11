@@ -16,6 +16,7 @@ const recoverySignature = process.env.PORTAL_VERIFY_RECOVERY_SIGNATURE;
 const requireRealRecovery =
   process.env.PORTAL_VERIFY_REQUIRE_SIGNED_RECOVERY === "1";
 const contractTermsCid = "QmX7XvSPD1QJbv88Y8XSQKde5upKCHbhDbFgNJhgHLjwtM";
+const verifiedTokenIds = [0, 1, 2];
 
 const contractAbi = [
   "function name() view returns (string)",
@@ -71,11 +72,63 @@ async function fetchJson(pathOrUrl, init) {
 }
 
 function ipfsGatewayUrl(uri) {
-  if (!uri?.startsWith("ipfs://")) {
-    return null;
+  return ipfsGatewayUrls(uri)[0] ?? null;
+}
+
+function ipfsGatewayUrls(uri) {
+  const cid = ipfsCid(uri);
+
+  if (!cid) {
+    return [];
   }
 
-  return `https://ipfs.io/ipfs/${uri.slice("ipfs://".length)}`;
+  return [
+    `https://ipfs.io/ipfs/${cid}`,
+    `https://gateway.pinata.cloud/ipfs/${cid}`,
+    `https://dweb.link/ipfs/${cid}`,
+  ];
+}
+
+function ipfsCid(uri) {
+  return uri?.startsWith("ipfs://") ? uri.slice("ipfs://".length) : null;
+}
+
+async function fetchIpfsJson(uri) {
+  const attempts = [];
+
+  for (const url of ipfsGatewayUrls(uri)) {
+    try {
+      const result = await fetchJson(url);
+      attempts.push(`${url} -> ${result.response.status}`);
+
+      if (result.response.ok && result.json && typeof result.json === "object") {
+        return { ...result, url, attempts };
+      }
+    } catch (error) {
+      attempts.push(`${url} -> ${error.message}`);
+    }
+  }
+
+  return { response: null, json: null, text: "", url: null, attempts };
+}
+
+async function fetchIpfsHead(uri) {
+  const attempts = [];
+
+  for (const url of ipfsGatewayUrls(uri)) {
+    try {
+      const response = await fetch(url, { method: "HEAD" });
+      attempts.push(`${url} -> ${response.status}`);
+
+      if (response.ok) {
+        return { response, url, attempts };
+      }
+    } catch (error) {
+      attempts.push(`${url} -> ${error.message}`);
+    }
+  }
+
+  return { response: null, url: null, attempts };
 }
 
 function recoveryMessage(wallet) {
@@ -165,7 +218,7 @@ async function verifyContract() {
   assert("metadata remains revealed", isRevealed === true);
   assert("contract is not paused", paused === false);
 
-  for (const tokenId of [0, 1]) {
+  for (const tokenId of verifiedTokenIds) {
     const [owner, originalMinter, tokenURI, royalty] = await Promise.all([
       contract.ownerOf(tokenId),
       contract.originalMinter(tokenId),
@@ -188,26 +241,24 @@ async function verifyContract() {
 
     await verifyMetadata(tokenId, tokenURI);
   }
-
-  try {
-    await contract.ownerOf(2);
-    record("token 2 remains burned/nonexistent", false, "ownerOf(2) returned");
-  } catch {
-    record("token 2 remains burned/nonexistent", true);
-  }
 }
 
 async function verifyMetadata(tokenId, tokenURI) {
   const metadataUrl = ipfsGatewayUrl(tokenURI);
   assert(`token ${tokenId} metadata has gateway URL`, Boolean(metadataUrl), metadataUrl);
 
-  const response = await fetch(metadataUrl);
-  const metadata = await response.json();
+  const metadataResult = await fetchIpfsJson(tokenURI);
+  const metadata = metadataResult.json ?? {};
   const attrs = Array.isArray(metadata.attributes) ? metadata.attributes : [];
-  const imageUrl = ipfsGatewayUrl(metadata.image);
-  const imageResponse = imageUrl ? await fetch(imageUrl, { method: "HEAD" }) : null;
+  const imageResult = metadata.image
+    ? await fetchIpfsHead(metadata.image)
+    : { response: null, url: null, attempts: [] };
 
-  assert(`token ${tokenId} metadata returns 200`, response.status === 200);
+  assert(
+    `token ${tokenId} metadata returns JSON`,
+    Boolean(metadataResult.response?.ok && metadataResult.json),
+    metadataResult.url ?? metadataResult.attempts.join(" | "),
+  );
   assert(
     `token ${tokenId} metadata name is current title`,
     metadata.name === "Certificate of Title for Spiritual Ownership",
@@ -229,7 +280,11 @@ async function verifyMetadata(tokenId, tokenURI) {
     `token ${tokenId} metadata links contract terms`,
     JSON.stringify(metadata).includes(contractTermsCid),
   );
-  assert(`token ${tokenId} image returns 200`, imageResponse?.status === 200, metadata.image);
+  assert(
+    `token ${tokenId} image returns 200`,
+    imageResult.response?.status === 200,
+    imageResult.url ?? imageResult.attempts.join(" | "),
+  );
 }
 
 async function verifyEas() {

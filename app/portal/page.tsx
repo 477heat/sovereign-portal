@@ -261,11 +261,11 @@ const previewReceipt: MintReceipt = {
   transactionId: "a74ce28e-b3da-43d2-a821-640dea0ae3a1",
   transactionHash:
     "0xaa68adcf2dc5f2b2741b8f3c1df8a9ede6a52f48f2364c25424784d0ff5e1861",
-  tokenURI: "ipfs://QmcYVhohGRg1ERD5upTPQ2C54vgm4taRouDxWcFtxpL5zj",
-  metadataUrl: "https://ipfs.io/ipfs/QmcYVhohGRg1ERD5upTPQ2C54vgm4taRouDxWcFtxpL5zj",
-  ipfsHash: "QmcYVhohGRg1ERD5upTPQ2C54vgm4taRouDxWcFtxpL5zj",
-  imageURI: "ipfs://QmTM1UygFAAVQYarsQh2L5dEhqoKcaSm4adX8oGUSYW3Ap",
-  imageUrl: "https://ipfs.io/ipfs/QmTM1UygFAAVQYarsQh2L5dEhqoKcaSm4adX8oGUSYW3Ap",
+  tokenURI: "ipfs://QmeAcwMSCHMngHo11qWWiwdgn8cPBiumBbH9yCpAv4Sis2",
+  metadataUrl: "https://ipfs.io/ipfs/QmeAcwMSCHMngHo11qWWiwdgn8cPBiumBbH9yCpAv4Sis2",
+  ipfsHash: "QmeAcwMSCHMngHo11qWWiwdgn8cPBiumBbH9yCpAv4Sis2",
+  imageURI: "ipfs://Qmf2cpm1J2iBa87qgbSY1NmsYTkWS2DF9gS6Nr3Qpjh1tE",
+  imageUrl: "https://ipfs.io/ipfs/Qmf2cpm1J2iBa87qgbSY1NmsYTkWS2DF9gS6Nr3Qpjh1tE",
 };
 
 function parseTokenUnits(amount: string, decimals: number) {
