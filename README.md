@@ -17,6 +17,11 @@ environment value as the live price without checking `/api/portal-settings`.
 - Mint orders use a DynamoDB table named by `PORTAL_LEDGER_TABLE`. The table only
   needs a string partition key named `pk`; it stores the order record and the
   one-wallet mint claim.
+- The IAM principal used by Vercel for the ledger needs these table-scoped
+  DynamoDB actions: `GetItem`, `PutItem`, `UpdateItem`, `DeleteItem`, and
+  `ConditionCheckItem`. The app uses `ConditionCheckItem` inside order creation
+  transactions to block wallets that already have a submitted mint before a new
+  checkout order is opened.
 - Submitted mint orders store receipt recovery fields when the mint succeeds:
   transaction identifiers, token URI, image URI, deed name, and chain details.
 - Users can recover the latest submitted mint receipt for their connected wallet
