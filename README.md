@@ -24,6 +24,9 @@ environment value as the live price without checking `/api/portal-settings`.
   checkout order is opened.
 - Submitted mint orders store receipt recovery fields when the mint succeeds:
   transaction identifiers, token URI, image URI, deed name, and chain details.
+- Receipt display keeps canonical `ipfs://` metadata/image URIs, but converts
+  them through the Pinata public gateway first for browser previews. The public
+  `ipfs.io` gateway remains a fallback because fresh pins can fail or lag there.
 - Users can recover the latest submitted mint receipt for their connected wallet
   through a signed wallet recovery request. The private admin operations page can
   look up orders by order ID or wallet for support triage.

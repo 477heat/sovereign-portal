@@ -14,6 +14,7 @@ import {
   getClientIp,
   rateLimitResponse,
 } from "@/lib/rateLimit";
+import { ipfsGatewayUrl } from "@/lib/ipfs";
 import { SOUL_DEED_CONTRACT_ADDRESS } from "@/lib/soulContract";
 
 const BASE_MAINNET_CHAIN_ID = 8453;
@@ -47,22 +48,6 @@ type MintWorkerResult = {
   ipfsHash?: string;
   error?: string;
 };
-
-function ipfsGatewayUrl(uri: string | undefined) {
-  if (!uri) {
-    return undefined;
-  }
-
-  if (uri.startsWith("ipfs://")) {
-    return `https://ipfs.io/ipfs/${uri.slice("ipfs://".length)}`;
-  }
-
-  if (uri.startsWith("https://")) {
-    return uri;
-  }
-
-  return undefined;
-}
 
 function isWalletAddress(value: string | undefined) {
   return Boolean(value?.match(/^0x[a-fA-F0-9]{40}$/));

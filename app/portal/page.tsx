@@ -35,6 +35,7 @@ import {
   buildMintOrderStatusMessage,
   buildMintRecoveryMessage,
 } from "@/lib/portalMessages";
+import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
 
 const portalEasGlossaryTerms: GlossaryTermKey[] = [
   "Attestation",
@@ -316,22 +317,6 @@ function shortAddress(address?: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-function ipfsToGatewayUrl(uri?: string) {
-  if (!uri) {
-    return undefined;
-  }
-
-  if (uri.startsWith("ipfs://")) {
-    return `https://ipfs.io/ipfs/${uri.slice("ipfs://".length)}`;
-  }
-
-  if (uri.startsWith("https://")) {
-    return uri;
-  }
-
-  return undefined;
-}
-
 function PortalContent() {
   const account = useActiveAccount();
   const activeWallet = useActiveWallet();
@@ -362,6 +347,10 @@ function PortalContent() {
   const [receiptMetadataImageURI, setReceiptMetadataImageURI] = useState<
     string | undefined
   >();
+  const [receiptImageFallback, setReceiptImageFallback] = useState({
+    index: 0,
+    key: "",
+  });
   const [mintOrder, setMintOrder] = useState<MintOrderState | null>(null);
   const [paymentSettings, setPaymentSettings] = useState<PortalPaymentSettings>({
     checkoutEnabled: defaultCheckoutEnabled,
@@ -439,10 +428,19 @@ function PortalContent() {
     ? "console-status-tile--entered"
     : "console-status-tile--waiting";
   const receiptImageURI = receipt?.imageURI ?? receiptMetadataImageURI;
+  const receiptImageUrls = useMemo(
+    () => ipfsGatewayUrls(receiptImageURI, receipt?.imageUrl),
+    [receipt?.imageUrl, receiptImageURI],
+  );
+  const receiptImageKey = `${receiptImageURI ?? ""}|${receipt?.imageUrl ?? ""}`;
+  const receiptImageUrlIndex =
+    receiptImageFallback.key === receiptImageKey
+      ? receiptImageFallback.index
+      : 0;
   const receiptImageUrl =
-    ipfsToGatewayUrl(receiptImageURI) ?? receipt?.imageUrl;
+    receiptImageUrls[receiptImageUrlIndex] ?? receiptImageUrls[0];
   const receiptMetadataUrl =
-    receipt?.metadataUrl ?? ipfsToGatewayUrl(receipt?.tokenURI);
+    ipfsGatewayUrl(receipt?.tokenURI) ?? receipt?.metadataUrl;
   const receiptTxUrl = receipt?.transactionHash
     ? `https://basescan.org/tx/${receipt.transactionHash}`
     : undefined;
@@ -611,7 +609,7 @@ function PortalContent() {
         return;
       }
 
-      const metadataUrl = ipfsToGatewayUrl(receipt.tokenURI);
+      const metadataUrl = ipfsGatewayUrl(receipt.tokenURI);
 
       if (!metadataUrl) {
         return;
@@ -1439,6 +1437,25 @@ function PortalContent() {
                 className="aspect-square w-full object-cover shadow-[0_0_28px_rgba(250,204,21,0.18)] transition duration-200 group-hover:scale-[1.015]"
                 decoding="async"
                 height={640}
+                onError={() => {
+                  setReceiptImageFallback((current) => {
+                    if (receiptImageUrls.length <= 1) {
+                      return current;
+                    }
+
+                    if (current.key !== receiptImageKey) {
+                      return { index: 1, key: receiptImageKey };
+                    }
+
+                    return {
+                      index: Math.min(
+                        current.index + 1,
+                        receiptImageUrls.length - 1,
+                      ),
+                      key: receiptImageKey,
+                    };
+                  });
+                }}
                 priority
                 sizes="(min-width: 768px) 18rem, 100vw"
                 src={receiptImageUrl}
