@@ -1,5 +1,8 @@
 const DEFAULT_IPFS_GATEWAY_BASE = "https://gateway.pinata.cloud/ipfs/";
-const FALLBACK_IPFS_GATEWAY_BASES = ["https://ipfs.io/ipfs/"];
+const FALLBACK_IPFS_GATEWAY_BASES = [
+  "https://ipfs.io/ipfs/",
+  "https://dweb.link/ipfs/",
+];
 const CID_PATTERN = /^(Qm[1-9A-HJ-NP-Za-km-z]{44}|baf[a-z0-9]{20,})$/i;
 
 function normalizeGatewayBase(value: string) {

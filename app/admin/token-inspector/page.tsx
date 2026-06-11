@@ -10,7 +10,7 @@ import {
   useActiveAccount,
 } from "thirdweb/react";
 import { formatEther, parseEther } from "ethers";
-import { ipfsGatewayUrl } from "@/lib/ipfs";
+import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
 import { SOUL_DEED_CONTRACT_ADDRESS } from "@/lib/soulContract";
 
 const CONTRACT_ADDRESS = SOUL_DEED_CONTRACT_ADDRESS;
@@ -232,30 +232,47 @@ function getMetadataFacts(metadata?: TokenMetadata) {
 }
 
 async function fetchTokenMetadata(tokenURI: string) {
-  const metadataUrl = ipfsGatewayUrl(tokenURI);
+  const metadataUrls = ipfsGatewayUrls(tokenURI);
 
-  if (!metadataUrl) {
+  if (!metadataUrls.length) {
     throw new Error(
       "Token URI must be an ipfs:// URI, bare IPFS CID, or https:// gateway URL.",
     );
   }
 
-  const response = await fetch(metadataUrl, { cache: "no-store" });
+  const attempts: string[] = [];
 
-  if (!response.ok) {
-    throw new Error(`Metadata fetch failed with status ${response.status}.`);
+  for (const metadataUrl of metadataUrls) {
+    try {
+      const response = await fetch(metadataUrl, { cache: "no-store" });
+
+      attempts.push(`${metadataUrl} returned ${response.status}`);
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const metadata = (await response.json()) as TokenMetadata;
+      const imageURI =
+        typeof metadata.image === "string" ? metadata.image : undefined;
+      const imageUrl = imageURI ? ipfsGatewayUrl(imageURI) : undefined;
+
+      return {
+        metadata,
+        metadataUrl,
+        imageURI,
+        imageUrl,
+      };
+    } catch (caughtError) {
+      attempts.push(
+        `${metadataUrl} failed: ${
+          caughtError instanceof Error ? caughtError.message : "unknown error"
+        }`,
+      );
+    }
   }
 
-  const metadata = (await response.json()) as TokenMetadata;
-  const imageURI = typeof metadata.image === "string" ? metadata.image : undefined;
-  const imageUrl = imageURI ? ipfsGatewayUrl(imageURI) : undefined;
-
-  return {
-    metadata,
-    metadataUrl,
-    imageURI,
-    imageUrl,
-  };
+  throw new Error(`Metadata fetch failed across gateways. ${attempts.join(" | ")}`);
 }
 
 function StatusLine({
