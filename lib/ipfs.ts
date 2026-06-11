@@ -1,16 +1,27 @@
 const DEFAULT_IPFS_GATEWAY_BASE = "https://gateway.pinata.cloud/ipfs/";
 const FALLBACK_IPFS_GATEWAY_BASES = ["https://ipfs.io/ipfs/"];
+const CID_PATTERN = /^(Qm[1-9A-HJ-NP-Za-km-z]{44}|baf[a-z0-9]{20,})$/i;
 
 function normalizeGatewayBase(value: string) {
   return value.endsWith("/") ? value : `${value}/`;
 }
 
 export function ipfsCidFromUri(uri?: string) {
-  if (!uri?.startsWith("ipfs://")) {
+  const value = uri?.trim();
+
+  if (!value) {
     return undefined;
   }
 
-  return uri.slice("ipfs://".length);
+  if (value.startsWith("ipfs://")) {
+    return value.slice("ipfs://".length).replace(/^ipfs\//, "");
+  }
+
+  if (CID_PATTERN.test(value)) {
+    return value;
+  }
+
+  return undefined;
 }
 
 export function ipfsGatewayUrl(uri?: string) {

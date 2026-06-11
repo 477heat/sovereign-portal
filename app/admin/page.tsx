@@ -56,16 +56,6 @@ type ContractSettings = {
   dynamicURIEndpoint: string;
 };
 
-type TokenLookup = {
-  tokenId: bigint;
-  originalMinter: string;
-  royaltySplitter: string;
-  tokenURI: string;
-  salePriceWei: bigint;
-  royaltyReceiver: string;
-  royaltyAmountWei: bigint;
-};
-
 type PortalMintSettings = {
   paymentAmount: string;
   updatedAt?: string;
@@ -157,18 +147,81 @@ function StatusLine({
 
 function Panel({
   title,
+  eyebrow,
   children,
+  tone = "cyan",
 }: {
   title: string;
+  eyebrow?: string;
   children: ReactNode;
+  tone?: "cyan" | "gold" | "red";
 }) {
+  const tones = {
+    cyan: "border-cyan-200/20 bg-cyan-200/[0.035]",
+    gold: "border-yellow-200/25 bg-yellow-200/[0.045]",
+    red: "border-rose-300/25 bg-rose-300/[0.045]",
+  };
+
   return (
-    <section className="border border-white/10 bg-black/55 p-4 md:p-5">
-      <h2 className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-white/60">
-        {title}
-      </h2>
+    <section
+      className={`control-surface relative overflow-hidden border p-4 shadow-[0_0_32px_rgba(34,211,238,0.06)] md:p-5 ${tones[tone]}`}
+    >
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div>
+          {eyebrow && (
+            <div className="mb-1 text-[10px] uppercase tracking-[0.32em] text-cyan-100/45">
+              {eyebrow}
+            </div>
+          )}
+          <h2 className="text-sm font-medium uppercase tracking-[0.24em] text-white/75">
+            {title}
+          </h2>
+        </div>
+        <div className="h-2 w-2 rounded-full bg-cyan-200 shadow-[0_0_18px_rgba(103,232,249,0.85)]" />
+      </div>
       {children}
     </section>
+  );
+}
+
+function Foldout({
+  title,
+  subtitle,
+  children,
+  defaultOpen = false,
+  tone = "cyan",
+}: {
+  title: string;
+  subtitle: string;
+  children: ReactNode;
+  defaultOpen?: boolean;
+  tone?: "cyan" | "gold" | "red";
+}) {
+  const tones = {
+    cyan: "border-cyan-200/20 bg-cyan-200/[0.035]",
+    gold: "border-yellow-200/25 bg-yellow-200/[0.045]",
+    red: "border-rose-300/25 bg-rose-300/[0.045]",
+  };
+
+  return (
+    <details
+      className={`control-surface group border p-4 md:p-5 ${tones[tone]}`}
+      open={defaultOpen}
+    >
+      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3">
+        <div>
+          <div className="text-sm font-medium uppercase tracking-[0.24em] text-white/75">
+            {title}
+          </div>
+          <div className="mt-1 text-xs leading-5 text-white/45">{subtitle}</div>
+        </div>
+        <span className="border border-white/15 bg-black/45 px-3 py-2 text-[10px] uppercase tracking-[0.24em] text-cyan-100/70">
+          <span className="group-open:hidden">Open</span>
+          <span className="hidden group-open:inline">Close</span>
+        </span>
+      </summary>
+      <div className="mt-5">{children}</div>
+    </details>
   );
 }
 
@@ -269,6 +322,31 @@ function StatRow({
   );
 }
 
+function CommandTile({
+  label,
+  value,
+  tone = "idle",
+}: {
+  label: string;
+  value: ReactNode;
+  tone?: "idle" | "ok" | "warn";
+}) {
+  const tones = {
+    idle: "border-white/10 bg-white/[0.03] text-white/75",
+    ok: "border-emerald-300/35 bg-emerald-300/10 text-emerald-100",
+    warn: "border-rose-300/35 bg-rose-300/10 text-rose-100",
+  };
+
+  return (
+    <div className={`control-surface-soft border px-3 py-3 ${tones[tone]}`}>
+      <div className="text-[10px] uppercase tracking-[0.24em] text-white/40">
+        {label}
+      </div>
+      <div className="mt-2 break-all text-sm font-medium">{value}</div>
+    </div>
+  );
+}
+
 function AdminContent() {
   const account = useActiveAccount();
   const [owner, setOwner] = useState("");
@@ -295,9 +373,6 @@ function AdminContent() {
   const [loadedTokenURIValue, setLoadedTokenURIValue] = useState("");
   const [blacklistAddress, setBlacklistAddress] = useState("");
   const [blacklistBlocked, setBlacklistBlocked] = useState(true);
-  const [tokenId, setTokenId] = useState("0");
-  const [salePrice, setSalePrice] = useState("1");
-  const [tokenLookup, setTokenLookup] = useState<TokenLookup | null>(null);
   const [portalPaymentAmount, setPortalPaymentAmount] = useState("");
   const [compWallet, setCompWallet] = useState("");
   const [compFirstName, setCompFirstName] = useState("");
@@ -502,7 +577,6 @@ function AdminContent() {
     setNotice("");
     setSettings(null);
     setPortalMintSettings(null);
-    setTokenLookup(null);
     setComplimentaryOrder(null);
 
     try {
@@ -847,67 +921,6 @@ function AdminContent() {
     await writeContract("Metadata freeze", "function freezeMetadata()");
   }
 
-  async function lookupToken(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!soulContract || !ownerConnected) {
-      return;
-    }
-
-    setPendingAction("Token lookup");
-    setError("");
-    setNotice("");
-
-    try {
-      const nextTokenId = parseTokenId(tokenId);
-      const salePriceWei = parsePositiveEth(salePrice, "Sale price");
-      const [originalMinter, royaltySplitter, tokenURI, royaltyInfo] =
-        await Promise.all([
-          readContract({
-            contract: soulContract,
-            method: "function originalMinter(uint256 tokenId) view returns (address)",
-            params: [nextTokenId],
-          }),
-          readContract({
-            contract: soulContract,
-            method: "function royaltySplitter(uint256 tokenId) view returns (address)",
-            params: [nextTokenId],
-          }),
-          readContract({
-            contract: soulContract,
-            method: "function tokenURI(uint256 tokenId) view returns (string)",
-            params: [nextTokenId],
-          }),
-          readContract({
-            contract: soulContract,
-            method:
-              "function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns (address receiver, uint256 royaltyAmount)",
-            params: [nextTokenId, salePriceWei],
-          }),
-        ]);
-
-      setTokenLookup({
-        tokenId: nextTokenId,
-        originalMinter,
-        royaltySplitter,
-        tokenURI,
-        salePriceWei,
-        royaltyReceiver: royaltyInfo[0],
-        royaltyAmountWei: royaltyInfo[1],
-      });
-      setNotice("Token lookup complete.");
-    } catch (caughtError) {
-      setTokenLookup(null);
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Token lookup failed.",
-      );
-    } finally {
-      setPendingAction("");
-    }
-  }
-
   if (!thirdwebClient || !soulContract) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 py-6 text-white md:px-8">
@@ -936,6 +949,12 @@ function AdminContent() {
               href="/admin/operations"
             >
               Operations
+            </Link>
+            <Link
+              className="border border-yellow-200/35 bg-yellow-200/10 px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-yellow-100 transition hover:bg-yellow-200/20"
+              href="/admin/token-inspector"
+            >
+              Token Inspector
             </Link>
           </div>
           <div className="text-[10px] uppercase tracking-[0.3em] text-yellow-300/70">
@@ -1023,22 +1042,83 @@ function AdminContent() {
 
         {ownerConnected && settings && (
           <>
-            <Panel title="Live State">
-              <div className="grid gap-x-6 xl:grid-cols-2">
-                <StatRow label="Mint price" value={formatNativeAmount(settings.mintPriceWei)} />
-                <StatRow label="Burn fee" value={formatNativeAmount(settings.burnFeeWei)} />
-                <StatRow label="Platform vault" value={settings.platformVault} />
-                <StatRow label="Founder wallet" value={settings.founderWallet} />
-                <StatRow label="Backend minter" value={settings.backendMinter} />
-                <StatRow label="Backend burner" value={settings.backendBurner} />
-                <StatRow label="Royalty" value={`${settings.totalRoyaltyBps.toString()} bps`} />
-                <StatRow label="Splitter implementation" value={settings.splitterImplementation} />
-                <StatRow label="Placeholder URI" value={settings.placeholderURI || "Empty"} />
-                <StatRow label="Dynamic URI" value={settings.dynamicURIEndpoint || "Empty"} />
+            <Panel eyebrow="Command Status" title="Live Control Readout">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                <CommandTile
+                  label="Contract"
+                  tone={settings.paused ? "warn" : "ok"}
+                  value={settings.paused ? "Paused" : "Active"}
+                />
+                <CommandTile
+                  label="Metadata"
+                  tone={settings.metadataFrozen ? "warn" : "ok"}
+                  value={settings.metadataFrozen ? "Frozen" : "Mutable"}
+                />
+                <CommandTile
+                  label="Reveal"
+                  tone={settings.isRevealed ? "ok" : "warn"}
+                  value={settings.isRevealed ? "Revealed" : "Hidden"}
+                />
+                <CommandTile
+                  label="Burn Path"
+                  tone={settings.burnActive ? "ok" : "idle"}
+                  value={settings.burnActive ? "Enabled" : "Disabled"}
+                />
+                <CommandTile
+                  label="Mint Price"
+                  value={formatNativeAmount(settings.mintPriceWei)}
+                />
+                <CommandTile
+                  label="Burn Fee"
+                  value={formatNativeAmount(settings.burnFeeWei)}
+                />
+                <CommandTile
+                  label="Royalty"
+                  value={`${settings.totalRoyaltyBps.toString()} bps`}
+                />
+                <CommandTile
+                  label="Trading"
+                  tone={settings.tradingAllowed ? "ok" : "warn"}
+                  value={settings.tradingAllowed ? "Allowed" : "Disabled"}
+                />
+              </div>
+
+              <details className="mt-4 border-t border-white/10 pt-4">
+                <summary className="cursor-pointer text-[10px] uppercase tracking-[0.24em] text-cyan-100/55">
+                  Contract Address Details
+                </summary>
+                <div className="grid gap-x-6 xl:grid-cols-2">
+                  <StatRow label="Platform vault" value={settings.platformVault} />
+                  <StatRow label="Founder wallet" value={settings.founderWallet} />
+                  <StatRow label="Backend minter" value={settings.backendMinter} />
+                  <StatRow label="Backend burner" value={settings.backendBurner} />
+                  <StatRow label="Splitter implementation" value={settings.splitterImplementation} />
+                  <StatRow label="Placeholder URI" value={settings.placeholderURI || "Empty"} />
+                  <StatRow label="Dynamic URI" value={settings.dynamicURIEndpoint || "Empty"} />
+                </div>
+              </details>
+            </Panel>
+
+            <Panel eyebrow="Daily Tool" title="Token Inspector" tone="gold">
+              <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+                <p className="text-sm leading-6 text-white/58">
+                  Token stats, metadata, image preview, royalty routing, and
+                  encrypted payload review now live in their own compact console.
+                </p>
+                <Link
+                  className="min-h-11 border border-yellow-200/55 bg-yellow-200/10 px-4 py-3 text-center text-xs font-medium uppercase tracking-[0.22em] text-yellow-100 transition hover:bg-yellow-200/20"
+                  href="/admin/token-inspector"
+                >
+                  Open Inspector
+                </Link>
               </div>
             </Panel>
 
-            <Panel title="Portal Checkout And Comp Mints">
+            <Foldout
+              defaultOpen
+              subtitle="Checkout pricing and complimentary mint orders."
+              title="Mint Operations"
+            >
               <div className="grid gap-5 xl:grid-cols-2">
                 <form className="grid gap-3" onSubmit={handlePortalMintPrice}>
                   <div className="grid gap-2">
@@ -1106,8 +1186,12 @@ function AdminContent() {
                   )}
                 </form>
               </div>
-            </Panel>
+            </Foldout>
 
+            <Foldout
+              subtitle="On-chain prices and transfer state toggles. Use deliberately."
+              title="Economics And Contract Switches"
+            >
             <section className="grid gap-5 xl:grid-cols-2">
               <Panel title="Economics">
                 <div className="grid gap-4">
@@ -1237,7 +1321,12 @@ function AdminContent() {
                 </div>
               </Panel>
             </section>
+            </Foldout>
 
+            <Foldout
+              subtitle="Authority addresses and future splitter implementation routing."
+              title="Wallet Authority"
+            >
             <Panel title="Wallets And Splitter">
               <div className="grid gap-4 xl:grid-cols-2">
                 <form
@@ -1316,7 +1405,13 @@ function AdminContent() {
                 </form>
               </div>
             </Panel>
+            </Foldout>
 
+            <Foldout
+              subtitle="Metadata mutation, reveal controls, freeze control, and marketplace blacklist."
+              title="Metadata Maintenance And Safety Lists"
+              tone="red"
+            >
             <section className="grid gap-5 xl:grid-cols-2">
               <Panel title="Metadata">
                 <div className="grid gap-4">
@@ -1437,30 +1532,8 @@ function AdminContent() {
                 </form>
               </Panel>
             </section>
+            </Foldout>
 
-            <Panel title="Token Royalty Lookup">
-              <form className="grid gap-3 md:grid-cols-[170px_200px_auto]" onSubmit={lookupToken}>
-                <Field label="Token ID" onChange={setTokenId} type="number" value={tokenId} />
-                <Field label="Sale price in ETH" onChange={setSalePrice} type="number" value={salePrice} />
-                <SubmitButton disabled={busy} label="Read Token" />
-              </form>
-
-              {tokenLookup && (
-                <div className="mt-4 grid gap-x-6 xl:grid-cols-2">
-                  <StatRow label="Token ID" value={tokenLookup.tokenId.toString()} />
-                  <StatRow label="Original minter" value={tokenLookup.originalMinter} />
-                  <StatRow label="Royalty splitter" value={tokenLookup.royaltySplitter} />
-                  <StatRow label="Royalty receiver" value={tokenLookup.royaltyReceiver} />
-                  <StatRow
-                    label="Royalty quote"
-                    value={`${formatNativeAmount(tokenLookup.royaltyAmountWei)} on ${formatNativeAmount(
-                      tokenLookup.salePriceWei,
-                    )}`}
-                  />
-                  <StatRow label="Token URI" value={tokenLookup.tokenURI || "Empty"} />
-                </div>
-              )}
-            </Panel>
           </>
         )}
       </div>
