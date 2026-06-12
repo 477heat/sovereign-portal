@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { AnimatedFrame } from "@/components/command/AnimatedFrame";
+import { AssemblingPanel } from "@/components/command/AssemblingPanel";
+import { MovingLines } from "@/components/command/MovingLines";
+import { PuffField } from "@/components/command/PuffField";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import type { GlossaryTermKey } from "@/lib/glossary";
@@ -78,115 +82,130 @@ const policyPanels = [
 
 export default function VanguardPrivilegesPage() {
   return (
-    <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-5 py-6 font-mono text-white md:px-10 md:py-10">
-      <TunnelBackdrop layer="page" variant="diffused" />
+    <main className="info-control-page command-room-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 font-mono text-white md:px-8">
+      <TunnelBackdrop layer="page" variant="diffused" rings />
 
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <nav className="mb-8 flex flex-col gap-3 border-b border-cyan-200/10 pb-5 text-[0.62rem] uppercase tracking-[0.22em] text-cyan-50/70 md:flex-row md:items-center md:justify-between">
+      <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
+        <nav className="command-room__topbar">
           <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
             Home
           </Link>
-          <div>Access // Vanguard Status</div>
+          <div>Charter Bay // Vanguard Status</div>
+          <Link href="/engine-lab" className="chamfer-nav-link chamfer-nav-link--compact">
+            Engine Lab
+          </Link>
         </nav>
 
-        <header className="chamfer-panel chamfer-panel--command mb-8 px-6 py-7 md:px-10 md:py-9">
-          <div className="mb-5 flex flex-wrap items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-            <span>Initial Supporters</span>
-            <span className="h-px w-10 bg-cyan-100/20" />
-            <span>wallet-linked</span>
-            <span className="h-px w-10 bg-cyan-100/20" />
-            <span>legacy status</span>
-          </div>
-          <div className="grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-end">
-            <div>
-              <p className="mb-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/55">
-                Charter Layer
-              </p>
-              <h1 className="max-w-3xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 md:text-5xl">
-                Vanguard Status
-              </h1>
-            </div>
-            <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              <GlossaryText
-                terms={vanguardGlossaryTerms}
-                text="Vanguards are the Initial Supporters class for Sovereign Engine: wallet-linked origin wallets with planned Launch Day Progeny access, future Engine mints, and discounted project benefits."
-              />
-            </p>
-          </div>
-        </header>
-
-        <section className="mb-9 grid gap-4 md:grid-cols-4">
-          {statusPanels.map((panel) => (
-            <Link
-              key={panel.label}
-              href={panel.href}
-              className="chamfer-panel chamfer-panel--interactive chamfer-panel--small p-5"
-            >
-              <div className="text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-                {panel.label}
-              </div>
-              <div className="mt-3 text-2xl uppercase tracking-normal text-cyan-50">
-                {panel.value}
-              </div>
-              <p className="mt-3 text-sm leading-6 text-cyan-50/66">{panel.body}</p>
-            </Link>
-          ))}
-        </section>
-
-        <section className="chamfer-panel chamfer-panel--wide mb-9 px-6 py-7 md:px-9 md:py-8">
-          <div className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-center">
-            <div>
-              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-cyan-100/50">
-                User Summary
-              </p>
-              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
-                What Vanguard Means
-              </h2>
-            </div>
-            <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              <GlossaryText
-                terms={vanguardGlossaryTerms}
-                text="Vanguard status is the named early-supporter layer for wallets that enter the Engine before Launch Day. The goal is simple: early supporters keep visible access, receive planned Progeny opportunities, and get better pricing on in-house creations as the Engine expands."
-              />
-            </p>
-          </div>
-        </section>
-
-        <div className="space-y-5 pb-16">
-          {policyPanels.map((panel) => (
-            <section
-              key={panel.id}
-              id={panel.id}
-              className="chamfer-panel chamfer-panel--policy mx-auto max-w-5xl scroll-mt-24 px-6 py-6 md:px-8"
-            >
-              <div className="grid gap-5 md:grid-cols-[6rem_1fr_auto] md:items-start">
-                <div>
-                  <p className="mb-2 text-[0.62rem] uppercase tracking-[0.32em] text-cyan-100/35">
-                    {panel.number}
-                  </p>
-                  <div className="h-px w-8 bg-cyan-100/20" />
-                </div>
-                <div>
-                  <h2 className="mb-4 text-lg font-semibold uppercase tracking-normal text-cyan-50 md:text-xl">
-                    {panel.title}
-                  </h2>
-                  <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
-                    <GlossaryText
-                      terms={vanguardGlossaryTerms}
-                      text={panel.body}
-                    />
-                  </p>
-                </div>
+        <section className="command-room__grid grid flex-1 gap-5 py-5">
+          <AssemblingPanel
+            className="command-room__rail border border-cyan-200/15 bg-black/50 p-4"
+            title="Vanguard Rail"
+          >
+            <div className="command-room__status-stack">
+              {statusPanels.map((panel) => (
                 <Link
-                  href={panel.link.href}
-                  className="chamfer-hero-link chamfer-hero-link--secondary justify-self-start md:justify-self-end"
+                  className="command-room__status-link"
+                  href={panel.href}
+                  key={panel.label}
                 >
-                  {panel.link.label}
+                  <span>{panel.label}</span>
+                  <strong>{panel.value}</strong>
+                  <small>{panel.body}</small>
                 </Link>
+              ))}
+            </div>
+
+            <div className="command-room__rail-actions">
+              <Link href="/economics" className="chamfer-nav-link chamfer-nav-link--compact">
+                Economy
+              </Link>
+              <Link href="/whitepaper#vanguard" className="chamfer-nav-link chamfer-nav-link--compact">
+                Whitepaper
+              </Link>
+              <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
+                Portal
+              </Link>
+            </div>
+          </AssemblingPanel>
+
+          <AnimatedFrame
+            className="command-room__viewport min-h-[38rem]"
+            label="Initial Supporter Array"
+          >
+            <MovingLines />
+            <PuffField />
+            <div className="engine-screen-grid absolute inset-0 opacity-45" aria-hidden="true" />
+            <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
+            <div className="command-room__beacon" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+
+            <div className="command-room__viewport-content relative z-10 grid min-h-[34rem] content-between gap-8 p-5 md:p-8">
+              <div>
+                <div className="command-room__signal-row">
+                  <span>Initial Supporters</span>
+                  <span>wallet-linked</span>
+                  <span>legacy status</span>
+                </div>
+                <p className="mt-7 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/58">
+                  Charter Layer
+                </p>
+                <h1 className="command-lab__headline mt-4 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 md:text-5xl">
+                  Vanguard Status
+                </h1>
+                <p className="mt-5 max-w-3xl text-sm leading-7 text-cyan-50/72 md:text-base">
+                  <GlossaryText
+                    terms={vanguardGlossaryTerms}
+                    text="Vanguards are the Initial Supporters class for Sovereign Engine: wallet-linked origin wallets with planned Launch Day Progeny access, future Engine mints, and discounted project benefits."
+                  />
+                </p>
               </div>
-            </section>
-          ))}
-        </div>
+
+              <section className="command-room__summary">
+                <div>
+                  <span>User Summary</span>
+                  <h2>What Vanguard Means</h2>
+                </div>
+                <p>
+                  <GlossaryText
+                    terms={vanguardGlossaryTerms}
+                    text="Vanguard status is the named early-supporter layer for wallets that enter the Engine before Launch Day. The goal is simple: early supporters keep visible access, receive planned Progeny opportunities, and get better pricing on in-house creations as the Engine expands."
+                  />
+                </p>
+              </section>
+            </div>
+          </AnimatedFrame>
+
+          <AssemblingPanel
+            className="command-room__policy-feed border border-white/10 bg-black/50 p-4"
+            delay="medium"
+            title="Privilege Queue"
+          >
+            <div className="command-room__policy-stack">
+              {policyPanels.map((panel) => (
+                <section
+                  className="command-room__policy-node"
+                  id={panel.id}
+                  key={panel.id}
+                >
+                  <div className="command-room__policy-index">{panel.number}</div>
+                  <div>
+                    <h2>{panel.title}</h2>
+                    <p>
+                      <GlossaryText
+                        terms={vanguardGlossaryTerms}
+                        text={panel.body}
+                      />
+                    </p>
+                    <Link href={panel.link.href}>{panel.link.label}</Link>
+                  </div>
+                </section>
+              ))}
+            </div>
+          </AssemblingPanel>
+        </section>
       </div>
     </main>
   );
