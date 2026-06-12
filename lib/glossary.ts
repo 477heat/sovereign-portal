@@ -11,6 +11,8 @@ export const glossary = {
     "A made object or item. Here, it means a digital creation made by the project, such as a deed, character, item, or future game asset.",
   "Artifact Engine":
     "The preview console where users can test possible stats and future creations.",
+  "Artifact Item":
+    "A future item-style creation shaped by the Engine. Here, it means a planned Progeny asset that can belong to a user's wallet and profile line.",
   Attestation:
     "A trusted proof from another source. Here, it means Coinbase has confirmed the connected wallet belongs to a verified account.",
   Attester:
@@ -31,6 +33,8 @@ export const glossary = {
     "The blockchain network built by Coinbase. Here, it is the network where this project mints tokens.",
   "Base Mainnet":
     "The live version of the Base network. Here, it is where real Sovereign Engine tokens and payments happen.",
+  "Base network gas":
+    "The small network fee paid to process an action on Base. It changes with network conditions and is separate from the project price.",
   Blacklist:
     "A block list that can stop certain wallets or marketplaces from being used.",
   Blockchain:
@@ -67,6 +71,8 @@ export const glossary = {
     "The place where a machine is watched and controlled. Here, it is the mock console where users test Sovereign Engine inputs, stat types, and future artifact ideas before the live mint path.",
   "Founder Share":
     "The part of a payment meant for the founder or project wallet.",
+  "Full Natal Chart":
+    "A future Engine upgrade that would use birth date, time, and location to map a fuller astrological profile instead of the current lighter-input version.",
   Genesis:
     "The beginning stage of the project, where the first personal profile and access path are created.",
   "Genesis Character":
@@ -83,8 +89,12 @@ export const glossary = {
     "A service that organizes network records so apps can find them faster.",
   IPFS:
     "A file storage network often used for NFT images and information.",
+  "Kindred Creature":
+    "The first planned creature-style Progeny concept, intended to come from a user's Genesis profile rather than a random generic drop.",
   Lambda:
     "A small cloud function that runs backend tasks when needed.",
+  "Launch Day":
+    "The first public launch window for a planned project, drop, or Progeny release.",
   Lineage:
     "The family line between a source profile and the characters, children, or items made from it.",
   Marketplace:

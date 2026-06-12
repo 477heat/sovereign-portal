@@ -9,10 +9,14 @@ import type { GlossaryTermKey } from "@/lib/glossary";
 
 const vanguardGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
+  "Artifact Item",
+  "Base network gas",
   "Genesis",
   "Genesis Mint",
+  "Full Natal Chart",
+  "Kindred Creature",
+  "Launch Day",
   "Marketplace",
-  "Mint",
   "Royalty",
   "Sovereign Engine",
   "Token",
@@ -39,7 +43,7 @@ const statusPanels = [
     href: "#legacy",
     label: "Legacy",
     value: "Carry-forward",
-    body: "Vanguard status carries into planned Progeny drops, in-house discounts, and future project systems.",
+    body: "Vanguard status carries into Progeny drops, early rate classes, and future project systems.",
   },
   {
     href: "#royalty-routing",
@@ -54,28 +58,28 @@ const policyPanels = [
     id: "initial-supporters",
     number: "01",
     title: "Launch Day Progeny",
-    body: "The first planned Progeny mint is the Kindred Creature Mint on Launch Day. Pre-launch supporters are planned to receive it for $0.02 plus Base network gas, currently estimated around $0.04-$0.06 but subject to network conditions.",
+    body: "The first Progeny mint is the Kindred Creature Mint on Launch Day. Pre-launch supporters receive it for $0.02 plus Base network gas, currently estimated around $0.04-$0.06 but subject to network conditions.",
     link: { href: "/whitepaper#vanguard", label: "Read Vanguard" },
   },
   {
     id: "wallet-linked",
     number: "02",
     title: "Included Engine Mints",
-    body: "Vanguards are also planned to receive the Full Natal Chart Mint when the Engine is ready, plus an Artifact Item Mint at the same early-supporter rate.",
+    body: "Vanguards receive the Full Natal Chart Mint when the Engine is ready, plus an Artifact Item Mint at the same early-supporter rate.",
     link: { href: "/whitepaper#genesis-access", label: "Open Access" },
   },
   {
     id: "legacy",
     number: "03",
-    title: "Future Progeny Discounts",
-    body: "Future Progeny mints are planned to stay discounted for Vanguards, with final rates set by each project's published specs. In-house Progeny is planned at 50% off, and most in-house Progeny is expected to cost less than a dollar.",
+    title: "Future Progeny Rates",
+    body: "Future Progeny mints use a Vanguard rate class when a project supports it, with final pricing set by each project's published specs. In-house Progeny will publish its own launch terms before each release.",
     link: { href: "/economics#developer-access", label: "Builder Use" },
   },
   {
     id: "royalty-routing",
     number: "04",
     title: "Third-party Progeny",
-    body: "Third-party Progeny pricing will be set by the developer building that project. Vanguard discounts may still apply, but each outside launch will publish its own pricing, access rules, and mint details.",
+    body: "Third-party Progeny pricing will be set by the developer building that project. Vanguard access may still apply, but each outside launch will publish its own pricing, access rules, and mint details.",
     link: { href: "/economics#royalty-routing", label: "Open Routing" },
   },
 ];
@@ -142,39 +146,65 @@ export default function VanguardPrivilegesPage() {
               <span />
             </div>
 
-            <div className="command-room__viewport-content relative z-10 grid min-h-[34rem] content-between gap-8 p-5 md:p-8">
+            <div className="command-room__viewport-content relative z-10 grid min-h-[34rem] content-start gap-8 p-5 md:p-8">
               <div>
-                <div className="command-room__signal-row">
-                  <span>Initial Supporters</span>
-                  <span>wallet-linked</span>
-                  <span>legacy status</span>
+                <div
+                  className="command-room__signal-row"
+                  style={{
+                    background: "rgba(3, 17, 23, 0.78)",
+                    border: "1px solid rgba(165, 243, 252, 0.2)",
+                    boxShadow: "0 0 18px rgba(125, 211, 252, 0.1)",
+                    clipPath:
+                      "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
+                    flexWrap: "nowrap",
+                    fontSize: "0.42rem",
+                    gap: "0.24rem",
+                    justifySelf: "start",
+                    letterSpacing: "0.06em",
+                    marginBottom: "-0.75rem",
+                    marginLeft: "-0.35rem",
+                    maxWidth: "100%",
+                    padding: "0.36rem 0.5rem",
+                    transform: "translateY(-1.22rem)",
+                    whiteSpace: "nowrap",
+                    width: "fit-content",
+                  }}
+                >
+                  <b style={{ fontWeight: 500 }}>Initial Supporters</b>
+                  <i
+                    aria-hidden="true"
+                    style={{
+                      background: "rgba(165, 243, 252, 0.24)",
+                      display: "block",
+                      flex: "0 0 0.34rem",
+                      height: "1px",
+                    }}
+                  />
+                  <b style={{ fontWeight: 500 }}>wallet-linked</b>
+                  <i
+                    aria-hidden="true"
+                    style={{
+                      background: "rgba(165, 243, 252, 0.24)",
+                      display: "block",
+                      flex: "0 0 0.34rem",
+                      height: "1px",
+                    }}
+                  />
+                  <b style={{ fontWeight: 500 }}>legacy status</b>
                 </div>
-                <p className="mt-7 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/58">
+                <p className="mt-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/58">
                   Charter Layer
                 </p>
-                <h1 className="command-lab__headline mt-4 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 md:text-5xl">
+                <h1 className="command-lab__headline mt-3 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 md:text-5xl">
                   Vanguard Status
                 </h1>
-                <p className="mt-5 max-w-3xl text-sm leading-7 text-cyan-50/72 md:text-base">
+                <p className="mt-4 max-w-3xl text-sm leading-7 text-cyan-50/72 md:text-base">
                   <GlossaryText
                     terms={vanguardGlossaryTerms}
-                    text="Vanguards are the Initial Supporters class for Sovereign Engine: wallet-linked origin wallets with planned Launch Day Progeny access, future Engine mints, and discounted project benefits."
+                    text="Vanguards are the Initial Supporters class for Sovereign Engine: wallet-linked origin wallets with Launch Day Progeny access, future Engine mints, and published early-supporter rate classes."
                   />
                 </p>
               </div>
-
-              <section className="command-room__summary">
-                <div>
-                  <span>User Summary</span>
-                  <h2>What Vanguard Means</h2>
-                </div>
-                <p>
-                  <GlossaryText
-                    terms={vanguardGlossaryTerms}
-                    text="Vanguard status is the named early-supporter layer for wallets that enter the Engine before Launch Day. The goal is simple: early supporters keep visible access, receive planned Progeny opportunities, and get better pricing on in-house creations as the Engine expands."
-                  />
-                </p>
-              </section>
             </div>
           </AnimatedFrame>
 
