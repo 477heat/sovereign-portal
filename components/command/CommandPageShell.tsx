@@ -103,6 +103,7 @@ export function CommandPageShell({
   );
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [pendingActionId, setPendingActionId] = useState<string | null>(null);
+  const [soundMuted, setSoundMuted] = useState(false);
 
   const activePanel =
     panels.find((panel) => panel.id === activePanelId) ?? panels[0];
@@ -112,6 +113,10 @@ export function CommandPageShell({
   const commandSounds = { ...defaultCommandSounds, ...sounds };
 
   function playCommandSound(src: string) {
+    if (soundMuted) {
+      return;
+    }
+
     const audio = new Audio(src);
     audio.volume = 0.78;
     void audio.play().catch(() => undefined);
@@ -187,6 +192,10 @@ export function CommandPageShell({
     });
   }
 
+  function handleSoundToggle() {
+    setSoundMuted((current) => !current);
+  }
+
   useEffect(() => {
     return () => {
       if (actionTimeoutRef.current) {
@@ -244,6 +253,9 @@ export function CommandPageShell({
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
         <section className="command-room__grid command-room__grid--drawer grid flex-1 gap-5 py-5">
           <section className="command-room__console-body">
+            <div className="command-room__layer-badge">
+              {activePanel.eyebrow}
+            </div>
             <div className="command-room__console-screen">
               <AnimatedFrame
                 className="command-room__viewport command-room__viewport--fullscreen"
@@ -259,9 +271,6 @@ export function CommandPageShell({
                 />
 
                 <div className="command-room__viewport-content command-room__viewport-content--fullscreen relative z-10 grid content-start gap-8 p-5 md:p-8">
-                  <div className="command-room__layer-badge">
-                    {activePanel.eyebrow}
-                  </div>
                   <div
                     className="command-room__active-panel"
                     data-panel-id={activePanel.id}
@@ -411,6 +420,44 @@ export function CommandPageShell({
                         </Link>
                       );
                     })}
+                    <div className="command-room__drawer-sound-row">
+                      <button
+                        aria-label={
+                          soundMuted
+                            ? "Unmute command sounds"
+                            : "Mute command sounds"
+                        }
+                        aria-pressed={soundMuted}
+                        className="command-room__drawer-sound-toggle"
+                        data-sound-muted={soundMuted ? "true" : "false"}
+                        onClick={handleSoundToggle}
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="command-room__drawer-sound-icon"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                          {soundMuted ? (
+                            <>
+                              <path d="M17 9l4 4" />
+                              <path d="M21 9l-4 4" />
+                            </>
+                          ) : (
+                            <>
+                              <path d="M16.5 8.5c1.2 1.9 1.2 5.1 0 7" />
+                              <path d="M19.5 6c2.1 3.2 2.1 8.8 0 12" />
+                            </>
+                          )}
+                        </svg>
+                      </button>
+                      <div
+                        aria-hidden="true"
+                        className="command-room__drawer-sound-slot"
+                      />
+                    </div>
                   </div>
                 ) : null}
               </div>
