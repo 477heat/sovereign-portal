@@ -30,8 +30,8 @@ const litepaperPanels = [
     value: "Engine",
     title: "Genesis Engine",
     copy: [
-      "Sovereign Engine turns stable participant inputs into a deterministic profile. The Genesis Access deed is the first artifact tied to that origin.",
-      "The result is not a random roll. One verified source creates one profile foundation that other Engine branches can read.",
+      "Genesis is the starting point: one verified person creates one stable profile instead of rolling a random collectible and hoping the numbers behave.",
+      "That matters because users get a profile foundation they can keep using, developers get cleaner identity signals, and the community gets fewer throwaway wallets pretending to be new people.",
     ],
   },
   {
@@ -41,8 +41,8 @@ const litepaperPanels = [
     value: "Access",
     title: "Vanguard Access",
     copy: [
-      "Vanguard is the legacy access class for wallets that entered during the Genesis phase. The original wallet stays visible as the Engine expands.",
-      "Vanguards do not pay membership or subscription fees. Mint rates, collection rules, and release terms are published per branch.",
+      "Vanguard marks the wallets that stepped in during the Genesis phase. The point is simple: early support should stay visible instead of getting buried every time the Engine opens a new branch.",
+      "Vanguards do not pay membership or subscription fees. Each release still publishes its own mint rate and rules, but the original support does not vanish.",
     ],
   },
   {
@@ -52,8 +52,8 @@ const litepaperPanels = [
     value: "Builds",
     title: "Progeny Layer",
     copy: [
-      "Progeny is the creation layer built from the Genesis profile: Kindred Creatures, items, adversaries, transport, characters, and project-specific assets.",
-      "Genesis stays scarce. Progeny can repeat under asset-specific rules so community creation can grow without turning the origin deed into a farm.",
+      "Progeny is what the profile can create: Kindred Creatures, items, adversaries, transport, characters, and project-specific assets.",
+      "Genesis stays scarce, but Progeny can use different supply rules. That lets games and communities grow without turning the original Soul Deed into an unlimited farming machine.",
     ],
   },
   {
@@ -63,8 +63,8 @@ const litepaperPanels = [
     value: "Routing",
     title: "Royalties And Boundaries",
     copy: [
-      "The current Soul Deed records original minters and uses token-specific royalty routing where marketplaces support it. ERC-2981 is a signal, not universal enforcement.",
-      "Personal intake data belongs in protected generation. Public metadata uses derived stats, token references, and readable terms, not raw private inputs.",
+      "The Soul Deed records the original minter and can signal royalty routing where marketplaces support the standard. That helps preserve attribution without pretending every marketplace enforces royalties the same way.",
+      "Private intake data belongs in protected generation. Public metadata should show useful derived traits, token references, and readable terms, not raw personal details.",
     ],
   },
 ];

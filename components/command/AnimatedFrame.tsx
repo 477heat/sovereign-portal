@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 type AnimatedFrameProps = {
   children: ReactNode;
   className?: string;
+  chromeOverlay?: ReactNode;
   label?: string;
   tone?: "cyan" | "gold";
 };
@@ -10,6 +11,7 @@ type AnimatedFrameProps = {
 export function AnimatedFrame({
   children,
   className = "",
+  chromeOverlay,
   label = "Frame",
   tone = "cyan",
 }: AnimatedFrameProps) {
@@ -27,6 +29,11 @@ export function AnimatedFrame({
         <path className="command-animated-frame__corner" d="M8 1 H28 M1 8 V28 M72 1 H92 L99 8 V28 M99 72 V92 L92 99 H72 M28 99 H8 L1 92 V72" />
       </svg>
       <div className="command-animated-frame__tag">{label}</div>
+      {chromeOverlay ? (
+        <div className="command-animated-frame__chrome-overlay">
+          {chromeOverlay}
+        </div>
+      ) : null}
       <div className="command-animated-frame__content">{children}</div>
     </section>
   );

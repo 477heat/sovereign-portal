@@ -107,9 +107,14 @@ export function CommandPageShell({
 
   const activePanel =
     panels.find((panel) => panel.id === activePanelId) ?? panels[0];
+  const activePanelIndex = Math.max(
+    0,
+    panels.findIndex((panel) => panel.id === activePanel?.id),
+  );
   const activePanelBody = Array.isArray(activePanel?.body)
     ? activePanel.body
     : [activePanel?.body ?? ""];
+  const activePanelTitleWords = activePanel.title.split(/\s+/).filter(Boolean);
   const commandSounds = { ...defaultCommandSounds, ...sounds };
 
   function playCommandSound(src: string) {
@@ -192,6 +197,22 @@ export function CommandPageShell({
     });
   }
 
+  function handlePanelCycle(direction: "next" | "previous") {
+    if (panels.length < 2) {
+      return;
+    }
+
+    const nextIndex =
+      direction === "next"
+        ? (activePanelIndex + 1) % panels.length
+        : (activePanelIndex - 1 + panels.length) % panels.length;
+    const nextPanel = panels[nextIndex];
+
+    queueCommandAction(`panel-cycle-${direction}`, commandSounds.panel, () => {
+      setActivePanelId(nextPanel.id);
+    });
+  }
+
   function handleSoundToggle() {
     setSoundMuted((current) => !current);
   }
@@ -238,6 +259,27 @@ export function CommandPageShell({
     return null;
   }
 
+  const renderDrawerTab = (embedded = false) => (
+    <button
+      aria-label={drawerOpen ? `Stow ${drawerLabel}` : `Deploy ${drawerLabel}`}
+      aria-controls={drawerContentId}
+      aria-disabled={pendingActionId !== null}
+      aria-expanded={drawerOpen}
+      className={`command-room__drawer-tab ${
+        embedded ? "command-room__drawer-tab--embedded" : ""
+      }`}
+      data-command-action="drawer-tab"
+      data-command-action-pending={
+        pendingActionId?.startsWith("drawer-") ? "true" : undefined
+      }
+      onClick={handleDrawerTabClick}
+      disabled={pendingActionId !== null}
+      type="button"
+    >
+      {drawerOpen ? "Stow" : "Deploy"}
+    </button>
+  );
+
   return (
     <main
       aria-busy={pendingActionId !== null}
@@ -253,12 +295,16 @@ export function CommandPageShell({
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
         <section className="command-room__grid command-room__grid--drawer grid flex-1 gap-5 py-5">
           <section className="command-room__console-body">
-            <div className="command-room__layer-badge">
-              {activePanel.eyebrow}
-            </div>
             <div className="command-room__console-screen">
               <AnimatedFrame
                 className="command-room__viewport command-room__viewport--fullscreen"
+                chromeOverlay={
+                  !drawerOpen ? (
+                    <div className="command-room__embedded-drawer-tab">
+                      {renderDrawerTab(true)}
+                    </div>
+                  ) : null
+                }
                 label={activePanel.groupLabel}
               >
                 <div
@@ -277,8 +323,19 @@ export function CommandPageShell({
                     key={activePanel.id}
                   >
                     {renderPanelBackdrop?.(activePanel)}
-                    <h1 className="command-lab__headline mt-3 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 max-sm:!text-[1.75rem] max-sm:!leading-[1.15] md:text-5xl">
-                      {activePanel.title}
+                    <h1
+                      aria-label={activePanel.title}
+                      className="command-lab__headline mt-3 max-w-3xl uppercase text-cyan-50"
+                    >
+                      {activePanelTitleWords.map((word, index) => (
+                        <span
+                          aria-hidden="true"
+                          className="command-lab__headline-word"
+                          key={`${activePanel.id}-title-${word}-${index}`}
+                        >
+                          {word}
+                        </span>
+                      ))}
                     </h1>
                     <p className="command-room__active-value mt-3 text-sm uppercase tracking-[0.24em] text-yellow-100/78">
                       {activePanel.value}
@@ -302,11 +359,51 @@ export function CommandPageShell({
               </AnimatedFrame>
             </div>
 
-            <div className="command-room__console-dock" aria-hidden="true">
+            <div className="command-room__console-dock">
               <div className="command-room__console-dock-cell" />
               <div className="command-room__console-dock-cell" />
-              <div className="command-room__console-dock-cell" />
-              <div className="command-room__console-dock-cell" />
+              <button
+                aria-label="Previous console panel"
+                className="command-room__console-dock-cell command-room__console-cycle-button"
+                data-command-action="panel-cycle"
+                data-command-action-pending={
+                  pendingActionId === "panel-cycle-previous"
+                    ? "true"
+                    : undefined
+                }
+                disabled={pendingActionId !== null || panels.length < 2}
+                onClick={() => handlePanelCycle("previous")}
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="command-room__console-cycle-icon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M14.5 5.5 8 12l6.5 6.5" />
+                </svg>
+              </button>
+              <button
+                aria-label="Next console panel"
+                className="command-room__console-dock-cell command-room__console-cycle-button command-room__console-cycle-button--next"
+                data-command-action="panel-cycle"
+                data-command-action-pending={
+                  pendingActionId === "panel-cycle-next" ? "true" : undefined
+                }
+                disabled={pendingActionId !== null || panels.length < 2}
+                onClick={() => handlePanelCycle("next")}
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="command-room__console-cycle-icon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
+                </svg>
+              </button>
             </div>
           </section>
 
@@ -317,24 +414,7 @@ export function CommandPageShell({
                 : "command-room__drawer-shell--closed"
             }`}
           >
-            <button
-              aria-label={
-                drawerOpen ? `Stow ${drawerLabel}` : `Deploy ${drawerLabel}`
-              }
-              aria-controls={drawerContentId}
-              aria-disabled={pendingActionId !== null}
-              aria-expanded={drawerOpen}
-              className="command-room__drawer-tab"
-              data-command-action="drawer-tab"
-              data-command-action-pending={
-                pendingActionId?.startsWith("drawer-") ? "true" : undefined
-              }
-              onClick={handleDrawerTabClick}
-              disabled={pendingActionId !== null}
-              type="button"
-            >
-              {drawerOpen ? "Stow" : "Deploy"}
-            </button>
+            {drawerOpen ? renderDrawerTab() : null}
 
             <AssemblingPanel
               className="command-room__drawer border border-cyan-200/15 bg-black/50 p-4"

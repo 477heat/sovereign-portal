@@ -27,25 +27,37 @@ const accessPanels = [
     id: "vanguard-access",
     label: "Vanguard",
     value: "Access",
-    body: "Vanguard is the legacy access class for Genesis-phase wallets. It carries recognition into published Engine branches without becoming a subscription.",
+    body: [
+      "Vanguard is early-supporter access for Genesis-phase wallets.",
+      "It keeps those supporters visible in published Engine branches without turning the project into a subscription club. Early support should create durable recognition, not another monthly charge.",
+    ],
   },
   {
     id: "progeny-builds",
     label: "Progeny",
     value: "Builds",
-    body: "Progeny is the repeatable creation layer: creatures, items, adversaries, transport, characters, and project-specific assets derived from the Genesis profile.",
+    body: [
+      "Progeny is the repeatable creation layer: creatures, items, adversaries, transport, characters, and project-specific builds derived from a Genesis profile.",
+      "This lets the community create more things without making the Genesis deed unlimited. One origin can lead to many useful game-native assets.",
+    ],
   },
   {
     id: "royalty-path",
     label: "Royalty",
     value: "Path",
-    body: "Royalty routing works when contract rules and marketplace support line up. Approved routes protect attribution better than unsupported venues.",
+    body: [
+      "Royalty routing works when contract rules and marketplace support line up.",
+      "That protects attribution better than unsupported venues, but the promise stays honest: ERC-2981 is a signal that supported marketplaces can honor, not a magic spell over every sale on the internet.",
+    ],
   },
   {
     id: "builder-use",
     label: "Developer",
     value: "Use",
-    body: "Developers can request Progeny structures, attribute trees, and supply rules that fit their game or collection.",
+    body: [
+      "Developers can request Progeny structures, attribute trees, and supply rules that fit their game or collection.",
+      "The practical benefit is time and trust: builders get profile-based generation without inventing identity, metadata, supply logic, and attribution from scratch.",
+    ],
   },
 ];
 
@@ -56,7 +68,10 @@ const policyPanels = [
     label: "One",
     value: "Genesis",
     title: "One Genesis",
-    body: "Genesis remains one person, one mint. That protects the origin layer from wallet farming and keeps each profile anchored to a real participant path.",
+    body: [
+      "Genesis is built around one person, one mint path.",
+      "That single fact is a big part of the value. It helps users prove they are not just another bot wallet, helps developers work with cleaner supply, and gives the community a better chance at culture made by real people instead of farms chasing the best roll.",
+    ],
   },
   {
     id: "many-builds",
@@ -64,7 +79,10 @@ const policyPanels = [
     label: "Many",
     value: "Builds",
     title: "Many Builds",
-    body: "Progeny can repeat under asset-specific rules. Vanguards and eligible access-token holders can create multiple Engine-derived assets where the release allows it.",
+    body: [
+      "Progeny can repeat under asset-specific rules.",
+      "That is where the economy can grow. A person only needs one Genesis, but they can create, trade, or use many Engine-derived assets when a release allows it.",
+    ],
   },
   {
     id: "supply-rules",
@@ -72,7 +90,10 @@ const policyPanels = [
     label: "Supply",
     value: "Rules",
     title: "Supply Rules",
-    body: "Characters can be strict. Items, transport, companions, and adversaries can be looser. Each project publishes the supply model before minting opens.",
+    body: [
+      "Some assets should be rare. Others need enough supply to support play, trade, and community use.",
+      "Characters can be strict while items, transport, companions, and adversaries can be looser. Each project should publish its supply model before minting opens.",
+    ],
   },
   {
     id: "marketplace-limits",
@@ -80,7 +101,10 @@ const policyPanels = [
     label: "Market",
     value: "Limits",
     title: "Marketplace Limits",
-    body: "ERC-2981 is a royalty signal. OpenSea and other supported routes can honor creator earnings, but no marketplace is treated as guaranteed enforcement.",
+    body: [
+      "ERC-2981 is a royalty signal. OpenSea and other supported routes can honor creator earnings, but no marketplace is treated as guaranteed enforcement.",
+      "We have not seen many projects combine verified human origin, profile-based generation, Progeny assets, and royalty-aware routing in this exact way. That mix is the real experiment.",
+    ],
   },
 ];
 

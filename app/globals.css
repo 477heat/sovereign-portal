@@ -3053,8 +3053,12 @@ body {
   }
 
   .command-room-page .command-lab__headline {
-    font-size: clamp(1.75rem, 9vw, 2rem);
-    line-height: 1.15;
+    align-items: flex-end;
+    display: inline-flex !important;
+    flex-direction: column !important;
+    font-size: clamp(1.32rem, 6.8vw, 1.5rem) !important;
+    line-height: 0.94 !important;
+    text-align: right;
   }
 
   .command-room-page .command-room__viewport--fullscreen .command-moving-lines {
@@ -3227,6 +3231,7 @@ body {
   overflow: hidden;
   padding-top: var(--command-console-screen-top);
   position: relative;
+  z-index: 1;
 }
 
 .command-room-page .command-room__viewport--fullscreen {
@@ -3273,8 +3278,23 @@ body {
 }
 
 .command-room__console-screen .command-animated-frame__tag {
+  background:
+    linear-gradient(135deg, rgba(8, 31, 38, 0.96), rgba(3, 17, 23, 0.92)),
+    rgba(3, 17, 23, 0.94);
+  border-color: rgba(254, 240, 138, 0.34);
+  box-shadow:
+    0 0 22px rgba(125, 211, 252, 0.16),
+    inset 0 0 0 1px rgba(165, 243, 252, 0.08);
+  color: rgba(254, 249, 195, 0.96);
+  font-size: clamp(0.58rem, 0.78vw, 0.68rem);
+  max-width: min(15rem, calc(100% - 3rem));
+  overflow: hidden;
+  bottom: clamp(0.75rem, 1.4vw, 1rem);
   right: clamp(1.35rem, 3vw, 2.25rem);
-  top: calc((var(--command-console-screen-top) * -1) + 0.16rem);
+  text-overflow: ellipsis;
+  top: auto;
+  white-space: nowrap;
+  z-index: 7;
 }
 
 .command-room__console-dock {
@@ -3294,6 +3314,76 @@ body {
   border: 1px solid rgba(165, 243, 252, 0.16);
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
   min-height: 2.6rem;
+}
+
+.command-room__console-cycle-button {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.13), rgba(254, 240, 138, 0.035)),
+    rgba(3, 22, 30, 0.72);
+  border: 0;
+  color: rgba(236, 254, 255, 0.9);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  padding: 0;
+  position: relative;
+  transition:
+    color 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
+.command-room__console-cycle-button::before,
+.command-room__console-cycle-button::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.command-room__console-cycle-button::before {
+  background: rgba(125, 211, 252, 0.72);
+  inset: 0;
+  z-index: -2;
+}
+
+.command-room__console-cycle-button::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(254, 240, 138, 0.045)),
+    rgba(2, 12, 16, 0.72);
+  inset: 1px;
+  z-index: -1;
+}
+
+.command-room__console-cycle-button:hover,
+.command-room__console-cycle-button:focus-visible {
+  color: white;
+  filter: brightness(1.16) saturate(1.12);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.command-room__console-cycle-button:disabled {
+  cursor: progress;
+  opacity: 0.84;
+}
+
+.command-room__console-cycle-button[data-command-action-pending="true"] {
+  color: rgba(254, 249, 195, 0.98);
+  filter: brightness(1.18) saturate(1.16);
+}
+
+.command-room__console-cycle-icon {
+  display: block;
+  fill: none;
+  height: 1.5rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+  width: 1.5rem;
 }
 
 .command-room__drawer-shell {
@@ -3344,6 +3434,43 @@ body {
   white-space: nowrap;
   width: var(--command-drawer-tab-long);
   z-index: 4;
+}
+
+.command-room__embedded-drawer-tab {
+  --command-drawer-tab-long: 8.45rem;
+  --command-drawer-tab-short: 3.95rem;
+  left: clamp(1.35rem, 3vw, 2.25rem);
+  pointer-events: auto;
+  position: absolute;
+  top: 0.16rem;
+  z-index: 6;
+}
+
+.command-room__drawer-tab--embedded {
+  animation: command-drawer-tab-pulse 1350ms ease-in-out infinite;
+  align-items: flex-end;
+  border-top-color: transparent;
+  border-top-style: none;
+  border-top-width: 0;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 12px);
+  display: inline-flex;
+  font-size: 0.84rem;
+  height: calc(var(--command-drawer-tab-short) * 0.72);
+  justify-content: flex-start;
+  left: auto;
+  letter-spacing: 0.23em;
+  line-height: 1;
+  min-height: calc(var(--command-drawer-tab-short) * 0.72);
+  min-width: calc(var(--command-drawer-tab-long) * 0.9);
+  opacity: 0.85;
+  padding: 0.76rem 1rem 0.24rem 0.9rem;
+  position: relative;
+  text-align: left;
+  text-orientation: mixed;
+  top: auto;
+  width: calc(var(--command-drawer-tab-long) * 0.9);
+  writing-mode: horizontal-tb;
+  z-index: 1;
 }
 
 .command-room__drawer-shell--open .command-room__drawer-tab {
@@ -3416,7 +3543,8 @@ body {
 
 .command-room-page[data-command-pending] .command-room__drawer-tab,
 .command-room-page[data-command-pending] .command-room__drawer-button,
-.command-room-page[data-command-pending] .command-room__drawer-actions .chamfer-nav-link {
+.command-room-page[data-command-pending] .command-room__drawer-actions .chamfer-nav-link,
+.command-room-page[data-command-pending] .command-room__console-cycle-button {
   cursor: progress;
 }
 
@@ -3427,7 +3555,8 @@ body {
 
 .command-room__drawer-tab[data-command-action-pending="true"],
 .command-room__drawer-button[data-command-action-pending="true"],
-.command-room__drawer-actions .chamfer-nav-link[data-command-action-pending="true"] {
+.command-room__drawer-actions .chamfer-nav-link[data-command-action-pending="true"],
+.command-room__console-cycle-button[data-command-action-pending="true"] {
   filter: saturate(1.18) brightness(1.12);
   box-shadow:
     0 0 0 1px rgba(254, 240, 138, 0.46),
@@ -3437,6 +3566,7 @@ body {
 
 .command-room__drawer-shell--closed {
   min-height: var(--command-drawer-tab-long);
+  pointer-events: none;
 }
 
 .command-room__drawer-shell--closed .command-room__drawer-tab {
@@ -3521,25 +3651,9 @@ body {
   z-index: 1;
 }
 
-.command-room__layer-badge {
-  background: rgba(3, 17, 23, 0.78);
-  border: 1px solid rgba(165, 243, 252, 0.2);
-  box-shadow: 0 0 18px rgba(125, 211, 252, 0.1);
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-  color: rgba(165, 243, 252, 0.72);
-  font-size: 0.58rem;
-  justify-self: end;
-  letter-spacing: 0.28em;
-  max-width: calc(100% - 2rem);
-  overflow: hidden;
-  padding: 0.42rem 0.68rem;
+.command-room__active-panel > .command-room__origin-badge-backdrop {
   position: absolute;
-  right: clamp(9.7rem, 18vw, 12.9rem);
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  top: 0.6rem;
-  white-space: nowrap;
-  z-index: 6;
+  z-index: 0;
 }
 
 .command-room__active-value {
@@ -3839,7 +3953,7 @@ body {
     box-shadow:
       0 0 14px rgba(250, 204, 21, 0.18),
       inset 0 0 18px rgba(254, 240, 138, 0.04);
-    opacity: 0.72;
+    opacity: 0.85;
   }
 
   50% {
@@ -3847,7 +3961,7 @@ body {
       0 0 30px rgba(250, 204, 21, 0.5),
       0 0 54px rgba(250, 204, 21, 0.18),
       inset 0 0 20px rgba(254, 240, 138, 0.1);
-    opacity: 1;
+    opacity: 0.96;
   }
 }
 
@@ -4001,6 +4115,13 @@ body {
   z-index: 5;
 }
 
+.command-animated-frame__chrome-overlay {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 4;
+}
+
 .command-animated-frame__content {
   min-height: inherit;
   position: relative;
@@ -4009,13 +4130,37 @@ body {
 
 .command-lab__headline {
   font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(2rem, 4.1vw, 3.25rem);
   font-style: italic;
   font-weight: 600;
   letter-spacing: 0;
   text-shadow:
     0 0 18px rgba(165, 243, 252, 0.26),
     0 0 34px rgba(80, 190, 255, 0.12);
+}
+
+.command-room-page .command-lab__headline {
+  align-items: flex-end;
+  display: flex !important;
+  flex-direction: column !important;
+  font-size: clamp(1.4rem, 2.65vw, 2.05rem) !important;
+  line-height: 0.94 !important;
+  width: fit-content;
+}
+
+.command-room-page .command-room__active-panel .command-lab__headline {
+  align-items: flex-end;
+  display: flex !important;
+  flex-direction: column !important;
+  font-size: clamp(1.4rem, 2.65vw, 2.05rem) !important;
+  line-height: 0.94 !important;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: right;
+  width: fit-content;
+}
+
+.command-lab__headline-word {
+  display: block;
 }
 
 .command-hud-button {
@@ -4369,35 +4514,129 @@ body {
 
 @media (max-width: 767px) {
   .command-room-page {
-    padding-top: 0.45rem !important;
+    padding-top: 0.12rem !important;
   }
 
   .command-room__grid.command-room__grid--drawer {
-    padding-top: 1.5rem !important;
+    min-height: calc(100svh - 0.75rem);
+    padding-top: 0.45rem !important;
+  }
+
+  .command-room__console-body {
+    --command-console-screen-top: 0.72rem;
+    gap: 0.18rem;
+    height: calc(100svh - 1.4rem);
+    min-height: calc(100svh - 1.4rem);
+    padding: 0.42rem;
+  }
+
+  .command-room-page .command-room__viewport--fullscreen {
+    height: calc(100svh - 1.4rem);
+    max-height: calc(100svh - 1.4rem);
+    min-height: calc(100svh - 1.4rem) !important;
   }
 
   .command-room-page .command-room__viewport-content--fullscreen {
     gap: 1.05rem !important;
-    padding-bottom: 1rem !important;
+    padding: 1.35rem 0.8rem 0.72rem !important;
+  }
+
+  .command-room__console-screen .command-animated-frame__rails {
+    opacity: 0.34;
+    z-index: 3;
+  }
+
+  .command-room__console-screen .command-animated-frame__rail--inner,
+  .command-room__console-screen .command-animated-frame__corner {
+    opacity: 0.28;
+  }
+
+  .command-room__console-dock {
+    gap: 0.38rem;
+    min-height: clamp(2.2rem, 6vh, 3rem);
+    padding-top: 0.2rem;
+  }
+
+  .command-room__console-dock-cell {
+    min-height: 2rem;
   }
 
   .command-room__active-panel .command-lab__headline {
+    display: flex !important;
+    flex-direction: column !important;
+    font-size: clamp(1.32rem, 6.8vw, 1.5rem) !important;
+    line-height: 0.94 !important;
+    margin-left: auto;
+    margin-right: 0;
     margin-top: 0.35rem !important;
+    max-width: calc(100% - 1.9rem);
+    overflow-wrap: anywhere;
+    text-align: right;
+    width: fit-content;
   }
 
   .command-room__active-value {
+    margin-left: auto;
     margin-top: 0.5rem !important;
+    max-width: calc(100% - 1.9rem);
+    overflow-wrap: anywhere;
+    text-align: right;
   }
 
   .command-room__active-panel > div.mt-4 {
     gap: 0.55rem !important;
-    line-height: 1.62 !important;
-    margin-top: 0.75rem !important;
+    line-height: 1.56 !important;
+    margin-top: 1.08rem !important;
+    max-width: 100% !important;
+  }
+
+  .command-room__active-panel p {
+    overflow-wrap: anywhere;
+  }
+
+  .command-room__console-cycle-icon {
+    height: 1.35rem;
+    width: 1.35rem;
   }
 
   .command-room__drawer-shell {
     padding-top: calc(var(--command-drawer-tab-short) * 0.76);
     top: max(0.42rem, env(safe-area-inset-top));
+  }
+
+  .command-room__drawer-shell--closed {
+    left: max(1rem, env(safe-area-inset-left));
+    min-height: calc(var(--command-drawer-tab-short) * 0.85);
+    padding-top: 0;
+    top: max(1rem, env(safe-area-inset-top));
+    width: calc(var(--command-drawer-tab-long) * 0.85);
+  }
+
+  .command-room__embedded-drawer-tab {
+    --command-drawer-tab-long: 8.45rem;
+    --command-drawer-tab-short: 3.95rem;
+    left: clamp(0.72rem, 4vw, 1.25rem);
+    top: 0.08rem;
+  }
+
+  .command-room__drawer-shell--closed .command-room__drawer-tab,
+  .command-room__drawer-tab--embedded {
+    align-items: flex-end !important;
+    border-top-color: transparent;
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    font-size: 0.74rem;
+    height: calc(var(--command-drawer-tab-short) * 0.64);
+    justify-content: flex-end;
+    letter-spacing: 0.22em;
+    line-height: 1;
+    min-height: calc(var(--command-drawer-tab-short) * 0.64);
+    min-width: calc(var(--command-drawer-tab-long) * 0.85);
+    opacity: 0.86;
+    padding: 0.78rem 0.98rem 0.18rem 0.82rem;
+    text-align: left;
+    text-orientation: mixed;
+    width: calc(var(--command-drawer-tab-long) * 0.85);
+    writing-mode: horizontal-tb;
   }
 
   .command-room__drawer-groups {
@@ -4431,10 +4670,28 @@ body {
     padding-top: 0.75rem;
   }
 
-  .command-room__layer-badge {
-    left: clamp(1.15rem, 6vw, 1.7rem);
-    max-width: calc(100% - 8rem);
-    right: auto;
+}
+
+.command-room__console-screen .command-animated-frame__rails {
+  z-index: 3 !important;
+}
+
+.command-room__drawer-tab--embedded {
+  border-top-color: transparent !important;
+  border-top-style: none !important;
+  border-top-width: 0 !important;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 12px) !important;
+  font-size: 0.84rem !important;
+}
+
+.command-room__console-screen .command-room__drawer-tab--embedded {
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 12px) !important;
+}
+
+@media (max-width: 767px) {
+  .command-room__drawer-tab--embedded {
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px) !important;
+    font-size: 0.74rem !important;
   }
 }
 

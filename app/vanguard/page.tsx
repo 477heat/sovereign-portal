@@ -36,13 +36,12 @@ const originBadgeBackdropStyle: CSSProperties = {
   filter:
     "drop-shadow(0 0 22px rgba(250, 204, 21, 0.16)) drop-shadow(0 0 48px rgba(125, 211, 252, 0.08))",
   height: "clamp(13rem, 34vw, 28rem)",
-  opacity: 0.24,
+  opacity: 0.38,
   pointerEvents: "none",
   position: "absolute",
   right: "clamp(-0.5rem, 4vw, 3rem)",
   top: "clamp(1.8rem, 7vh, 4.25rem)",
   width: "clamp(13rem, 34vw, 28rem)",
-  zIndex: 0,
 };
 
 const statusPanels: CommandPanel[] = [
@@ -52,7 +51,10 @@ const statusPanels: CommandPanel[] = [
     label: "Origin",
     value: "Vanguard",
     title: "Vanguard Origin",
-    body: "Vanguards are the Genesis-phase access class: wallet-linked participants who entered before the Engine branches outward.",
+    body: [
+      "Vanguards are the Genesis-phase supporters: the people who entered before the Engine branches outward.",
+      "That matters because the first community should not become invisible later. Their wallets carry a visible record of early support as new branches and projects are published.",
+    ],
   },
   {
     id: "rail-wallet",
@@ -60,7 +62,10 @@ const statusPanels: CommandPanel[] = [
     label: "Wallet",
     value: "Linked",
     title: "Wallet Linked",
-    body: "Recognition follows the original Genesis mint wallet. This keeps the access trail tied to origin wallets instead of anonymous wallet farming.",
+    body: [
+      "Recognition follows the original Genesis mint wallet. It is not meant to reward whoever can spin up the most throwaway wallets.",
+      "For users, that keeps status tied to real participation. For builders, it creates a cleaner access trail than anonymous farming.",
+    ],
   },
   {
     id: "rail-legacy",
@@ -68,7 +73,10 @@ const statusPanels: CommandPanel[] = [
     label: "No Fees",
     value: "Legacy",
     title: "Vanguard Legacy",
-    body: "Vanguards keep legacy recognition across published Engine branches and never pay a subscription or membership fee.",
+    body: [
+      "Vanguard status is designed as lasting recognition, not a monthly toll booth.",
+      "Vanguards never pay a subscription or membership fee. Release prices and rules can still change by project, but keeping your place in the first wave does not become another bill.",
+    ],
   },
   {
     id: "rail-routing",
@@ -76,7 +84,10 @@ const statusPanels: CommandPanel[] = [
     label: "Royalties",
     value: "Signal",
     title: "Royalty Signal",
-    body: "Royalty participation follows contract rules, marketplace support, and published release terms. No marketplace is treated as automatic enforcement.",
+    body: [
+      "Royalty participation follows contract rules, marketplace support, and each release's published terms.",
+      "That is the honest version: the system can signal attribution and route supported payments, but no marketplace should be treated as automatic enforcement.",
+    ],
   },
 ];
 
@@ -87,7 +98,10 @@ const policyPanels: CommandPanel[] = [
     label: "Kindred",
     value: "Creature",
     title: "Kindred Creature",
-    body: "Kindred Creature is the first Progeny branch. It is the creature-style mint tied to the Genesis profile rather than a generic drop.",
+    body: [
+      "Kindred Creature is the first Progeny branch: a creature-style mint tied to the Genesis profile.",
+      "The creature matters because it comes from the person's profile instead of being a disconnected generic drop. It should feel like it belongs to the holder's origin.",
+    ],
   },
   {
     id: "natal-chart",
@@ -95,7 +109,10 @@ const policyPanels: CommandPanel[] = [
     label: "Natal",
     value: "Chart",
     title: "Full Natal Chart",
-    body: "Full Natal Chart access belongs to the Vanguard benefit set. That branch extends the profile with birth date, time, and location inputs.",
+    body: [
+      "Full Natal Chart access belongs to the Vanguard benefit set.",
+      "That branch expands the profile with birth date, time, and location inputs, making the Engine more personal without forcing those details into public marketplace metadata.",
+    ],
   },
   {
     id: "artifact-item",
@@ -103,7 +120,10 @@ const policyPanels: CommandPanel[] = [
     label: "Artifact",
     value: "Item",
     title: "Artifact Item",
-    body: "Artifact Item access uses the Vanguard path. Item releases can use flexible supply when the design calls for multiple tradeable copies.",
+    body: [
+      "Artifact Item access uses the Vanguard path for item releases.",
+      "Items do not always need the same scarcity as people. Some should exist in small sets, and some should be tradeable in larger counts when a game or community actually needs supply.",
+    ],
   },
   {
     id: "partner-projects",
@@ -111,7 +131,10 @@ const policyPanels: CommandPanel[] = [
     label: "Partner",
     value: "Projects",
     title: "Partner Projects",
-    body: "Partner projects publish their own access rules. Vanguard status can be recognized while each project defines supply, pricing, and marketplace routes.",
+    body: [
+      "Partner projects can recognize Vanguard status while publishing their own rules for price, supply, and marketplace routes.",
+      "That gives builders flexibility without hiding the terms from the community. The project can be custom, but the access rules should not be a mystery box.",
+    ],
   },
 ];
 

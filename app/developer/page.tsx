@@ -29,25 +29,37 @@ const builderPanels = [
     id: "profile-source",
     label: "Profile",
     value: "Source",
-    body: "Use Engine-approved profile outputs as the origin layer for characters, classes, and persistent user identity.",
+    body: [
+      "Use Engine-approved profile outputs as the starting point for characters, classes, and persistent player identity.",
+      "That gives developers a stable source for personalization instead of relying on random rolls alone.",
+    ],
   },
   {
     id: "progeny-trees",
     label: "Progeny",
     value: "Trees",
-    body: "Request a character, item, creature, vehicle, or project-specific attribute structure for a game world.",
+    body: [
+      "Request the trait structure your game actually needs: character, item, creature, vehicle, or another project-specific asset.",
+      "The goal is not a generic generator. It is a generation system shaped around the world you are building.",
+    ],
   },
   {
     id: "traceable-lineage-summary",
     label: "Lineage",
     value: "Traceable",
-    body: "Generated assets can preserve parent/source relationships so Progeny stays tied to its origin profile.",
+    body: [
+      "Generated assets can keep a readable link back to the profile that created them.",
+      "That helps players, collectors, and communities understand where an asset came from instead of treating every item like it fell out of a black box.",
+    ],
   },
   {
     id: "routing-conditional-summary",
     label: "Royalty",
     value: "Path",
-    body: "Wallet-linked attribution can be designed into assets where contract and marketplace support exists.",
+    body: [
+      "Wallet-linked attribution can be designed into assets where contracts and marketplaces support it.",
+      "That is useful for creator credit and resale routing, but it should stay framed as support-dependent instead of guaranteed everywhere.",
+    ],
   },
 ];
 
@@ -58,7 +70,10 @@ const developerSections = [
     label: "Profile",
     value: "Layer",
     title: "Profile Layer",
-    body: "Sovereign Engine reads participant inputs into a stable profile origin. For games, that turns a player into a consistent source signal instead of a random roll.",
+    body: [
+      "Sovereign Engine turns approved user inputs into a stable profile for games and collections.",
+      "For developers, that means a player can have a consistent identity source instead of a new random result every time they touch a project.",
+    ],
     link: { href: "/engine", label: "View Engine" },
   },
   {
@@ -67,7 +82,10 @@ const developerSections = [
     label: "Attribute",
     value: "Trees",
     title: "Attribute Trees",
-    body: "A Progeny Project defines what gets generated from a source profile: creatures, characters, gear, transport, adversaries, locations, or other game objects.",
+    body: [
+      "A Progeny project defines what can be generated from a Genesis profile: creatures, characters, gear, transport, adversaries, locations, or other game objects.",
+      "The tree matters because it turns profile data into useful game design instead of a spreadsheet full of disconnected traits.",
+    ],
     link: { href: "/economics#progeny-model", label: "Open Progeny" },
   },
   {
@@ -76,7 +94,10 @@ const developerSections = [
     label: "Actual",
     value: "Supply",
     title: "Actual Supply",
-    body: "One verified Genesis origin gives developers cleaner supply. Players cannot spam new profiles until the numbers finally surrender.",
+    body: [
+      "One verified Genesis origin gives developers a cleaner supply base.",
+      "It is designed to make profile spam harder, so players cannot keep rerolling wallets until they get the best outcome.",
+    ],
     link: { href: "/whitepaper#progeny", label: "Read Model" },
   },
   {
@@ -85,7 +106,10 @@ const developerSections = [
     label: "Lineage",
     value: "Trace",
     title: "Traceable Lineage",
-    body: "Progeny assets inherit source-profile qualities. Games can trace a character, item, or construct back to the origin that created it.",
+    body: [
+      "Progeny assets can inherit qualities from the profile that created them.",
+      "That gives games and communities a way to trace an item, character, or construct back to its source.",
+    ],
     link: { href: "/economics#developer-access", label: "Builder Use" },
   },
   {
@@ -94,7 +118,10 @@ const developerSections = [
     label: "Vanguard",
     value: "Collections",
     title: "Vanguard Collections",
-    body: "Developers can design systems where users generate from their own profile or acquire assets from a Vanguard collection. Scarcity follows the project rules.",
+    body: [
+      "Developers can design systems where users generate from their own profile or acquire assets from a Vanguard collection.",
+      "That creates room for both personal identity and market movement. Scarcity follows the published project rules instead of one rule being forced onto every asset.",
+    ],
     link: { href: "/vanguard", label: "Vanguard" },
   },
   {
@@ -103,7 +130,10 @@ const developerSections = [
     label: "Royalty",
     value: "Routing",
     title: "Royalty Routing",
-    body: "Lineage assets use wallet-linked attribution where the contract and marketplace route support it. This is marketplace-dependent, not universal enforcement.",
+    body: [
+      "Lineage assets can use wallet-linked attribution where the contract and marketplace route support it.",
+      "This helps creator credit survive resale better than a loose promise in a Discord post, while staying honest about marketplace-dependent enforcement.",
+    ],
     link: { href: "/economics#royalty-routing", label: "Routing" },
   },
   {
@@ -112,7 +142,10 @@ const developerSections = [
     label: "Controlled",
     value: "Review",
     title: "Integration Boundary",
-    body: "Developer access is controlled review, structure design, and integration planning. Sovereign Engine owns generation truth; game clients consume approved outputs.",
+    body: [
+      "Developer access is reviewed and scoped before integration.",
+      "That boundary matters because the Portal can display approved outputs, but the Engine remains the source of truth for generation, metadata, and protected rules.",
+    ],
     link: { href: "/whitepaper#deterministic-engine", label: "Litepaper" },
   },
   {
@@ -121,7 +154,10 @@ const developerSections = [
     label: "Privacy",
     value: "Metadata",
     title: "Privacy And Metadata",
-    body: "Integrations use derived stats, lineage references, token IDs, wallet-linked ownership state, and approved metadata. Raw personal intake data stays out of public clients.",
+    body: [
+      "Integrations use derived stats, lineage references, token IDs, wallet-linked ownership state, and approved metadata.",
+      "Raw personal intake data stays out of public clients. The system should be useful to games without asking users to turn private details into public collectibles.",
+    ],
     link: { href: "/whitepaper#privacy-practices", label: "Privacy" },
   },
 ];
