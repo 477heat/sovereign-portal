@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatedFrame } from "@/components/command/AnimatedFrame";
@@ -28,6 +29,23 @@ const vanguardGlossaryTerms: GlossaryTermKey[] = [
   "Wallet",
   "wallet-linked",
 ];
+
+const originBadgeBackdropStyle: CSSProperties = {
+  backgroundImage: 'url("/vanguard-assets/golden-v-vanguard-badge.png")',
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "contain",
+  filter:
+    "drop-shadow(0 0 22px rgba(250, 204, 21, 0.16)) drop-shadow(0 0 48px rgba(125, 211, 252, 0.08))",
+  height: "clamp(13rem, 34vw, 28rem)",
+  opacity: 0.24,
+  pointerEvents: "none",
+  position: "absolute",
+  right: "clamp(-0.5rem, 4vw, 3rem)",
+  top: "clamp(1.8rem, 7vh, 4.25rem)",
+  width: "clamp(13rem, 34vw, 28rem)",
+  zIndex: 0,
+};
 
 type DrawerBasePanel = {
   id: string;
@@ -75,8 +93,8 @@ const statusPanels: DrawerBasePanel[] = [
     number: "03",
     label: "Legacy",
     value: "Carry-forward",
-    title: "Carry-forward Status",
-    body: "Vanguard status carries into Progeny drops, early rate classes, and future project systems.",
+    title: "Vanguard Legacy",
+    body: "Vanguard status carries into Progeny drops, early rate classes, and future project systems. Vanguards will never pay a subscription or membership fee.",
   },
   {
     id: "rail-routing",
@@ -201,54 +219,19 @@ export default function VanguardPrivilegesPage() {
             </div>
 
             <div className="command-room__viewport-content command-room__viewport-content--fullscreen relative z-10 grid content-start gap-8 p-5 md:p-8">
-              <div className="command-room__active-panel" key={activePanel.id}>
-                <div
-                  className="command-room__signal-row"
-                  style={{
-                    background: "rgba(3, 17, 23, 0.78)",
-                    border: "1px solid rgba(165, 243, 252, 0.2)",
-                    boxShadow: "0 0 18px rgba(125, 211, 252, 0.1)",
-                    clipPath:
-                      "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
-                    flexWrap: "nowrap",
-                    fontSize: "0.42rem",
-                    gap: "0.24rem",
-                    justifySelf: "start",
-                    letterSpacing: "0.06em",
-                    marginBottom: "-0.75rem",
-                    marginLeft: "-0.35rem",
-                    maxWidth: "100%",
-                    padding: "0.36rem 0.5rem",
-                    transform: "translateY(-1.22rem)",
-                    whiteSpace: "nowrap",
-                    width: "fit-content",
-                  }}
-                >
-                  <b style={{ fontWeight: 500 }}>{activePanel.groupLabel}</b>
-                  <i
+              <div className="command-room__layer-badge">{activePanel.eyebrow}</div>
+              <div
+                className="command-room__active-panel"
+                data-panel-id={activePanel.id}
+                key={activePanel.id}
+              >
+                {activePanel.id === "rail-origin" ? (
+                  <div
+                    className="command-room__origin-badge-backdrop"
+                    style={originBadgeBackdropStyle}
                     aria-hidden="true"
-                    style={{
-                      background: "rgba(165, 243, 252, 0.24)",
-                      display: "block",
-                      flex: "0 0 0.34rem",
-                      height: "1px",
-                    }}
                   />
-                  <b style={{ fontWeight: 500 }}>{activePanel.number}</b>
-                  <i
-                    aria-hidden="true"
-                    style={{
-                      background: "rgba(165, 243, 252, 0.24)",
-                      display: "block",
-                      flex: "0 0 0.34rem",
-                      height: "1px",
-                    }}
-                  />
-                  <b style={{ fontWeight: 500 }}>{activePanel.eyebrow}</b>
-                </div>
-                <p className="mt-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/58">
-                  {activePanel.eyebrow}
-                </p>
+                ) : null}
                 <h1 className="command-lab__headline mt-3 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 max-sm:!text-[1.75rem] max-sm:!leading-[1.15] md:text-5xl">
                   {activePanel.title}
                 </h1>
@@ -261,14 +244,6 @@ export default function VanguardPrivilegesPage() {
                     text={activePanel.body}
                   />
                 </p>
-                {activePanel.link ? (
-                  <Link
-                    className="chamfer-nav-link chamfer-nav-link--compact mt-6"
-                    href={activePanel.link.href}
-                  >
-                    {activePanel.link.label}
-                  </Link>
-                ) : null}
               </div>
             </div>
               </AnimatedFrame>
@@ -290,13 +265,14 @@ export default function VanguardPrivilegesPage() {
             }`}
           >
             <button
+              aria-label={drawerOpen ? "Stow Vanguard drawer" : "Deploy Vanguard drawer"}
               aria-controls="vanguard-drawer"
               aria-expanded={drawerOpen}
               className="command-room__drawer-tab"
               onClick={() => setDrawerOpen((open) => !open)}
               type="button"
             >
-              {drawerOpen ? "Stow Vanguard Drawer" : "Open"}
+              {drawerOpen ? "Stow" : "Deploy"}
             </button>
 
             <AssemblingPanel

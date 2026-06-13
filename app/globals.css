@@ -3212,9 +3212,11 @@ body {
 }
 
 .command-room__console-screen {
+  box-sizing: border-box;
   min-height: 0;
   min-width: 0;
   overflow: hidden;
+  padding-top: 2.15rem;
   position: relative;
 }
 
@@ -3249,15 +3251,21 @@ body {
 }
 
 .command-room__console-screen .command-room__viewport--fullscreen {
-  height: 100%;
-  max-height: 100%;
-  min-height: 100% !important;
+  height: calc(100% - 2.15rem);
+  max-height: calc(100% - 2.15rem);
+  min-height: calc(100% - 2.15rem) !important;
+  overflow: visible;
 }
 
 .command-room__console-screen .command-room__viewport-content--fullscreen {
   height: 100%;
   max-height: 100%;
   min-height: 100% !important;
+}
+
+.command-room__console-screen .command-animated-frame__tag {
+  right: 1.45rem;
+  top: -1.85rem;
 }
 
 .command-room__console-dock {
@@ -3301,14 +3309,14 @@ body {
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
   color: rgba(254, 249, 195, 0.95);
   cursor: pointer;
-  font-size: 0.56rem;
+  font-size: 0.62rem;
   font-weight: 800;
   left: 0;
   letter-spacing: 0.24em;
   line-height: 1;
-  min-height: 1.85rem;
-  min-width: 8.8rem;
-  padding: 0.55rem 0.9rem 0.5rem 0.7rem;
+  min-height: 2.15rem;
+  min-width: 9.6rem;
+  padding: 0.68rem 1rem 0.62rem 0.78rem;
   position: absolute;
   text-align: left;
   text-transform: uppercase;
@@ -3320,13 +3328,13 @@ body {
     transform 160ms ease,
     width 220ms ease;
   white-space: nowrap;
-  width: 8.8rem;
+  width: 9.6rem;
   z-index: 4;
 }
 
 .command-room__drawer-shell--open .command-room__drawer-tab {
-  min-width: min(18rem, calc(100vw - 1rem));
-  width: min(18rem, calc(100vw - 1rem));
+  min-width: min(10.4rem, calc(100vw - 1rem));
+  width: min(10.4rem, calc(100vw - 1rem));
 }
 
 .command-room__drawer-tab:hover,
@@ -3350,15 +3358,15 @@ body {
   animation: command-drawer-tab-pulse 1350ms ease-in-out infinite;
   align-items: center;
   display: inline-flex;
-  height: 6.8rem;
+  height: 7.45rem;
   justify-content: center;
   line-height: 1.15;
-  min-height: 6.8rem;
-  min-width: 3.15rem;
-  padding: 0.8rem 0.42rem;
+  min-height: 7.45rem;
+  min-width: 3.55rem;
+  padding: 0.92rem 0.5rem;
   text-align: center;
   text-orientation: mixed;
-  width: 3.15rem;
+  width: 3.55rem;
   writing-mode: vertical-rl;
 }
 
@@ -3420,6 +3428,33 @@ body {
   max-width: 100%;
   min-width: 0;
   overflow-wrap: break-word;
+  position: relative;
+}
+
+.command-room__active-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.command-room__layer-badge {
+  background: rgba(3, 17, 23, 0.78);
+  border: 1px solid rgba(165, 243, 252, 0.2);
+  box-shadow: 0 0 18px rgba(125, 211, 252, 0.1);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  color: rgba(165, 243, 252, 0.72);
+  font-size: 0.58rem;
+  justify-self: end;
+  letter-spacing: 0.28em;
+  max-width: calc(100% - 2rem);
+  overflow: hidden;
+  padding: 0.42rem 0.68rem;
+  position: absolute;
+  right: clamp(1.15rem, 3vw, 2.15rem);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  top: 0.6rem;
+  white-space: nowrap;
+  z-index: 6;
 }
 
 .command-room__active-value {
@@ -3502,7 +3537,7 @@ body {
 }
 
 .command-room__drawer-button small {
-  color: rgba(254, 240, 138, 0.66);
+  color: rgba(165, 243, 252, 0.5);
   font-size: 0.5rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -3513,10 +3548,21 @@ body {
 .command-room__drawer-button:focus-visible,
 .command-room__drawer-button--active {
   box-shadow:
+    0 0 0 1px rgba(125, 211, 252, 0.32),
     0 0 18px rgba(56, 189, 248, 0.1),
     0 0 38px rgba(14, 165, 233, 0.055);
   transform: scale(1.035);
   z-index: 2;
+}
+
+.command-room__drawer-button--active span {
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow: 0 0 14px rgba(165, 243, 252, 0.34);
+}
+
+.command-room__drawer-button--active small {
+  color: rgba(254, 240, 138, 0.94);
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.32);
 }
 
 .command-room__drawer-button--active::before {
