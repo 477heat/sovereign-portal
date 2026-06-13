@@ -567,6 +567,14 @@ body {
   margin-inline: 0.18em;
 }
 
+@media (max-width: 640px) {
+  .coinbase-entry-hero,
+  .coinbase-entry-copy {
+    max-width: min(100%, 22rem) !important;
+    width: min(100%, 22rem) !important;
+  }
+}
+
 @media (min-width: 768px) {
   .coinbase-entry-hero {
     display: grid;
