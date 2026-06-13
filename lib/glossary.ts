@@ -144,7 +144,7 @@ export const glossary = {
   Signature:
     "A wallet approval that proves the wallet owner said yes.",
   SI:
-    "Synthetic intelligence. Here, it means machine intelligence that can act like a person, but does not count as a verified human origin for the Soul Mint.",
+    "Synthetic intelligence, quickly nicknamed Superior Intelligence by the people selling it. Here, it means machine intelligence that can act like a person, but does not count as a verified human origin for the Soul Mint.",
   "Smart Contract":
     "A program on a blockchain that follows set rules. Here, it controls token minting, ownership records, and royalty rules.",
   Soul:

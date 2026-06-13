@@ -3358,6 +3358,27 @@ body {
   transform: translateY(-1px);
 }
 
+.command-room-page[data-command-pending] .command-room__drawer-tab,
+.command-room-page[data-command-pending] .command-room__drawer-button,
+.command-room-page[data-command-pending] .command-room__drawer-actions .chamfer-nav-link {
+  cursor: progress;
+}
+
+.command-room__drawer-tab:disabled,
+.command-room__drawer-button:disabled {
+  opacity: 1;
+}
+
+.command-room__drawer-tab[data-command-action-pending="true"],
+.command-room__drawer-button[data-command-action-pending="true"],
+.command-room__drawer-actions .chamfer-nav-link[data-command-action-pending="true"] {
+  filter: saturate(1.18) brightness(1.12);
+  box-shadow:
+    0 0 0 1px rgba(254, 240, 138, 0.46),
+    0 0 26px rgba(250, 204, 21, 0.24),
+    0 0 54px rgba(56, 189, 248, 0.1);
+}
+
 .command-room__drawer-shell--closed {
   min-height: 7.25rem;
 }

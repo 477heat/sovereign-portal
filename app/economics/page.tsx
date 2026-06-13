@@ -1,6 +1,8 @@
-import Link from "next/link";
-import { GlossaryText } from "@/components/GlossaryTerm";
-import TunnelBackdrop from "@/components/TunnelBackdrop";
+import {
+  CommandPageShell,
+  type CommandDrawerAction,
+  type CommandPanelGroup,
+} from "@/components/command/CommandPageShell";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
 const economicsGlossaryTerms: GlossaryTermKey[] = [
@@ -22,25 +24,25 @@ const economicsGlossaryTerms: GlossaryTermKey[] = [
 
 const accessPanels = [
   {
-    href: "/vanguard",
+    id: "initial-supporters",
     label: "Initial Supporters",
     value: "Vanguard",
     body: "Vanguard is the legacy access tier. Benefits carry forward as new Access Token variants launch.",
   },
   {
-    href: "#future-progeny-flow",
+    id: "progeny-inheritance",
     label: "Progeny",
     value: "Inheritance",
     body: "Characters, children, gear, creatures, and project assets can inherit traceable source qualities.",
   },
   {
-    href: "#royalty-routing",
+    id: "approved-routing",
     label: "Routing",
     value: "Approved",
     body: "Royalty benefits depend on approved marketplace routes that honor the collection's royalty flow.",
   },
   {
-    href: "#developer-access",
+    id: "builder-use",
     label: "Builder Use",
     value: "Trees",
     body: "Developers can choose a Progeny structure or request a project-specific attribute tree.",
@@ -100,164 +102,70 @@ const progenyExplainer = [
   },
 ];
 
+const futureProgenyBody = [
+  "Early users should think of Genesis as the origin deed, not the entire Engine. Progeny is planned to become the layer where characters, gear, vehicles, creatures, and project-specific assets can be generated from that origin.",
+  ...progenyExplainer.map((item) => `${item.label}: ${item.body}`),
+  "In a later release, Vanguard inventory may let users compare generated Progeny by type or game, request a mint from a Vanguard-generated asset, or purchase through approved routes where the contract and marketplace support the flow. These mechanics are roadmap direction until published in live terms.",
+];
+
+const economicsGroups: CommandPanelGroup[] = [
+  {
+    label: "Access Matrix",
+    eyebrow: "Access Layer",
+    panels: accessPanels.map((panel, index) => ({
+      id: panel.id,
+      number: String(index + 1).padStart(2, "0"),
+      label: panel.label,
+      value: panel.value,
+      title: `${panel.label} ${panel.value}`,
+      body: panel.body,
+    })),
+  },
+  {
+    label: "Progeny Flow",
+    eyebrow: "Future Builds",
+    panels: [
+      {
+        id: "future-progeny-flow",
+        number: "01",
+        label: "One Genesis",
+        value: "Many Builds",
+        title: "One Genesis. Many Future Builds.",
+        body: futureProgenyBody,
+      },
+    ],
+  },
+  {
+    label: "Policy Nodes",
+    eyebrow: "Progeny Routing",
+    panels: policyPanels.map((panel) => ({
+      id: panel.id,
+      number: panel.number,
+      label: panel.title,
+      value: panel.link.label,
+      title: panel.title,
+      body: panel.body,
+      link: panel.link,
+    })),
+  },
+];
+
+const drawerActions: CommandDrawerAction[] = [
+  { href: "/", label: "Home" },
+  { href: "/vanguard", label: "Vanguard", variant: "opposite" },
+  { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
+  { href: "/developer", label: "Developer" },
+  { href: "/portal", label: "Portal", variant: "primary" },
+];
+
 export default function EconomicsPage() {
   return (
-    <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-5 py-6 font-mono text-white md:px-10 md:py-10">
-      <TunnelBackdrop layer="page" variant="diffused" />
-
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <nav className="mb-8 flex flex-col gap-3 border-b border-cyan-200/10 pb-5 text-[0.62rem] uppercase tracking-[0.22em] text-cyan-50/70 md:flex-row md:items-center md:justify-between">
-          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
-            Home
-          </Link>
-          <div>Access // Progeny Routing</div>
-        </nav>
-
-        <header className="chamfer-panel chamfer-panel--command mb-8 px-6 py-7 md:px-10 md:py-9">
-          <div className="mb-5 flex flex-wrap items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-            <span>Vanguard class</span>
-            <span className="h-px w-10 bg-cyan-100/20" />
-            <span>Progeny logic</span>
-            <span className="h-px w-10 bg-cyan-100/20" />
-            <span>royalty-routing</span>
-          </div>
-          <div className="grid gap-8 md:grid-cols-[0.92fr_1.08fr] md:items-end">
-            <div>
-              <p className="mb-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/55">
-                Access Layer
-              </p>
-              <h1 className="max-w-3xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 md:text-5xl">
-                Access And Progeny
-              </h1>
-            </div>
-            <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              <GlossaryText
-                terms={economicsGlossaryTerms}
-                text="This page explains how Vanguard access, Progeny creation, and royalty routing connect. The practical rule is simple: source profiles create traceable assets, and approved routes preserve wallet-linked benefits where supported."
-              />
-            </p>
-          </div>
-        </header>
-
-        <section className="mb-9 grid gap-4 md:grid-cols-4">
-          {accessPanels.map((panel) => (
-            <Link
-              key={panel.label}
-              href={panel.href}
-              className="chamfer-panel chamfer-panel--interactive chamfer-panel--small p-5"
-            >
-              <div className="text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-                {panel.label}
-              </div>
-              <div className="mt-3 text-2xl uppercase tracking-normal text-cyan-50">
-                {panel.value}
-              </div>
-              <p className="mt-3 text-sm leading-6 text-cyan-50/66">{panel.body}</p>
-            </Link>
-          ))}
-        </section>
-
-        <section className="chamfer-panel chamfer-panel--wide mb-9 px-6 py-7 md:px-9 md:py-8">
-          <div className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-center">
-            <div>
-              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-cyan-100/50">
-                User Summary
-              </p>
-              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
-                Why This Page Exists
-              </h2>
-            </div>
-            <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              <GlossaryText
-                terms={economicsGlossaryTerms}
-                text="Users should understand what carries forward, what can be generated from their profile, and where marketplace support matters. This is the short version before reading the full policy layer."
-              />
-            </p>
-          </div>
-        </section>
-
-        <section
-          id="future-progeny-flow"
-          className="chamfer-panel chamfer-panel--wide mb-9 scroll-mt-24 px-6 py-7 md:px-9 md:py-8"
-        >
-          <div className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-            <div>
-              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-yellow-100/70">
-                Future Progeny Flow
-              </p>
-              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
-                One Genesis. Many Future Builds.
-              </h2>
-              <p className="mt-4 text-sm leading-6 text-cyan-50/66 md:text-base">
-                <GlossaryText
-                  terms={economicsGlossaryTerms}
-                  text="Early users should think of Genesis as the origin deed, not the entire Engine. Progeny is planned to become the layer where characters, gear, vehicles, creatures, and project-specific assets can be generated from that origin."
-                />
-              </p>
-            </div>
-            <div className="grid gap-3 md:grid-cols-3">
-              {progenyExplainer.map((item) => (
-                <div
-                  key={item.label}
-                  className="chamfer-panel chamfer-panel--small border border-cyan-100/15 bg-black/35 p-4"
-                >
-                  <div className="text-[0.62rem] uppercase tracking-[0.2em] text-yellow-100/75">
-                    {item.label}
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-cyan-50/66">
-                    <GlossaryText
-                      terms={economicsGlossaryTerms}
-                      text={item.body}
-                    />
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-6 border-t border-cyan-100/10 pt-5 text-sm leading-6 text-cyan-50/64 md:text-base">
-            <GlossaryText
-              terms={economicsGlossaryTerms}
-              text="In a later release, Vanguard inventory may let users compare generated Progeny by type or game, request a mint from a Vanguard-generated asset, or purchase through approved routes where the contract and marketplace support the flow. These mechanics are roadmap direction until published in live terms."
-            />
-          </div>
-        </section>
-
-        <div className="space-y-5 pb-16">
-          {policyPanels.map((panel) => (
-            <section
-              key={panel.id}
-              id={panel.id}
-              className="chamfer-panel chamfer-panel--policy mx-auto max-w-5xl scroll-mt-24 px-6 py-6 md:px-8"
-            >
-              <div className="grid gap-5 md:grid-cols-[6rem_1fr_auto] md:items-start">
-                <div>
-                  <p className="mb-2 text-[0.62rem] uppercase tracking-[0.32em] text-cyan-100/35">
-                    {panel.number}
-                  </p>
-                  <div className="h-px w-8 bg-cyan-100/20" />
-                </div>
-                <div>
-                  <h2 className="mb-4 text-lg font-semibold uppercase tracking-normal text-cyan-50 md:text-xl">
-                    {panel.title}
-                  </h2>
-                  <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
-                    <GlossaryText
-                      terms={economicsGlossaryTerms}
-                      text={panel.body}
-                    />
-                  </p>
-                </div>
-                <Link
-                  href={panel.link.href}
-                  className="chamfer-hero-link chamfer-hero-link--secondary justify-self-start md:justify-self-end"
-                >
-                  {panel.link.label}
-                </Link>
-              </div>
-            </section>
-          ))}
-        </div>
-      </div>
-    </main>
+    <CommandPageShell
+      drawerActions={drawerActions}
+      drawerContentId="economics-drawer"
+      drawerLabel="Access drawer"
+      glossaryTerms={economicsGlossaryTerms}
+      groups={economicsGroups}
+    />
   );
 }

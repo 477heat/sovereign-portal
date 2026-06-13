@@ -7,6 +7,31 @@ import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
 const dayOneLaunchAt = Date.UTC(2026, 5, 24, 15, 0, 0);
+const architectTokenMetadataUrl =
+  "https://ipfs.io/ipfs/QmT4TMS6rvcqCJidEveQFe6jr62Pg1h2E7157xEtsJi4o4";
+const architectTokenImageUrl =
+  "https://ipfs.io/ipfs/QmYGQiWLkK9CFDPsHEbhpLpT4tU4MxX6VAR7bYAMKKrj2z";
+const architectTokenTraits = [
+  ["*Token", "Genesis Access"],
+  ["*Rank", "Magister"],
+  ["*Align", "Mirrored"],
+  ["*Line", "Cautious"],
+  ["*Ordo", "Earth + Earth"],
+] as const;
+const architectStatTraits = [
+  ["01 Presence", "82"],
+  ["02 Wealth", "110"],
+  ["03 Fortitude", "108"],
+  ["04 Cunning", "83"],
+  ["05 Flair", "78"],
+  ["06 Vigor", "72"],
+  ["07 Kinship", "102"],
+  ["08 Potency", "92"],
+  ["09 Wisdom", "113"],
+  ["10 Prestige", "112"],
+  ["11 Influence", "94"],
+  ["12 Arcana", "108"],
+] as const;
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
   "Actual Supply",
@@ -34,23 +59,23 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
 
 const protocolCards = [
   {
-    label: "Checklist",
-    title: "Pre-Flight Check",
-    body: "Any early support is welcome while we continue to iron out the website and other details. Read the litepaper for more info.",
-    href: "/vanguard",
-    destination: "Vanguard status",
+    label: "Story Origin",
+    title: "Machine Economy",
+    body: "AI came first. SI followed and was quickly sold as Superior. Search, markets, and games learned to reward synthetic advantage. Sovereign Engine starts with the part machines still have to fake: a real origin.",
+    href: "/whitepaper",
+    destination: "Litepaper",
   },
   {
     label: "Base-native",
     title: "Genesis Artifact",
-    body: "If you're human, you have a Soul. The Genesis Artifact is an Access Token. Mint your Title of Ownership directly into your possession.",
+    body: "The Soul Deed is the first Access Token: a Title of Ownership minted to the wallet behind a verified human path, not to an empty account swarm.",
     href: "/portal",
     destination: "Soul Registry Portal",
   },
   {
     label: "Coinbase EAS",
     title: "1 Soul, 1 Mint",
-    body: "We use Coinbase EAS to help confirm each participant is a verified human. Once a Genesis mint is claimed, the contract blocks a second one, helping make this community unusually focused on real people.",
+    body: "The live path uses Coinbase EAS and contract mint history to keep Genesis scarce: one verified origin, one starting profile, one human signal in the Engine.",
     href: "/economics",
     destination: "Access and Progeny",
   },
@@ -68,32 +93,32 @@ const mobileNavLinks = [["Home", "/"], ...navLinks] as const;
 
 const whyThisMatters = [
   {
-    body: "Your Title of Ownership carries attributes that affect each Progeny project. The contract uses heavy legal language to discourage resale while preserving each user's autonomy.",
+    body: "Your Title of Ownership carries the starting attributes future Progeny can read. It does not pretend to solve the internet; it creates a verified origin point the Engine can build from.",
     featured: false,
     opposite: false,
   },
   {
-    body: "Vanguard is an access title granted to initial holders of this Access Token, carrying rights and recognition under that title.",
+    body: "Vanguard is the Initial Supporter layer: the first human-linked wallets that entered before the Engine branches outward.",
     featured: false,
     opposite: true,
   },
   {
-    body: "Progeny Projects are individual mints, including characters, creatures, items, weapons, and more, imbued with attributes that correlate to your initial Genesis Mint.",
+    body: "Progeny Projects are future mints that inherit from that origin: characters, creatures, items, weapons, vehicles, and other project-specific builds.",
     featured: false,
     opposite: true,
   },
   {
-    body: "Material items are also Progeny: clothing, armor, weapons, creatures, adversarial constructs, modes of transport, and more.",
+    body: "Items do not need to be generic drops. A weapon, creature, transport, or adversary can be generated from the holder's source profile instead of rolled from a public loot table.",
     featured: false,
     opposite: false,
   },
   {
-    body: "Developers choose which attribute structure they want for their games, request a specific Character Attribute Tree for users to generate a profile from, or have their users purchase from a Vanguard's Collection. Each creation is unique to the user's original stats.",
+    body: "Developers can choose an Attribute Tree for their game and let the Engine produce consistent player-linked variety without handing every advantage to reroll farms.",
     featured: false,
     opposite: false,
   },
   {
-    body: "For developers, one verified mint per project creates Actual Supply. Players cannot reroll until they get an overpowered build; each user works with their own attributes, giving games controlled variety without rewarding exploit-driven play.",
+    body: "For developers, one verified Genesis source per participant creates Actual Supply. Players work with their own attributes instead of rerolling endlessly until the numbers surrender.",
     featured: false,
     opposite: false,
   },
@@ -293,7 +318,7 @@ export default function HomePage() {
         <div className="home-hero-command-stack relative z-10 lg:col-span-2">
           <div className="chamfer-panel chamfer-panel--hero-copy max-w-[28rem] px-5 py-4 md:w-[35vw] md:max-w-none md:px-7 md:py-3">
             <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80 md:mb-1">
-              Registry Initializing
+              Human Signal Initializing
             </p>
             <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
               Sovereign Engine
@@ -301,7 +326,7 @@ export default function HomePage() {
             <p className="mt-5 max-w-[24rem] text-lg leading-7 text-white/68 md:mt-3 md:max-w-[46rem] md:text-base md:leading-6">
               <GlossaryText
                 terms={homeGlossaryTerms}
-                text="One person, one Genesis mint. No bot farms, no prize harvesting, no empty wallets pretending to be a community."
+                text="AI scaled the noise. SI made it look human. Sovereign Engine starts from the opposite signal: one person, one Genesis mint, no empty-wallet swarm."
               />
             </p>
           </div>
@@ -415,7 +440,7 @@ export default function HomePage() {
           <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-base leading-7 text-white/68 md:text-lg md:leading-8">
             <GlossaryText
               terms={homeGlossaryTerms}
-              text="We use your DOB to determine 1 of 60 Chinese and 1 of 24 Western astrological signs, which are fused to establish your unique attribute origin. 12 initial attributes are embedded in your Soul Mint and direct every future Progeny branch. EAS ensures a single verified mint only."
+              text="The Engine starts with fixed human inputs, not rerolls. DOB-derived Western and Chinese signs establish the first 12 attributes; EAS and the mint ledger keep Genesis from becoming another machine-scaled claim farm."
             />
           </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
@@ -433,27 +458,60 @@ export default function HomePage() {
 
       <section className="relative z-10 mx-auto flex max-w-7xl items-start justify-start gap-4 px-5 pb-6 md:gap-6 md:px-8">
         <Link
-          aria-label="Open Archive page for the Architect artifact"
-          className="home-deed-preview chamfer-panel chamfer-panel--all-corners block w-1/2 p-1.5 md:w-1/4"
+          aria-label="Open Archive page for the Architect Genesis Access artifact"
+          className="home-deed-preview chamfer-panel chamfer-panel--all-corners block w-1/2 p-1.5 md:w-1/5"
           href="/archive"
         >
           <Image
-            alt="T. Bre Soul Deed artifact display"
-            className="block aspect-square w-full object-cover"
+            alt="Certificate of Title for Spiritual Ownership Genesis Access card for T. Bre"
+            className="block aspect-[5/7] w-full bg-black object-contain"
             height={1960}
             src="/media/t-bre-soul-deed.jpg"
-            width={1960}
+            width={1429}
           />
         </Link>
-        <div className="home-architect-artifact chamfer-panel chamfer-panel--readout chamfer-panel--all-corners w-[calc(50%-1rem)] px-4 py-3 md:w-fit md:px-5 md:py-4">
-          <h2 className="text-xs uppercase leading-5 tracking-[0.14em] text-white md:text-sm md:leading-6">
-            Title 0000
-            <span className="block">The Architect</span>
-          </h2>
-          <p className="mt-4 text-xs leading-5 text-white/58 md:text-sm md:leading-6">
-            View the Archive for details.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">
+        <div className="home-architect-column w-[calc(50%-1rem)] md:w-[22rem]">
+          <div className="home-architect-artifact chamfer-panel chamfer-panel--readout chamfer-panel--all-corners px-3 py-3 md:px-5 md:py-4">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-[0.48rem] uppercase leading-none tracking-[0.22em] text-cyan-100/55 md:text-[0.62rem]">
+                  Token 0000
+                </p>
+                <h2 className="mt-1 text-[0.62rem] uppercase leading-tight tracking-[0.14em] text-white md:text-xs">
+                  T. Bre
+                </h2>
+              </div>
+              <span className="text-[0.45rem] uppercase tracking-[0.16em] text-yellow-100/75 md:text-[0.58rem]">
+                Genesis
+              </span>
+            </div>
+
+            <dl className="mt-2 grid gap-1 text-[0.48rem] uppercase leading-tight tracking-[0.08em] md:text-[0.62rem]">
+              {architectTokenTraits.map(([label, value]) => (
+                <div
+                  className="grid grid-cols-[minmax(0,0.68fr)_minmax(0,1fr)] gap-1 border-b border-cyan-100/10 pb-1"
+                  key={label}
+                >
+                  <dt className="truncate text-cyan-100/52">{label}</dt>
+                  <dd className="truncate text-white/78">{value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <dl className="mt-2 grid grid-cols-1 gap-0.5 text-[0.46rem] uppercase leading-tight tracking-[0.06em] text-white/64 md:grid-cols-2 md:gap-x-3 md:text-[0.58rem]">
+              {architectStatTraits.map(([label, value]) => (
+                <div
+                  className="grid grid-cols-[minmax(0,1fr)_3ch] gap-1"
+                  key={label}
+                >
+                  <dt className="truncate text-cyan-100/48">{label}</dt>
+                  <dd className="text-right text-yellow-100/78">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div className="home-architect-actions mt-2 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact"
               href="/archive"
@@ -462,11 +520,19 @@ export default function HomePage() {
             </Link>
             <a
               className="chamfer-nav-link chamfer-nav-link--compact"
-              href="https://ipfs.io/ipfs/QmQeCXtBJyTyvypYQEFo24woEP3q1kEgBq9ebvC8eCHSk4"
+              href={architectTokenMetadataUrl}
               rel="noopener noreferrer"
               target="_blank"
             >
               Metadata IPFS
+            </a>
+            <a
+              className="chamfer-nav-link chamfer-nav-link--compact"
+              href={architectTokenImageUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Image IPFS
             </a>
           </div>
         </div>

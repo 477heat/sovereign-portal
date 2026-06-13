@@ -2,6 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 
+const architectTokenMetadataUrl =
+  "https://ipfs.io/ipfs/QmT4TMS6rvcqCJidEveQFe6jr62Pg1h2E7157xEtsJi4o4";
+const architectTokenImageUrl =
+  "https://ipfs.io/ipfs/QmYGQiWLkK9CFDPsHEbhpLpT4tU4MxX6VAR7bYAMKKrj2z";
+const architectOpenSeaUrl =
+  "https://opensea.io/item/base/0x2df9151c4e32082a05c686bd3092180134d17deb/0";
+
 export default function ArchivePage() {
   return (
     <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black text-white">
@@ -20,12 +27,12 @@ export default function ArchivePage() {
         <section className="grid flex-1 items-start gap-6 py-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.55fr)]">
           <div className="chamfer-panel chamfer-panel--all-corners archive-contract-frame p-2 md:p-3">
             <Image
-              alt="Blank Certificate of Title contract display"
-              className="block aspect-square w-full object-cover"
-              height={2048}
+              alt="Certificate of Title for Spiritual Ownership Genesis Access card for T. Bre"
+              className="block aspect-[5/7] w-full bg-black object-contain"
+              height={1960}
               priority
-              src="/media/soul-contract-blank.png"
-              width={2048}
+              src="/media/t-bre-soul-deed.jpg"
+              width={1429}
             />
           </div>
 
@@ -37,22 +44,23 @@ export default function ArchivePage() {
               Certificate of Title
             </h1>
             <div className="mt-5 grid gap-2 text-sm uppercase tracking-[0.2em] text-white/68">
-              <span>Title 0000</span>
-              <span>The Architect</span>
+              <span>Spiritual Ownership</span>
+              <span>T. Bre // Token 0000</span>
+              <span>Genesis Access</span>
             </div>
             <p className="mt-6 text-sm leading-6 text-white/58">
-              Archive view of the blank certificate frame used for Soul ownership
-              titles before personal inscription and final wallet delivery.
+              Archive view of the current Architect Soul Deed minted on the
+              live SLDD contract.
             </p>
             <p className="mt-4 text-sm leading-6 text-white/58">
-              Each title is marked with a short public signature, then sent
-              directly to the wallet. No extra identifying details are printed
-              on the artifact.
+              The public card shows the visible title marker. The current token
+              metadata carries the Genesis Access traits, contract terms link,
+              and image URI.
             </p>
             <div className="mt-6 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">
               <a
                 className="chamfer-nav-link chamfer-nav-link--compact"
-                href="https://ipfs.io/ipfs/QmQeCXtBJyTyvypYQEFo24woEP3q1kEgBq9ebvC8eCHSk4"
+                href={architectTokenMetadataUrl}
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -60,7 +68,15 @@ export default function ArchivePage() {
               </a>
               <a
                 className="chamfer-nav-link chamfer-nav-link--compact"
-                href="https://opensea.io/item/base/0x8453b77c845c913d8ca3d1a265ba17fc6aa5ea65/0"
+                href={architectTokenImageUrl}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Image IPFS
+              </a>
+              <a
+                className="chamfer-nav-link chamfer-nav-link--compact"
+                href={architectOpenSeaUrl}
                 rel="noopener noreferrer"
                 target="_blank"
               >

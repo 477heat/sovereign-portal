@@ -1,6 +1,8 @@
-import Link from "next/link";
-import { GlossaryText } from "@/components/GlossaryTerm";
-import TunnelBackdrop from "@/components/TunnelBackdrop";
+import {
+  CommandPageShell,
+  type CommandDrawerAction,
+  type CommandPanelGroup,
+} from "@/components/command/CommandPageShell";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
 const developerGlossaryTerms: GlossaryTermKey[] = [
@@ -24,25 +26,25 @@ const developerGlossaryTerms: GlossaryTermKey[] = [
 
 const builderPanels = [
   {
-    href: "#profile-layer",
+    id: "profile-source",
     label: "Source",
     value: "Profiles",
     body: "Use deterministic profile outputs as the origin layer for characters, classes, and persistent user identity.",
   },
   {
-    href: "#progeny-structures",
+    id: "progeny-trees",
     label: "Progeny",
     value: "Trees",
     body: "Request a character, item, creature, vehicle, or project-specific attribute structure for your game world.",
   },
   {
-    href: "#lineage",
+    id: "traceable-lineage-summary",
     label: "Lineage",
     value: "Traceable",
     body: "Generated assets can preserve parent/source relationships so Progeny remains tied to its origin profile.",
   },
   {
-    href: "#royalty-routing",
+    id: "routing-conditional-summary",
     label: "Routing",
     value: "Conditional",
     body: "Where contract and marketplace support exists, assets can be designed around wallet-linked royalty attribution.",
@@ -115,137 +117,50 @@ const developerSections = [
   },
 ];
 
+const developerGroups: CommandPanelGroup[] = [
+  {
+    label: "Builder Matrix",
+    eyebrow: "Developer Control",
+    panels: builderPanels.map((panel, index) => ({
+      id: panel.id,
+      number: String(index + 1).padStart(2, "0"),
+      label: panel.label,
+      value: panel.value,
+      title: `${panel.label} ${panel.value}`,
+      body: panel.body,
+    })),
+  },
+  {
+    label: "Integration Queue",
+    eyebrow: "Progeny Structures",
+    panels: developerSections.map((section) => ({
+      id: section.id,
+      number: section.number,
+      label: section.title,
+      value: section.link.label,
+      title: section.title,
+      body: section.body,
+      link: section.link,
+    })),
+  },
+];
+
+const drawerActions: CommandDrawerAction[] = [
+  { href: "/", label: "Home" },
+  { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
+  { href: "/economics", label: "Access", variant: "opposite" },
+  { href: "/vanguard", label: "Vanguard" },
+  { href: "/portal", label: "Portal", variant: "primary" },
+];
+
 export default function DeveloperPage() {
   return (
-    <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-5 py-6 font-mono text-white md:px-10 md:py-10">
-      <TunnelBackdrop layer="page" variant="diffused" />
-
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <nav className="mb-8 flex flex-col gap-3 border-b border-cyan-200/10 pb-5 text-[0.62rem] uppercase tracking-[0.22em] text-cyan-50/70 md:flex-row md:items-center md:justify-between">
-          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
-            Home
-          </Link>
-          <div>Developer // Progeny Structures</div>
-        </nav>
-
-        <header className="chamfer-panel chamfer-panel--command mb-8 px-6 py-7 md:px-10 md:py-9">
-          <div className="mb-5 flex flex-wrap items-center gap-3 text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-            <span>game systems</span>
-            <span className="h-px w-10 bg-cyan-100/20" />
-            <span>attribute trees</span>
-            <span className="h-px w-10 bg-cyan-100/20" />
-            <span>lineage assets</span>
-          </div>
-          <div className="grid gap-8 md:grid-cols-[0.92fr_1.08fr] md:items-end">
-            <div>
-              <p className="mb-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/55">
-                Builder Layer
-              </p>
-              <h1 className="max-w-3xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 md:text-5xl">
-                Game Developer Access
-              </h1>
-            </div>
-            <p className="max-w-2xl text-sm leading-6 text-cyan-50/72 md:text-base">
-              <GlossaryText
-                terms={developerGlossaryTerms}
-                text="Sovereign Engine is built around deterministic profile inputs that can serve as a stable origin layer for profiles, characters, items, creatures, and lineage systems."
-              />
-            </p>
-          </div>
-        </header>
-
-        <section className="chamfer-panel chamfer-panel--wide mb-9 px-6 py-7 md:px-9 md:py-8">
-          <div className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-center">
-            <div>
-              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-cyan-100/50">
-                Marker Access
-              </p>
-              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
-                Stable By Nature
-              </h2>
-            </div>
-            <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              <GlossaryText
-                terms={developerGlossaryTerms}
-                text="The stat-generation method is not exactly secret, but it is being held back while the Engine matures. Approved developer partners may receive deeper disclosure about how profile inputs are interpreted, how stats are derived, and how project-specific Progeny trees can be mapped from them."
-              />
-            </p>
-          </div>
-        </section>
-
-        <section className="mb-9 grid gap-4 md:grid-cols-4">
-          {builderPanels.map((panel) => (
-            <Link
-              key={panel.label}
-              href={panel.href}
-              className="chamfer-panel chamfer-panel--interactive chamfer-panel--small p-5"
-            >
-              <div className="text-[0.62rem] uppercase tracking-[0.22em] text-yellow-100/80">
-                {panel.label}
-              </div>
-              <div className="mt-3 text-2xl uppercase tracking-normal text-cyan-50">
-                {panel.value}
-              </div>
-              <p className="mt-3 text-sm leading-6 text-cyan-50/66">{panel.body}</p>
-            </Link>
-          ))}
-        </section>
-
-        <section className="chamfer-panel chamfer-panel--wide mb-9 px-6 py-7 md:px-9 md:py-8">
-          <div className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-center">
-            <div>
-              <p className="mb-2 text-[0.62rem] uppercase tracking-[0.26em] text-cyan-100/50">
-                Builder Summary
-              </p>
-              <h2 className="text-xl font-semibold uppercase text-cyan-50 md:text-2xl">
-                What This Allows
-              </h2>
-            </div>
-            <p className="text-sm leading-6 text-cyan-50/70 md:text-base">
-              <GlossaryText
-                terms={developerGlossaryTerms}
-                text="A developer can build around stable profile stats, choose a Progeny structure, request a custom attribute tree, and design assets that carry source lineage. Open integration is not live yet; this page defines the developer-facing model before partner tooling is exposed."
-              />
-            </p>
-          </div>
-        </section>
-
-        <div className="space-y-5 pb-16">
-          {developerSections.map((section) => (
-            <section
-              key={section.id}
-              id={section.id}
-              className="chamfer-panel chamfer-panel--policy mx-auto max-w-5xl scroll-mt-24 px-6 py-6 md:px-8"
-            >
-              <div className="grid gap-5 md:grid-cols-[6rem_1fr_auto] md:items-start">
-                <div>
-                  <p className="mb-2 text-[0.62rem] uppercase tracking-[0.32em] text-cyan-100/35">
-                    {section.number}
-                  </p>
-                  <div className="h-px w-8 bg-cyan-100/20" />
-                </div>
-                <div>
-                  <h2 className="mb-4 text-lg font-semibold uppercase tracking-normal text-cyan-50 md:text-xl">
-                    {section.title}
-                  </h2>
-                  <p className="text-sm leading-6 text-cyan-50/68 md:text-base">
-                    <GlossaryText
-                      terms={developerGlossaryTerms}
-                      text={section.body}
-                    />
-                  </p>
-                </div>
-                <Link
-                  href={section.link.href}
-                  className="chamfer-hero-link chamfer-hero-link--secondary justify-self-start md:justify-self-end"
-                >
-                  {section.link.label}
-                </Link>
-              </div>
-            </section>
-          ))}
-        </div>
-      </div>
-    </main>
+    <CommandPageShell
+      drawerActions={drawerActions}
+      drawerContentId="developer-drawer"
+      drawerLabel="Developer drawer"
+      glossaryTerms={developerGlossaryTerms}
+      groups={developerGroups}
+    />
   );
 }
