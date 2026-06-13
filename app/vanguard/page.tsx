@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatedFrame } from "@/components/command/AnimatedFrame";
 import { AssemblingPanel } from "@/components/command/AssemblingPanel";
@@ -26,29 +29,61 @@ const vanguardGlossaryTerms: GlossaryTermKey[] = [
   "wallet-linked",
 ];
 
-const statusPanels = [
+type DrawerBasePanel = {
+  id: string;
+  number: string;
+  label: string;
+  value: string;
+  title: string;
+  body: string;
+  link?: {
+    href: string;
+    label: string;
+  };
+};
+
+type DrawerPanelGroup = {
+  label: string;
+  eyebrow: string;
+  panels: DrawerBasePanel[];
+};
+
+type DrawerPanel = DrawerBasePanel & {
+  groupLabel: string;
+  eyebrow: string;
+};
+
+const statusPanels: DrawerBasePanel[] = [
   {
-    href: "#initial-supporters",
+    id: "rail-origin",
+    number: "01",
     label: "Initial Supporters",
     value: "Origin",
+    title: "Vanguard Origin",
     body: "Pre-launch supporters enter as Vanguards, the first public access class for the Engine.",
   },
   {
-    href: "#wallet-linked",
+    id: "rail-wallet",
+    number: "02",
     label: "Wallet",
     value: "Linked",
+    title: "Wallet Linked",
     body: "Recognition is designed around the wallet-linked Genesis mint, not anonymous mint farming.",
   },
   {
-    href: "#legacy",
+    id: "rail-legacy",
+    number: "03",
     label: "Legacy",
     value: "Carry-forward",
+    title: "Carry-forward Status",
     body: "Vanguard status carries into Progeny drops, early rate classes, and future project systems.",
   },
   {
-    href: "#royalty-routing",
+    id: "rail-routing",
+    number: "04",
     label: "Routing",
     value: "Conditional",
+    title: "Royalty Routing",
     body: "Royalty participation depends on contract rules, marketplace support, and published terms.",
   },
 ];
@@ -84,58 +119,77 @@ const policyPanels = [
   },
 ];
 
+const drawerGroups: DrawerPanelGroup[] = [
+  {
+    label: "Vanguard Rail",
+    eyebrow: "Initial Supporter Layer",
+    panels: statusPanels,
+  },
+  {
+    label: "Privilege Queue",
+    eyebrow: "Launch Access Layer",
+    panels: policyPanels.map((panel) => ({
+      ...panel,
+      label: panel.title,
+      value: panel.link.label,
+    })),
+  },
+];
+
+const drawerPanels: DrawerPanel[] = drawerGroups.flatMap((group) =>
+  group.panels.map((panel) => ({
+    ...panel,
+    groupLabel: group.label,
+    eyebrow: group.eyebrow,
+  })),
+);
+
 export default function VanguardPrivilegesPage() {
+  const [activePanelId, setActivePanelId] = useState(drawerPanels[0].id);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const activePanel =
+    drawerPanels.find((panel) => panel.id === activePanelId) ?? drawerPanels[0];
+
+  useEffect(() => {
+    if (!drawerOpen) {
+      return;
+    }
+
+    const scrollY = window.scrollY;
+    const previousBodyPosition = document.body.style.position;
+    const previousBodyTop = document.body.style.top;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyWidth = document.body.style.width;
+    const previousHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.documentElement.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.position = previousBodyPosition;
+      document.body.style.top = previousBodyTop;
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.width = previousBodyWidth;
+      document.documentElement.style.overscrollBehavior = previousHtmlOverscroll;
+      window.scrollTo(0, scrollY);
+    };
+  }, [drawerOpen]);
+
   return (
-    <main className="info-control-page command-room-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 font-mono text-white md:px-8">
+    <main className="info-control-page command-room-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 font-mono text-white max-sm:!px-2 md:px-8">
       <TunnelBackdrop layer="page" variant="diffused" rings />
 
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
-        <nav className="command-room__topbar">
-          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
-            Home
-          </Link>
-          <div>Charter Bay // Vanguard Status</div>
-          <Link href="/engine-lab" className="chamfer-nav-link chamfer-nav-link--compact">
-            Engine Lab
-          </Link>
-        </nav>
-
-        <section className="command-room__grid grid flex-1 gap-5 py-5">
-          <AssemblingPanel
-            className="command-room__rail border border-cyan-200/15 bg-black/50 p-4"
-            title="Vanguard Rail"
-          >
-            <div className="command-room__status-stack">
-              {statusPanels.map((panel) => (
-                <Link
-                  className="command-room__status-link"
-                  href={panel.href}
-                  key={panel.label}
-                >
-                  <span>{panel.label}</span>
-                  <strong>{panel.value}</strong>
-                  <small>{panel.body}</small>
-                </Link>
-              ))}
-            </div>
-
-            <div className="command-room__rail-actions">
-              <Link href="/economics" className="chamfer-nav-link chamfer-nav-link--compact">
-                Economy
-              </Link>
-              <Link href="/whitepaper#vanguard" className="chamfer-nav-link chamfer-nav-link--compact">
-                Whitepaper
-              </Link>
-              <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
-                Portal
-              </Link>
-            </div>
-          </AssemblingPanel>
-
-          <AnimatedFrame
-            className="command-room__viewport min-h-[38rem]"
-            label="Initial Supporter Array"
-          >
+        <section className="command-room__grid command-room__grid--drawer grid flex-1 gap-5 py-5">
+          <section className="command-room__console-body">
+            <div className="command-room__console-screen">
+              <AnimatedFrame
+                className="command-room__viewport command-room__viewport--fullscreen"
+                label={activePanel.groupLabel}
+              >
             <MovingLines />
             <PuffField />
             <div className="engine-screen-grid absolute inset-0 opacity-45" aria-hidden="true" />
@@ -146,8 +200,8 @@ export default function VanguardPrivilegesPage() {
               <span />
             </div>
 
-            <div className="command-room__viewport-content relative z-10 grid min-h-[34rem] content-start gap-8 p-5 md:p-8">
-              <div>
+            <div className="command-room__viewport-content command-room__viewport-content--fullscreen relative z-10 grid content-start gap-8 p-5 md:p-8">
+              <div className="command-room__active-panel" key={activePanel.id}>
                 <div
                   className="command-room__signal-row"
                   style={{
@@ -170,7 +224,7 @@ export default function VanguardPrivilegesPage() {
                     width: "fit-content",
                   }}
                 >
-                  <b style={{ fontWeight: 500 }}>Initial Supporters</b>
+                  <b style={{ fontWeight: 500 }}>{activePanel.groupLabel}</b>
                   <i
                     aria-hidden="true"
                     style={{
@@ -180,7 +234,7 @@ export default function VanguardPrivilegesPage() {
                       height: "1px",
                     }}
                   />
-                  <b style={{ fontWeight: 500 }}>wallet-linked</b>
+                  <b style={{ fontWeight: 500 }}>{activePanel.number}</b>
                   <i
                     aria-hidden="true"
                     style={{
@@ -190,51 +244,117 @@ export default function VanguardPrivilegesPage() {
                       height: "1px",
                     }}
                   />
-                  <b style={{ fontWeight: 500 }}>legacy status</b>
+                  <b style={{ fontWeight: 500 }}>{activePanel.eyebrow}</b>
                 </div>
                 <p className="mt-3 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/58">
-                  Charter Layer
+                  {activePanel.eyebrow}
                 </p>
-                <h1 className="command-lab__headline mt-3 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 md:text-5xl">
-                  Vanguard Status
+                <h1 className="command-lab__headline mt-3 max-w-3xl text-3xl uppercase leading-tight text-cyan-50 max-sm:!text-[1.75rem] max-sm:!leading-[1.15] md:text-5xl">
+                  {activePanel.title}
                 </h1>
+                <p className="command-room__active-value mt-3 text-sm uppercase tracking-[0.24em] text-yellow-100/78">
+                  {activePanel.value}
+                </p>
                 <p className="mt-4 max-w-3xl text-sm leading-7 text-cyan-50/72 md:text-base">
                   <GlossaryText
                     terms={vanguardGlossaryTerms}
-                    text="Vanguards are the Initial Supporters class for Sovereign Engine: wallet-linked origin wallets with Launch Day Progeny access, future Engine mints, and published early-supporter rate classes."
+                    text={activePanel.body}
                   />
                 </p>
+                {activePanel.link ? (
+                  <Link
+                    className="chamfer-nav-link chamfer-nav-link--compact mt-6"
+                    href={activePanel.link.href}
+                  >
+                    {activePanel.link.label}
+                  </Link>
+                ) : null}
               </div>
             </div>
-          </AnimatedFrame>
-
-          <AssemblingPanel
-            className="command-room__policy-feed border border-white/10 bg-black/50 p-4"
-            delay="medium"
-            title="Privilege Queue"
-          >
-            <div className="command-room__policy-stack">
-              {policyPanels.map((panel) => (
-                <section
-                  className="command-room__policy-node"
-                  id={panel.id}
-                  key={panel.id}
-                >
-                  <div className="command-room__policy-index">{panel.number}</div>
-                  <div>
-                    <h2>{panel.title}</h2>
-                    <p>
-                      <GlossaryText
-                        terms={vanguardGlossaryTerms}
-                        text={panel.body}
-                      />
-                    </p>
-                    <Link href={panel.link.href}>{panel.link.label}</Link>
-                  </div>
-                </section>
-              ))}
+              </AnimatedFrame>
             </div>
-          </AssemblingPanel>
+
+            <div className="command-room__console-dock" aria-hidden="true">
+              <div className="command-room__console-dock-cell" />
+              <div className="command-room__console-dock-cell" />
+              <div className="command-room__console-dock-cell" />
+              <div className="command-room__console-dock-cell" />
+            </div>
+          </section>
+
+          <div
+            className={`command-room__drawer-shell ${
+              drawerOpen
+                ? "command-room__drawer-shell--open"
+                : "command-room__drawer-shell--closed"
+            }`}
+          >
+            <button
+              aria-controls="vanguard-drawer"
+              aria-expanded={drawerOpen}
+              className="command-room__drawer-tab"
+              onClick={() => setDrawerOpen((open) => !open)}
+              type="button"
+            >
+              {drawerOpen ? "Stow Vanguard Drawer" : "Open"}
+            </button>
+
+            <AssemblingPanel
+              className="command-room__drawer border border-cyan-200/15 bg-black/50 p-4"
+              delay="medium"
+            >
+              <div className="command-room__drawer-content" id="vanguard-drawer">
+                <div className="command-room__drawer-groups">
+                  {drawerGroups.map((group) => (
+                    <section className="command-room__drawer-group" key={group.label}>
+                      <div className="command-room__drawer-label">{group.label}</div>
+                      <div className="command-room__drawer-button-grid">
+                        {group.panels.map((panel, index) => (
+                          <button
+                            aria-pressed={activePanelId === panel.id}
+                            className={`chamfer-hero-link command-room__drawer-button ${
+                              index % 2 === 1 ? "chamfer-hero-link--opposite" : ""
+                            } ${
+                              activePanelId === panel.id
+                                ? "command-room__drawer-button--active"
+                                : ""
+                            }`}
+                            key={panel.id}
+                            onClick={() => {
+                              setActivePanelId(panel.id);
+                              setDrawerOpen(false);
+                            }}
+                            type="button"
+                          >
+                            <span>{panel.label}</span>
+                            <small>{panel.value}</small>
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+
+                <div className="command-room__drawer-actions">
+                  <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
+                    Home
+                  </Link>
+                  <Link href="/engine-lab" className="chamfer-nav-link chamfer-nav-link--compact chamfer-nav-link--opposite">
+                    Engine Lab
+                  </Link>
+                  <Link href="/economics" className="chamfer-nav-link chamfer-nav-link--compact chamfer-nav-link--opposite">
+                    Access
+                  </Link>
+                  <Link href="/whitepaper#vanguard" className="chamfer-nav-link chamfer-nav-link--compact">
+                    Whitepaper
+                  </Link>
+                  <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact command-room__drawer-action--primary">
+                    Portal
+                  </Link>
+                </div>
+              </div>
+            </AssemblingPanel>
+          </div>
         </section>
       </div>
     </main>

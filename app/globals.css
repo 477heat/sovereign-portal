@@ -2703,7 +2703,7 @@ body {
   }
 
   .home-control-page .home-protocol-section {
-    margin-top: -3rem !important;
+    margin-top: 1rem !important;
     padding-top: 0 !important;
   }
 
@@ -3025,6 +3025,35 @@ body {
   padding-top: 2.35rem !important;
 }
 
+@media (max-width: 640px) {
+  .command-room-page {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  .command-room-page .command-room__grid {
+    gap: 0.85rem !important;
+  }
+
+  .command-room-page .command-room__viewport {
+    min-height: 34rem !important;
+  }
+
+  .command-room-page .command-room__viewport-content {
+    min-height: 30.5rem !important;
+    padding: 3.15rem 1.1rem 1.4rem !important;
+  }
+
+  .command-room-page .command-lab__headline {
+    font-size: clamp(1.75rem, 9vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .command-room-page .command-room__viewport--fullscreen .command-moving-lines {
+    display: none;
+  }
+}
+
 .command-room__signal-row {
   align-items: center;
   background: rgba(3, 17, 23, 0.78);
@@ -3127,6 +3156,430 @@ body {
   color: rgba(254, 249, 195, 1);
   outline: none;
   text-shadow: 0 0 16px rgba(254, 240, 138, 0.42);
+}
+
+.command-room__grid--drawer {
+  align-content: start;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: calc(100svh - 2.5rem);
+  padding-bottom: 0 !important;
+  padding-top: 3rem !important;
+}
+
+.command-room__grid--drawer .command-room__viewport {
+  order: 1;
+}
+
+.command-room__console-body {
+  background:
+    radial-gradient(circle at 50% 26%, rgba(125, 211, 252, 0.11), transparent 36%),
+    linear-gradient(180deg, rgba(15, 48, 56, 0.32), rgba(3, 10, 13, 0.72)),
+    rgba(0, 0, 0, 0.58);
+  box-sizing: border-box;
+  clip-path: polygon(28px 0, calc(100% - 28px) 0, 100% 28px, 100% calc(100% - 28px), calc(100% - 28px) 100%, 28px 100%, 0 calc(100% - 28px), 0 28px);
+  display: grid;
+  gap: 0.65rem;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: calc(100svh - 5.5rem);
+  isolation: isolate;
+  min-height: calc(100svh - 5.5rem);
+  min-width: 0;
+  overflow: hidden;
+  padding: 0.55rem;
+  position: relative;
+}
+
+.command-room__console-body::before,
+.command-room__console-body::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.command-room__console-body::before {
+  background: rgba(165, 243, 252, 0.28);
+  inset: 0;
+  z-index: -2;
+}
+
+.command-room__console-body::after {
+  background:
+    linear-gradient(135deg, rgba(254, 240, 138, 0.035), transparent 34%),
+    rgba(0, 0, 0, 0.34);
+  inset: 1px;
+  z-index: -1;
+}
+
+.command-room__console-screen {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.command-room-page .command-room__viewport--fullscreen {
+  box-sizing: border-box;
+  height: calc(100svh - 5.5rem);
+  max-height: calc(100svh - 5.5rem);
+  min-height: calc(100svh - 5.5rem) !important;
+}
+
+.command-room__viewport--fullscreen .command-animated-frame__content {
+  box-sizing: border-box;
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  min-width: 0;
+}
+
+.command-room-page .command-room__viewport-content--fullscreen {
+  box-sizing: border-box;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  min-height: 100% !important;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: clamp(3rem, 5vh, 4.5rem) clamp(1.35rem, 4vw, 2.35rem) 1.6rem !important;
+  scrollbar-color: rgba(165, 243, 252, 0.34) rgba(3, 17, 23, 0.44);
+  scrollbar-width: thin;
+  width: 100%;
+}
+
+.command-room__console-screen .command-room__viewport--fullscreen {
+  height: 100%;
+  max-height: 100%;
+  min-height: 100% !important;
+}
+
+.command-room__console-screen .command-room__viewport-content--fullscreen {
+  height: 100%;
+  max-height: 100%;
+  min-height: 100% !important;
+}
+
+.command-room__console-dock {
+  border-top: 1px solid rgba(165, 243, 252, 0.14);
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: clamp(3rem, 10vh, 4.8rem);
+  min-width: 0;
+  padding-top: 0.55rem;
+}
+
+.command-room__console-dock-cell {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(254, 240, 138, 0.018)),
+    rgba(2, 12, 16, 0.62);
+  border: 1px solid rgba(165, 243, 252, 0.16);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  min-height: 2.6rem;
+}
+
+.command-room__drawer-shell {
+  left: max(0.5rem, env(safe-area-inset-left));
+  min-width: 0;
+  order: 2;
+  padding-top: 2.05rem;
+  position: fixed;
+  top: max(0.55rem, env(safe-area-inset-top));
+  width: min(24rem, calc(100vw - 1rem));
+  z-index: 70;
+}
+
+.command-room__drawer-tab {
+  background:
+    linear-gradient(135deg, rgba(254, 240, 138, 0.34), rgba(250, 204, 21, 0.18)),
+    rgba(28, 22, 4, 0.86);
+  border: 1px solid rgba(254, 240, 138, 0.55);
+  box-shadow:
+    0 0 18px rgba(250, 204, 21, 0.2),
+    inset 0 0 18px rgba(254, 240, 138, 0.06);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  color: rgba(254, 249, 195, 0.95);
+  cursor: pointer;
+  font-size: 0.56rem;
+  font-weight: 800;
+  left: 0;
+  letter-spacing: 0.24em;
+  line-height: 1;
+  min-height: 1.85rem;
+  min-width: 8.8rem;
+  padding: 0.55rem 0.9rem 0.5rem 0.7rem;
+  position: absolute;
+  text-align: left;
+  text-transform: uppercase;
+  top: 0;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    width 220ms ease;
+  white-space: nowrap;
+  width: 8.8rem;
+  z-index: 4;
+}
+
+.command-room__drawer-shell--open .command-room__drawer-tab {
+  min-width: min(18rem, calc(100vw - 1rem));
+  width: min(18rem, calc(100vw - 1rem));
+}
+
+.command-room__drawer-tab:hover,
+.command-room__drawer-tab:focus-visible {
+  background:
+    linear-gradient(135deg, rgba(254, 240, 138, 0.48), rgba(250, 204, 21, 0.24)),
+    rgba(33, 25, 5, 0.92);
+  box-shadow:
+    0 0 28px rgba(250, 204, 21, 0.32),
+    inset 0 0 20px rgba(254, 240, 138, 0.08);
+  color: white;
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.command-room__drawer-shell--closed {
+  min-height: 7.25rem;
+}
+
+.command-room__drawer-shell--closed .command-room__drawer-tab {
+  animation: command-drawer-tab-pulse 1350ms ease-in-out infinite;
+  align-items: center;
+  display: inline-flex;
+  height: 6.8rem;
+  justify-content: center;
+  line-height: 1.15;
+  min-height: 6.8rem;
+  min-width: 3.15rem;
+  padding: 0.8rem 0.42rem;
+  text-align: center;
+  text-orientation: mixed;
+  width: 3.15rem;
+  writing-mode: vertical-rl;
+}
+
+.command-room__drawer {
+  -webkit-overflow-scrolling: touch;
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(14, 165, 233, 0.025)),
+    rgba(0, 0, 0, 0.48);
+  max-height: min(42rem, calc(100svh - 3.4rem));
+  order: 2;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  overflow: hidden auto;
+  touch-action: pan-y;
+  transform-origin: top left;
+  transform: translateY(0);
+  transition:
+    border-color 180ms ease,
+    max-height 240ms ease,
+    opacity 180ms ease,
+    padding 220ms ease,
+    transform 220ms ease;
+}
+
+.command-room__drawer-shell--open .command-room__drawer {
+  transition-delay: 115ms;
+}
+
+.command-room__drawer-shell--closed .command-room__drawer {
+  border-color: transparent !important;
+  max-height: 0;
+  opacity: 0;
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+  pointer-events: none;
+  transform: translateY(-0.65rem) scaleY(0.92);
+  transition-delay: 0ms;
+}
+
+.command-room__drawer-shell--closed .command-room__drawer::before,
+.command-room__drawer-shell--closed .command-room__drawer::after {
+  opacity: 0;
+}
+
+.command-room__drawer-shell--closed .command-assembling-panel__title,
+.command-room__drawer-shell--closed .command-room__drawer-content {
+  visibility: hidden;
+}
+
+.command-room__drawer::after {
+  background:
+    radial-gradient(circle at 26% 20%, rgba(125, 211, 252, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(56, 189, 248, 0.075), rgba(14, 165, 233, 0.02)),
+    rgba(0, 0, 0, 0.36);
+}
+
+.command-room__active-panel {
+  animation: command-panel-assemble 420ms ease-out both;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.command-room__active-value {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-shadow: 0 0 16px rgba(254, 240, 138, 0.18);
+}
+
+.command-room__active-panel .chamfer-nav-link,
+.command-room__active-panel h1,
+.command-room__active-panel p {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.command-room__drawer-groups {
+  display: grid;
+  gap: 1rem;
+}
+
+.command-room__drawer-group {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.command-room__drawer-label {
+  color: rgba(254, 240, 138, 0.72);
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.command-room__drawer-button-grid {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.command-room__drawer-button {
+  flex-direction: column;
+  gap: 0.18rem;
+  height: auto !important;
+  justify-content: center;
+  max-width: none !important;
+  min-height: 4.35rem !important;
+  min-width: 0 !important;
+  padding: 0.7rem 0.45rem;
+  width: 100% !important;
+  will-change: transform;
+}
+
+.command-room__drawer-button-grid .command-room__drawer-button:nth-child(3) {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.command-room__drawer-button-grid .command-room__drawer-button:nth-child(4) {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+.command-room__drawer-button::before {
+  background: rgba(125, 211, 252, 0.5);
+}
+
+.command-room__drawer-button::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.055), rgba(14, 165, 233, 0.018)),
+    rgba(4, 18, 24, 0.54);
+}
+
+.command-room__drawer-button span,
+.command-room__drawer-button small {
+  display: block;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.command-room__drawer-button span {
+  color: rgba(236, 254, 255, 0.9);
+  font-size: 0.66rem;
+}
+
+.command-room__drawer-button small {
+  color: rgba(254, 240, 138, 0.66);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.command-room__drawer-button:hover,
+.command-room__drawer-button:focus-visible,
+.command-room__drawer-button--active {
+  box-shadow:
+    0 0 18px rgba(56, 189, 248, 0.1),
+    0 0 38px rgba(14, 165, 233, 0.055);
+  transform: scale(1.035);
+  z-index: 2;
+}
+
+.command-room__drawer-button--active::before {
+  background: rgba(125, 211, 252, 0.86);
+}
+
+.command-room__drawer-button--active::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(14, 165, 233, 0.04)),
+    rgba(6, 31, 39, 0.72);
+}
+
+.command-room__drawer-actions {
+  border-top: 1px solid rgba(165, 243, 252, 0.12);
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.command-room__drawer-actions .chamfer-nav-link {
+  width: 100% !important;
+}
+
+.command-room__drawer-action--primary {
+  color: rgba(254, 249, 195, 0.98);
+  grid-column: 1 / -1;
+}
+
+.command-room__drawer-action--primary::before {
+  background: rgba(254, 240, 138, 0.72);
+}
+
+.command-room__drawer-action--primary::after {
+  background:
+    linear-gradient(135deg, rgba(254, 240, 138, 0.16), rgba(250, 204, 21, 0.06)),
+    rgba(33, 25, 5, 0.9);
+}
+
+.command-room__drawer-action--primary:hover,
+.command-room__drawer-action--primary:focus-visible {
+  box-shadow:
+    0 0 24px rgba(250, 204, 21, 0.26),
+    0 0 48px rgba(250, 204, 21, 0.12);
+}
+
+@keyframes command-drawer-tab-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 14px rgba(250, 204, 21, 0.18),
+      inset 0 0 18px rgba(254, 240, 138, 0.04);
+    opacity: 0.72;
+  }
+
+  50% {
+    box-shadow:
+      0 0 30px rgba(250, 204, 21, 0.5),
+      0 0 54px rgba(250, 204, 21, 0.18),
+      inset 0 0 20px rgba(254, 240, 138, 0.1);
+    opacity: 1;
+  }
 }
 
 .command-lab__grid {
@@ -3595,6 +4048,22 @@ body {
     grid-template-columns: minmax(14rem, 0.34fr) minmax(0, 1fr) minmax(17rem, 0.42fr);
   }
 
+  .command-room__grid.command-room__grid--drawer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .command-room__grid--drawer .command-room__drawer-button-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .command-room__grid--drawer .command-room__drawer-actions {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .command-room__grid--drawer .command-room__drawer-action--primary {
+    grid-column: auto;
+  }
+
   .command-room__rail,
   .command-room__viewport,
   .command-room__policy-feed {
@@ -3691,6 +4160,7 @@ body {
   .command-animated-frame__corner,
   .command-moving-lines__path,
   .command-puff-field__puff,
+  .command-room__drawer-tab,
   .command-lab__core-mark span {
     animation: none;
   }
