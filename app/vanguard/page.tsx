@@ -18,7 +18,6 @@ const vanguardGlossaryTerms: GlossaryTermKey[] = [
   "Genesis Mint",
   "Full Natal Chart",
   "Kindred Creature",
-  "Launch Day",
   "Marketplace",
   "Royalty",
   "Sovereign Engine",
@@ -50,10 +49,10 @@ const statusPanels: CommandPanel[] = [
   {
     id: "rail-origin",
     number: "01",
-    label: "Initial Supporters",
-    value: "Origin",
+    label: "Origin",
+    value: "Vanguard",
     title: "Vanguard Origin",
-    body: "Pre-launch supporters enter as Vanguards, the first public access class for the Engine.",
+    body: "Vanguards are the Genesis-phase access class: wallet-linked participants who entered before the Engine branches outward.",
   },
   {
     id: "rail-wallet",
@@ -61,58 +60,58 @@ const statusPanels: CommandPanel[] = [
     label: "Wallet",
     value: "Linked",
     title: "Wallet Linked",
-    body: "Recognition is designed around the wallet-linked Genesis mint, not anonymous mint farming.",
+    body: "Recognition follows the original Genesis mint wallet. This keeps the access trail tied to origin wallets instead of anonymous wallet farming.",
   },
   {
     id: "rail-legacy",
     number: "03",
-    label: "Legacy",
-    value: "Carry-forward",
+    label: "No Fees",
+    value: "Legacy",
     title: "Vanguard Legacy",
-    body: "Vanguard status carries into Progeny drops, early rate classes, and future project systems. Vanguards will never pay a subscription or membership fee.",
+    body: "Vanguards keep legacy recognition across published Engine branches and never pay a subscription or membership fee.",
   },
   {
     id: "rail-routing",
     number: "04",
-    label: "Routing",
-    value: "Conditional",
-    title: "Royalty Routing",
-    body: "Royalty participation depends on contract rules, marketplace support, and published terms.",
+    label: "Royalties",
+    value: "Signal",
+    title: "Royalty Signal",
+    body: "Royalty participation follows contract rules, marketplace support, and published release terms. No marketplace is treated as automatic enforcement.",
   },
 ];
 
-type LinkedPolicyPanel = Omit<CommandPanel, "label" | "value"> & {
-  link: NonNullable<CommandPanel["link"]>;
-};
-
-const policyPanels: LinkedPolicyPanel[] = [
+const policyPanels: CommandPanel[] = [
   {
-    id: "initial-supporters",
+    id: "kindred-creature",
     number: "01",
-    title: "Launch Day Progeny",
-    body: "The first Progeny mint is the Kindred Creature Mint on Launch Day. Pre-launch supporters receive it for $0.02 plus Base network gas, currently estimated around $0.04-$0.06 but subject to network conditions.",
-    link: { href: "/whitepaper#vanguard", label: "Read Vanguard" },
+    label: "Kindred",
+    value: "Creature",
+    title: "Kindred Creature",
+    body: "Kindred Creature is the first Progeny branch. It is the creature-style mint tied to the Genesis profile rather than a generic drop.",
   },
   {
-    id: "wallet-linked",
+    id: "natal-chart",
     number: "02",
-    title: "Included Engine Mints",
-    body: "Vanguards receive the Full Natal Chart Mint when the Engine is ready, plus an Artifact Item Mint at the same early-supporter rate.",
-    link: { href: "/whitepaper#genesis-access", label: "Open Access" },
+    label: "Natal",
+    value: "Chart",
+    title: "Full Natal Chart",
+    body: "Full Natal Chart access belongs to the Vanguard benefit set. That branch extends the profile with birth date, time, and location inputs.",
   },
   {
-    id: "legacy",
+    id: "artifact-item",
     number: "03",
-    title: "Future Progeny Rates",
-    body: "Future Progeny mints use a Vanguard rate class when a project supports it, with final pricing set by each project's published specs. In-house Progeny will publish its own launch terms before each release.",
-    link: { href: "/economics#developer-access", label: "Builder Use" },
+    label: "Artifact",
+    value: "Item",
+    title: "Artifact Item",
+    body: "Artifact Item access uses the Vanguard path. Item releases can use flexible supply when the design calls for multiple tradeable copies.",
   },
   {
-    id: "royalty-routing",
+    id: "partner-projects",
     number: "04",
-    title: "Third-party Progeny",
-    body: "Third-party Progeny pricing will be set by the developer building that project. Vanguard access may still apply, but each outside launch will publish its own pricing, access rules, and mint details.",
-    link: { href: "/economics#royalty-routing", label: "Open Routing" },
+    label: "Partner",
+    value: "Projects",
+    title: "Partner Projects",
+    body: "Partner projects publish their own access rules. Vanguard status can be recognized while each project defines supply, pricing, and marketplace routes.",
   },
 ];
 
@@ -123,13 +122,9 @@ const drawerGroups: CommandPanelGroup[] = [
     panels: statusPanels,
   },
   {
-    label: "Privilege Queue",
-    eyebrow: "Launch Access Layer",
-    panels: policyPanels.map((panel) => ({
-      ...panel,
-      label: panel.title,
-      value: panel.link.label,
-    })),
+    label: "Access Queue",
+    eyebrow: "Vanguard Access",
+    panels: policyPanels,
   },
 ];
 

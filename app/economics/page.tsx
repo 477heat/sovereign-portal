@@ -24,88 +24,64 @@ const economicsGlossaryTerms: GlossaryTermKey[] = [
 
 const accessPanels = [
   {
-    id: "initial-supporters",
-    label: "Initial Supporters",
-    value: "Vanguard",
-    body: "Vanguard is the legacy access tier. Benefits carry forward as new Access Token variants launch.",
+    id: "vanguard-access",
+    label: "Vanguard",
+    value: "Access",
+    body: "Vanguard is the legacy access class for Genesis-phase wallets. It carries recognition into published Engine branches without becoming a subscription.",
   },
   {
-    id: "progeny-inheritance",
+    id: "progeny-builds",
     label: "Progeny",
-    value: "Inheritance",
-    body: "Characters, children, gear, creatures, and project assets can inherit traceable source qualities.",
+    value: "Builds",
+    body: "Progeny is the repeatable creation layer: creatures, items, adversaries, transport, characters, and project-specific assets derived from the Genesis profile.",
   },
   {
-    id: "approved-routing",
-    label: "Routing",
-    value: "Approved",
-    body: "Royalty benefits depend on approved marketplace routes that honor the collection's royalty flow.",
+    id: "royalty-path",
+    label: "Royalty",
+    value: "Path",
+    body: "Royalty routing works when contract rules and marketplace support line up. Approved routes protect attribution better than unsupported venues.",
   },
   {
     id: "builder-use",
-    label: "Builder Use",
-    value: "Trees",
-    body: "Developers can choose a Progeny structure or request a project-specific attribute tree.",
+    label: "Developer",
+    value: "Use",
+    body: "Developers can request Progeny structures, attribute trees, and supply rules that fit their game or collection.",
   },
 ];
 
 const policyPanels = [
   {
-    id: "day-one-access",
+    id: "one-genesis",
     number: "01",
-    title: "Legacy Access",
-    body: "Vanguard wallets keep their access tier as the Engine expands. New Access Token variants may introduce new benefits, but Vanguard eligibility is designed to carry forward by default.",
-    link: { href: "/vanguard", label: "Read Vanguard" },
+    label: "One",
+    value: "Genesis",
+    title: "One Genesis",
+    body: "Genesis remains one person, one mint. That protects the origin layer from wallet farming and keeps each profile anchored to a real participant path.",
   },
   {
-    id: "progeny-model",
+    id: "many-builds",
     number: "02",
-    title: "Progeny Model",
-    body: "Progeny includes children and material assets: clothing, armor, weapons, creatures, adversarial constructs, transport, and project objects. Each Progeny Project can draw from 479,001,600 user-specific possibilities, with supply rules shaped by the asset type and published project terms.",
-    link: { href: "/whitepaper#progeny", label: "Open Progeny" },
+    label: "Many",
+    value: "Builds",
+    title: "Many Builds",
+    body: "Progeny can repeat under asset-specific rules. Vanguards and eligible access-token holders can create multiple Engine-derived assets where the release allows it.",
   },
   {
-    id: "royalty-routing",
+    id: "supply-rules",
     number: "03",
-    title: "Royalty Routing",
-    body: "When the contract and marketplace route support it, the originating wallet is written into a lineage NFT as a royalty receiver. Approved marketplaces, including OpenSea when creator earnings are supported, help preserve that route.",
-    link: { href: "/whitepaper#royalty-routing", label: "Open Routing" },
-  },
-  {
-    id: "developer-access",
-    number: "04",
-    title: "Developer Access",
-    body: "Developers can choose which Progeny structure fits their game or request a specific character attribute tree for users to generate from or purchase through a Vanguard collection.",
-    link: { href: "/engine", label: "Open Engine" },
+    label: "Supply",
+    value: "Rules",
+    title: "Supply Rules",
+    body: "Characters can be strict. Items, transport, companions, and adversaries can be looser. Each project publishes the supply model before minting opens.",
   },
   {
     id: "marketplace-limits",
-    number: "05",
+    number: "04",
+    label: "Market",
+    value: "Limits",
     title: "Marketplace Limits",
-    body: "Some marketplaces do not honor royalty routing. Users should use approved marketplaces for Vanguard and Progeny sales so contract-level attribution has the best chance to work as intended.",
-    link: { href: "/whitepaper#privacy-practices", label: "Read Limits" },
+    body: "ERC-2981 is a royalty signal. OpenSea and other supported routes can honor creator earnings, but no marketplace is treated as guaranteed enforcement.",
   },
-];
-
-const progenyExplainer = [
-  {
-    label: "Genesis stays scarce",
-    body: "The Genesis Soul Deed is intended as the one-person entry point. It anchors the profile layer before later Engine branches open.",
-  },
-  {
-    label: "Progeny can repeat",
-    body: "Future Progeny is planned as the repeatable creation layer. Eligible users, especially Vanguards, may be able to generate and sell multiple assets over time.",
-  },
-  {
-    label: "Rules fit the asset",
-    body: "A developer game character can be strict if the game needs one active character per player. Weapons, armor, transport, companions, and similar assets can stay more flexible.",
-  },
-];
-
-const futureProgenyBody = [
-  "Early users should think of Genesis as the origin deed, not the entire Engine. Progeny is planned to become the layer where characters, gear, vehicles, creatures, and project-specific assets can be generated from that origin.",
-  ...progenyExplainer.map((item) => `${item.label}: ${item.body}`),
-  "In a later release, Vanguard inventory may let users compare generated Progeny by type or game, request a mint from a Vanguard-generated asset, or purchase through approved routes where the contract and marketplace support the flow. These mechanics are roadmap direction until published in live terms.",
 ];
 
 const economicsGroups: CommandPanelGroup[] = [
@@ -122,31 +98,9 @@ const economicsGroups: CommandPanelGroup[] = [
     })),
   },
   {
-    label: "Progeny Flow",
-    eyebrow: "Future Builds",
-    panels: [
-      {
-        id: "future-progeny-flow",
-        number: "01",
-        label: "One Genesis",
-        value: "Many Builds",
-        title: "One Genesis. Many Future Builds.",
-        body: futureProgenyBody,
-      },
-    ],
-  },
-  {
-    label: "Policy Nodes",
+    label: "Project Rules",
     eyebrow: "Progeny Routing",
-    panels: policyPanels.map((panel) => ({
-      id: panel.id,
-      number: panel.number,
-      label: panel.title,
-      value: panel.link.label,
-      title: panel.title,
-      body: panel.body,
-      link: panel.link,
-    })),
+    panels: policyPanels,
   },
 ];
 

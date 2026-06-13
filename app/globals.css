@@ -4376,9 +4376,59 @@ body {
     padding-top: 1.5rem !important;
   }
 
+  .command-room-page .command-room__viewport-content--fullscreen {
+    gap: 1.05rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .command-room__active-panel .command-lab__headline {
+    margin-top: 0.35rem !important;
+  }
+
+  .command-room__active-value {
+    margin-top: 0.5rem !important;
+  }
+
+  .command-room__active-panel > div.mt-4 {
+    gap: 0.55rem !important;
+    line-height: 1.62 !important;
+    margin-top: 0.75rem !important;
+  }
+
   .command-room__drawer-shell {
     padding-top: calc(var(--command-drawer-tab-short) * 0.76);
     top: max(0.42rem, env(safe-area-inset-top));
+  }
+
+  .command-room__drawer-groups {
+    gap: 0.72rem;
+  }
+
+  .command-room__drawer-group {
+    gap: 0.48rem;
+  }
+
+  .command-room__drawer-label {
+    font-size: 0.52rem;
+  }
+
+  .command-room__drawer-button {
+    min-height: 3.9rem !important;
+    padding: 0.52rem 0.38rem;
+  }
+
+  .command-room__drawer-button span {
+    font-size: 0.61rem;
+  }
+
+  .command-room__drawer-button small {
+    font-size: 0.46rem;
+  }
+
+  .command-room__drawer-actions {
+    gap: 0.46rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
   }
 
   .command-room__layer-badge {
