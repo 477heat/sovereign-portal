@@ -7,7 +7,6 @@ import { CommandConsoleDock } from "@/components/command/CommandConsoleDock";
 import { CommandConsoleScreen } from "@/components/command/CommandConsoleScreen";
 import { CommandDrawer } from "@/components/command/CommandDrawer";
 import { CommandDrawerTab } from "@/components/command/CommandDrawerTab";
-import TunnelBackdrop from "@/components/TunnelBackdrop";
 import type {
   CommandDrawerAction,
   CommandPageShellProps,
@@ -40,7 +39,6 @@ export function CommandPageShell({
   initialPanelId,
   interactionDelayMs = DEFAULT_COMMAND_DELAY_MS,
   renderPanelBackdrop,
-  showBackdropRings = false,
   sounds,
 }: CommandPageShellProps) {
   const router = useRouter();
@@ -232,12 +230,6 @@ export function CommandPageShell({
       className="info-control-page command-room-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 font-mono text-white max-sm:!px-2 md:px-8"
       data-command-pending={pendingActionId ?? undefined}
     >
-      <TunnelBackdrop
-        layer="page"
-        variant="diffused"
-        rings={showBackdropRings}
-      />
-
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
         <section className="command-room__grid command-room__grid--drawer grid flex-1 gap-5 py-5">
           <section className="command-room__console-body">

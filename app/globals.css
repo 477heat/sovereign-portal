@@ -2870,12 +2870,37 @@ body {
   }
 }
 
+@keyframes command-page-light-rise {
+  0% {
+    opacity: 0.08;
+    transform: translateY(24%);
+  }
+
+  18%,
+  68% {
+    opacity: 0.24;
+  }
+
+  100% {
+    opacity: 0.08;
+    transform: translateY(-24%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hash-stream-column {
     animation: none;
   }
 
   .engine-sweep {
+    animation: none;
+  }
+
+  .command-room-page::after {
+    animation: none;
+  }
+
+  .command-room-page .command-room__viewport-content--fullscreen::before {
     animation: none;
   }
 }
@@ -2896,7 +2921,53 @@ body {
 }
 
 .command-room-page {
+  background: #000;
   font-family: "SFMono-Regular", "Cascadia Code", "Roboto Mono", "Liberation Mono", monospace;
+}
+
+.command-room-page::before,
+.command-room-page::after {
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+}
+
+.command-room-page::before {
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px, 72px 72px;
+  opacity: 0.38;
+  z-index: 0;
+}
+
+.command-room-page::after {
+  animation: command-page-light-rise 18s linear infinite;
+  background:
+    linear-gradient(90deg, transparent 0 8%, rgba(147, 197, 253, 0.18) 8.08%, transparent 8.28% 28%, rgba(219, 234, 254, 0.14) 28.08%, transparent 28.22% 58%, rgba(125, 211, 252, 0.16) 58.08%, transparent 58.22% 84%, rgba(191, 219, 254, 0.12) 84.08%, transparent 84.22%),
+    linear-gradient(90deg, transparent 0 18%, rgba(147, 197, 253, 0.1) 18.08%, transparent 18.26% 46%, rgba(219, 234, 254, 0.12) 46.08%, transparent 46.26% 73%, rgba(125, 211, 252, 0.1) 73.08%, transparent 73.24%);
+  filter: blur(0.2px);
+  mask-image: linear-gradient(180deg, transparent 0%, black 16%, black 82%, transparent 100%);
+  opacity: 0.24;
+  transform: translateY(18%);
+  z-index: 0;
+}
+
+.command-room-page .engine-screen-grid {
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.065) 1px, transparent 1px);
+  background-size: 42px 42px, 42px 42px;
+}
+
+.command-room-page .engine-sweep {
+  background: linear-gradient(
+    180deg,
+    rgba(219, 234, 254, 0),
+    rgba(147, 197, 253, 0.08),
+    rgba(219, 234, 254, 0)
+  );
 }
 
 .command-room__topbar {
@@ -3185,9 +3256,8 @@ body {
 .command-room__console-body {
   --command-console-screen-top: 1.35rem;
   background:
-    radial-gradient(circle at 50% 26%, rgba(125, 211, 252, 0.11), transparent 36%),
-    linear-gradient(180deg, rgba(15, 48, 56, 0.32), rgba(3, 10, 13, 0.72)),
-    rgba(0, 0, 0, 0.58);
+    linear-gradient(180deg, rgba(147, 197, 253, 0.012), rgba(0, 0, 0, 0.02)),
+    rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   clip-path: polygon(28px 0, calc(100% - 28px) 0, 100% 28px, 100% calc(100% - 28px), calc(100% - 28px) 100%, 28px 100%, 0 calc(100% - 28px), 0 28px);
   display: grid;
@@ -3211,15 +3281,15 @@ body {
 }
 
 .command-room__console-body::before {
-  background: rgba(165, 243, 252, 0.28);
+  background: rgba(147, 197, 253, 0.07);
   inset: 0;
   z-index: -2;
 }
 
 .command-room__console-body::after {
   background:
-    linear-gradient(135deg, rgba(254, 240, 138, 0.035), transparent 34%),
-    rgba(0, 0, 0, 0.34);
+    linear-gradient(135deg, rgba(254, 240, 138, 0.01), transparent 34%),
+    rgba(0, 0, 0, 0.07);
   inset: 1px;
   z-index: -1;
 }
@@ -3264,6 +3334,20 @@ body {
   width: 100%;
 }
 
+.command-room-page .command-room__viewport-content--fullscreen::before {
+  animation: command-page-light-rise 14s linear infinite;
+  background:
+    linear-gradient(90deg, transparent 0 14%, rgba(147, 197, 253, 0.11) 14.08%, transparent 14.22% 38%, rgba(219, 234, 254, 0.08) 38.08%, transparent 38.22% 66%, rgba(147, 197, 253, 0.09) 66.08%, transparent 66.22% 90%, rgba(219, 234, 254, 0.06) 90.08%, transparent 90.22%),
+    linear-gradient(90deg, transparent 0 5%, rgba(147, 197, 253, 0.055) 5.08%, transparent 5.22% 52%, rgba(219, 234, 254, 0.07) 52.08%, transparent 52.22%);
+  content: "";
+  inset: 0;
+  mask-image: linear-gradient(180deg, transparent 0%, black 18%, black 84%, transparent 100%);
+  opacity: 0.1;
+  pointer-events: none;
+  position: absolute;
+  transform: translateY(18%);
+}
+
 .command-room__console-screen .command-room__viewport--fullscreen {
   height: calc(100% - var(--command-console-screen-top));
   max-height: calc(100% - var(--command-console-screen-top));
@@ -3279,12 +3363,12 @@ body {
 
 .command-room__console-screen .command-animated-frame__tag {
   background:
-    linear-gradient(135deg, rgba(8, 31, 38, 0.96), rgba(3, 17, 23, 0.92)),
-    rgba(3, 17, 23, 0.94);
-  border-color: rgba(254, 240, 138, 0.34);
+    linear-gradient(135deg, rgba(12, 18, 20, 0.92), rgba(0, 0, 0, 0.86)),
+    rgba(0, 0, 0, 0.78);
+  border-color: rgba(254, 240, 138, 0.28);
   box-shadow:
-    0 0 22px rgba(125, 211, 252, 0.16),
-    inset 0 0 0 1px rgba(165, 243, 252, 0.08);
+    0 0 18px rgba(147, 197, 253, 0.1),
+    inset 0 0 0 1px rgba(147, 197, 253, 0.05);
   color: rgba(254, 249, 195, 0.96);
   font-size: clamp(0.58rem, 0.78vw, 0.68rem);
   max-width: min(15rem, calc(100% - 3rem));
@@ -3309,22 +3393,21 @@ body {
 
 .command-room__console-dock-cell {
   background:
-    linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(254, 240, 138, 0.018)),
-    rgba(2, 12, 16, 0.62);
-  border: 1px solid rgba(165, 243, 252, 0.16);
+    linear-gradient(135deg, rgba(147, 197, 253, 0.025), rgba(254, 240, 138, 0.012)),
+    rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(147, 197, 253, 0.12);
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
   min-height: 2.6rem;
 }
 
 .command-room__console-cycle-button {
   align-items: center;
-  background:
-    linear-gradient(135deg, rgba(56, 189, 248, 0.13), rgba(254, 240, 138, 0.035)),
-    rgba(3, 22, 30, 0.72);
+  background: rgba(0, 0, 0, 0.25);
   border: 0;
   color: rgba(236, 254, 255, 0.9);
   cursor: pointer;
   display: flex;
+  isolation: isolate;
   justify-content: center;
   min-width: 0;
   padding: 0;
@@ -3351,9 +3434,9 @@ body {
 
 .command-room__console-cycle-button::after {
   background:
-    linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(254, 240, 138, 0.045)),
-    rgba(2, 12, 16, 0.72);
-  inset: 1px;
+    linear-gradient(135deg, rgba(125, 211, 252, 0.018), transparent 42%),
+    rgba(0, 0, 0, 0.84);
+  inset: 2px;
   z-index: -1;
 }
 
@@ -3389,7 +3472,7 @@ body {
 .command-room__drawer-shell {
   --command-drawer-tab-long: 8.45rem;
   --command-drawer-tab-stow-height: calc(var(--command-drawer-tab-short) * 0.5);
-  --command-drawer-tab-stow-width: calc(var(--command-drawer-tab-long) * 0.5);
+  --command-drawer-tab-stow-width: calc(var(--command-drawer-tab-long) * 0.68);
   --command-drawer-tab-short: 3.95rem;
   left: max(0.5rem, env(safe-area-inset-left));
   min-width: 0;
@@ -3478,7 +3561,7 @@ body {
   align-items: center;
   background: transparent;
   border: 0;
-  clip-path: polygon(var(--command-drawer-tab-stow-cut) 0, calc(100% - var(--command-drawer-tab-stow-cut)) 0, 100% var(--command-drawer-tab-stow-cut), 100% 100%, 0 100%, 0 var(--command-drawer-tab-stow-cut));
+  clip-path: polygon(var(--command-drawer-tab-stow-cut) 0, calc(100% - var(--command-drawer-tab-stow-cut)) 0, 100% var(--command-drawer-tab-stow-cut), 100% 100%, var(--command-drawer-tab-stow-cut) 100%, 0 calc(100% - var(--command-drawer-tab-stow-cut)), 0 var(--command-drawer-tab-stow-cut));
   display: inline-flex;
   height: var(--command-drawer-tab-stow-height);
   justify-content: center;
@@ -3489,9 +3572,13 @@ body {
   right: auto;
   text-align: center;
   text-orientation: mixed;
-  top: calc(var(--command-drawer-tab-short) - var(--command-drawer-tab-stow-height));
+  top: calc((var(--command-drawer-tab-short) * 0.75) + 0.1rem);
   width: var(--command-drawer-tab-stow-width);
   writing-mode: horizontal-tb;
+}
+
+.command-room__drawer-shell--open .command-room__drawer-tab {
+  color: rgba(254, 249, 195, 1);
 }
 
 .command-room__drawer-shell--open .command-room__drawer-tab::before,
@@ -3503,16 +3590,16 @@ body {
 }
 
 .command-room__drawer-shell--open .command-room__drawer-tab::before {
-  background: rgba(254, 240, 138, 0.62);
+  background: rgba(254, 240, 138, 1);
   inset: 0;
   z-index: -2;
 }
 
 .command-room__drawer-shell--open .command-room__drawer-tab::after {
   background:
-    linear-gradient(135deg, rgba(254, 240, 138, 0.34), rgba(250, 204, 21, 0.18)),
-    rgba(28, 22, 4, 0.92);
-  inset: 1px;
+    linear-gradient(135deg, rgba(254, 240, 138, 0.12), rgba(250, 204, 21, 0.06)),
+    rgba(28, 22, 4, 0.3);
+  inset: 2px;
   z-index: -1;
 }
 
@@ -3714,13 +3801,11 @@ body {
 }
 
 .command-room__drawer-button::before {
-  background: rgba(125, 211, 252, 0.5);
+  background: rgba(254, 240, 138, 0.46);
 }
 
 .command-room__drawer-button::after {
-  background:
-    linear-gradient(135deg, rgba(56, 189, 248, 0.055), rgba(14, 165, 233, 0.018)),
-    rgba(4, 18, 24, 0.54);
+  background: rgb(1, 10, 16);
 }
 
 .command-room__drawer-button span,
@@ -3731,12 +3816,12 @@ body {
 }
 
 .command-room__drawer-button span {
-  color: rgba(236, 254, 255, 0.9);
+  color: rgba(236, 254, 255, 0.88);
   font-size: 0.66rem;
 }
 
 .command-room__drawer-button small {
-  color: rgba(165, 243, 252, 0.5);
+  color: rgba(207, 250, 254, 0.52);
   font-size: 0.5rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -3747,38 +3832,36 @@ body {
 .command-room__drawer-button:focus-visible,
 .command-room__drawer-button--active {
   box-shadow:
-    0 0 0 1px rgba(125, 211, 252, 0.32),
-    0 0 18px rgba(56, 189, 248, 0.1),
-    0 0 38px rgba(14, 165, 233, 0.055);
+    0 0 0 1px rgba(254, 240, 138, 0.28),
+    inset 0 0 0 1px rgba(254, 240, 138, 0.04);
   transform: scale(1.035);
   z-index: 2;
 }
 
 .command-room__drawer-button--active {
   box-shadow:
-    0 0 0 1px rgba(74, 222, 128, 0.46),
-    0 0 22px rgba(34, 197, 94, 0.16),
-    0 0 44px rgba(16, 185, 129, 0.08);
+    0 0 0 1px rgba(254, 240, 138, 0.42),
+    inset 0 0 0 1px rgba(254, 240, 138, 0.06);
 }
 
 .command-room__drawer-button--active span {
   color: rgba(255, 255, 255, 0.98);
-  text-shadow: 0 0 14px rgba(134, 239, 172, 0.36);
+  text-shadow: none;
 }
 
 .command-room__drawer-button--active small {
-  color: rgba(254, 240, 138, 0.94);
-  text-shadow: 0 0 12px rgba(250, 204, 21, 0.32);
+  color: rgba(207, 250, 254, 0.72);
+  text-shadow: none;
 }
 
 .command-room__drawer-button--active::before {
-  background: rgba(74, 222, 128, 0.86);
+  background: rgba(254, 240, 138, 0.7);
 }
 
 .command-room__drawer-button--active::after {
   background:
-    linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.05)),
-    rgba(8, 38, 27, 0.74);
+    linear-gradient(135deg, rgba(20, 92, 56, 0.84), rgba(3, 38, 24, 0.92)),
+    rgb(3, 43, 25);
 }
 
 .command-room__drawer-actions {
@@ -4043,7 +4126,7 @@ body {
 
 .command-animated-frame {
   animation: command-panel-assemble 760ms ease-out both;
-  background: rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.08);
   clip-path: polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px);
   isolation: isolate;
   overflow: hidden;
@@ -4052,9 +4135,8 @@ body {
 
 .command-animated-frame::after {
   background:
-    radial-gradient(circle at 50% 36%, rgba(125, 211, 252, 0.16), transparent 34%),
-    linear-gradient(120deg, rgba(254, 240, 138, 0.035), transparent 42%),
-    rgba(0, 0, 0, 0.18);
+    linear-gradient(120deg, rgba(254, 240, 138, 0.01), transparent 38%),
+    rgba(0, 0, 0, 0.035);
   content: "";
   inset: 1px;
   pointer-events: none;
@@ -4079,29 +4161,29 @@ body {
 
 .command-animated-frame__rail--outer {
   animation: command-rail-draw 1100ms ease-out 120ms both;
-  stroke: rgba(165, 243, 252, 0.68);
+  stroke: rgba(147, 197, 253, 0.44);
   stroke-width: 0.55;
 }
 
 .command-animated-frame__rail--inner {
   animation: command-rail-draw 980ms ease-out 260ms both;
-  stroke: rgba(254, 240, 138, 0.36);
+  stroke: rgba(254, 240, 138, 0.22);
   stroke-width: 0.34;
 }
 
 .command-animated-frame__corner {
   animation: command-rail-draw 780ms ease-out 440ms both;
-  stroke: rgba(236, 254, 255, 0.88);
+  stroke: rgba(219, 234, 254, 0.6);
   stroke-width: 0.72;
 }
 
 .command-animated-frame--gold .command-animated-frame__rail--outer {
-  stroke: rgba(254, 240, 138, 0.68);
+  stroke: rgba(254, 240, 138, 0.52);
 }
 
 .command-animated-frame__tag {
-  background: rgba(3, 17, 23, 0.86);
-  border: 1px solid rgba(165, 243, 252, 0.22);
+  background: rgba(0, 0, 0, 0.68);
+  border: 1px solid rgba(147, 197, 253, 0.16);
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
   color: rgba(254, 240, 138, 0.82);
   font-size: 0.62rem;
@@ -4109,7 +4191,7 @@ body {
   padding: 0.45rem 0.65rem;
   position: absolute;
   right: 1.2rem;
-  box-shadow: 0 0 18px rgba(125, 211, 252, 0.12);
+  box-shadow: 0 0 14px rgba(147, 197, 253, 0.08);
   text-transform: uppercase;
   top: 1.1rem;
   z-index: 5;
