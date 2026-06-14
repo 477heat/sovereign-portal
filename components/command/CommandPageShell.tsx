@@ -1,24 +1,27 @@
 "use client";
 
-import type { MouseEvent, ReactNode } from "react";
+import type { MouseEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AnimatedFrame } from "@/components/command/AnimatedFrame";
-import { AssemblingPanel } from "@/components/command/AssemblingPanel";
-import { GlossaryText } from "@/components/GlossaryTerm";
+import { CommandConsoleDock } from "@/components/command/CommandConsoleDock";
+import { CommandConsoleScreen } from "@/components/command/CommandConsoleScreen";
+import { CommandDrawer } from "@/components/command/CommandDrawer";
+import { CommandDrawerTab } from "@/components/command/CommandDrawerTab";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
-import type { GlossaryTermKey } from "@/lib/glossary";
+import type {
+  CommandDrawerAction,
+  CommandPageShellProps,
+  CommandShellSounds,
+} from "@/components/command/types";
+
+export type {
+  CommandDrawerAction,
+  CommandPanel,
+  CommandPanelGroup,
+  CommandShellPanel,
+} from "@/components/command/types";
 
 const DEFAULT_COMMAND_DELAY_MS = 500;
-
-type CommandShellSounds = {
-  deploy: string;
-  menu: string;
-  panel: string;
-  primary: string;
-  stow: string;
-};
 
 const defaultCommandSounds: CommandShellSounds = {
   deploy: "/sounds/deploy.mp3",
@@ -26,49 +29,6 @@ const defaultCommandSounds: CommandShellSounds = {
   panel: "/sounds/button_select.mp3",
   primary: "/sounds/portal_select.mp3",
   stow: "/sounds/stow.mp3",
-};
-
-export type CommandPanel = {
-  id: string;
-  number?: string;
-  label: string;
-  value: string;
-  title: string;
-  body: string | string[];
-  link?: {
-    href: string;
-    label: string;
-  };
-};
-
-export type CommandPanelGroup = {
-  label: string;
-  eyebrow: string;
-  panels: CommandPanel[];
-};
-
-export type CommandDrawerAction = {
-  href: string;
-  label: string;
-  variant?: "default" | "opposite" | "primary";
-};
-
-export type CommandShellPanel = CommandPanel & {
-  groupLabel: string;
-  eyebrow: string;
-};
-
-type CommandPageShellProps = {
-  drawerActions?: CommandDrawerAction[];
-  drawerContentId?: string;
-  drawerLabel?: string;
-  glossaryTerms?: GlossaryTermKey[];
-  groups: CommandPanelGroup[];
-  initialPanelId?: string;
-  interactionDelayMs?: number;
-  renderPanelBackdrop?: (panel: CommandShellPanel) => ReactNode;
-  showBackdropRings?: boolean;
-  sounds?: Partial<CommandShellSounds>;
 };
 
 export function CommandPageShell({
@@ -111,10 +71,6 @@ export function CommandPageShell({
     0,
     panels.findIndex((panel) => panel.id === activePanel?.id),
   );
-  const activePanelBody = Array.isArray(activePanel?.body)
-    ? activePanel.body
-    : [activePanel?.body ?? ""];
-  const activePanelTitleWords = activePanel.title.split(/\s+/).filter(Boolean);
   const commandSounds = { ...defaultCommandSounds, ...sounds };
 
   function playCommandSound(src: string) {
@@ -260,24 +216,14 @@ export function CommandPageShell({
   }
 
   const renderDrawerTab = (embedded = false) => (
-    <button
-      aria-label={drawerOpen ? `Stow ${drawerLabel}` : `Deploy ${drawerLabel}`}
-      aria-controls={drawerContentId}
-      aria-disabled={pendingActionId !== null}
-      aria-expanded={drawerOpen}
-      className={`command-room__drawer-tab ${
-        embedded ? "command-room__drawer-tab--embedded" : ""
-      }`}
-      data-command-action="drawer-tab"
-      data-command-action-pending={
-        pendingActionId?.startsWith("drawer-") ? "true" : undefined
-      }
+    <CommandDrawerTab
+      drawerContentId={drawerContentId}
+      drawerLabel={drawerLabel}
+      drawerOpen={drawerOpen}
+      embedded={embedded}
       onClick={handleDrawerTabClick}
-      disabled={pendingActionId !== null}
-      type="button"
-    >
-      {drawerOpen ? "Stow" : "Deploy"}
-    </button>
+      pendingActionId={pendingActionId}
+    />
   );
 
   return (
@@ -295,116 +241,24 @@ export function CommandPageShell({
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
         <section className="command-room__grid command-room__grid--drawer grid flex-1 gap-5 py-5">
           <section className="command-room__console-body">
-            <div className="command-room__console-screen">
-              <AnimatedFrame
-                className="command-room__viewport command-room__viewport--fullscreen"
-                chromeOverlay={
-                  !drawerOpen ? (
-                    <div className="command-room__embedded-drawer-tab">
-                      {renderDrawerTab(true)}
-                    </div>
-                  ) : null
-                }
-                label={activePanel.groupLabel}
-              >
-                <div
-                  className="engine-screen-grid absolute inset-0 opacity-45"
-                  aria-hidden="true"
-                />
-                <div
-                  className="engine-sweep absolute inset-x-0 top-0 h-28"
-                  aria-hidden="true"
-                />
-
-                <div className="command-room__viewport-content command-room__viewport-content--fullscreen relative z-10 grid content-start gap-8 p-5 md:p-8">
-                  <div
-                    className="command-room__active-panel"
-                    data-panel-id={activePanel.id}
-                    key={activePanel.id}
-                  >
-                    {renderPanelBackdrop?.(activePanel)}
-                    <h1
-                      aria-label={activePanel.title}
-                      className="command-lab__headline mt-3 max-w-3xl uppercase text-cyan-50"
-                    >
-                      {activePanelTitleWords.map((word, index) => (
-                        <span
-                          aria-hidden="true"
-                          className="command-lab__headline-word"
-                          key={`${activePanel.id}-title-${word}-${index}`}
-                        >
-                          {word}
-                        </span>
-                      ))}
-                    </h1>
-                    <p className="command-room__active-value mt-3 text-sm uppercase tracking-[0.24em] text-yellow-100/78">
-                      {activePanel.value}
-                    </p>
-                    <div className="mt-4 grid max-w-3xl gap-3 text-sm leading-7 text-cyan-50/72 md:text-base">
-                      {activePanelBody.map((paragraph, index) => (
-                        <p key={`${activePanel.id}-${index}`}>
-                          {glossaryTerms.length > 0 ? (
-                            <GlossaryText
-                              terms={glossaryTerms}
-                              text={paragraph}
-                            />
-                          ) : (
-                            paragraph
-                          )}
-                        </p>
-                      ))}
-                    </div>
+            <CommandConsoleScreen
+              activePanel={activePanel}
+              drawerTabSlot={
+                !drawerOpen ? (
+                  <div className="command-room__embedded-drawer-tab">
+                    {renderDrawerTab(true)}
                   </div>
-                </div>
-              </AnimatedFrame>
-            </div>
+                ) : null
+              }
+              glossaryTerms={glossaryTerms}
+              renderPanelBackdrop={renderPanelBackdrop}
+            />
 
-            <div className="command-room__console-dock">
-              <div className="command-room__console-dock-cell" />
-              <div className="command-room__console-dock-cell" />
-              <button
-                aria-label="Previous console panel"
-                className="command-room__console-dock-cell command-room__console-cycle-button"
-                data-command-action="panel-cycle"
-                data-command-action-pending={
-                  pendingActionId === "panel-cycle-previous"
-                    ? "true"
-                    : undefined
-                }
-                disabled={pendingActionId !== null || panels.length < 2}
-                onClick={() => handlePanelCycle("previous")}
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  className="command-room__console-cycle-icon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M14.5 5.5 8 12l6.5 6.5" />
-                </svg>
-              </button>
-              <button
-                aria-label="Next console panel"
-                className="command-room__console-dock-cell command-room__console-cycle-button command-room__console-cycle-button--next"
-                data-command-action="panel-cycle"
-                data-command-action-pending={
-                  pendingActionId === "panel-cycle-next" ? "true" : undefined
-                }
-                disabled={pendingActionId !== null || panels.length < 2}
-                onClick={() => handlePanelCycle("next")}
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  className="command-room__console-cycle-icon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
-                </svg>
-              </button>
-            </div>
+            <CommandConsoleDock
+              onCycle={handlePanelCycle}
+              panelCount={panels.length}
+              pendingActionId={pendingActionId}
+            />
           </section>
 
           <div
@@ -416,132 +270,17 @@ export function CommandPageShell({
           >
             {drawerOpen ? renderDrawerTab() : null}
 
-            <AssemblingPanel
-              className="command-room__drawer border border-cyan-200/15 bg-black/50 p-4"
-              delay="medium"
-            >
-              <div className="command-room__drawer-content" id={drawerContentId}>
-                <div className="command-room__drawer-groups">
-                  {groups.map((group) => (
-                    <section
-                      className="command-room__drawer-group"
-                      key={group.label}
-                    >
-                      <div className="command-room__drawer-label">
-                        {group.label}
-                      </div>
-                      <div className="command-room__drawer-button-grid">
-                        {group.panels.map((panel, index) => (
-                          <button
-                            aria-disabled={pendingActionId !== null}
-                            aria-pressed={activePanelId === panel.id}
-                            className={`chamfer-hero-link command-room__drawer-button ${
-                              index % 2 === 1
-                                ? "chamfer-hero-link--opposite"
-                                : ""
-                            } ${
-                              activePanelId === panel.id
-                                ? "command-room__drawer-button--active"
-                                : ""
-                            }`}
-                            data-command-action="panel"
-                            data-command-action-pending={
-                              pendingActionId === `panel-${panel.id}`
-                                ? "true"
-                                : undefined
-                            }
-                            key={panel.id}
-                            onClick={() => handlePanelSelect(panel.id)}
-                            disabled={pendingActionId !== null}
-                            type="button"
-                          >
-                            <span>{panel.label}</span>
-                            <small>{panel.value}</small>
-                          </button>
-                        ))}
-                      </div>
-                    </section>
-                  ))}
-                </div>
-
-                {drawerActions.length > 0 ? (
-                  <div className="command-room__drawer-actions">
-                    {drawerActions.map((action) => {
-                      const actionClassName = [
-                        "chamfer-nav-link chamfer-nav-link--compact",
-                        action.variant === "opposite"
-                          ? "chamfer-nav-link--opposite"
-                          : "",
-                        action.variant === "primary"
-                          ? "command-room__drawer-action--primary"
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ");
-
-                      return (
-                        <Link
-                          className={actionClassName}
-                          data-command-action={
-                            action.variant === "primary" ? "primary" : "menu"
-                          }
-                          data-command-action-pending={
-                            pendingActionId === `drawer-action-${action.href}`
-                              ? "true"
-                              : undefined
-                          }
-                          href={action.href}
-                          key={`${action.href}-${action.label}`}
-                          onClick={(event) =>
-                            handleDrawerActionClick(event, action)
-                          }
-                        >
-                          {action.label}
-                        </Link>
-                      );
-                    })}
-                    <div className="command-room__drawer-sound-row">
-                      <button
-                        aria-label={
-                          soundMuted
-                            ? "Unmute command sounds"
-                            : "Mute command sounds"
-                        }
-                        aria-pressed={soundMuted}
-                        className="command-room__drawer-sound-toggle"
-                        data-sound-muted={soundMuted ? "true" : "false"}
-                        onClick={handleSoundToggle}
-                        type="button"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          className="command-room__drawer-sound-icon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M4 9v6h4l5 4V5L8 9H4Z" />
-                          {soundMuted ? (
-                            <>
-                              <path d="M17 9l4 4" />
-                              <path d="M21 9l-4 4" />
-                            </>
-                          ) : (
-                            <>
-                              <path d="M16.5 8.5c1.2 1.9 1.2 5.1 0 7" />
-                              <path d="M19.5 6c2.1 3.2 2.1 8.8 0 12" />
-                            </>
-                          )}
-                        </svg>
-                      </button>
-                      <div
-                        aria-hidden="true"
-                        className="command-room__drawer-sound-slot"
-                      />
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </AssemblingPanel>
+            <CommandDrawer
+              activePanelId={activePanelId}
+              drawerActions={drawerActions}
+              drawerContentId={drawerContentId}
+              groups={groups}
+              onActionClick={handleDrawerActionClick}
+              onPanelSelect={handlePanelSelect}
+              onSoundToggle={handleSoundToggle}
+              pendingActionId={pendingActionId}
+              soundMuted={soundMuted}
+            />
           </div>
         </section>
       </div>
