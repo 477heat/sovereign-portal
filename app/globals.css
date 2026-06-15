@@ -1969,27 +1969,33 @@ body {
     margin-left: auto;
     margin-right: 0;
     width: fit-content;
-    max-width: min(100%, 11rem);
+    max-width: min(100%, 15rem);
     min-width: 0;
     padding-left: 0;
     min-height: 0;
-    padding-top: 0.2rem;
+    padding-top: 0;
     justify-content: flex-end;
   }
 
   .portal-gate-title-card {
     display: grid;
-    max-width: 100%;
+    width: min(15rem, 100%);
+    max-width: min(15rem, 100%);
     margin-left: auto;
-    justify-items: end;
-    text-align: right;
-    width: fit-content;
+    justify-items: start;
+    text-align: left;
+    align-content: start;
   }
 
   .portal-gate-title-box {
-    display: inline-block;
-    width: auto;
-    max-width: min(11rem, 100%);
+    display: block;
+    width: min(15rem, 100%);
+    max-width: min(15rem, 100%);
+    min-width: 0;
+    text-align: left !important;
+    border: none;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .portal-gate-top-row {
@@ -1998,13 +2004,28 @@ body {
 
   .portal-gate-title-box {
     border-radius: 7px;
-    padding: 0.45rem 0.48rem 0.42rem;
+    padding: 0.28rem 0.38rem 0.31rem;
+  }
+
+  .portal-gate-title-card h2 {
+    display: block !important;
+    margin-top: 0 !important;
+    max-width: 100%;
+    width: 100%;
+    text-align: left !important;
+    word-break: break-word;
+    line-height: 0.97;
   }
 
   .portal-gate-title-box__label {
+    text-align: left !important;
+    margin-top: 0;
     font-size: 0.39rem;
     letter-spacing: 0.12em;
     line-height: 1.3;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .portal-gate-bottom-status {
@@ -2300,6 +2321,10 @@ body {
   line-height: 1;
 }
 
+.portal-gate-deploy-tab {
+  --portal-gate-chip-corner: 7px;
+}
+
 .portal-command-tab small {
   color: rgba(254, 240, 138, 0.82);
   font-size: 0.46rem;
@@ -2448,7 +2473,7 @@ body {
 }
 
 .portal-mobile-select-backdrop {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.24);
   backdrop-filter: none;
   border: 0;
   cursor: default;
@@ -2463,7 +2488,7 @@ body {
   animation: portal-select-drawer-enter 180ms ease-out both;
   background:
     linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(14, 165, 233, 0.025)),
-    rgba(0, 0, 0, 0.48) !important;
+    rgba(0, 0, 0, 0.8) !important;
   box-shadow:
     0 0 0 1px rgba(250, 204, 21, 0.08),
     0 18px 50px rgba(0, 0, 0, 0.65),
@@ -2990,17 +3015,91 @@ body {
 .portal-control-page .portal-gate-view--matrix .console-key-button,
 .portal-control-page .portal-gate-view--matrix .portal-connect-wallet-button {
   flex-direction: column;
-  font-size: clamp(0.72rem, 1.05vw, 0.92rem);
+  font-size: clamp(0.58rem, 0.9vw, 0.78rem);
   gap: 0.08rem;
   height: auto;
   letter-spacing: 0.12em;
   line-height: 1.08;
   max-width: 8.5rem;
-  min-height: 3rem;
+  min-height: 2.7rem;
   padding: 0.55rem 0.7rem;
   white-space: normal;
   width: min-content;
   word-spacing: 100vw;
+}
+
+.portal-control-page .portal-gate-view--matrix .portal-panel-button-row .console-key-button,
+.portal-control-page .portal-gate-view--matrix .portal-panel-button-row .portal-terms-action-button {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.portal-control-page .portal-gate-view--matrix .portal-panel-button-row .portal-connect-wallet-button {
+  width: 100%;
+}
+
+.portal-panel-button-row {
+  --portal-panel-button-row-max: min(100%, 42rem);
+  --portal-panel-button-row-min: min(12rem, 100%);
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(auto-fit, minmax(var(--portal-panel-button-row-min), 1fr));
+  justify-content: center;
+  justify-items: stretch;
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--portal-panel-button-row-max);
+}
+
+.portal-panel-button-row--one {
+  --portal-panel-button-row-max: min(100%, 20rem);
+  grid-template-columns: 1fr;
+}
+
+.portal-panel-button-row--two {
+  --portal-panel-button-row-max: min(100%, 36rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.portal-panel-button-row--three {
+  --portal-panel-button-row-max: min(100%, 48rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.portal-control-page .portal-panel-button-row .console-key-button,
+.portal-control-page .portal-panel-button-row .portal-terms-action-button,
+.portal-control-page .portal-panel-button-row .portal-pay-button,
+.portal-control-page .portal-panel-button-row .chamfer-nav-link {
+  min-width: 0;
+  width: 100%;
+  opacity: 0.5;
+  font-size: 0.58rem;
+  min-height: 2.7rem;
+  max-height: 2.7rem;
+  white-space: normal;
+}
+
+.portal-control-page .portal-panel-button-row .portal-pay-button {
+  min-height: 2.7rem;
+  padding: 0.42rem 0.58rem;
+}
+
+.portal-control-page .portal-panel-button-row .portal-terms-action-button {
+  min-height: 2.7rem !important;
+  height: 2.7rem !important;
+  max-height: 2.7rem;
+  min-width: 0 !important;
+  padding-inline: 0.72rem !important;
+}
+
+.portal-control-page .portal-panel-button-row .portal-pay-button span {
+  font-size: 0.72rem;
+  line-height: 1.05;
+}
+
+.portal-control-page .portal-panel-button-row .portal-pay-button small {
+  font-size: 0.44rem;
 }
 
 .portal-control-page .portal-gate-view--matrix .portal-connect-wallet-button {
@@ -3074,24 +3173,46 @@ body {
   }
 
   .portal-control-page .portal-gate-view--matrix .portal-pay-button {
-    min-height: 4rem;
-    padding: 0.62rem;
+    min-height: 2.9rem;
+    padding: 0.5rem 0.56rem;
   }
 
   .portal-control-page .portal-gate-view--matrix .portal-pay-button span {
-    font-size: clamp(0.78rem, 2.6vw, 1rem);
+    font-size: 0.72rem;
   }
 
   .portal-control-page .portal-gate-view--matrix .portal-pay-button small {
-    font-size: 0.46rem;
-    letter-spacing: 0.12em;
+    font-size: 0.4rem;
+    letter-spacing: 0.11em;
   }
 
   .portal-control-page .portal-gate-view--matrix .console-key-button {
-    font-size: 0.48rem;
-    min-height: 2.16rem;
+    font-size: 0.44rem;
+    min-height: 2rem;
     min-width: 4.45rem;
-    padding: 0 0.42rem;
+    padding: 0 0.38rem;
+  }
+
+  .portal-control-page .portal-panel-button-row .console-key-button,
+  .portal-control-page .portal-panel-button-row .portal-terms-action-button,
+  .portal-control-page .portal-panel-button-row .portal-pay-button,
+  .portal-control-page .portal-panel-button-row .chamfer-nav-link {
+    font-size: 0.44rem;
+    min-height: 2rem;
+    max-height: 2rem;
+    min-width: 0;
+    padding-left: 0.38rem;
+    padding-right: 0.38rem;
+  }
+
+  .portal-control-page .portal-panel-button-row .portal-pay-button span {
+    font-size: 0.64rem;
+    line-height: 1.08;
+  }
+
+  .portal-control-page .portal-panel-button-row .portal-pay-button small {
+    font-size: 0.38rem;
+    letter-spacing: 0.11em;
   }
 
   .portal-control-page .portal-gate-view--matrix .portal-connect-wallet-button {

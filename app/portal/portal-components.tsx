@@ -495,17 +495,14 @@ export function PortalMobileSelectDrawer({
       <aside
         aria-label="Select Panel"
         aria-modal="true"
-        className="control-surface-soft command-room__drawer portal-mobile-select-drawer border border-cyan-100/18 bg-black/50 p-4"
+        className="control-surface-soft command-room__drawer portal-mobile-select-drawer border border-cyan-100/18 bg-black/80 p-4"
         id="portal-mobile-select-drawer"
         role="dialog"
       >
         <div className="command-room__drawer-content portal-mobile-select-content">
-          <div className="portal-mobile-select-header mb-4 flex items-center justify-between gap-3">
+          <div className="portal-mobile-select-header mb-2 flex items-center justify-between gap-3">
             <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.26em] text-yellow-100/76">
-                Mint Path
-              </div>
-              <div className="mt-1 text-sm font-black uppercase tracking-[0.18em] text-cyan-50">
+              <div className="text-sm font-black uppercase tracking-[0.18em] text-cyan-50">
                 Control Deck
               </div>
             </div>
