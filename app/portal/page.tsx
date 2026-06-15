@@ -1571,14 +1571,14 @@ function PortalContent() {
   );
 
   return (
-    <main className="info-control-page portal-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 text-white md:px-8 md:py-8">
+    <main className="info-control-page portal-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-0 py-5 text-white sm:px-4 md:px-8 md:py-8">
       <TunnelBackdrop layer="page" variant="diffused" />
       <BackgroundHashStream
         className="z-0 opacity-20 md:opacity-25"
         variant="right"
       />
 
-      <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-[358px] flex-col gap-5 pt-1 sm:mx-auto sm:max-w-6xl md:pt-2">
+      <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-full flex-col gap-5 pt-1 sm:mx-auto sm:max-w-6xl md:pt-2">
         <section className="flex flex-1 flex-col gap-5">
           {previewShellActive && (
             <div className="control-surface portal-surface-cyan border border-cyan-100/30 bg-cyan-100/[0.06] px-4 py-3 text-sm leading-6 text-cyan-50/78">
@@ -1706,10 +1706,7 @@ function PortalContent() {
                       </div>
                     )}
 
-                      <div
-                        className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative"
-                        style={{ zIndex: 300, position: "relative", isolation: "isolate", overflow: "visible" }}
-                      >
+                      <div className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative">
                         <div
                           className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
                             selectedGateReadout.complete
@@ -1723,49 +1720,40 @@ function PortalContent() {
                           <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
                           <div className="absolute inset-x-5 top-1/2 h-px bg-cyan-100/20 shadow-[0_0_24px_rgba(165,243,252,0.38)]" aria-hidden="true" />
                           <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-px bg-cyan-100/10" aria-hidden="true" />
-                          <button
-                            aria-controls="portal-mobile-select-drawer"
-                            aria-expanded={mobileGateDrawerOpen}
-                            aria-label="Deploy mint controls"
-                            className="console-key-button portal-command-tab portal-gate-deploy-tab portal-mobile-select-trigger portal-mobile-select-trigger--attention"
-                            onClick={() => setMobileGateDrawerOpen(true)}
-                            ref={mobileGateTriggerRef}
-                            type="button"
-                          >
-                            <span>Deploy</span>
-                            <small>Mint Controls</small>
-                          </button>
-                        <div className="control-surface portal-surface-red-soft portal-active-mint-notice border border-red-200/35 bg-red-200/[0.045] px-3 py-2 text-sm leading-6 text-red-50/82">
-                          <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
-                            Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
-                          </div>
-                        </div>
-                        <div className="relative z-10 flex min-h-full flex-col gap-4">
-                          <div className="portal-gate-header">
-                            <div className="portal-gate-title-card min-w-0">
-                              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                                Active Entry
+                          <div className="portal-gate-top-row">
+                            <button
+                              aria-controls="portal-mobile-select-drawer"
+                              aria-expanded={mobileGateDrawerOpen}
+                              aria-label="Deploy mint controls"
+                              className="console-key-button portal-command-tab portal-gate-deploy-tab portal-mobile-select-trigger portal-mobile-select-trigger--attention"
+                              onClick={() => setMobileGateDrawerOpen(true)}
+                              ref={mobileGateTriggerRef}
+                              type="button"
+                            >
+                              <span>Deploy</span>
+                              <small>Mint Controls</small>
+                            </button>
+                            <div className="portal-gate-header">
+                              <div className="portal-gate-title-box">
+                                <div className="portal-gate-title-card min-w-0">
+                                  <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
+                                    {selectedGate === "wallet" &&
+                                    !account?.address ? (
+                                      <GlossaryTerm term="User Wallet">
+                                        User Wallet
+                                      </GlossaryTerm>
+                                    ) : (
+                                      selectedGateTitle
+                                    )}
+                                  </h2>
+                                  <div className="portal-gate-title-box__label">
+                                    Active Entry
+                                  </div>
+                                </div>
                               </div>
-                              <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
-                                {selectedGate === "wallet" &&
-                                !account?.address ? (
-                                  <GlossaryTerm term="User Wallet">
-                                    User Wallet
-                                  </GlossaryTerm>
-                                ) : (
-                                  selectedGateTitle
-                                )}
-                              </h2>
-                              <p className="mt-3 text-sm leading-6 text-white/66">
-                                {selectedGateStatus}
-                              </p>
-                              {selectedGateCompleteNotice && (
-                                <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-100/72">
-                                  {selectedGateCompleteNotice}
-                                </p>
-                              )}
                             </div>
                           </div>
+                          <div className="relative z-10 flex min-h-full flex-col gap-4">
 
                           <div className="grid flex-1 content-start gap-3">
                             {selectedGate === "wallet" && (
@@ -2174,12 +2162,19 @@ function PortalContent() {
                               ))}
                             </div>
                           </div>
+
+                          {(selectedGateStatus || selectedGateCompleteNotice) && (
+                            <div className="portal-gate-bottom-status">
+                              {selectedGateStatus && (
+                                <p className="portal-gate-bottom-status__text">{selectedGateStatus}</p>
+                              )}
+                              {selectedGateCompleteNotice && (
+                                <p className="portal-gate-bottom-status__notice">{selectedGateCompleteNotice}</p>
+                              )}
+                            </div>
+                          )}
                         </div>
-                        <div
-                          className="portal-console-edge-lines"
-                          aria-hidden="true"
-                          style={{ zIndex: 9999 }}
-                        >
+                        <div className="portal-console-edge-lines" aria-hidden="true">
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--top-cyan" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--right-gold" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--bottom-cyan" />
