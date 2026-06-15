@@ -4341,6 +4341,21 @@ body {
   text-align: center;
 }
 
+.command-lab__module-buttons--table .command-hud-button__label {
+  align-items: center;
+  display: grid;
+  gap: 0.18rem;
+  line-height: 1.08;
+}
+
+.command-lab__module-buttons--table .command-hud-button__label small {
+  color: rgba(254, 240, 138, 0.62);
+  display: block;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
 .command-lab__module-buttons .command-hud-button--rail-left {
   clip-path: polygon(10px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 10px);
 }
@@ -4485,6 +4500,250 @@ body {
   inset: 38%;
 }
 
+.command-lab__table-mark {
+  aspect-ratio: 1;
+  border: 1px solid rgba(165, 243, 252, 0.09);
+  left: 50%;
+  max-width: 26rem;
+  opacity: 0.56;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(54vw, 26rem);
+  z-index: 0;
+}
+
+.command-lab__table-mark,
+.command-lab__table-mark span {
+  border-radius: 999px;
+}
+
+.command-lab__table-mark span {
+  animation: command-core-orbit 15s linear infinite;
+  border: 1px solid rgba(254, 240, 138, 0.1);
+  inset: 12%;
+  position: absolute;
+}
+
+.command-lab__table-mark span:nth-child(2) {
+  animation-duration: 19s;
+  border-color: rgba(165, 243, 252, 0.12);
+  inset: 27%;
+  transform: rotate(58deg);
+}
+
+.command-lab__table-mark span:nth-child(3) {
+  animation-duration: 11s;
+  inset: 42%;
+}
+
+.command-lab__table-header {
+  align-items: start;
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.command-lab__status-chip {
+  background: rgba(0, 0, 0, 0.42);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  display: grid;
+  gap: 0.3rem;
+  min-width: min(100%, 13rem);
+  padding: 0.72rem 0.8rem;
+  position: relative;
+}
+
+.command-lab__status-chip::before,
+.command-lab__status-chip::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.command-lab__status-chip::before {
+  background: rgba(165, 243, 252, 0.34);
+  inset: 0;
+  z-index: -2;
+}
+
+.command-lab__status-chip::after {
+  background: rgba(4, 18, 24, 0.88);
+  inset: 1px;
+  z-index: -1;
+}
+
+.command-lab__status-chip span {
+  color: rgba(254, 240, 138, 0.68);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.command-lab__status-chip strong {
+  color: rgba(236, 254, 255, 0.9);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.command-lab__status-chip--design::before {
+  background: rgba(254, 240, 138, 0.36);
+}
+
+.command-lab__status-chip--spec::before {
+  background: rgba(165, 243, 252, 0.34);
+}
+
+.command-lab__status-chip--required::before {
+  background: rgba(96, 165, 250, 0.34);
+}
+
+.command-lab__status-chip--future::before {
+  background: rgba(252, 165, 165, 0.26);
+}
+
+.command-lab__specimen-grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.command-lab__specimen-copy {
+  background: rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(165, 243, 252, 0.14);
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  padding: 1rem;
+}
+
+.command-lab__specimen-copy--next {
+  border-color: rgba(254, 240, 138, 0.18);
+}
+
+.command-lab__specimen-copy span,
+.command-lab__checkpoint-panel > span {
+  color: rgba(254, 240, 138, 0.7);
+  display: block;
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  margin-bottom: 0.7rem;
+  text-transform: uppercase;
+}
+
+.command-lab__specimen-copy p {
+  color: rgba(207, 250, 254, 0.74);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.command-lab__system-strip {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.command-readout-tile--system {
+  min-height: 4.2rem;
+}
+
+.command-lab__stage-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.command-lab__stage-row {
+  background: rgba(0, 0, 0, 0.36);
+  border: 0;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  color: rgba(236, 254, 255, 0.7);
+  display: grid;
+  gap: 0.28rem;
+  min-height: 3.2rem;
+  padding: 0.7rem 0.72rem;
+  position: relative;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.command-lab__stage-row::before,
+.command-lab__stage-row::after {
+  clip-path: inherit;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.command-lab__stage-row::before {
+  background: rgba(165, 243, 252, 0.16);
+  inset: 0;
+  z-index: -2;
+}
+
+.command-lab__stage-row::after {
+  background: rgba(4, 18, 24, 0.84);
+  inset: 1px;
+  z-index: -1;
+}
+
+.command-lab__stage-row span {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+}
+
+.command-lab__stage-row strong {
+  color: rgba(254, 240, 138, 0.58);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.command-lab__stage-row--active {
+  color: white;
+}
+
+.command-lab__stage-row--active::before {
+  background: rgba(34, 197, 94, 0.7);
+}
+
+.command-lab__stage-row--design::before {
+  background: rgba(254, 240, 138, 0.2);
+}
+
+.command-lab__stage-row--future::before {
+  background: rgba(252, 165, 165, 0.16);
+}
+
+.command-lab__checkpoint-panel {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(165, 243, 252, 0.12);
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  margin-top: 1rem;
+  padding: 0.85rem;
+}
+
+.command-lab__checkpoint-panel ul {
+  display: grid;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.command-lab__checkpoint-panel li {
+  color: rgba(207, 250, 254, 0.7);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.command-lab__checkpoint-panel li::before {
+  color: rgba(165, 243, 252, 0.68);
+  content: "// ";
+}
+
 .command-readout-tile,
 .command-diagnostic-card {
   background: rgba(0, 0, 0, 0.38);
@@ -4592,9 +4851,110 @@ body {
   .command-lab__grid {
     grid-template-columns: minmax(13rem, 0.32fr) minmax(0, 1fr) minmax(15rem, 0.36fr);
   }
+
+  .command-lab__table-header {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.28fr);
+  }
+
+  .command-lab__status-chip {
+    justify-self: end;
+  }
+
+  .command-lab__specimen-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
 }
 
 @media (max-width: 767px) {
+  .command-lab {
+    padding-left: 0.8rem !important;
+    padding-right: 0.8rem !important;
+  }
+
+  .command-lab__grid {
+    gap: 0.85rem;
+    padding-bottom: 0.85rem !important;
+    padding-top: 0.85rem !important;
+  }
+
+  .command-lab__module-rail,
+  .command-lab__diagnostics {
+    padding: 0.9rem !important;
+  }
+
+  .command-lab__viewscreen--table {
+    min-height: 36rem !important;
+  }
+
+  .command-lab__table-screen {
+    gap: 1.1rem;
+    min-height: 32rem !important;
+    padding: 1rem !important;
+  }
+
+  .command-lab__table-header {
+    gap: 0.85rem;
+  }
+
+  .command-lab__table-header .command-lab__headline {
+    font-size: clamp(1.7rem, 9vw, 2.45rem) !important;
+    line-height: 0.98 !important;
+  }
+
+  .command-lab__status-chip {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .command-lab__specimen-copy {
+    padding: 0.85rem;
+  }
+
+  .command-lab__specimen-copy p {
+    font-size: 0.86rem;
+    line-height: 1.62;
+  }
+
+  .command-lab__system-strip {
+    gap: 0.55rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .command-readout-tile--system {
+    min-height: 3.7rem;
+    padding: 0.68rem;
+  }
+
+  .command-readout-tile--system span {
+    font-size: 0.48rem;
+  }
+
+  .command-readout-tile--system strong {
+    font-size: 0.68rem;
+  }
+
+  .command-lab__module-buttons--table .command-hud-button {
+    min-height: 3.35rem;
+  }
+
+  .command-lab__stage-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .command-lab__stage-row {
+    min-height: 3.05rem;
+    padding: 0.62rem;
+  }
+
+  .command-lab__stage-row span {
+    font-size: 0.54rem;
+  }
+
+  .command-lab__stage-row strong {
+    font-size: 0.47rem;
+  }
+
   .command-room-page {
     padding-top: 0.12rem !important;
   }
