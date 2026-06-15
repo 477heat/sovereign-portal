@@ -3256,8 +3256,8 @@ body {
 .command-room__console-body {
   --command-console-screen-top: 1.35rem;
   background:
-    linear-gradient(180deg, rgba(147, 197, 253, 0.012), rgba(0, 0, 0, 0.02)),
-    rgba(0, 0, 0, 0.1);
+    linear-gradient(180deg, rgba(147, 197, 253, 0.006), rgba(0, 0, 0, 0.08)),
+    rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   clip-path: polygon(28px 0, calc(100% - 28px) 0, 100% 28px, 100% calc(100% - 28px), calc(100% - 28px) 100%, 28px 100%, 0 calc(100% - 28px), 0 28px);
   display: grid;
@@ -3281,15 +3281,15 @@ body {
 }
 
 .command-room__console-body::before {
-  background: rgba(147, 197, 253, 0.07);
+  background: rgba(147, 197, 253, 0.035);
   inset: 0;
   z-index: -2;
 }
 
 .command-room__console-body::after {
   background:
-    linear-gradient(135deg, rgba(254, 240, 138, 0.01), transparent 34%),
-    rgba(0, 0, 0, 0.07);
+    linear-gradient(135deg, rgba(254, 240, 138, 0.008), transparent 34%),
+    rgba(0, 0, 0, 0.18);
   inset: 1px;
   z-index: -1;
 }
@@ -3320,6 +3320,9 @@ body {
 }
 
 .command-room-page .command-room__viewport-content--fullscreen {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.05), rgba(0, 0, 0, 0.12)),
+    rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   height: 100%;
   max-height: 100%;
@@ -3342,7 +3345,7 @@ body {
   content: "";
   inset: 0;
   mask-image: linear-gradient(180deg, transparent 0%, black 18%, black 84%, transparent 100%);
-  opacity: 0.1;
+  opacity: 0.085;
   pointer-events: none;
   position: absolute;
   transform: translateY(18%);
@@ -3747,6 +3750,86 @@ body {
   max-width: 100%;
   overflow-wrap: anywhere;
   text-shadow: 0 0 16px rgba(254, 240, 138, 0.18);
+}
+
+.command-room__panel-header {
+  display: grid;
+  justify-items: end;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.command-room__panel-title-card {
+  align-items: end;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(165, 243, 252, 0.11);
+  box-shadow:
+    0 0 24px rgba(125, 211, 252, 0.045),
+    inset 0 0 18px rgba(0, 0, 0, 0.32);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  display: grid;
+  gap: 0.42rem;
+  justify-items: end;
+  max-width: min(100%, 34rem);
+  padding: 0.78rem 0.92rem;
+  width: fit-content;
+}
+
+.command-room__panel-title-card .command-lab__headline {
+  margin-top: 0 !important;
+}
+
+.command-room__panel-title-card .command-room__active-value {
+  margin-top: 0 !important;
+}
+
+.command-room__panel-copy-stack {
+  display: grid;
+  gap: 0.78rem;
+  margin-top: clamp(1rem, 2vh, 1.35rem);
+  max-width: min(100%, 47rem);
+  min-width: 0;
+}
+
+.command-room__panel-copy-card {
+  background:
+    linear-gradient(135deg, rgba(147, 197, 253, 0.018), transparent 52%),
+    rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(165, 243, 252, 0.13);
+  box-shadow:
+    inset 0 0 16px rgba(0, 0, 0, 0.34),
+    0 0 18px rgba(125, 211, 252, 0.035);
+  clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px);
+  display: grid;
+  gap: 0.52rem;
+  max-width: min(100%, 44rem);
+  min-width: 0;
+  padding: 0.82rem 0.92rem;
+  width: fit-content;
+}
+
+.command-room__panel-copy-card--primary {
+  border-color: rgba(254, 240, 138, 0.18);
+}
+
+.command-room__panel-copy-card span {
+  color: rgba(254, 240, 138, 0.68);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.command-room__panel-copy-card p {
+  color: rgba(207, 250, 254, 0.76);
+  line-height: 1.72;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.command-room__panel-copy-card:nth-child(even) {
+  border-color: rgba(147, 197, 253, 0.12);
 }
 
 .command-room__active-panel .chamfer-nav-link,
@@ -4453,6 +4536,7 @@ body {
 
 .command-lab__headline-word {
   display: block;
+  white-space: nowrap;
 }
 
 .command-hud-button {
@@ -5285,7 +5369,7 @@ body {
   .command-room__active-panel .command-lab__headline {
     display: flex !important;
     flex-direction: column !important;
-    font-size: clamp(1.32rem, 6.8vw, 1.5rem) !important;
+    font-size: clamp(1.08rem, 5.8vw, 1.28rem) !important;
     line-height: 0.94 !important;
     margin-left: auto;
     margin-right: 0;
@@ -5304,14 +5388,29 @@ body {
     text-align: right;
   }
 
-  .command-room__active-panel > div.mt-4 {
+  .command-room__panel-title-card {
+    max-width: calc(100% - 1.2rem);
+    padding: 0.62rem 0.7rem;
+  }
+
+  .command-room__panel-copy-stack {
     gap: 0.55rem !important;
     line-height: 1.56 !important;
     margin-top: 1.08rem !important;
     max-width: 100% !important;
   }
 
-  .command-room__active-panel p {
+  .command-room__panel-copy-card {
+    padding: 0.66rem 0.72rem;
+    width: fit-content;
+  }
+
+  .command-room__panel-copy-card span {
+    font-size: 0.5rem;
+  }
+
+  .command-room__active-panel p,
+  .command-room__panel-copy-card p {
     overflow-wrap: anywhere;
   }
 
