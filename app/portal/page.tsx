@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import {
   createThirdwebClient,
   prepareTransaction,
@@ -24,7 +22,7 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import { GlossaryTerm, GlossaryText } from "@/components/GlossaryTerm";
+import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   encodeErc20TransferCalldata,
@@ -36,6 +34,24 @@ import {
   buildMintRecoveryMessage,
 } from "@/lib/portalMessages";
 import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
+import type {
+  IdentityField,
+  MintOrderState,
+  MintReceipt,
+  PortalGate,
+  PortalGateReadout,
+  PortalPaymentFlow,
+  PortalPaymentSettings,
+  ReceiptDetailRow,
+  VerificationState,
+} from "./portal-types";
+import {
+  PortalGateIcon,
+  PortalMobileSelectDrawer,
+  PortalReceiptCompletePanel,
+  PortalTermsChecklist,
+  PortalTermsReviewModal,
+} from "./portal-components";
 
 const portalEasGlossaryTerms: GlossaryTermKey[] = [
   "Attestation",
@@ -55,121 +71,6 @@ const plainEnglishCertificateSummary = [
   "Royalties are not magic. The contract can point to them, but marketplaces still have to honor the routing. In some cases there may also be claim, withdrawal, or splitter steps before money actually reaches a wallet.",
   "This Plain English Summary is here so people can understand the idea without needing to decode every joke and legal-sounding phrase. The Formal Terms are still the version used for the agreement.",
 ];
-
-type VerificationState = {
-  eligible: boolean;
-  mode: "mock" | "live";
-  schemaId: string;
-  message: string;
-};
-
-type MintReceipt = {
-  tokenId?: string;
-  status: string;
-  orderId?: string;
-  deedName: string;
-  mode?: "mock" | "live";
-  chainId?: number;
-  contractAddress?: string;
-  transactionId?: string;
-  transactionHash?: string;
-  tokenURI?: string;
-  metadataUrl?: string;
-  ipfsHash?: string;
-  imageURI?: string;
-  imageUrl?: string;
-};
-
-type MintOrderState = {
-  orderId: string;
-  status: "pending_payment" | "paid" | "minting" | "mint_submitted";
-  wallet: string;
-  paymentAmount?: string;
-  paymentKind?: "checkout" | "complimentary";
-  mintTransactionId?: string;
-  mintTransactionHash?: string;
-};
-
-type PortalPaymentSettings = {
-  checkoutEnabled: boolean;
-  directPaymentEnabled?: boolean;
-  paymentAmount: string;
-  paymentFlow?: PortalPaymentFlow;
-  paymentSeller?: string;
-  paymentTokenAddress?: string;
-  paymentTokenDecimals?: number;
-};
-
-type PortalPaymentFlow =
-  | "base_usdc_direct_attributed"
-  | "disabled"
-  | "thirdweb_checkout";
-type PortalGate = "wallet" | "eas" | "identity" | "terms" | "payment" | "mint";
-type IdentityField = "firstName" | "lastName" | "dob";
-
-function PortalGateIcon({ gate }: { gate: PortalGate }) {
-  const sharedProps = {
-    "aria-hidden": true,
-    className: "portal-step-icon-svg",
-    fill: "none",
-    viewBox: "0 0 24 24",
-  };
-
-  if (gate === "wallet") {
-    return (
-      <svg {...sharedProps}>
-        <path d="M4 7.5h14.5a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4.5a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2H17" />
-        <path d="M15.5 13h5" />
-        <path d="M16.75 13h.01" />
-      </svg>
-    );
-  }
-
-  if (gate === "eas") {
-    return (
-      <svg {...sharedProps}>
-        <path d="M12 3.5 19 6v5.4c0 4.2-2.8 7.2-7 9.1-4.2-1.9-7-4.9-7-9.1V6l7-2.5Z" />
-        <path d="m8.8 12 2.1 2.1 4.5-4.7" />
-      </svg>
-    );
-  }
-
-  if (gate === "identity") {
-    return (
-      <svg {...sharedProps}>
-        <path d="M12 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
-        <path d="M5.5 20c.8-3.4 3.1-5.2 6.5-5.2s5.7 1.8 6.5 5.2" />
-      </svg>
-    );
-  }
-
-  if (gate === "terms") {
-    return (
-      <svg {...sharedProps}>
-        <path d="M7 3.5h7l3 3V20H7V3.5Z" />
-        <path d="M14 3.5V7h3" />
-        <path d="M9.5 11h5" />
-        <path d="M9.5 14h5" />
-      </svg>
-    );
-  }
-
-  if (gate === "payment") {
-    return (
-      <svg {...sharedProps}>
-        <path d="M4 7h16v10H4V7Z" />
-        <path d="M4 10h16" />
-        <path d="M7 14h4" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...sharedProps}>
-      <path d="M12 3.5 14.4 9l5.6.5-4.2 3.8 1.3 5.5L12 15.9l-5.1 2.9 1.3-5.5L4 9.5 9.6 9 12 3.5Z" />
-    </svg>
-  );
-}
 
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
@@ -1080,7 +981,7 @@ function PortalContent() {
     }
   }
 
-  const gateReadouts = [
+  const gateReadouts: PortalGateReadout[] = [
     {
       key: "wallet",
       label: "Wallet",
@@ -1161,14 +1062,7 @@ function PortalContent() {
           ? "console-key-button--entered"
           : "console-key-button--complete",
     },
-  ] satisfies Array<{
-    key: PortalGate;
-    label: string;
-    value: string;
-    complete: boolean;
-    enabled: boolean;
-    stateClass: string;
-  }>;
+  ];
 
   const walletStatusClass = account?.address
     ? "portal-wallet-status--ready"
@@ -1364,7 +1258,7 @@ function PortalContent() {
     }
   }
 
-  const receiptDetailRows = receipt
+  const receiptDetailRows: ReceiptDetailRow[] = receipt
     ? [
         receipt.tokenId
           ? { label: "Token ID", value: receipt.tokenId }
@@ -1395,180 +1289,26 @@ function PortalContent() {
           ? { label: "Image URI", value: receiptImageURI }
           : null,
       ].filter(
-        (
-          row,
-        ): row is {
-          href?: string;
-          label: string;
-          value: string;
-        } => Boolean(row?.value),
+        (row): row is ReceiptDetailRow => Boolean(row?.value),
       )
     : [];
 
-  const receiptPanel = receipt ? (
-    <div className="control-surface-soft portal-receipt-panel portal-surface-gold mt-4 border border-yellow-300/40 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-[11px] uppercase tracking-[0.25em] text-yellow-200/70">
-            {receipt.mode === "live"
-              ? "Mainnet Mint Submitted"
-              : "Mainnet Route Ready"}
-          </div>
-          <div className="mt-2 font-semibold text-yellow-50">
-            {receipt.deedName}
-          </div>
-        </div>
-        <div className="control-surface-soft portal-receipt-chain-chip border border-yellow-200/25 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-yellow-100/76">
-          Base {receipt.chainId ?? 8453}
-        </div>
-      </div>
+  function handleReceiptImageError() {
+    setReceiptImageFallback((current) => {
+      if (receiptImageUrls.length <= 1) {
+        return current;
+      }
 
-      <div className="mt-4 grid gap-4 md:grid-cols-[minmax(12rem,18rem)_1fr] md:items-start">
-        <div className="min-w-0">
-          {receiptImageUrl ? (
-            <a
-              className="portal-receipt-image-frame group block overflow-hidden border border-yellow-200/25 bg-black/35 p-2"
-              href={receiptImageUrl}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <Image
-                alt={`Burned Soul Deed image for ${receipt.deedName}`}
-                className="aspect-square w-full object-cover shadow-[0_0_28px_rgba(250,204,21,0.18)] transition duration-200 group-hover:scale-[1.015]"
-                decoding="async"
-                height={640}
-                onError={() => {
-                  setReceiptImageFallback((current) => {
-                    if (receiptImageUrls.length <= 1) {
-                      return current;
-                    }
+      if (current.key !== receiptImageKey) {
+        return { index: 1, key: receiptImageKey };
+      }
 
-                    if (current.key !== receiptImageKey) {
-                      return { index: 1, key: receiptImageKey };
-                    }
-
-                    return {
-                      index: Math.min(
-                        current.index + 1,
-                        receiptImageUrls.length - 1,
-                      ),
-                      key: receiptImageKey,
-                    };
-                  });
-                }}
-                priority
-                sizes="(min-width: 768px) 18rem, 100vw"
-                src={receiptImageUrl}
-                width={640}
-              />
-            </a>
-          ) : (
-            <div className="portal-receipt-image-frame flex aspect-square items-center justify-center border border-yellow-200/20 bg-black/35 p-4 text-center text-xs uppercase tracking-[0.18em] text-yellow-100/58">
-              Image link pending. Save the receipt details below.
-            </div>
-          )}
-          <p className="mt-3 text-xs leading-5 text-yellow-50/62">
-            Open the image to inspect the burned artifact. Marketplaces may take
-            a few minutes to refresh their own cached preview.
-          </p>
-        </div>
-
-        <div className="min-w-0 space-y-3">
-          {receiptDetailRows.map((row) => (
-            <div
-              className="control-surface-soft border border-yellow-200/14 bg-black/25 px-3 py-2"
-              key={row.label}
-            >
-              <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-200/50">
-                {row.label}
-              </div>
-              {row.href ? (
-                <a
-                  className="break-all text-yellow-100/80 underline decoration-yellow-200/30 underline-offset-4 hover:text-yellow-50"
-                  href={row.href}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {row.value}
-                </a>
-              ) : (
-                <div className="break-all text-yellow-100/70">{row.value}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  ) : null;
-
-  const termsContent = (
-    <div className="grid gap-4">
-      <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
-        <label
-          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-            contractAccepted
-              ? "console-status-tile--entered"
-              : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-          } ${certificateOpened ? "" : "cursor-not-allowed opacity-70"}`}
-        >
-          <input
-            checked={contractAccepted}
-            onChange={(event) => setContractAccepted(event.target.checked)}
-            disabled={!certificateOpened}
-            type="checkbox"
-            className="mt-1 h-4 w-4 shrink-0 accent-yellow-300 disabled:cursor-not-allowed"
-          />
-          <span className="text-[10px] leading-4">
-            Read and agree to the Certificate.
-          </span>
-        </label>
-        <label
-          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-            accuracyAccepted
-              ? "console-status-tile--entered"
-              : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-          }`}
-        >
-          <input
-            checked={accuracyAccepted}
-            onChange={(event) => setAccuracyAccepted(event.target.checked)}
-            type="checkbox"
-            className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
-          />
-          <span className="text-[10px] leading-4">
-            Name and DOB match Coinbase/EAS.
-          </span>
-        </label>
-        <label
-          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
-            publicMarkAccepted
-              ? "console-status-tile--entered"
-              : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-          }`}
-        >
-          <input
-            checked={publicMarkAccepted}
-            onChange={(event) => setPublicMarkAccepted(event.target.checked)}
-            type="checkbox"
-            className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
-          />
-          <span className="text-[10px] leading-4">
-            Public deed uses shortened mark.
-          </span>
-        </label>
-      </div>
-      <button
-        className="console-key-button console-key-button--gold w-fit"
-        onClick={() => {
-          setCertificateOpened(true);
-          setTermsReviewOpen(true);
-        }}
-        type="button"
-      >
-        Read Terms
-      </button>
-    </div>
-  );
+      return {
+        index: Math.min(current.index + 1, receiptImageUrls.length - 1),
+        key: receiptImageKey,
+      };
+    });
+  }
 
   return (
     <main className="info-control-page portal-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-0 py-5 text-white sm:px-4 md:px-8 md:py-8">
@@ -1594,91 +1334,18 @@ function PortalContent() {
           )}
 
           {receipt ? (
-            <section className="control-surface-large portal-surface-gold border border-yellow-300/40 bg-yellow-300/10 p-4 text-yellow-100 md:p-6">
-              <div className="grid gap-5">
-                <div>
-                  <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-200/70">
-                    Mint Complete
-                  </div>
-                  <h1 className="mt-3 text-3xl font-black uppercase leading-none tracking-[0.12em] text-yellow-50 md:text-5xl">
-                    Artifact Sent
-                  </h1>
-                  <p className="mt-4 max-w-3xl text-sm leading-6 text-yellow-50/72">
-                    Save or copy these details now. This receipt is displayed
-                    for this session first; if you close or leave this screen,
-                    connect the same wallet later and use Receipt Recovery to
-                    restore the latest recorded mint receipt.
-                  </p>
-                </div>
-
-                {receiptPanel}
-
-                <div className="control-surface-soft portal-surface-red-soft border border-red-300/25 bg-red-500/[0.05] p-4 text-sm leading-6 text-red-50/82">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-100/80">
-                    Save Before Exit
-                  </div>
-                  <p className="mt-2">
-                    Your token, metadata, image, and transaction stay public on
-                    chain/IPFS. The Portal can recover the latest receipt for
-                    this wallet, but saving a copy now is still the cleanest
-                    record.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    className="console-key-button console-key-button--gold"
-                    onClick={saveMintReceipt}
-                    type="button"
-                  >
-                    Save Receipt
-                  </button>
-                  <button
-                    className="console-key-button"
-                    onClick={() => void copyMintReceipt()}
-                    type="button"
-                  >
-                    {receiptCopied ? "Copied" : "Copy Details"}
-                  </button>
-                  {receiptImageUrl && (
-                    <button
-                      className="console-key-button"
-                      onClick={() => void saveReceiptScreenshot()}
-                      type="button"
-                    >
-                      Save Screenshot
-                    </button>
-                  )}
-                  {receiptMetadataUrl && (
-                    <a
-                      className="console-key-button"
-                      href={receiptMetadataUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      Open Metadata
-                    </a>
-                  )}
-                  {receiptImageUrl && (
-                    <a
-                      className="console-key-button"
-                      href={receiptImageUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      Open Image
-                    </a>
-                  )}
-                  <button
-                    className="console-key-button console-key-button--active"
-                    onClick={returnHomeAfterReceipt}
-                    type="button"
-                  >
-                    Return Home
-                  </button>
-                </div>
-              </div>
-            </section>
+            <PortalReceiptCompletePanel
+              imageUrl={receiptImageUrl}
+              onCopyReceipt={() => void copyMintReceipt()}
+              onImageError={handleReceiptImageError}
+              onReturnHome={returnHomeAfterReceipt}
+              onSaveReceipt={saveMintReceipt}
+              onSaveScreenshot={() => void saveReceiptScreenshot()}
+              receipt={receipt}
+              receiptCopied={receiptCopied}
+              receiptMetadataUrl={receiptMetadataUrl}
+              detailRows={receiptDetailRows}
+            />
           ) : (
             <>
           <section className="min-w-0">
@@ -1739,9 +1406,7 @@ function PortalContent() {
                                   <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
                                     {selectedGate === "wallet" &&
                                     !account?.address ? (
-                                      <GlossaryTerm term="User Wallet">
-                                        User Wallet
-                                      </GlossaryTerm>
+                                      "User Wallet"
                                     ) : (
                                       selectedGateTitle
                                     )}
@@ -1766,7 +1431,7 @@ function PortalContent() {
                                     {account?.address ?? "No wallet connected"}
                                   </div>
                                 </div>
-                                <div className="portal-wallet-action flex items-center">
+                                <div className="portal-wallet-action portal-panel-button-row portal-panel-button-row--one">
                                   {thirdwebClient ? (
                                     account?.address ? (
                                       <button
@@ -1839,7 +1504,7 @@ function PortalContent() {
                                       {verification.message}
                                     </p>
                                   )}
-                                  <div className="mt-4 flex flex-wrap gap-2">
+                                  <div className="mt-4 portal-panel-button-row portal-panel-button-row--two">
                                     <a
                                       className="console-key-button"
                                       href={coinbaseEasUrl}
@@ -1943,11 +1608,23 @@ function PortalContent() {
                                   </div>
                                   <p className="mt-3 text-sm leading-6 text-white/68">
                                     Read the terms first, then confirm each
-                                    agreement item. The full contract opens only
-                                    when you choose Read Terms.
-                                  </p>
+                                  agreement item. The full contract opens only
+                                  when you choose Read Terms.
+                                </p>
                                 </div>
-                                {termsContent}
+                                <PortalTermsChecklist
+                                  accuracyAccepted={accuracyAccepted}
+                                  certificateOpened={certificateOpened}
+                                  contractAccepted={contractAccepted}
+                                  onReadTerms={() => {
+                                    setCertificateOpened(true);
+                                    setTermsReviewOpen(true);
+                                  }}
+                                  publicMarkAccepted={publicMarkAccepted}
+                                  setAccuracyAccepted={setAccuracyAccepted}
+                                  setContractAccepted={setContractAccepted}
+                                  setPublicMarkAccepted={setPublicMarkAccepted}
+                                />
                               </div>
                             )}
 
@@ -1960,45 +1637,52 @@ function PortalContent() {
                                 </div>
 
                                 {orderPaid ? (
-                                  <div className="portal-pay-button portal-pay-button--confirmed mt-4">
-                                    <span>
-                                      {activeOrder?.paymentKind === "complimentary"
-                                        ? "Comped"
-                                        : "Completed"}
-                                    </span>
-                                    <small>
-                                      {activeOrder?.paymentKind === "complimentary"
-                                        ? "Admin-issued mint order armed."
-                                        : "Mint control armed."}
-                                    </small>
+                                  <div className="portal-panel-button-row portal-panel-button-row--one mt-4">
+                                    <div className="portal-pay-button portal-pay-button--confirmed">
+                                      <span>
+                                        {activeOrder?.paymentKind === "complimentary"
+                                          ? "Comped"
+                                          : "Completed"}
+                                      </span>
+                                      <small>
+                                        {activeOrder?.paymentKind === "complimentary"
+                                          ? "Admin-issued mint order armed."
+                                          : "Mint control armed."}
+                                      </small>
+                                    </div>
                                   </div>
                                 ) : checkoutPrerequisitesComplete ? (
-                                  <button
-                                    className="portal-pay-button portal-pay-button--ready mt-4"
-                                    disabled={
-                                      !paymentOrderStartAllowed ||
-                                      Boolean(activeOrder) ||
-                                      orderBusy
-                                    }
-                                    onClick={createOrder}
-                                    type="button"
-                                  >
-                                    <span>Pay ${paymentAmount}</span>
-                                    <small>
-                                      {directPaymentConfigured &&
-                                      !directPaymentAllowedForWallet
-                                        ? "Approved test wallets only"
-                                        : directPaymentEnabled
-                                        ? "Base USDC direct payment"
-                                        : "We cover the gas fees"}
-                                    </small>
-                                  </button>
+                                  <div className="portal-panel-button-row portal-panel-button-row--one mt-4">
+                                    <button
+                                      className="portal-pay-button portal-pay-button--ready"
+                                      disabled={
+                                        !paymentOrderStartAllowed ||
+                                        Boolean(activeOrder) ||
+                                        orderBusy
+                                      }
+                                      onClick={createOrder}
+                                      type="button"
+                                    >
+                                      <span>Pay ${paymentAmount}</span>
+                                      <small>
+                                        {directPaymentConfigured &&
+                                        !directPaymentAllowedForWallet
+                                          ? "Approved test wallets only"
+                                          : directPaymentEnabled
+                                            ? "Base USDC direct payment"
+                                            : "We cover the gas fees"}
+                                      </small>
+                                    </button>
+                                  </div>
                                 ) : (
-                                  <div className="portal-pay-button portal-pay-button--waiting mt-4">
-                                    <span>Sequence Not Completed</span>
-                                    <small>
-                                      Wallet, EAS, identity, and terms must be green first.
-                                    </small>
+                                  <div className="portal-panel-button-row portal-panel-button-row--one mt-4">
+                                    <div className="portal-pay-button portal-pay-button--waiting">
+                                      <span>Sequence Not Completed</span>
+                                      <small>
+                                        Wallet, EAS, identity, and terms must be green
+                                        first.
+                                      </small>
+                                    </div>
                                   </div>
                                 )}
 
@@ -2048,21 +1732,23 @@ function PortalContent() {
                                         />
                                       )}
                                     {directPaymentEnabled && !orderPaid && (
-                                      <button
-                                        className="portal-pay-button portal-pay-button--ready"
-                                        disabled={directPaymentBusy || orderBusy}
-                                        onClick={handleDirectBuilderPayment}
-                                        type="button"
-                                      >
-                                        <span>
-                                          {directPaymentBusy
-                                            ? "Verifying"
-                                            : "Send Base USDC"}
-                                        </span>
-                                        <small>
-                                          Wallet pays gas. Builder Code suffix attached.
-                                        </small>
-                                      </button>
+                                      <div className="portal-panel-button-row portal-panel-button-row--one">
+                                        <button
+                                          className="portal-pay-button portal-pay-button--ready"
+                                          disabled={directPaymentBusy || orderBusy}
+                                          onClick={handleDirectBuilderPayment}
+                                          type="button"
+                                        >
+                                          <span>
+                                            {directPaymentBusy
+                                              ? "Verifying"
+                                              : "Send Base USDC"}
+                                          </span>
+                                          <small>
+                                            Wallet pays gas. Builder Code suffix attached.
+                                          </small>
+                                        </button>
+                                      </div>
                                     )}
                                     {directPaymentConfigured &&
                                       !directPaymentEnabled &&
@@ -2071,31 +1757,39 @@ function PortalContent() {
                                           Direct payment attribution test is limited to approved wallets.
                                         </p>
                                       )}
-                                    <div className="control-surface-soft flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
-                                      <span className="break-all">
+                                    <div className="control-surface-soft border border-white/10 bg-black/55 px-3 py-3 text-xs text-white/58">
+                                      <span className="block break-all">
                                         Order {activeOrder.orderId} / {activeOrder.status}
                                         {activeOrder.paymentKind === "complimentary"
                                           ? " / complimentary"
                                           : ""}
                                       </span>
-                                      <button
-                                        className="console-key-button"
-                                        disabled={orderBusy}
-                                        onClick={refreshOrder}
-                                        type="button"
+                                      <div
+                                        className={`portal-panel-button-row mt-3 ${
+                                          activeOrder.status === "pending_payment"
+                                            ? "portal-panel-button-row--two"
+                                            : "portal-panel-button-row--one"
+                                        }`}
                                       >
-                                        Refresh Status
-                                      </button>
-                                      {activeOrder.status === "pending_payment" && (
                                         <button
                                           className="console-key-button"
                                           disabled={orderBusy}
-                                          onClick={discardPendingOrder}
+                                          onClick={refreshOrder}
                                           type="button"
                                         >
-                                          Start New Order
+                                          Refresh Status
                                         </button>
-                                      )}
+                                        {activeOrder.status === "pending_payment" && (
+                                          <button
+                                            className="console-key-button"
+                                            disabled={orderBusy}
+                                            onClick={discardPendingOrder}
+                                            type="button"
+                                          >
+                                            Start New Order
+                                          </button>
+                                        )}
+                                      </div>
                                     </div>
                                     {paymentNotice && (
                                       <p className="text-sm leading-6 text-cyan-50/72">
@@ -2204,14 +1898,16 @@ function PortalContent() {
                   wallet and recover the latest receipt recorded for it.
                 </p>
               </div>
-              <button
-                className="console-key-button"
-                disabled={recoveryBusy}
-                onClick={() => void recoverMintReceipt()}
-                type="button"
-              >
-                {recoveryBusy ? "Recovering" : "Recover Receipt"}
-              </button>
+              <div className="portal-panel-button-row portal-panel-button-row--one">
+                <button
+                  className="console-key-button"
+                  disabled={recoveryBusy}
+                  onClick={() => void recoverMintReceipt()}
+                  type="button"
+                >
+                  {recoveryBusy ? "Recovering" : "Recover Receipt"}
+                </button>
+              </div>
             </div>
             {recoveryNotice && (
               <p className="mt-3 text-xs uppercase tracking-[0.16em] text-yellow-100/78">
@@ -2226,206 +1922,31 @@ function PortalContent() {
       </div>
 
       {termsReviewOpen && (
-        <div className="portal-terms-layer">
-          <section
-            aria-label="Certificate terms"
-            aria-modal="true"
-            className="control-surface-soft portal-terms-panel border border-yellow-300/25 p-4 md:p-6"
-            role="dialog"
-          >
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <div className="text-[10px] font-semibold uppercase tracking-[0.26em] text-yellow-200/72">
-                  Full Page Review
-                </div>
-                <h2 className="mt-2 text-2xl font-black uppercase tracking-[0.12em] text-yellow-50 md:text-4xl">
-                  Certificate Terms
-                </h2>
-              </div>
-              <button
-                className="console-key-button portal-terms-action-button portal-terms-close-button"
-                onClick={() => {
-                  setTermsReviewOpen(false);
-                  setPlainEnglishTermsOpen(false);
-                }}
-                type="button"
-              >
-                Close Review
-              </button>
-            </div>
-            <div className="control-surface-soft portal-terms-certificate space-y-3 overflow-y-auto border border-yellow-300/25 bg-black/55 p-4 text-xs leading-6 text-white/65">
-              {plainEnglishTermsOpen ? (
-                <>
-                  <p className="portal-terms-priority text-yellow-100 uppercase tracking-[0.18em]">
-                    Plain English Summary
-                  </p>
-                  {plainEnglishCertificateSummary.map((paragraph) => (
-                    <p
-                      className="portal-terms-priority"
-                      key={paragraph.slice(0, 32)}
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </>
-              ) : (
-                contractLanguage.map((paragraph, index) => {
-                  const isHeading =
-                    index === 0 || paragraph.startsWith("SECTION ");
-                  const isPriorityTerms =
-                    index <
-                    contractLanguage.findIndex((entry) =>
-                      entry.startsWith("SECTION IV"),
-                    );
-
-                  return (
-                    <p
-                      key={`${paragraph.slice(0, 24)}-${index}`}
-                      className={`${isPriorityTerms ? "portal-terms-priority" : ""} ${
-                        isHeading
-                          ? "text-yellow-100 uppercase tracking-[0.18em]"
-                          : ""
-                      }`}
-                    >
-                      {paragraph}
-                    </p>
-                  );
-                })
-              )}
-            </div>
-            <div className="mt-5 flex flex-wrap justify-center gap-3">
-              <button
-                className="console-key-button portal-terms-action-button"
-                onClick={() => setPlainEnglishTermsOpen((current) => !current)}
-                type="button"
-              >
-                {plainEnglishTermsOpen ? "Formal Terms" : "Plain English Summary"}
-              </button>
-              <button
-                className="console-key-button portal-terms-action-button"
-                onClick={downloadFormalTerms}
-                type="button"
-              >
-                Download Formal Terms
-              </button>
-            </div>
-          </section>
-        </div>
-      )}
-
-      {mobileGateDrawerOpen && (
-        <div className="portal-mobile-select-layer">
-          <button
-            aria-label="Close Select Panel"
-            className="portal-mobile-select-backdrop"
-            onClick={() => {
-              setMobileGateDrawerOpen(false);
-              mobileGateTriggerRef.current?.focus();
+          <PortalTermsReviewModal
+            onClose={() => {
+              setTermsReviewOpen(false);
+              setPlainEnglishTermsOpen(false);
             }}
-            type="button"
+            onDownloadFormalTerms={downloadFormalTerms}
+            onToggleView={() =>
+              setPlainEnglishTermsOpen((current) => !current)
+            }
+            plainEnglishCertificateSummary={plainEnglishCertificateSummary}
+            plainEnglishTermsOpen={plainEnglishTermsOpen}
+            contractLanguage={contractLanguage}
           />
-          <aside
-            aria-label="Select Panel"
-            aria-modal="true"
-            className="control-surface-soft command-room__drawer portal-mobile-select-drawer border border-cyan-100/18 bg-black/50 p-4"
-            id="portal-mobile-select-drawer"
-            role="dialog"
-          >
-            <div className="command-room__drawer-content portal-mobile-select-content">
-              <div className="portal-mobile-select-header mb-4 flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.26em] text-yellow-100/76">
-                    Mint Path
-                  </div>
-                  <div className="mt-1 text-sm font-black uppercase tracking-[0.18em] text-cyan-50">
-                    Control Deck
-                  </div>
-                </div>
-                <button
-                  className="console-key-button portal-command-stow portal-mobile-select-close"
-                  onClick={() => {
-                    setMobileGateDrawerOpen(false);
-                    mobileGateTriggerRef.current?.focus();
-                  }}
-                  type="button"
-                >
-                  Stow
-                </button>
-              </div>
-              <div className="command-room__drawer-groups">
-                <section className="command-room__drawer-group">
-                  <div className="command-room__drawer-label">
-                  Mint Path
-                  </div>
-                  <div className="command-room__drawer-button-grid portal-mobile-select-grid">
-                    {gateReadouts.map((gate, index) => (
-                      <button
-                        aria-pressed={selectedGate === gate.key}
-                        className={`chamfer-hero-link console-key-button command-room__drawer-button portal-gate-button portal-mobile-select-chip ${
-                          index % 2 === 1 ? "chamfer-hero-link--opposite" : ""
-                        } ${
-                          selectedGate === gate.key
-                            ? "portal-gate-button--selected"
-                            : ""
-                        } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
-                        key={gate.key}
-                        onClick={() => {
-                          selectGate(gate.key);
-                          setMobileGateDrawerOpen(false);
-                        }}
-                        type="button"
-                      >
-                        <span>{gate.label}</span>
-                        <small>{gate.value}</small>
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              </div>
-              <nav
-                aria-label="Portal navigation"
-                className="command-room__drawer-actions portal-mobile-drawer-actions"
-              >
-                <Link
-                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
-                  href="/"
-                  onClick={() => setMobileGateDrawerOpen(false)}
-                >
-                  Home
-                </Link>
-                <Link
-                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
-                  href="/vanguard"
-                  onClick={() => setMobileGateDrawerOpen(false)}
-                >
-                  Vanguard
-                </Link>
-                <Link
-                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
-                  href="/whitepaper"
-                  onClick={() => setMobileGateDrawerOpen(false)}
-                >
-                  Whitepaper
-                </Link>
-                <Link
-                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
-                  href="/developer"
-                  onClick={() => setMobileGateDrawerOpen(false)}
-                >
-                  Developer
-                </Link>
-                <Link
-                  className="chamfer-nav-link chamfer-nav-link--compact command-room__drawer-action--primary portal-mobile-drawer-action"
-                  href="/engine-lab"
-                  onClick={() => setMobileGateDrawerOpen(false)}
-                >
-                  Engine Room
-                </Link>
-              </nav>
-            </div>
-          </aside>
-        </div>
       )}
+
+      <PortalMobileSelectDrawer
+        gateReadouts={gateReadouts}
+        isOpen={mobileGateDrawerOpen}
+        onClose={() => {
+          setMobileGateDrawerOpen(false);
+          mobileGateTriggerRef.current?.focus();
+        }}
+        onSelectGate={selectGate}
+        selectedGate={selectedGate}
+      />
     </main>
   );
 }
