@@ -369,7 +369,7 @@ function PortalContent() {
   const [receiptCopied, setReceiptCopied] = useState(false);
   const [error, setError] = useState("");
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
-  const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
+  const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(true);
   const previewShellActive = previewShellEnabled && previewShellRequested;
 
   const publicMark = useMemo(
@@ -1578,7 +1578,7 @@ function PortalContent() {
         variant="right"
       />
 
-      <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-[358px] flex-col gap-5 pt-28 sm:mx-auto sm:max-w-6xl md:pt-32">
+      <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-[358px] flex-col gap-5 pt-1 sm:mx-auto sm:max-w-6xl md:pt-2">
         <section className="flex flex-1 flex-col gap-5">
           {previewShellActive && (
             <div className="control-surface portal-surface-cyan border border-cyan-100/30 bg-cyan-100/[0.06] px-4 py-3 text-sm leading-6 text-cyan-50/78">
@@ -1681,16 +1681,10 @@ function PortalContent() {
             </section>
           ) : (
             <>
-          <div className="control-surface portal-surface-red-soft portal-active-mint-notice border border-red-200/35 bg-red-200/[0.045] px-4 py-3 text-sm leading-6 text-red-50/82">
-            <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
-              Warning Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
-            </div>
-          </div>
-
           <section className="min-w-0">
             <div className="relative min-w-0">
               <div className="min-w-0">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="portal-live-console-label flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
                           Live Mint Console
@@ -1712,7 +1706,7 @@ function PortalContent() {
                       </div>
                     )}
 
-                    <div className="mt-4 grid gap-4">
+                    <div className="portal-console-shell mt-4 grid gap-4">
                       <div
                         className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
                           selectedGateReadout.complete
@@ -1726,9 +1720,26 @@ function PortalContent() {
                         <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
                         <div className="absolute inset-x-5 top-1/2 h-px bg-cyan-100/20 shadow-[0_0_24px_rgba(165,243,252,0.38)]" aria-hidden="true" />
                         <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-px bg-cyan-100/10" aria-hidden="true" />
+                        <button
+                          aria-controls="portal-mobile-select-drawer"
+                          aria-expanded={mobileGateDrawerOpen}
+                          aria-label="Deploy mint controls"
+                          className="console-key-button portal-command-tab portal-gate-deploy-tab portal-mobile-select-trigger portal-mobile-select-trigger--attention"
+                          onClick={() => setMobileGateDrawerOpen(true)}
+                          ref={mobileGateTriggerRef}
+                          type="button"
+                        >
+                          <span>Deploy</span>
+                          <small>Mint Controls</small>
+                        </button>
+                        <div className="control-surface portal-surface-red-soft portal-active-mint-notice border border-red-200/35 bg-red-200/[0.045] px-3 py-2 text-sm leading-6 text-red-50/82">
+                          <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
+                            Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
+                          </div>
+                        </div>
                         <div className="relative z-10 flex min-h-full flex-col gap-4">
                           <div className="portal-gate-header">
-                            <div className="min-w-0 flex-1">
+                            <div className="portal-gate-title-card min-w-0">
                               <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                 Active Entry
                               </div>
@@ -1750,30 +1761,6 @@ function PortalContent() {
                                   {selectedGateCompleteNotice}
                                 </p>
                               )}
-                            </div>
-                            <div
-                              aria-label="Mint sequence status"
-                              className="portal-step-strip"
-                              role="list"
-                            >
-                              {gateReadouts.map((gate) => (
-                                <div
-                                  key={gate.key}
-                                  role="listitem"
-                                >
-                                  <button
-                                    aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
-                                    className={`portal-step-icon ${gateIconState(gate)}`}
-                                    disabled={!gate.enabled && !gate.complete}
-                                    onClick={() => selectGate(gate.key)}
-                                    title={`${gate.label}: ${gate.value}`}
-                                    type="button"
-                                  >
-                                    <PortalGateIcon gate={gate.key} />
-                                    <span>{gate.label}</span>
-                                  </button>
-                                </div>
-                              ))}
                             </div>
                           </div>
 
@@ -1891,7 +1878,7 @@ function PortalContent() {
                             {selectedGate === "identity" && (
                               <div className="grid gap-3">
                                 <div className="grid gap-2 sm:grid-cols-3">
-                                  <label className="console-input-field relative block">
+                                  <label className="console-input-field portal-input-shell relative block">
                                     <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
                                       First Name
                                     </span>
@@ -1906,12 +1893,12 @@ function PortalContent() {
                                       onKeyDown={(event) =>
                                         handleIdentityKeyDown(event, "firstName")
                                       }
-                                      className="control-input-surface w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                       placeholder="As it Appears on Coinbase Acct."
                                     />
                                   </label>
 
-                                  <label className="console-input-field relative block">
+                                  <label className="console-input-field portal-input-shell relative block">
                                     <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
                                       Last Name
                                     </span>
@@ -1926,12 +1913,12 @@ function PortalContent() {
                                       onKeyDown={(event) =>
                                         handleIdentityKeyDown(event, "lastName")
                                       }
-                                      className="control-input-surface w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                       placeholder="As it Appears on Coinbase Acct."
                                     />
                                   </label>
 
-                                  <label className="console-input-field relative block">
+                                  <label className="console-input-field portal-input-shell relative block">
                                     <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
                                       DOB
                                     </span>
@@ -1947,7 +1934,7 @@ function PortalContent() {
                                         handleIdentityKeyDown(event, "dob")
                                       }
                                       type="date"
-                                      className="control-input-surface w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                     />
                                   </label>
                                 </div>
@@ -2145,18 +2132,45 @@ function PortalContent() {
                             )}
                           </div>
 
-                          <button
-                            className={`portal-console-enter mt-auto ${
-                              gateEnterEnabled
-                                ? "portal-console-enter--ready"
-                                : "portal-console-enter--locked"
-                            }`}
-                            disabled={!gateEnterEnabled}
-                            onClick={() => void handleGateEnter()}
-                            type="button"
-                          >
-                            {gateEnterLabel}
-                          </button>
+                          <div className="portal-gate-bottom-row mt-auto">
+                            <button
+                              className={`portal-console-enter ${
+                                gateEnterEnabled
+                                  ? "portal-console-enter--ready"
+                                  : "portal-console-enter--locked"
+                              }`}
+                              disabled={!gateEnterEnabled}
+                              onClick={() => void handleGateEnter()}
+                              type="button"
+                            >
+                              {gateEnterLabel}
+                            </button>
+
+                            <div
+                              aria-label="Mint sequence status"
+                              className="portal-step-strip portal-step-strip--dock"
+                              role="list"
+                            >
+                              {gateReadouts.map((gate) => (
+                                <div
+                                  key={gate.key}
+                                  role="listitem"
+                                >
+                                  <button
+                                    aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+                                    className={`portal-step-icon ${gateIconState(gate)}`}
+                                    disabled={!gate.enabled && !gate.complete}
+                                    onClick={() => selectGate(gate.key)}
+                                    title={`${gate.label}: ${gate.value}`}
+                                    type="button"
+                                  >
+                                    <PortalGateIcon gate={gate.key} />
+                                    <span>{gate.label}</span>
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2202,20 +2216,6 @@ function PortalContent() {
 
         </section>
       </div>
-
-      {!receipt && (
-      <button
-        aria-controls="portal-mobile-select-drawer"
-        aria-expanded={mobileGateDrawerOpen}
-        className="console-key-button portal-mobile-select-trigger portal-mobile-select-trigger--attention"
-        onClick={() => setMobileGateDrawerOpen(true)}
-        ref={mobileGateTriggerRef}
-        type="button"
-      >
-        <span>Console</span>
-        <span>Controls</span>
-      </button>
-      )}
 
       {termsReviewOpen && (
         <div className="portal-terms-layer">
@@ -2319,67 +2319,101 @@ function PortalContent() {
           <aside
             aria-label="Select Panel"
             aria-modal="true"
-            className="control-surface-soft portal-mobile-select-drawer border border-cyan-100/18 p-4"
+            className="control-surface-soft command-room__drawer portal-mobile-select-drawer border border-cyan-100/18 bg-black/50 p-4"
             id="portal-mobile-select-drawer"
             role="dialog"
           >
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-50">
-                Select Panel
-              </div>
-              <button
-                className="console-key-button portal-mobile-select-close"
-                onClick={() => {
-                  setMobileGateDrawerOpen(false);
-                  mobileGateTriggerRef.current?.focus();
-                }}
-                type="button"
-              >
-                Close
-              </button>
-            </div>
-            <div className="portal-mobile-select-grid">
-              {gateReadouts.map((gate) => (
+            <div className="command-room__drawer-content portal-mobile-select-content">
+              <div className="portal-mobile-select-header mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.26em] text-yellow-100/76">
+                    Mint Path
+                  </div>
+                  <div className="mt-1 text-sm font-black uppercase tracking-[0.18em] text-cyan-50">
+                    Control Deck
+                  </div>
+                </div>
                 <button
-                  aria-pressed={selectedGate === gate.key}
-                  className={`console-key-button portal-gate-button portal-mobile-select-chip ${
-                    selectedGate === gate.key
-                      ? "portal-gate-button--selected"
-                      : ""
-                  } ${
-                    gate.key === "wallet" ||
-                    gate.key === "identity" ||
-                    gate.key === "payment"
-                      ? "portal-gate-button--right-chamfer"
-                      : "portal-gate-button--left-chamfer"
-                  } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
-                  key={gate.key}
+                  className="console-key-button portal-command-stow portal-mobile-select-close"
                   onClick={() => {
-                    selectGate(gate.key);
                     setMobileGateDrawerOpen(false);
+                    mobileGateTriggerRef.current?.focus();
                   }}
                   type="button"
                 >
-                  <span>{gate.label}</span>
-                  <small>{gate.value}</small>
+                  Stow
                 </button>
-              ))}
-            </div>
-            <div className="portal-mobile-drawer-actions">
-              <Link
-                className="console-key-button portal-mobile-drawer-action"
-                href="/"
-                onClick={() => setMobileGateDrawerOpen(false)}
+              </div>
+              <div className="command-room__drawer-groups">
+                <section className="command-room__drawer-group">
+                  <div className="command-room__drawer-label">
+                  Mint Path
+                  </div>
+                  <div className="command-room__drawer-button-grid portal-mobile-select-grid">
+                    {gateReadouts.map((gate, index) => (
+                      <button
+                        aria-pressed={selectedGate === gate.key}
+                        className={`chamfer-hero-link console-key-button command-room__drawer-button portal-gate-button portal-mobile-select-chip ${
+                          index % 2 === 1 ? "chamfer-hero-link--opposite" : ""
+                        } ${
+                          selectedGate === gate.key
+                            ? "portal-gate-button--selected"
+                            : ""
+                        } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
+                        key={gate.key}
+                        onClick={() => {
+                          selectGate(gate.key);
+                          setMobileGateDrawerOpen(false);
+                        }}
+                        type="button"
+                      >
+                        <span>{gate.label}</span>
+                        <small>{gate.value}</small>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              </div>
+              <nav
+                aria-label="Portal navigation"
+                className="command-room__drawer-actions portal-mobile-drawer-actions"
               >
-                Home
-              </Link>
-              <Link
-                className="console-key-button portal-mobile-drawer-action"
-                href="/engine"
-                onClick={() => setMobileGateDrawerOpen(false)}
-              >
-                Engine Room
-              </Link>
+                <Link
+                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
+                  href="/"
+                  onClick={() => setMobileGateDrawerOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
+                  href="/vanguard"
+                  onClick={() => setMobileGateDrawerOpen(false)}
+                >
+                  Vanguard
+                </Link>
+                <Link
+                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
+                  href="/whitepaper"
+                  onClick={() => setMobileGateDrawerOpen(false)}
+                >
+                  Whitepaper
+                </Link>
+                <Link
+                  className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
+                  href="/developer"
+                  onClick={() => setMobileGateDrawerOpen(false)}
+                >
+                  Developer
+                </Link>
+                <Link
+                  className="chamfer-nav-link chamfer-nav-link--compact command-room__drawer-action--primary portal-mobile-drawer-action"
+                  href="/engine-lab"
+                  onClick={() => setMobileGateDrawerOpen(false)}
+                >
+                  Engine Room
+                </Link>
+              </nav>
             </div>
           </aside>
         </div>
