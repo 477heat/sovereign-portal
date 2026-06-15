@@ -3826,11 +3826,11 @@ body {
 
 .command-room__drawer-tab {
   background:
-    linear-gradient(135deg, rgba(254, 240, 138, 0.34), rgba(250, 204, 21, 0.18)),
-    rgba(28, 22, 4, 0.86);
-  border: 1px solid rgba(254, 240, 138, 0.55);
+    linear-gradient(135deg, rgba(254, 240, 138, 0.22), rgba(125, 211, 252, 0.07)),
+    rgba(18, 16, 8, 0.88);
+  border: 1px solid rgba(254, 240, 138, 0.44);
   box-shadow:
-    0 0 18px rgba(250, 204, 21, 0.2),
+    0 0 18px rgba(250, 204, 21, 0.14),
     inset 0 0 18px rgba(254, 240, 138, 0.06);
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
   color: rgba(254, 249, 195, 0.95);
@@ -3946,10 +3946,10 @@ body {
 .command-room__drawer-tab:hover,
 .command-room__drawer-tab:focus-visible {
   background:
-    linear-gradient(135deg, rgba(254, 240, 138, 0.48), rgba(250, 204, 21, 0.24)),
-    rgba(33, 25, 5, 0.92);
+    linear-gradient(135deg, rgba(254, 240, 138, 0.32), rgba(125, 211, 252, 0.1)),
+    rgba(28, 22, 6, 0.94);
   box-shadow:
-    0 0 28px rgba(250, 204, 21, 0.32),
+    0 0 24px rgba(250, 204, 21, 0.22),
     inset 0 0 20px rgba(254, 240, 138, 0.08);
   color: white;
   outline: none;
@@ -4015,8 +4015,8 @@ body {
 .command-room__drawer {
   -webkit-overflow-scrolling: touch;
   background:
-    linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(14, 165, 233, 0.025)),
-    rgba(0, 0, 0, 0.48);
+    linear-gradient(135deg, rgba(56, 189, 248, 0.04), rgba(250, 204, 21, 0.012)),
+    rgba(0, 0, 0, 0.56);
   max-height: min(46.2rem, calc(100svh - 2.55rem));
   order: 2;
   overscroll-behavior: contain;
@@ -4060,9 +4060,9 @@ body {
 
 .command-room__drawer::after {
   background:
-    radial-gradient(circle at 26% 20%, rgba(125, 211, 252, 0.12), transparent 34%),
-    linear-gradient(135deg, rgba(56, 189, 248, 0.075), rgba(14, 165, 233, 0.02)),
-    rgba(0, 0, 0, 0.36);
+    radial-gradient(circle at 26% 20%, rgba(125, 211, 252, 0.07), transparent 34%),
+    linear-gradient(135deg, rgba(56, 189, 248, 0.04), rgba(254, 240, 138, 0.012)),
+    rgba(0, 0, 0, 0.44);
 }
 
 .command-room__active-panel {
@@ -4245,18 +4245,20 @@ body {
   display: block;
   line-height: 1.2;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .command-room__drawer-button span {
   color: rgba(236, 254, 255, 0.88);
   font-size: 0.66rem;
+  letter-spacing: 0.04em;
 }
 
 .command-room__drawer-button small {
   color: rgba(207, 250, 254, 0.52);
   font-size: 0.5rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -4266,7 +4268,7 @@ body {
   box-shadow:
     0 0 0 1px rgba(254, 240, 138, 0.28),
     inset 0 0 0 1px rgba(254, 240, 138, 0.04);
-  transform: scale(1.035);
+  transform: translateY(-1px);
   z-index: 2;
 }
 
@@ -4311,6 +4313,7 @@ body {
   height: 2.38rem !important;
   line-height: 1.08;
   min-height: 2.38rem !important;
+  overflow-wrap: anywhere;
   padding-inline: 0.46rem;
   width: 100% !important;
 }
@@ -4621,8 +4624,8 @@ body {
 
 .command-lab__drawer-persist[aria-pressed="true"]::after {
   background:
-    linear-gradient(135deg, rgba(20, 92, 56, 0.76), rgba(3, 38, 24, 0.9)),
-    rgb(3, 32, 22);
+    linear-gradient(135deg, rgba(254, 240, 138, 0.12), rgba(56, 189, 248, 0.08)),
+    rgb(2, 12, 17);
 }
 
 .command-lab__drawer-button-grid {
@@ -4649,15 +4652,15 @@ body {
 }
 
 .command-lab__drawer-button--design::before {
-  background: rgba(254, 240, 138, 0.34);
+  background: rgba(254, 240, 138, 0.3);
 }
 
 .command-lab__drawer-button--future::before {
-  background: rgba(252, 165, 165, 0.24);
+  background: rgba(252, 165, 165, 0.2);
 }
 
 .command-lab__drawer-button--required::before {
-  background: rgba(96, 165, 250, 0.32);
+  background: rgba(125, 211, 252, 0.28);
 }
 
 .command-lab__stage-list--drawer {
