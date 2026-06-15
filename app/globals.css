@@ -1806,6 +1806,8 @@ body {
 .portal-control-page .portal-gate-view--matrix {
   --portal-surface-border: rgba(165, 243, 252, 0.44);
   --portal-surface-fill: rgba(0, 0, 0, 0.08);
+  min-width: 0;
+  width: 100%;
 }
 
 .portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft, .control-input-surface) {
@@ -1843,25 +1845,87 @@ body {
   gap: 1rem;
   justify-content: flex-end;
   min-height: 7.35rem;
+  min-width: 0;
+  width: min(100%, calc(100% - 7.6rem));
+  max-width: min(100%, calc(100% - 7.6rem));
+  flex: 0 1 auto;
   padding-top: clamp(0.3rem, 1vw, 0.7rem);
+}
+
+.portal-gate-title-box {
+  border: 1px solid rgba(103, 232, 249, 0.26);
+  border-radius: 8px;
+  max-width: min(18rem, 100%);
+  padding: 0.55rem 0.6rem 0.5rem;
+}
+
+.portal-gate-title-box__label {
+  color: rgba(103, 232, 249, 0.86);
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.25;
+  margin-top: 0.32rem;
+  text-transform: uppercase;
+}
+
+.portal-gate-top-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.9rem;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .portal-gate-title-card {
   display: grid;
+  column-gap: 0.2rem;
   justify-items: end;
   margin-left: auto;
   max-width: min(38rem, 100%);
   text-align: right;
+  row-gap: 0.1rem;
 }
 
 .portal-control-page .portal-gate-view--matrix .portal-gate-title-card h2 {
-  font-size: clamp(2.25rem, 5.6vw, 4.65rem);
+  font-size: clamp(1.55rem, 3.9vw, 3.25rem);
   line-height: 0.96;
+  max-width: 17rem;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  word-break: break-word;
+  white-space: normal;
 }
 
-.portal-control-page .portal-gate-view--matrix .portal-gate-title-card p {
-  font-size: clamp(1rem, 1.55vw, 1.28rem);
-  line-height: 1.65;
+.portal-control-page .portal-gate-view--matrix .relative.z-10 .portal-gate-title-card .text-\[10px\] {
+  font-size: 0.44rem !important;
+  line-height: 1.35;
+}
+
+.portal-gate-bottom-status {
+  display: grid;
+  gap: 0.24rem;
+  margin-inline: auto;
+  margin-top: auto;
+  max-width: min(56ch, 100%);
+  padding: 0 0.4rem 0.2rem;
+  text-align: center;
+}
+
+.portal-gate-bottom-status__text {
+  color: rgba(225, 247, 255, 0.82);
+  font-size: clamp(0.64rem, 1.4vw, 0.83rem);
+  font-weight: 500;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+
+.portal-gate-bottom-status__notice {
+  color: rgba(250, 204, 21, 0.82);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  line-height: 1.45;
+  text-transform: uppercase;
 }
 
 .portal-control-page .portal-gate-view--matrix .relative.z-10 :where(p, li) {
@@ -1901,8 +1965,62 @@ body {
 
 @media (max-width: 580px) {
   .portal-gate-header {
-    min-height: 8.1rem;
-    padding-top: 4.55rem;
+    align-items: flex-start;
+    margin-left: auto;
+    margin-right: 0;
+    width: fit-content;
+    max-width: min(100%, 11rem);
+    min-width: 0;
+    padding-left: 0;
+    min-height: 0;
+    padding-top: 0.2rem;
+    justify-content: flex-end;
+  }
+
+  .portal-gate-title-card {
+    display: grid;
+    max-width: 100%;
+    margin-left: auto;
+    justify-items: end;
+    text-align: right;
+    width: fit-content;
+  }
+
+  .portal-gate-title-box {
+    display: inline-block;
+    width: auto;
+    max-width: min(11rem, 100%);
+  }
+
+  .portal-gate-top-row {
+    gap: 0.55rem;
+  }
+
+  .portal-gate-title-box {
+    border-radius: 7px;
+    padding: 0.45rem 0.48rem 0.42rem;
+  }
+
+  .portal-gate-title-box__label {
+    font-size: 0.39rem;
+    letter-spacing: 0.12em;
+    line-height: 1.3;
+  }
+
+  .portal-gate-bottom-status {
+    gap: 0.18rem;
+    max-width: min(47ch, 100%);
+    padding: 0 0.18rem 0.15rem;
+  }
+
+  .portal-gate-bottom-status__text {
+    font-size: clamp(0.58rem, 2.1vw, 0.74rem);
+    line-height: 1.34;
+  }
+
+  .portal-gate-bottom-status__notice {
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
   }
 
   .portal-step-strip {
@@ -2153,13 +2271,13 @@ body {
 }
 
 .portal-mobile-select-trigger {
-  --portal-gate-chip-corner: 12px;
+  --portal-gate-chip-corner: 10px;
   background:
     linear-gradient(135deg, rgba(254, 240, 138, 0.34), rgba(250, 204, 21, 0.18)),
     rgba(28, 22, 4, 0.86);
   bottom: auto;
   border: 1px solid rgba(254, 240, 138, 0.55);
-  clip-path: polygon(0 0, calc(100% - var(--portal-gate-chip-corner)) 0, 100% var(--portal-gate-chip-corner), 100% calc(100% - var(--portal-gate-chip-corner)), calc(100% - var(--portal-gate-chip-corner)) 100%, 0 100%);
+  clip-path: polygon(var(--portal-gate-chip-corner) 0, 100% 0, 100% calc(100% - var(--portal-gate-chip-corner)), calc(100% - var(--portal-gate-chip-corner)) 100%, var(--portal-gate-chip-corner) 100%, 0 calc(100% - var(--portal-gate-chip-corner)), 0 var(--portal-gate-chip-corner));
   color: rgba(254, 249, 195, 0.95);
   flex-direction: column;
   font-size: 0.84rem;
@@ -2170,7 +2288,7 @@ body {
   min-width: calc(8.45rem * 0.9);
   padding: 0.76rem 1rem 0.24rem 0.9rem;
   position: absolute;
-  top: 0.55rem;
+  top: -0.27rem;
   transform-origin: left center;
   width: calc(8.45rem * 0.9);
   z-index: 24;
@@ -2191,7 +2309,11 @@ body {
 }
 
 .portal-mobile-select-trigger--attention {
-  animation: portal-deploy-double-pulse 3s ease-in-out infinite;
+  animation-name: portal-deploy-double-pulse;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 3;
+  animation-fill-mode: forwards;
   box-shadow:
     0 0 0 1px rgba(254, 240, 138, 0.55),
     0 0 18px rgba(250, 204, 21, 0.2),
@@ -2200,7 +2322,11 @@ body {
 }
 
 .portal-mobile-select-trigger--attention::before {
-  animation: portal-deploy-face-double-pulse 3s ease-in-out infinite;
+  animation-name: portal-deploy-face-double-pulse;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 3;
+  animation-fill-mode: forwards;
   background:
     linear-gradient(135deg, rgba(254, 240, 138, 0.34), rgba(250, 204, 21, 0.16)),
     rgba(28, 22, 4, 0.86);
@@ -2210,7 +2336,11 @@ body {
 }
 
 .portal-mobile-select-trigger--attention::after {
-  animation: portal-deploy-aura-double-pulse 3s ease-in-out infinite;
+  animation-name: portal-deploy-aura-double-pulse;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 3;
+  animation-fill-mode: forwards;
   background:
     radial-gradient(ellipse at 28% 48%, rgba(254, 249, 195, 0.55), transparent 46%),
     linear-gradient(90deg, rgba(250, 204, 21, 0.32), transparent 78%);
@@ -2644,21 +2774,21 @@ body {
 }
 
 .portal-console-shell {
+  min-width: 0;
   margin-top: 0 !important;
+  width: 100%;
 }
 
 .portal-control-page .portal-console-border-shell {
   position: relative;
   overflow: visible;
-  isolation: isolate;
-  z-index: 120;
 }
 
 .portal-control-page .portal-console-edge-lines {
   inset: -1.32rem;
   pointer-events: none;
   position: absolute;
-  z-index: 300;
+  z-index: 9999;
 }
 
 .portal-control-page .portal-console-edge-lines__stroke {
@@ -2896,9 +3026,115 @@ body {
     padding: 0.55rem;
   }
 
+  .portal-control-page .portal-gate-view--matrix .relative.z-10 {
+    font-size: 0.78rem;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .relative.z-10 :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft, .control-input-surface) {
+    --portal-surface-corner: 10px;
+    padding: 0.68rem;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .relative.z-10 :where(p, li) {
+    font-size: clamp(0.78rem, 1.26vw, 0.94rem);
+    line-height: 1.58;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .relative.z-10 :where(.text-xs, .text-sm, .text-base, .text-lg) {
+    font-size: clamp(0.66rem, 1vw, 0.82rem) !important;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .relative.z-10 :where(.text-\[10px\], .text-\[9px\]) {
+    font-size: 0.58rem !important;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-gate-title-card h2 {
+    font-size: clamp(0.72rem, 4.6vw, 1.12rem);
+    line-height: 1.08;
+    display: inline-block;
+    max-width: 9ch;
+    text-wrap: normal;
+    text-align: right;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .console-input-label {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.15em;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-console-enter {
+    font-size: 0.82rem;
+    min-height: 2.4rem;
+    min-width: 6.7rem;
+    padding: 0.54rem 0.74rem;
+    width: min-content;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-pay-button {
+    min-height: 4rem;
+    padding: 0.62rem;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-pay-button span {
+    font-size: clamp(0.78rem, 2.6vw, 1rem);
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-pay-button small {
+    font-size: 0.46rem;
+    letter-spacing: 0.12em;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .console-key-button {
+    font-size: 0.48rem;
+    min-height: 2.16rem;
+    min-width: 4.45rem;
+    padding: 0 0.42rem;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-connect-wallet-button {
+    font-size: 0.56rem !important;
+    min-height: 2.35rem !important;
+    height: 2.35rem !important;
+    min-width: 7.2rem !important;
+    padding: 0 0.7rem !important;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-terminal-input {
+    font-size: clamp(0.72rem, 1.8vw, 0.88rem);
+    min-height: 2.75rem;
+    padding-right: 1.35rem;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-gate-bottom-status {
+    gap: 0.16rem;
+    max-width: min(42ch, 100%);
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-gate-bottom-status__text {
+    font-size: clamp(0.52rem, 1.7vw, 0.68rem);
+    line-height: 1.34;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-gate-bottom-status__notice {
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .portal-control-page .portal-gate-view--matrix .portal-terminal-input::placeholder {
+    font-size: clamp(0.72rem, 2vw, 0.86rem);
+  }
+
+  .portal-control-page .portal-input-shell::after {
+    right: 0.62rem;
+    top: 1.65rem;
+  }
+
   .portal-mobile-select-trigger {
     left: 0.5rem;
-    top: 0.5rem;
+    top: 0.1rem;
   }
 }
 
