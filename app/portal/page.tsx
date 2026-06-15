@@ -134,7 +134,7 @@ const portalWallets = [
 ];
 const portalConnectButton = {
   className: "portal-connect-wallet-button",
-  label: "Connect Base Wallet",
+  label: "Connect Wallet",
 };
 const portalSwitchButton = {
   label: "Switch To Base",
@@ -1150,9 +1150,9 @@ function PortalContent() {
       ? "Checking"
       : verification?.eligible
         ? "Refresh EAS"
-        : "Open Coinbase EAS",
+        : "Open EAS",
     identity: hasIdentity ? "Confirmed" : "Enter Identity",
-    terms: deedAccepted ? "Continue" : "Enter Terms",
+    terms: deedAccepted ? "Submit" : "Submit",
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
     mint: minting
       ? "Minting"
@@ -1375,7 +1375,7 @@ function PortalContent() {
 
                       <div className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative">
                         <div
-                          className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
+                          className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[30rem] md:min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
                             selectedGateReadout.complete
                               ? "console-status-tile--entered"
                               : selectedGate === "mint"
@@ -1418,11 +1418,19 @@ function PortalContent() {
                               </div>
                             </div>
                           </div>
-                          <div className="relative z-10 flex min-h-full flex-col gap-4">
+                          <div
+                            className={`relative z-10 flex min-h-full flex-col ${
+                              selectedGate === "terms" ? "gap-0" : "gap-4"
+                            }`}
+                          >
 
-                          <div className="grid flex-1 content-start gap-3">
+                          <div
+                            className={`grid flex-1 content-start ${
+                              selectedGate === "terms" ? "gap-0" : "gap-3"
+                            }`}
+                          >
                             {selectedGate === "wallet" && (
-                              <div className={`grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] ${walletStatusClass}`}>
+                              <div className={`grid gap-3 ${walletStatusClass}`}>
                                 <div className="control-surface-soft portal-wallet-recipient border p-3">
                                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                     Recipient
@@ -1431,7 +1439,13 @@ function PortalContent() {
                                     {account?.address ?? "No wallet connected"}
                                   </div>
                                 </div>
-                                <div className="portal-wallet-action portal-panel-button-row portal-panel-button-row--one">
+                                <div
+                                  className={`portal-wallet-action portal-panel-button-row ${
+                                    account?.address
+                                      ? "portal-panel-button-row--one"
+                                      : "portal-panel-button-row--two"
+                                  }`}
+                                >
                                   {thirdwebClient ? (
                                     account?.address ? (
                                       <button
@@ -1446,18 +1460,28 @@ function PortalContent() {
                                         Disconnect
                                       </button>
                                     ) : (
-                                      <ConnectButton
-                                        client={thirdwebClient}
-                                        chain={base}
-                                        appMetadata={portalAppMetadata}
-                                        connectButton={portalConnectButton}
-                                        connectModal={portalConnectModal}
-                                        detailsModal={portalDetailsModal}
-                                        recommendedWallets={portalWallets}
-                                        showAllWallets={false}
-                                        switchButton={portalSwitchButton}
-                                        wallets={portalWallets}
-                                      />
+                                      <>
+                                        <ConnectButton
+                                          client={thirdwebClient}
+                                          chain={base}
+                                          appMetadata={portalAppMetadata}
+                                          connectButton={portalConnectButton}
+                                          connectModal={portalConnectModal}
+                                          detailsModal={portalDetailsModal}
+                                          recommendedWallets={portalWallets}
+                                          showAllWallets={false}
+                                          switchButton={portalSwitchButton}
+                                          wallets={portalWallets}
+                                        />
+                                        <button
+                                          className="portal-connect-wallet-button"
+                                          disabled={!gateEnterEnabled}
+                                          onClick={() => void handleGateEnter()}
+                                          type="button"
+                                        >
+                                          {gateEnterLabel}
+                                        </button>
+                                      </>
                                     )
                                   ) : (
                                     <div className="text-sm leading-6 text-white/65">
@@ -1506,12 +1530,12 @@ function PortalContent() {
                                   )}
                                   <div className="mt-4 portal-panel-button-row portal-panel-button-row--two">
                                     <a
-                                      className="console-key-button"
+                                      className="console-key-button portal-eas-open-button"
                                       href={coinbaseEasUrl}
                                       rel="noreferrer"
                                       target="_blank"
                                     >
-                                      Coinbase EAS
+                                      Open EAS
                                     </a>
                                     <a
                                       className="console-key-button"
@@ -1601,21 +1625,24 @@ function PortalContent() {
                             )}
 
                             {selectedGate === "terms" && (
-                              <div className="grid gap-3">
+                              <div className="grid -mt-1 gap-0">
                                 <div className="control-surface-soft border border-yellow-300/25 bg-black/45 p-4">
                                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-100">
                                     Terms Agreement
                                   </div>
-                                  <p className="mt-3 text-sm leading-6 text-white/68">
+                                  <p className="mt-0 text-sm leading-5 text-white/68">
                                     Read the terms first, then confirm each
                                   agreement item. The full contract opens only
                                   when you choose Read Terms.
-                                </p>
+                                  </p>
                                 </div>
                                 <PortalTermsChecklist
                                   accuracyAccepted={accuracyAccepted}
                                   certificateOpened={certificateOpened}
                                   contractAccepted={contractAccepted}
+                                  enterTermsEnabled={gateEnterEnabled}
+                                  gateEnterLabel={gateEnterLabel}
+                                  onEnterTerms={() => void handleGateEnter()}
                                   onReadTerms={() => {
                                     setCertificateOpened(true);
                                     setTermsReviewOpen(true);
@@ -1817,19 +1844,27 @@ function PortalContent() {
                             )}
                           </div>
 
-                          <div className="portal-gate-bottom-row mt-auto">
-                            <button
-                              className={`portal-console-enter ${
-                                gateEnterEnabled
-                                  ? "portal-console-enter--ready"
-                                  : "portal-console-enter--locked"
-                              }`}
-                              disabled={!gateEnterEnabled}
-                              onClick={() => void handleGateEnter()}
-                              type="button"
-                            >
-                              {gateEnterLabel}
-                            </button>
+                          <div
+                            className={`portal-gate-bottom-row mt-auto ${
+                              selectedGate === "terms"
+                                ? "portal-gate-bottom-row--terms"
+                                : ""
+                            }`}
+                          >
+                            {selectedGate !== "wallet" && selectedGate !== "terms" && (
+                              <button
+                                className={`portal-console-enter ${
+                                  gateEnterEnabled
+                                    ? "portal-console-enter--ready"
+                                    : "portal-console-enter--locked"
+                                }`}
+                                disabled={!gateEnterEnabled}
+                                onClick={() => void handleGateEnter()}
+                                type="button"
+                              >
+                                {gateEnterLabel}
+                              </button>
+                            )}
 
                             <div
                               aria-label="Mint sequence status"

@@ -284,6 +284,9 @@ export function PortalTermsChecklist({
   setContractAccepted,
   setAccuracyAccepted,
   setPublicMarkAccepted,
+  onEnterTerms,
+  gateEnterLabel,
+  enterTermsEnabled,
   onReadTerms,
 }: {
   contractAccepted: boolean;
@@ -293,17 +296,20 @@ export function PortalTermsChecklist({
   setContractAccepted: (value: boolean) => void;
   setAccuracyAccepted: (value: boolean) => void;
   setPublicMarkAccepted: (value: boolean) => void;
+  onEnterTerms: () => void;
+  gateEnterLabel: string;
+  enterTermsEnabled: boolean;
   onReadTerms: () => void;
 }) {
   return (
     <div className="grid gap-4">
-      <div className="grid gap-2 text-xs leading-5 text-white/65 sm:grid-cols-3">
+      <div className="grid grid-cols-3 gap-2 text-xs leading-5 text-white/65">
         <label
-          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+          className={`portal-terms-checkbox-row control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
             contractAccepted
               ? "console-status-tile--entered"
               : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-          } ${certificateOpened ? "" : "cursor-not-allowed opacity-70"}`}
+          } ${certificateOpened ? "" : "cursor-not-allowed"} opacity-100`}
         >
           <input
             checked={contractAccepted}
@@ -312,16 +318,16 @@ export function PortalTermsChecklist({
             type="checkbox"
             className="mt-1 h-4 w-4 shrink-0 accent-yellow-300 disabled:cursor-not-allowed"
           />
-          <span className="text-[10px] leading-4">
+          <span className="portal-terms-checkbox-text text-[10px] leading-4">
             Read and agree to the Certificate.
           </span>
         </label>
         <label
-          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+          className={`portal-terms-checkbox-row control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
             accuracyAccepted
               ? "console-status-tile--entered"
               : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-          }`}
+          } opacity-100`}
         >
           <input
             checked={accuracyAccepted}
@@ -329,16 +335,16 @@ export function PortalTermsChecklist({
             type="checkbox"
             className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
           />
-          <span className="text-[10px] leading-4">
+          <span className="portal-terms-checkbox-text text-[10px] leading-4">
             Name and DOB match Coinbase/EAS.
           </span>
         </label>
         <label
-          className={`control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
+          className={`portal-terms-checkbox-row control-surface-soft flex min-h-20 gap-2 border px-2 py-2 ${
             publicMarkAccepted
               ? "console-status-tile--entered"
               : "portal-surface-red-soft border-red-300/20 bg-red-500/[0.05]"
-          }`}
+          } opacity-100`}
         >
           <input
             checked={publicMarkAccepted}
@@ -346,18 +352,26 @@ export function PortalTermsChecklist({
             type="checkbox"
             className="mt-1 h-4 w-4 shrink-0 accent-yellow-300"
           />
-          <span className="text-[10px] leading-4">
+          <span className="portal-terms-checkbox-text text-[10px] leading-4">
             Public deed uses shortened mark.
           </span>
         </label>
       </div>
-      <div className="portal-panel-button-row portal-panel-button-row--one mt-1">
+      <div className="mt-1 grid grid-cols-2 gap-2 md:flex">
         <button
           className="console-key-button console-key-button--gold"
           onClick={onReadTerms}
           type="button"
         >
           Read Terms
+        </button>
+        <button
+          className="console-key-button console-key-button--gold"
+          disabled={!enterTermsEnabled}
+          onClick={onEnterTerms}
+          type="button"
+        >
+          {gateEnterLabel}
         </button>
       </div>
     </div>
