@@ -30,8 +30,8 @@ const litepaperPanels = [
     value: "Engine",
     title: "Genesis Engine",
     copy: [
-      "Genesis is the starting point: one verified person creates one stable profile instead of rolling a random collectible and hoping the numbers behave.",
-      "That matters because users get a profile foundation they can keep using, developers get cleaner identity signals, and the community gets fewer throwaway wallets pretending to be new people.",
+      "Genesis is the starting point: one verified person creates one stable profile from birth-date signal, not from rerolling a random collectible until the numbers behave.",
+      "The Engine begins with Western and Chinese zodiac systems, their elemental logic, and the character traditions attached to them. That signal becomes twelve Soul Attributes the user can keep carrying into future branches.",
     ],
   },
   {
@@ -42,7 +42,7 @@ const litepaperPanels = [
     title: "Vanguard Access",
     copy: [
       "Vanguard marks the wallets that stepped in during the Genesis phase. The point is simple: early support should stay visible instead of getting buried every time the Engine opens a new branch.",
-      "Vanguards do not pay membership or subscription fees. Each release still publishes its own mint rate and rules, but the original support does not vanish.",
+      "Vanguards do not pay membership or subscription fees. New releases still publish their own rates and rules, but the original support does not vanish into the background.",
     ],
   },
   {
@@ -53,7 +53,7 @@ const litepaperPanels = [
     title: "Progeny Layer",
     copy: [
       "Progeny is what the profile can create: Kindred Creatures, items, adversaries, transport, characters, and project-specific assets.",
-      "Genesis stays scarce, but Progeny can use different supply rules. That lets games and communities grow without turning the original Soul Deed into an unlimited farming machine.",
+      "Genesis stays scarce because it represents the person. Progeny can use different supply rules because games need usable assets, trade, and community movement.",
     ],
   },
   {
@@ -64,7 +64,7 @@ const litepaperPanels = [
     title: "Royalties And Boundaries",
     copy: [
       "The Soul Deed records the original minter and can signal royalty routing where marketplaces support the standard. That helps preserve attribution without pretending every marketplace enforces royalties the same way.",
-      "Private intake data belongs in protected generation. Public metadata should show useful derived traits, token references, and readable terms, not raw personal details.",
+      "Private intake data belongs in protected generation. Public metadata should show useful derived traits, token references, and readable terms, not raw birth records or private identity details.",
     ],
   },
 ];

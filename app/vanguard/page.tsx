@@ -111,7 +111,7 @@ const policyPanels: CommandPanel[] = [
     title: "Full Natal Chart",
     body: [
       "Full Natal Chart access belongs to the Vanguard benefit set.",
-      "That branch expands the profile with birth date, time, and location inputs, making the Engine more personal without forcing those details into public marketplace metadata.",
+      "The current Engine starts with birth date. The full chart branch adds birth time and location so planets, houses, and placements can deepen the stat tree without dumping private intake details into public marketplace metadata.",
     ],
   },
   {

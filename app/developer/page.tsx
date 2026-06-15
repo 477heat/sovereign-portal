@@ -31,7 +31,7 @@ const builderPanels = [
     value: "Source",
     body: [
       "Use Engine-approved profile outputs as the starting point for characters, classes, and persistent player identity.",
-      "That gives developers a stable source for personalization instead of relying on random rolls alone.",
+      "The profile begins with birth-date zodiac signal and expands into twelve Soul Attributes. Developers get personalization with a stable source instead of relying on random rolls alone.",
     ],
   },
   {
@@ -40,7 +40,7 @@ const builderPanels = [
     value: "Trees",
     body: [
       "Request the trait structure your game actually needs: character, item, creature, vehicle, or another project-specific asset.",
-      "The goal is not a generic generator. It is a generation system shaped around the world you are building.",
+      "The goal is not a generic generator. It is a generation system shaped around the world you are building, using only the stats and elements that matter to that world.",
     ],
   },
   {
@@ -72,7 +72,7 @@ const developerSections = [
     title: "Profile Layer",
     body: [
       "Sovereign Engine turns approved user inputs into a stable profile for games and collections.",
-      "For developers, that means a player can have a consistent identity source instead of a new random result every time they touch a project.",
+      "For developers, that means a player can have a consistent identity source instead of a new random result every time they touch a project. The first layer uses birth date and zodiac logic; the natal expansion adds birth time and location for deeper trees.",
     ],
     link: { href: "/engine", label: "View Engine" },
   },
@@ -96,7 +96,7 @@ const developerSections = [
     title: "Actual Supply",
     body: [
       "One verified Genesis origin gives developers a cleaner supply base.",
-      "It is designed to make profile spam harder, so players cannot keep rerolling wallets until they get the best outcome.",
+      "It is designed to make profile spam harder, so players cannot keep rerolling wallets until they get the best outcome. If the birthday is the seed, EAS and mint history help keep that seed tied to a real participant.",
     ],
     link: { href: "/whitepaper#progeny", label: "Read Model" },
   },

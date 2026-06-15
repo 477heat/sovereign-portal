@@ -38,7 +38,7 @@ const accessPanels = [
     value: "Builds",
     body: [
       "Progeny is the repeatable creation layer: creatures, items, adversaries, transport, characters, and project-specific builds derived from a Genesis profile.",
-      "This lets the community create more things without making the Genesis deed unlimited. One origin can lead to many useful game-native assets.",
+      "This lets the community create more things without making the Genesis deed unlimited. One human origin can lead to many useful game-native assets.",
     ],
   },
   {
@@ -56,7 +56,7 @@ const accessPanels = [
     value: "Use",
     body: [
       "Developers can request Progeny structures, attribute trees, and supply rules that fit their game or collection.",
-      "The practical benefit is time and trust: builders get profile-based generation without inventing identity, metadata, supply logic, and attribution from scratch.",
+      "The practical benefit is time and trust: builders can use the Engine's verified origin and stat layer instead of inventing identity, metadata, supply logic, and attribution from scratch.",
     ],
   },
 ];
@@ -70,7 +70,7 @@ const policyPanels = [
     title: "One Genesis",
     body: [
       "Genesis is built around one person, one mint path.",
-      "That single fact is a big part of the value. It helps users prove they are not just another bot wallet, helps developers work with cleaner supply, and gives the community a better chance at culture made by real people instead of farms chasing the best roll.",
+      "That single fact is a big part of the value. The first stats come from birthday-based Western and Chinese zodiac logic, then every user runs through the same Engine.",
     ],
   },
   {
