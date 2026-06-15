@@ -2647,6 +2647,123 @@ body {
   margin-top: 0 !important;
 }
 
+.portal-control-page .portal-console-border-shell {
+  position: relative;
+  overflow: visible;
+}
+
+.portal-control-page .portal-console-edge-lines {
+  inset: -1.32rem;
+  pointer-events: none;
+  position: absolute;
+  z-index: 9999;
+}
+
+.portal-control-page .portal-console-edge-lines__stroke {
+  background: linear-gradient(90deg, transparent 0, currentColor 0);
+  display: block;
+  filter: drop-shadow(0 0 12px currentColor);
+  position: absolute;
+  transform: translateZ(0);
+}
+
+.portal-control-page .portal-console-edge-lines__stroke--top-cyan {
+  --line-color: rgba(141, 251, 255, 1);
+  color: var(--line-color);
+  height: 2px;
+  left: 2%;
+  opacity: 1;
+  top: -1.95rem;
+  width: 68%;
+  background:
+    linear-gradient(90deg, transparent 0 10%, var(--line-color) 10% 78%, transparent 78%);
+}
+
+.portal-control-page .portal-console-edge-lines__stroke--top-cyan::after {
+  border-color: var(--line-color);
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  content: "";
+  height: 1.08rem;
+  position: absolute;
+  right: -0.75rem;
+  top: -0.16rem;
+  width: 1.2rem;
+}
+
+.portal-control-page .portal-console-edge-lines__stroke--right-gold {
+  --line-color: rgba(254, 236, 150, 0.95);
+  color: var(--line-color);
+  height: calc(100% - 56%);
+  opacity: 1;
+  right: -2rem;
+  top: 7%;
+  width: 2px;
+  background:
+    linear-gradient(180deg, transparent 0 12%, var(--line-color) 12% 100%);
+}
+
+.portal-control-page .portal-console-edge-lines__stroke--right-gold::before {
+  border-color: var(--line-color);
+  border-left: 2px solid;
+  border-bottom: 2px solid;
+  content: "";
+  height: 1.1rem;
+  left: -0.6rem;
+  position: absolute;
+  top: -0.94rem;
+  width: 1.1rem;
+}
+
+.portal-control-page .portal-console-edge-lines__stroke--bottom-cyan {
+  --line-color: rgba(180, 249, 255, 0.95);
+  color: var(--line-color);
+  bottom: -1.25rem;
+  height: 2px;
+  left: 30%;
+  opacity: 0.98;
+  width: 49%;
+  background:
+    linear-gradient(90deg, transparent 0 16%, var(--line-color) 16% 84%, transparent 84%);
+}
+
+.portal-control-page .portal-console-edge-lines__stroke--left-gold {
+  --line-color: rgba(255, 240, 153, 0.96);
+  color: var(--line-color);
+  height: calc(100% - 44%);
+  left: -1.25rem;
+  opacity: 0.98;
+  top: 33%;
+  width: 2px;
+  background:
+    linear-gradient(180deg, transparent 0 22%, var(--line-color) 22% 100%);
+}
+
+@media (max-width: 640px) {
+  .portal-control-page .portal-console-edge-lines {
+    inset: -0.72rem;
+  }
+
+  .portal-control-page .portal-console-edge-lines__stroke--top-cyan {
+    left: 8%;
+    width: 58%;
+  }
+
+  .portal-control-page .portal-console-edge-lines__stroke--right-gold {
+    top: 18%;
+  }
+
+  .portal-control-page .portal-console-edge-lines__stroke--bottom-cyan {
+    left: 26%;
+    width: 50%;
+  }
+
+  .portal-control-page .portal-console-edge-lines__stroke--left-gold {
+    left: -0.75rem;
+    top: 38%;
+  }
+}
+
 .portal-control-page .portal-gate-view--soft {
   --portal-surface-corner: 28px;
   --portal-surface-fill: rgba(0, 0, 0, 0.04);

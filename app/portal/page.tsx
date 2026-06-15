@@ -1706,32 +1706,32 @@ function PortalContent() {
                       </div>
                     )}
 
-                    <div className="portal-console-shell mt-4 grid gap-4">
-                      <div
-                        className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
-                          selectedGateReadout.complete
-                            ? "console-status-tile--entered"
-                            : selectedGate === "mint"
-                              ? "portal-surface-red-soft"
-                              : "portal-surface-cyan"
-                        }`}
-                      >
-                        <div className="engine-screen-grid absolute inset-0 opacity-60" aria-hidden="true" />
-                        <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
-                        <div className="absolute inset-x-5 top-1/2 h-px bg-cyan-100/20 shadow-[0_0_24px_rgba(165,243,252,0.38)]" aria-hidden="true" />
-                        <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-px bg-cyan-100/10" aria-hidden="true" />
-                        <button
-                          aria-controls="portal-mobile-select-drawer"
-                          aria-expanded={mobileGateDrawerOpen}
-                          aria-label="Deploy mint controls"
-                          className="console-key-button portal-command-tab portal-gate-deploy-tab portal-mobile-select-trigger portal-mobile-select-trigger--attention"
-                          onClick={() => setMobileGateDrawerOpen(true)}
-                          ref={mobileGateTriggerRef}
-                          type="button"
+                      <div className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative">
+                        <div
+                          className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
+                            selectedGateReadout.complete
+                              ? "console-status-tile--entered"
+                              : selectedGate === "mint"
+                                ? "portal-surface-red-soft"
+                                : "portal-surface-cyan"
+                          }`}
                         >
-                          <span>Deploy</span>
-                          <small>Mint Controls</small>
-                        </button>
+                          <div className="engine-screen-grid absolute inset-0 opacity-60" aria-hidden="true" />
+                          <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
+                          <div className="absolute inset-x-5 top-1/2 h-px bg-cyan-100/20 shadow-[0_0_24px_rgba(165,243,252,0.38)]" aria-hidden="true" />
+                          <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-px bg-cyan-100/10" aria-hidden="true" />
+                          <button
+                            aria-controls="portal-mobile-select-drawer"
+                            aria-expanded={mobileGateDrawerOpen}
+                            aria-label="Deploy mint controls"
+                            className="console-key-button portal-command-tab portal-gate-deploy-tab portal-mobile-select-trigger portal-mobile-select-trigger--attention"
+                            onClick={() => setMobileGateDrawerOpen(true)}
+                            ref={mobileGateTriggerRef}
+                            type="button"
+                          >
+                            <span>Deploy</span>
+                            <small>Mint Controls</small>
+                          </button>
                         <div className="control-surface portal-surface-red-soft portal-active-mint-notice border border-red-200/35 bg-red-200/[0.045] px-3 py-2 text-sm leading-6 text-red-50/82">
                           <div className="text-[11px] uppercase tracking-[0.2em] text-red-200/90">
                             Active <GlossaryTerm term="Mint Path">Mint Path</GlossaryTerm>
@@ -2171,6 +2171,12 @@ function PortalContent() {
                               ))}
                             </div>
                           </div>
+                        </div>
+                        <div className="portal-console-edge-lines" aria-hidden="true">
+                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--top-cyan" />
+                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--right-gold" />
+                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--bottom-cyan" />
+                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--left-gold" />
                         </div>
                       </div>
                     </div>
