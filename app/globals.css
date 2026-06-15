@@ -2650,13 +2650,15 @@ body {
 .portal-control-page .portal-console-border-shell {
   position: relative;
   overflow: visible;
+  isolation: isolate;
+  z-index: 120;
 }
 
 .portal-control-page .portal-console-edge-lines {
   inset: -1.32rem;
   pointer-events: none;
   position: absolute;
-  z-index: 9999;
+  z-index: 300;
 }
 
 .portal-control-page .portal-console-edge-lines__stroke {

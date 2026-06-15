@@ -1706,7 +1706,10 @@ function PortalContent() {
                       </div>
                     )}
 
-                      <div className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative">
+                      <div
+                        className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative"
+                        style={{ zIndex: 300, position: "relative", isolation: "isolate", overflow: "visible" }}
+                      >
                         <div
                           className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
                             selectedGateReadout.complete
@@ -2172,7 +2175,11 @@ function PortalContent() {
                             </div>
                           </div>
                         </div>
-                        <div className="portal-console-edge-lines" aria-hidden="true">
+                        <div
+                          className="portal-console-edge-lines"
+                          aria-hidden="true"
+                          style={{ zIndex: 9999 }}
+                        >
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--top-cyan" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--right-gold" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--bottom-cyan" />
