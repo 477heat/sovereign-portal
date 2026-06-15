@@ -3,6 +3,7 @@ import type { GlossaryTermKey } from "@/lib/glossary";
 
 export type CommandShellSounds = {
   deploy: string;
+  cycle: string;
   menu: string;
   panel: string;
   primary: string;

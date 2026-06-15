@@ -24,6 +24,7 @@ const DEFAULT_COMMAND_DELAY_MS = 500;
 
 const defaultCommandSounds: CommandShellSounds = {
   deploy: "/sounds/deploy.mp3",
+  cycle: "/sounds/interface_swoosh.mp3",
   menu: "/sounds/menu_select.mp3",
   panel: "/sounds/button_select.mp3",
   primary: "/sounds/portal_select.mp3",
@@ -162,7 +163,7 @@ export function CommandPageShell({
         : (activePanelIndex - 1 + panels.length) % panels.length;
     const nextPanel = panels[nextIndex];
 
-    queueCommandAction(`panel-cycle-${direction}`, commandSounds.panel, () => {
+    queueCommandAction(`panel-cycle-${direction}`, commandSounds.cycle, () => {
       setActivePanelId(nextPanel.id);
     });
   }

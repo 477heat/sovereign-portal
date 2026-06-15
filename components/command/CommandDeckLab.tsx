@@ -235,7 +235,11 @@ export function CommandDeckLab() {
         : (activeEntryIndex - 1 + labEntries.length) % labEntries.length;
 
     setActiveEntryId(labEntries[nextIndex].id);
-    playBleep("select");
+    if (soundEnabled) {
+      const audio = new Audio("/sounds/interface_swoosh.mp3");
+      audio.volume = 0.78;
+      void audio.play().catch(() => undefined);
+    }
   }
 
   function handleSoundToggle() {

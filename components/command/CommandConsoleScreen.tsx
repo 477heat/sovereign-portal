@@ -22,7 +22,25 @@ export function CommandConsoleScreen({
   const activePanelBody = Array.isArray(activePanel.body)
     ? activePanel.body
     : [activePanel.body];
+  const [primaryPanelBody, ...secondaryPanelBody] = activePanelBody;
   const activePanelTitleWords = activePanel.title.split(/\s+/).filter(Boolean);
+  const renderCopyCard = (paragraph: string, index: number) => (
+    <section
+      className={`command-room__panel-copy-card ${
+        index === 0 ? "command-room__panel-copy-card--primary" : ""
+      }`}
+      key={`${activePanel.id}-${index}`}
+    >
+      <span>{index === 0 ? "Readout" : "Context"}</span>
+      <p>
+        {glossaryTerms.length > 0 ? (
+          <GlossaryText terms={glossaryTerms} text={paragraph} />
+        ) : (
+          paragraph
+        )}
+      </p>
+    </section>
+  );
 
   return (
     <div className="command-room__console-screen">
@@ -48,6 +66,7 @@ export function CommandConsoleScreen({
           >
             {renderPanelBackdrop?.(activePanel)}
             <div className="command-room__panel-header">
+              {primaryPanelBody ? renderCopyCard(primaryPanelBody, 0) : null}
               <div className="command-room__panel-title-card">
                 <h1
                   aria-label={activePanel.title}
@@ -68,25 +87,13 @@ export function CommandConsoleScreen({
                 </p>
               </div>
             </div>
-            <div className="command-room__panel-copy-stack text-sm leading-7 text-cyan-50/72 md:text-base">
-              {activePanelBody.map((paragraph, index) => (
-                <section
-                  className={`command-room__panel-copy-card ${
-                    index === 0 ? "command-room__panel-copy-card--primary" : ""
-                  }`}
-                  key={`${activePanel.id}-${index}`}
-                >
-                  <span>{index === 0 ? "Readout" : "Context"}</span>
-                  <p>
-                    {glossaryTerms.length > 0 ? (
-                      <GlossaryText terms={glossaryTerms} text={paragraph} />
-                    ) : (
-                      paragraph
-                    )}
-                  </p>
-                </section>
-              ))}
-            </div>
+            {secondaryPanelBody.length > 0 ? (
+              <div className="command-room__panel-copy-stack text-sm leading-7 text-cyan-50/72 md:text-base">
+                {secondaryPanelBody.map((paragraph, index) =>
+                  renderCopyCard(paragraph, index + 1),
+                )}
+              </div>
+            ) : null}
           </div>
         </div>
       </AnimatedFrame>
