@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { AnimatedFrame } from "@/components/command/AnimatedFrame";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
@@ -27,7 +28,29 @@ export function CommandConsoleScreen({
     : [activePanel.body];
   const [primaryPanelBody, ...secondaryPanelBody] = activePanelBody;
   const activePanelTitleWords = activePanel.title.split(/\s+/).filter(Boolean);
-  const panelVisual = renderPanelBackdrop?.(activePanel);
+  const configuredPanelVisual = activePanel.visual ? (
+    <figure
+      className={`command-room__panel-visual-card command-room__panel-visual-card--${
+        activePanel.visual.mode ?? "square"
+      }`}
+    >
+      <Image
+        alt={activePanel.visual.alt}
+        className="command-room__panel-visual-image"
+        height={activePanel.visual.height}
+        priority={activePanel.visual.priority ?? false}
+        sizes="(max-width: 767px) 42vw, 22vw"
+        src={activePanel.visual.src}
+        width={activePanel.visual.width}
+      />
+      {activePanel.visual.caption ? (
+        <figcaption>{activePanel.visual.caption}</figcaption>
+      ) : null}
+    </figure>
+  ) : null;
+  const customPanelVisual = renderPanelBackdrop?.(activePanel);
+  const panelVisual = customPanelVisual ?? configuredPanelVisual;
+  const panelVisualIsImage = customPanelVisual == null && Boolean(activePanel.visual);
   const renderGlossaryText = (text: string) =>
     glossaryTerms.length > 0 ? (
       <GlossaryText terms={glossaryTerms} text={text} />
@@ -109,7 +132,13 @@ export function CommandConsoleScreen({
                 renderCopyCard(primaryPanelBody, 0)
               ) : null}
               {panelVisual ? (
-                <div className="command-room__panel-visual-slot">
+                <div
+                  className={`command-room__panel-visual-slot ${
+                    panelVisualIsImage
+                      ? "command-room__panel-visual-slot--image"
+                      : ""
+                  }`}
+                >
                   {panelVisual}
                 </div>
               ) : null}

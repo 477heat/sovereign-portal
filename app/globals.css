@@ -3829,130 +3829,12 @@ body {
   );
 }
 
-.command-room__topbar {
-  align-items: center;
-  border-bottom: 1px solid rgba(165, 243, 252, 0.1);
-  color: rgba(207, 250, 254, 0.64);
-  display: grid;
-  font-size: clamp(0.48rem, 1.4vw, 0.62rem);
-  gap: 0.45rem;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  letter-spacing: 0.22em;
-  padding-bottom: 1rem;
-  text-transform: uppercase;
-}
-
-.command-room__topbar > div {
-  min-width: 0;
-  overflow: hidden;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.command-room__topbar .chamfer-nav-link {
-  min-width: 0;
-  padding-left: 0.9rem;
-  padding-right: 0.9rem;
-  width: auto !important;
-}
-
 .command-room__grid {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.command-room__rail,
-.command-room__policy-feed {
-  align-self: start;
-}
-
-.command-room__rail {
-  order: 2;
-}
-
 .command-room__viewport {
   order: 1;
-}
-
-.command-room__policy-feed {
-  order: 3;
-}
-
-.command-room__status-stack,
-.command-room__policy-stack {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.command-room__status-link {
-  background: rgba(0, 0, 0, 0.34);
-  border: 1px solid rgba(165, 243, 252, 0.11);
-  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-  display: grid;
-  gap: 0.45rem;
-  padding: 0.9rem;
-  position: relative;
-  text-decoration: none;
-  transition:
-    border-color 180ms ease,
-    filter 180ms ease,
-    transform 180ms ease;
-}
-
-.command-room__status-link::before {
-  background:
-    linear-gradient(90deg, rgba(165, 243, 252, 0.16), transparent 52%),
-    radial-gradient(circle at top right, rgba(254, 240, 138, 0.1), transparent 42%);
-  clip-path: inherit;
-  content: "";
-  inset: 1px;
-  opacity: 0.66;
-  pointer-events: none;
-  position: absolute;
-}
-
-.command-room__status-link:hover,
-.command-room__status-link:focus-visible {
-  border-color: rgba(165, 243, 252, 0.42);
-  filter: brightness(1.14);
-  outline: none;
-  transform: translateY(-1px);
-}
-
-.command-room__status-link span {
-  color: rgba(254, 240, 138, 0.76);
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
-  position: relative;
-  text-transform: uppercase;
-}
-
-.command-room__status-link strong {
-  color: rgba(236, 254, 255, 0.92);
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  position: relative;
-  text-transform: uppercase;
-}
-
-.command-room__status-link small {
-  color: rgba(207, 250, 254, 0.6);
-  font-size: 0.74rem;
-  line-height: 1.55;
-  position: relative;
-}
-
-.command-room__rail-actions {
-  border-top: 1px solid rgba(165, 243, 252, 0.12);
-  display: grid;
-  gap: 0.55rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-}
-
-.command-room__rail-actions .chamfer-nav-link {
-  width: 100% !important;
 }
 
 .command-room__viewport {
@@ -3994,110 +3876,6 @@ body {
   .command-room-page .command-room__viewport--fullscreen .command-moving-lines {
     display: none;
   }
-}
-
-.command-room__signal-row {
-  align-items: center;
-  background: rgba(3, 17, 23, 0.78);
-  border: 1px solid rgba(165, 243, 252, 0.2);
-  box-shadow: 0 0 18px rgba(125, 211, 252, 0.1);
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-  color: rgba(254, 240, 138, 0.74);
-  display: inline-flex;
-  flex-wrap: wrap;
-  font-size: 0.62rem;
-  gap: 0.7rem;
-  justify-self: start;
-  letter-spacing: 0.22em;
-  max-width: 100%;
-  padding: 0.42rem 0.62rem;
-  text-transform: uppercase;
-  width: fit-content;
-}
-
-.command-room__beacon {
-  aspect-ratio: 1;
-  border: 1px solid rgba(165, 243, 252, 0.12);
-  bottom: 10%;
-  left: 50%;
-  opacity: 0.58;
-  position: absolute;
-  transform: translateX(-50%);
-  width: min(58vw, 26rem);
-  z-index: 0;
-}
-
-.command-room__beacon,
-.command-room__beacon span {
-  border-radius: 999px;
-}
-
-.command-room__beacon span {
-  animation: command-core-orbit 14s linear infinite;
-  border: 1px solid rgba(254, 240, 138, 0.13);
-  inset: 12%;
-  position: absolute;
-}
-
-.command-room__beacon span:nth-child(2) {
-  animation-duration: 18s;
-  inset: 26%;
-}
-
-.command-room__beacon span:nth-child(3) {
-  animation-duration: 11s;
-  border-color: rgba(165, 243, 252, 0.18);
-  inset: 40%;
-}
-
-.command-room__policy-node {
-  background:
-    linear-gradient(125deg, rgba(165, 243, 252, 0.06), transparent 42%),
-    rgba(0, 0, 0, 0.34);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
-  display: grid;
-  gap: 0.8rem;
-  padding: 0.95rem;
-  scroll-margin-top: 5rem;
-}
-
-.command-room__policy-index {
-  color: rgba(165, 243, 252, 0.42);
-  font-size: 0.62rem;
-  letter-spacing: 0.32em;
-}
-
-.command-room__policy-node h2 {
-  color: rgba(236, 254, 255, 0.94);
-  font-size: 0.9rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.65rem;
-  text-transform: uppercase;
-}
-
-.command-room__policy-node p {
-  color: rgba(207, 250, 254, 0.64);
-  font-size: 0.8rem;
-  line-height: 1.65;
-}
-
-.command-room__policy-node a {
-  color: rgba(254, 240, 138, 0.82);
-  display: inline-block;
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  margin-top: 0.75rem;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.command-room__policy-node a:hover,
-.command-room__policy-node a:focus-visible {
-  color: rgba(254, 249, 195, 1);
-  outline: none;
-  text-shadow: 0 0 16px rgba(254, 240, 138, 0.42);
 }
 
 .command-room__grid--drawer {
@@ -4706,6 +4484,11 @@ body {
   z-index: 2;
 }
 
+.command-room__panel-visual-slot--image {
+  height: clamp(10rem, 24vw, 18.5rem);
+  width: clamp(10rem, 24vw, 20rem);
+}
+
 .command-room__panel-visual-slot .command-room__origin-badge-backdrop {
   height: 100% !important;
   position: relative;
@@ -4713,6 +4496,49 @@ body {
   top: auto !important;
   width: 100% !important;
   z-index: 2 !important;
+}
+
+.command-room__panel-visual-card {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(147, 197, 253, 0.06), transparent 54%),
+    rgba(1, 8, 12, 0.84);
+  border: 1px solid rgba(165, 243, 252, 0.26);
+  box-shadow:
+    0 0 28px rgba(125, 211, 252, 0.1),
+    inset 0 0 22px rgba(0, 0, 0, 0.58);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+  display: grid;
+  gap: 0.42rem;
+  height: 100%;
+  justify-items: center;
+  margin: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0.56rem;
+  width: 100%;
+}
+
+.command-room__panel-visual-image {
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.command-room__panel-visual-card--wide .command-room__panel-visual-image {
+  height: auto;
+  width: 100%;
+}
+
+.command-room__panel-visual-card figcaption {
+  color: rgba(254, 240, 138, 0.78);
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  line-height: 1.25;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .command-room__panel-title-card {
@@ -6126,25 +5952,12 @@ body {
     grid-column: 3;
   }
 
-  .command-room__rail,
-  .command-room__viewport,
-  .command-room__policy-feed {
+  .command-room__viewport {
     order: initial;
-  }
-
-  .command-room__policy-feed {
-    max-height: calc(100vh - 8rem);
-    overflow: auto;
   }
 
   .command-room__viewport-content {
     padding-top: 2rem !important;
-  }
-
-  .command-room__signal-row {
-    display: inline-flex;
-    margin-bottom: -0.75rem;
-    transform: translateY(-1.15rem);
   }
 
   .command-lab__grid {
@@ -6590,6 +6403,22 @@ body {
   }
 
   .command-room__panel-header--with-visual
+    > .command-room__panel-visual-slot--image {
+    height: clamp(6rem, 26vw, 8.25rem);
+    margin: 0;
+    width: min(12rem, 48vw);
+  }
+
+  .command-room__panel-visual-card {
+    gap: 0.24rem;
+    padding: 0.34rem;
+  }
+
+  .command-room__panel-visual-card figcaption {
+    display: none;
+  }
+
+  .command-room__panel-header--with-visual
     > .command-room__panel-copy-column {
     gap: 0.55rem;
     margin-top: 0.3rem;
@@ -6687,10 +6516,6 @@ body {
   .command-puff-field__puff,
   .command-room__drawer-tab,
   .command-lab__core-mark span {
-    animation: none;
-  }
-
-  .command-room__beacon span {
     animation: none;
   }
 

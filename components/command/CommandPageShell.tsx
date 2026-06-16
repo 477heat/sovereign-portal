@@ -228,7 +228,7 @@ export function CommandPageShell({
   return (
     <main
       aria-busy={pendingActionId !== null}
-      className="info-control-page command-room-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 font-mono text-white max-sm:!px-2 md:px-8"
+      className="command-room-page relative isolate min-h-screen overflow-x-hidden bg-black px-4 py-5 font-mono text-white max-sm:!px-2 md:px-8"
       data-command-pending={pendingActionId ?? undefined}
     >
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">

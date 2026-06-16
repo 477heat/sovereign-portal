@@ -17,6 +17,16 @@ export type CommandPanelCopy =
       items: string[];
     };
 
+export type CommandPanelVisual = {
+  alt: string;
+  caption?: string;
+  height: number;
+  mode?: "portrait" | "square" | "wide";
+  priority?: boolean;
+  src: string;
+  width: number;
+};
+
 export type CommandPanel = {
   id: string;
   number?: string;
@@ -28,6 +38,7 @@ export type CommandPanel = {
     href: string;
     label: string;
   };
+  visual?: CommandPanelVisual;
 };
 
 export type CommandPanelGroup = {
