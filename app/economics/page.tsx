@@ -1,6 +1,7 @@
 import {
   CommandPageShell,
   type CommandDrawerAction,
+  type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
 import type { GlossaryTermKey } from "@/lib/glossary";
@@ -21,6 +22,22 @@ const economicsGlossaryTerms: GlossaryTermKey[] = [
   "Wallet",
   "wallet-linked",
 ];
+
+const economicsGhostAsset = {
+  src: "/Blueprint.png",
+  variant: "network" as const,
+};
+
+const economicsPanelIcons: Record<string, NonNullable<CommandPanel["icon"]>> = {
+  "builder-use": "network",
+  "many-builds": "orbital",
+  "marketplace-limits": "royalty",
+  "one-genesis": "scroll",
+  "progeny-builds": "creature",
+  "royalty-path": "royalty",
+  "supply-rules": "network",
+  "vanguard-access": "badge",
+};
 
 const accessPanels = [
   {
@@ -119,12 +136,18 @@ const economicsGroups: CommandPanelGroup[] = [
       value: panel.value,
       title: `${panel.label} ${panel.value}`,
       body: panel.body,
+      ghostAsset: economicsGhostAsset,
+      icon: economicsPanelIcons[panel.id] ?? "network",
     })),
   },
   {
     label: "Project Rules",
     eyebrow: "Progeny Routing",
-    panels: policyPanels,
+    panels: policyPanels.map((panel) => ({
+      ...panel,
+      ghostAsset: economicsGhostAsset,
+      icon: economicsPanelIcons[panel.id] ?? "network",
+    })),
   },
 ];
 

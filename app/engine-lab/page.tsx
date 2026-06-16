@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function EngineLabPage() {
   return (
     <main className="info-control-page command-lab-page relative isolate min-h-screen overflow-x-hidden bg-black text-white">
-      <TunnelBackdrop layer="page" variant="diffused" rings />
+      <TunnelBackdrop intensity="faint" layer="page" variant="diffused" />
       <CommandDeckLab />
     </main>
   );

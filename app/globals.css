@@ -3798,15 +3798,7 @@ body {
 }
 
 .command-room-page::after {
-  animation: command-page-light-rise 18s linear infinite;
-  background:
-    linear-gradient(90deg, transparent 0 8%, rgba(147, 197, 253, 0.18) 8.08%, transparent 8.28% 28%, rgba(219, 234, 254, 0.14) 28.08%, transparent 28.22% 58%, rgba(125, 211, 252, 0.16) 58.08%, transparent 58.22% 84%, rgba(191, 219, 254, 0.12) 84.08%, transparent 84.22%),
-    linear-gradient(90deg, transparent 0 18%, rgba(147, 197, 253, 0.1) 18.08%, transparent 18.26% 46%, rgba(219, 234, 254, 0.12) 46.08%, transparent 46.26% 73%, rgba(125, 211, 252, 0.1) 73.08%, transparent 73.24%);
-  filter: blur(0.2px);
-  mask-image: linear-gradient(180deg, transparent 0%, black 16%, black 82%, transparent 100%);
-  opacity: 0.24;
-  transform: translateY(18%);
-  z-index: 0;
+  display: none;
 }
 
 .command-room-page .engine-screen-grid {
@@ -3824,7 +3816,7 @@ body {
   background: linear-gradient(
     180deg,
     rgba(219, 234, 254, 0),
-    rgba(147, 197, 253, 0.08),
+    rgba(147, 197, 253, 0.035),
     rgba(219, 234, 254, 0)
   );
 }
@@ -3862,6 +3854,21 @@ body {
   .command-room-page .command-room__viewport-content {
     min-height: 30.5rem !important;
     padding: 3.15rem 1.1rem 1.4rem !important;
+  }
+
+  .command-room-page .command-room__panel-ghost {
+    opacity: 0.2;
+    width: min(92vw, 30rem);
+  }
+
+  .command-room-page .command-room__panel-ghost--badge {
+    opacity: 0.22;
+    width: min(84vw, 28rem);
+  }
+
+  .command-room-page .command-room__panel-ghost--network {
+    opacity: 0.24;
+    width: min(96vw, 32rem);
   }
 
   .command-room-page .command-lab__headline {
@@ -4038,6 +4045,65 @@ body {
   border: 1px solid rgba(147, 197, 253, 0.12);
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
   min-height: 2.6rem;
+}
+
+.command-room__console-dock-module {
+  align-content: center;
+  display: grid;
+  gap: 0.24rem;
+  padding: 0.45rem 0.56rem;
+}
+
+.command-room__console-dock-module span,
+.command-room__console-dock-module strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.command-room__console-dock-module span {
+  color: rgba(254, 240, 138, 0.64);
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
+}
+
+.command-room__console-dock-module strong {
+  color: rgba(207, 250, 254, 0.82);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+}
+
+.command-room__signal-bars {
+  align-items: end;
+  display: flex;
+  gap: 0.18rem;
+  height: 0.95rem;
+}
+
+.command-room__signal-bars i {
+  background: rgba(125, 211, 252, 0.72);
+  box-shadow: 0 0 10px rgba(125, 211, 252, 0.22);
+  display: block;
+  width: 0.22rem;
+}
+
+.command-room__signal-bars i:nth-child(1) {
+  height: 34%;
+}
+
+.command-room__signal-bars i:nth-child(2) {
+  height: 54%;
+}
+
+.command-room__signal-bars i:nth-child(3) {
+  height: 74%;
+}
+
+.command-room__signal-bars i:nth-child(4) {
+  height: 92%;
 }
 
 .command-room__console-cycle-button {
@@ -4411,9 +4477,55 @@ body {
   z-index: 1;
 }
 
-.command-room__active-panel > .command-room__origin-badge-backdrop {
+.command-room__panel-ghost {
+  filter: grayscale(1) saturate(0.82) hue-rotate(132deg);
+  left: 50%;
+  opacity: 0.26;
+  pointer-events: none;
   position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(66vw, 46rem);
   z-index: 0;
+}
+
+.command-room__panel-ghost::before {
+  content: "";
+  display: block;
+  padding-top: 72%;
+}
+
+.command-room__panel-ghost-image {
+  object-fit: contain;
+}
+
+.command-room__panel-ghost--badge {
+  filter: grayscale(0.35) sepia(0.38) saturate(1.28) hue-rotate(350deg);
+  opacity: 0.28;
+  width: min(58vw, 38rem);
+}
+
+.command-room__panel-ghost--card {
+  opacity: 0.24;
+  width: min(50vw, 31rem);
+}
+
+.command-room__panel-ghost--network {
+  filter: grayscale(0.8) saturate(0.9) hue-rotate(128deg);
+  opacity: 0.3;
+  width: min(68vw, 48rem);
+}
+
+.command-room__panel-ghost--orbital {
+  filter: grayscale(0.75) saturate(1.1) hue-rotate(122deg);
+  opacity: 0.28;
+  width: min(62vw, 42rem);
+}
+
+.command-room__panel-ghost--creature {
+  filter: grayscale(0.9) saturate(0.8) hue-rotate(120deg);
+  opacity: 0.22;
+  width: min(66vw, 46rem);
 }
 
 .command-room__active-value {
@@ -4434,117 +4546,10 @@ body {
   min-width: 0;
 }
 
-.command-room__panel-header--with-visual {
-  grid-template-areas:
-    "copy title"
-    "copy visual";
-  grid-template-columns: minmax(13rem, 1fr) minmax(10rem, 22rem);
-}
-
-.command-room__panel-header--with-visual > .command-room__panel-title-card {
-  grid-area: title;
-}
-
-.command-room__panel-copy-column {
-  align-self: start;
-  display: grid;
-  gap: 0.78rem;
-  grid-area: copy;
-  max-width: min(100%, 47rem);
-  min-width: 0;
-  padding-top: var(--command-panel-readout-drop);
-}
-
-.command-room__panel-copy-column > .command-room__panel-copy-card--primary {
-  margin-top: 0;
-}
-
-.command-room__panel-copy-column > .command-room__panel-copy-stack {
-  margin-top: 0;
-  max-width: 100%;
-}
-
 .command-room__panel-header > .command-room__panel-copy-card--primary {
   align-self: start;
   margin-top: var(--command-panel-readout-drop);
   max-width: min(100%, 40rem);
-}
-
-.command-room__panel-visual-slot {
-  align-self: start;
-  display: grid;
-  grid-area: visual;
-  height: clamp(8rem, 22vw, 17rem);
-  justify-self: end;
-  min-width: 0;
-  place-items: center;
-  pointer-events: none;
-  position: relative;
-  width: clamp(8rem, 22vw, 17rem);
-  z-index: 2;
-}
-
-.command-room__panel-visual-slot--image {
-  height: clamp(10rem, 24vw, 18.5rem);
-  width: clamp(10rem, 24vw, 20rem);
-}
-
-.command-room__panel-visual-slot .command-room__origin-badge-backdrop {
-  height: 100% !important;
-  position: relative;
-  right: auto !important;
-  top: auto !important;
-  width: 100% !important;
-  z-index: 2 !important;
-}
-
-.command-room__panel-visual-card {
-  align-items: center;
-  background:
-    linear-gradient(135deg, rgba(147, 197, 253, 0.06), transparent 54%),
-    rgba(1, 8, 12, 0.84);
-  border: 1px solid rgba(165, 243, 252, 0.26);
-  box-shadow:
-    0 0 28px rgba(125, 211, 252, 0.1),
-    inset 0 0 22px rgba(0, 0, 0, 0.58);
-  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
-  display: grid;
-  gap: 0.42rem;
-  height: 100%;
-  justify-items: center;
-  margin: 0;
-  min-height: 0;
-  overflow: hidden;
-  padding: 0.56rem;
-  width: 100%;
-}
-
-.command-room__panel-visual-card--portrait {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.command-room__panel-visual-image {
-  height: 100%;
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-  width: 100%;
-}
-
-.command-room__panel-visual-card--wide .command-room__panel-visual-image {
-  height: auto;
-  width: 100%;
-}
-
-.command-room__panel-visual-card figcaption {
-  color: rgba(254, 240, 138, 0.78);
-  font-size: 0.52rem;
-  letter-spacing: 0.22em;
-  line-height: 1.25;
-  text-align: center;
-  text-transform: uppercase;
 }
 
 .command-room__panel-title-card {
@@ -4694,6 +4699,19 @@ body {
   will-change: transform;
 }
 
+.command-room__drawer-button-icon {
+  color: rgba(165, 243, 252, 0.62);
+  fill: none;
+  height: 1rem;
+  margin-bottom: 0.1rem;
+  opacity: 0.78;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.45;
+  width: 1rem;
+}
+
 .command-room__drawer-button-grid .command-room__drawer-button:nth-child(3) {
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
@@ -4756,6 +4774,11 @@ body {
 .command-room__drawer-button--active small {
   color: rgba(207, 250, 254, 0.72);
   text-shadow: none;
+}
+
+.command-room__drawer-button--active .command-room__drawer-button-icon {
+  color: rgba(254, 240, 138, 0.92);
+  filter: drop-shadow(0 0 8px rgba(254, 240, 138, 0.28));
 }
 
 .command-room__drawer-button--active::before {
@@ -5008,6 +5031,22 @@ body {
   height: 100%;
   min-height: 100%;
   overflow: hidden auto;
+}
+
+.command-lab__asset-ghost {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: grayscale(0.82) saturate(0.9) hue-rotate(126deg);
+  height: min(64vh, 34rem);
+  left: 50%;
+  opacity: 0.23;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(72vw, 44rem);
+  z-index: 1;
 }
 
 .command-lab__console-readouts {
@@ -5631,43 +5670,6 @@ body {
   inset: 38%;
 }
 
-.command-lab__table-mark {
-  aspect-ratio: 1;
-  border: 1px solid rgba(165, 243, 252, 0.09);
-  left: 50%;
-  max-width: 26rem;
-  opacity: 0.56;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(54vw, 26rem);
-  z-index: 0;
-}
-
-.command-lab__table-mark,
-.command-lab__table-mark span {
-  border-radius: 999px;
-}
-
-.command-lab__table-mark span {
-  animation: command-core-orbit 15s linear infinite;
-  border: 1px solid rgba(254, 240, 138, 0.1);
-  inset: 12%;
-  position: absolute;
-}
-
-.command-lab__table-mark span:nth-child(2) {
-  animation-duration: 19s;
-  border-color: rgba(165, 243, 252, 0.12);
-  inset: 27%;
-  transform: rotate(58deg);
-}
-
-.command-lab__table-mark span:nth-child(3) {
-  animation-duration: 11s;
-  inset: 42%;
-}
-
 .command-lab__table-header {
   align-items: start;
   display: grid;
@@ -6071,6 +6073,12 @@ body {
     padding: 1.75rem 0.78rem 0.78rem !important;
   }
 
+  .command-lab__asset-ghost {
+    height: min(58vh, 30rem);
+    opacity: 0.18;
+    width: min(96vw, 32rem);
+  }
+
   .command-lab__table-header {
     gap: 0.85rem;
   }
@@ -6384,52 +6392,6 @@ body {
   .command-room__drawer-tab--embedded {
     clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px) !important;
     font-size: 0.74rem !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .command-room__panel-header--with-visual {
-    grid-template-areas:
-      "title"
-      "visual"
-      "copy";
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .command-room__panel-header--with-visual > .command-room__panel-title-card {
-    order: 1;
-  }
-
-  .command-room__panel-header--with-visual > .command-room__panel-visual-slot {
-    height: clamp(4.5rem, 21vw, 5.25rem);
-    justify-self: end;
-    margin: -0.1rem 0 -0.08rem;
-    order: 2;
-    width: clamp(4.5rem, 21vw, 5.25rem);
-  }
-
-  .command-room__panel-header--with-visual
-    > .command-room__panel-visual-slot--image {
-    height: clamp(6rem, 26vw, 8.25rem);
-    margin: 0;
-    width: min(12rem, 48vw);
-  }
-
-  .command-room__panel-visual-card {
-    gap: 0.24rem;
-    padding: 0.34rem;
-  }
-
-  .command-room__panel-visual-card figcaption {
-    display: none;
-  }
-
-  .command-room__panel-header--with-visual
-    > .command-room__panel-copy-column {
-    gap: 0.55rem;
-    margin-top: 0.3rem;
-    order: 3;
-    padding-top: 0;
   }
 }
 

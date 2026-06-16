@@ -1,12 +1,10 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import {
   CommandPageShell,
   type CommandDrawerAction,
   type CommandPanel,
   type CommandPanelGroup,
-  type CommandShellPanel,
 } from "@/components/command/CommandPageShell";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
@@ -28,19 +26,9 @@ const vanguardGlossaryTerms: GlossaryTermKey[] = [
   "wallet-linked",
 ];
 
-const originBadgeBackdropStyle: CSSProperties = {
-  backgroundImage: 'url("/vanguard-assets/golden-v-vanguard-badge.png")',
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "contain",
-  filter:
-    "drop-shadow(0 0 26px rgba(250, 204, 21, 0.34)) drop-shadow(0 0 54px rgba(125, 211, 252, 0.14))",
-  height: "clamp(8rem, 22vw, 17rem)",
-  opacity: 1,
-  pointerEvents: "none",
-  position: "relative",
-  width: "clamp(8rem, 22vw, 17rem)",
-  zIndex: 2,
+const vanguardGhostAsset = {
+  src: "/vanguard-assets/golden-v-vanguard-badge.png",
+  variant: "badge" as const,
 };
 
 const statusPanels: CommandPanel[] = [
@@ -54,6 +42,8 @@ const statusPanels: CommandPanel[] = [
       "Vanguards are early supporters of Sovereign Engine.",
       "These perpetual perks are a thank you for early supporters.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "badge",
   },
   {
     id: "rail-wallet",
@@ -65,6 +55,8 @@ const statusPanels: CommandPanel[] = [
       "Early support matters. Vanguards keep their privileges in perpetuity.",
       "If you help open the door early, you should not have to earn the same place again later.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "wallet",
   },
   {
     id: "rail-legacy",
@@ -76,6 +68,8 @@ const statusPanels: CommandPanel[] = [
       "Vanguard access is $3 during pre-launch.",
       "Early Supporter Vanguards never pay a membership or subscription. They keep their initial perks and receive future offers automatically.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "badge",
   },
   {
     id: "rail-routing",
@@ -87,6 +81,8 @@ const statusPanels: CommandPanel[] = [
       "Vanguards always keep wallet recognition on their mints.",
       "That recognition carries royalty rights in perpetuity. When a marketplace supports royalties, supported royalties are sent automatically to your wallet.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "royalty",
   },
 ];
 
@@ -101,6 +97,8 @@ const policyPanels: CommandPanel[] = [
       "Kindred Creature is your pal for the game side.",
       "As an early supporter, it is yours before that side of the Engine opens wider.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "creature",
   },
   {
     id: "natal-chart",
@@ -112,6 +110,8 @@ const policyPanels: CommandPanel[] = [
       "Vanguards receive random Item Drops and bonus Forge Items.",
       "Some will be small thank-you drops. Some will be useful later as the game side continues to develop.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "scroll",
   },
   {
     id: "artifact-item",
@@ -123,6 +123,8 @@ const policyPanels: CommandPanel[] = [
       "Progeny are future Items, Characters, Creatures, and Artifacts that grow out of the original Soul Stat sheet.",
       "These future mints are created under your parentage. They are tied to you, unique to your allowable attribute specs, and some can be traded while others cannot.",
     ],
+    ghostAsset: vanguardGhostAsset,
+    icon: "orbital",
   },
   {
     id: "partner-projects",
@@ -145,6 +147,8 @@ const policyPanels: CommandPanel[] = [
         "Future offers",
       ],
     },
+    ghostAsset: vanguardGhostAsset,
+    icon: "network",
   },
 ];
 
@@ -170,20 +174,6 @@ const drawerActions: CommandDrawerAction[] = [
 ];
 
 export default function VanguardPrivilegesPage() {
-  const renderVanguardPanelBackdrop = (panel: CommandShellPanel) => {
-    if (panel.id !== "rail-origin") {
-      return null;
-    }
-
-    return (
-      <div
-        className="command-room__origin-badge-backdrop"
-        style={originBadgeBackdropStyle}
-        aria-hidden="true"
-      />
-    );
-  };
-
   return (
     <CommandPageShell
       drawerActions={drawerActions}
@@ -191,7 +181,6 @@ export default function VanguardPrivilegesPage() {
       drawerLabel="Vanguard drawer"
       glossaryTerms={vanguardGlossaryTerms}
       groups={drawerGroups}
-      renderPanelBackdrop={renderVanguardPanelBackdrop}
     />
   );
 }

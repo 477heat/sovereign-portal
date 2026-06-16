@@ -7,6 +7,30 @@ import {
 
 const soulDeedContractAddress = "0x2df9151c4e32082a05c686bd3092180134d17deb";
 
+const whitepaperGhostAsset = {
+  src: "/whitepaper-assets/t-bre-soul-deed-portrait.png",
+  variant: "card" as const,
+};
+
+const whitepaperPanelIcons: Record<string, NonNullable<CommandPanel["icon"]>> = {
+  "contract-powers": "network",
+  "eligibility-gate": "wallet",
+  "future-dev-direction": "orbital",
+  "genesis-origin": "scroll",
+  "image-burner": "scroll",
+  "live-contract": "network",
+  "mint-pipeline": "network",
+  "royalty-rails": "royalty",
+};
+
+function withWhitepaperShellAssets(panels: CommandPanel[]): CommandPanel[] {
+  return panels.map((panel) => ({
+    ...panel,
+    ghostAsset: panel.ghostAsset ?? whitepaperGhostAsset,
+    icon: panel.icon ?? whitepaperPanelIcons[panel.id] ?? "scroll",
+  }));
+}
+
 const originPanels: CommandPanel[] = [
   {
     id: "genesis-origin",
@@ -16,15 +40,6 @@ const originPanels: CommandPanel[] = [
     title: "Genesis Origin",
     body:
       "Sovereign Engine is live as a Genesis Access mint: an eligible Base wallet passes Coinbase EAS, completes checkout, receives generated metadata, and gets a Soul Deed artifact minted on Base. Thank you for reading early; this moved from premise to working rails quickly, and your support is why the next Engine branches can be built.",
-    visual: {
-      alt: "Genesis Access Soul Deed origin artifact",
-      caption: "Genesis Origin",
-      height: 900,
-      mode: "portrait",
-      priority: true,
-      src: "/whitepaper-assets/t-bre-soul-deed-portrait.png",
-      width: 656,
-    },
   },
   {
     id: "live-contract",
@@ -197,17 +212,17 @@ const whitepaperGroups: CommandPanelGroup[] = [
   {
     label: "System Paper",
     eyebrow: "Whitepaper Control",
-    panels: originPanels,
+    panels: withWhitepaperShellAssets(originPanels),
   },
   {
     label: "Implementation",
     eyebrow: "Whitepaper Control",
-    panels: implementationPanels,
+    panels: withWhitepaperShellAssets(implementationPanels),
   },
   {
     label: "Forward Rails",
     eyebrow: "Whitepaper Control",
-    panels: forwardPanels,
+    panels: withWhitepaperShellAssets(forwardPanels),
   },
 ];
 

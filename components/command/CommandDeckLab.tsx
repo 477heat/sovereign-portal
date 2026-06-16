@@ -7,7 +7,6 @@ import { AssemblingPanel } from "./AssemblingPanel";
 import { CommandConsoleDock } from "./CommandConsoleDock";
 import { CommandDrawerTab } from "./CommandDrawerTab";
 import { MovingLines } from "./MovingLines";
-import { PuffField } from "./PuffField";
 import { SoundToggle } from "./SoundToggle";
 import { useBleeps } from "./useBleeps";
 
@@ -165,6 +164,14 @@ const systemLamps = [
 
 type LabEntryId = (typeof labEntries)[number]["id"];
 
+const labGhostAssets: Partial<Record<LabEntryId, string>> = {
+  adversaries: "/media/fullscreen_dragons.png",
+  "genesis-access": "/whitepaper-assets/t-bre-soul-deed-portrait.png",
+  "genesis-card": "/whitepaper-assets/t-bre-soul-deed-portrait.png",
+  "kindred-creature": "/media/Fullscreen_wolf.png",
+  "vanguard-badge": "/vanguard-assets/golden-v-vanguard-badge.png",
+};
+
 function statusToneLabel(tone: LabStatusTone) {
   switch (tone) {
     case "live":
@@ -197,6 +204,7 @@ export function CommandDeckLab() {
   const primaryEntries = labEntries.slice(0, 4);
   const secondaryEntries = labEntries.slice(4, 8);
   const futureEntries = labEntries.slice(8);
+  const labGhostAsset = labGhostAssets[activeEntry.id] ?? "/Blueprint.png";
 
   function selectEntry(entryId: LabEntryId) {
     setActiveEntryId(entryId);
@@ -349,14 +357,13 @@ export function CommandDeckLab() {
               label={activeEntry.status}
             >
               <MovingLines />
-              <PuffField />
               <div className="engine-screen-grid absolute inset-0 opacity-36" aria-hidden="true" />
               <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
-              <div className="command-lab__table-mark" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </div>
+              <div
+                aria-hidden="true"
+                className="command-lab__asset-ghost"
+                style={{ backgroundImage: `url("${labGhostAsset}")` }}
+              />
 
               <div className="command-lab__table-screen command-lab__table-screen--console relative z-10 grid content-between gap-7 p-5 md:p-8">
                 <div className="command-lab__table-header">

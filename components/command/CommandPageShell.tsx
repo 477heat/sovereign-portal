@@ -39,7 +39,6 @@ export function CommandPageShell({
   groups,
   initialPanelId,
   interactionDelayMs = DEFAULT_COMMAND_DELAY_MS,
-  renderPanelBackdrop,
   sounds,
 }: CommandPageShellProps) {
   const router = useRouter();
@@ -244,7 +243,6 @@ export function CommandPageShell({
                 ) : null
               }
               glossaryTerms={glossaryTerms}
-              renderPanelBackdrop={renderPanelBackdrop}
             />
 
             <CommandConsoleDock

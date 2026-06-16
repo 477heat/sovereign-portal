@@ -13,8 +13,19 @@ export function CommandConsoleDock({
 }: CommandConsoleDockProps) {
   return (
     <div className="command-room__console-dock">
-      <div className="command-room__console-dock-cell" />
-      <div className="command-room__console-dock-cell" />
+      <div className="command-room__console-dock-cell command-room__console-dock-module command-room__console-dock-module--signal">
+        <span>Signal</span>
+        <div aria-hidden="true" className="command-room__signal-bars">
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+      </div>
+      <div className="command-room__console-dock-cell command-room__console-dock-module">
+        <span>Hash</span>
+        <strong>SOUL-00</strong>
+      </div>
       <button
         aria-label="Previous console panel"
         className="command-room__console-dock-cell command-room__console-cycle-button"

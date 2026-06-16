@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
 export type CommandShellSounds = {
@@ -17,15 +16,20 @@ export type CommandPanelCopy =
       items: string[];
     };
 
-export type CommandPanelVisual = {
-  alt: string;
-  caption?: string;
-  height: number;
-  mode?: "portrait" | "square" | "wide";
-  priority?: boolean;
+export type CommandPanelGhostAsset = {
+  alt?: string;
   src: string;
-  width: number;
+  variant?: "badge" | "card" | "network" | "orbital" | "creature";
 };
+
+export type CommandPanelIcon =
+  | "badge"
+  | "wallet"
+  | "scroll"
+  | "orbital"
+  | "creature"
+  | "network"
+  | "royalty";
 
 export type CommandPanel = {
   id: string;
@@ -38,7 +42,8 @@ export type CommandPanel = {
     href: string;
     label: string;
   };
-  visual?: CommandPanelVisual;
+  ghostAsset?: CommandPanelGhostAsset;
+  icon?: CommandPanelIcon;
 };
 
 export type CommandPanelGroup = {
@@ -66,7 +71,5 @@ export type CommandPageShellProps = {
   groups: CommandPanelGroup[];
   initialPanelId?: string;
   interactionDelayMs?: number;
-  renderPanelBackdrop?: (panel: CommandShellPanel) => ReactNode;
-  showBackdropRings?: boolean;
   sounds?: Partial<CommandShellSounds>;
 };
