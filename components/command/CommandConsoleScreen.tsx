@@ -4,7 +4,10 @@ import type { ReactNode } from "react";
 import { AnimatedFrame } from "@/components/command/AnimatedFrame";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
-import type { CommandShellPanel } from "@/components/command/types";
+import type {
+  CommandPanelCopy,
+  CommandShellPanel,
+} from "@/components/command/types";
 
 type CommandConsoleScreenProps = {
   activePanel: CommandShellPanel;
@@ -24,23 +27,51 @@ export function CommandConsoleScreen({
     : [activePanel.body];
   const [primaryPanelBody, ...secondaryPanelBody] = activePanelBody;
   const activePanelTitleWords = activePanel.title.split(/\s+/).filter(Boolean);
-  const renderCopyCard = (paragraph: string, index: number) => (
-    <section
-      className={`command-room__panel-copy-card ${
-        index === 0 ? "command-room__panel-copy-card--primary" : ""
-      }`}
-      key={`${activePanel.id}-${index}`}
-    >
-      <span>{index === 0 ? "Readout" : "Context"}</span>
-      <p>
-        {glossaryTerms.length > 0 ? (
-          <GlossaryText terms={glossaryTerms} text={paragraph} />
+  const panelVisual = renderPanelBackdrop?.(activePanel);
+  const renderGlossaryText = (text: string) =>
+    glossaryTerms.length > 0 ? (
+      <GlossaryText terms={glossaryTerms} text={text} />
+    ) : (
+      text
+    );
+  const renderCopyCard = (copy: CommandPanelCopy, index: number) => {
+    const cardLabel =
+      typeof copy === "string"
+        ? index === 0
+          ? "Readout"
+          : "Context"
+        : copy.label ?? (index === 0 ? "Readout" : "Context");
+
+    return (
+      <section
+        className={`command-room__panel-copy-card ${
+          index === 0 ? "command-room__panel-copy-card--primary" : ""
+        } ${typeof copy === "string" ? "" : "command-room__panel-copy-card--list"}`}
+        key={`${activePanel.id}-${index}`}
+      >
+        <span>{cardLabel}</span>
+        {typeof copy === "string" ? (
+          <p>{renderGlossaryText(copy)}</p>
         ) : (
-          paragraph
+          <ul className="command-room__panel-copy-list">
+            {copy.items.map((item) => (
+              <li key={`${activePanel.id}-${cardLabel}-${item}`}>
+                {renderGlossaryText(item)}
+              </li>
+            ))}
+          </ul>
         )}
-      </p>
-    </section>
-  );
+      </section>
+    );
+  };
+  const renderSecondaryCopyStack = () =>
+    secondaryPanelBody.length > 0 ? (
+      <div className="command-room__panel-copy-stack text-sm leading-7 text-cyan-50/72 md:text-base">
+        {secondaryPanelBody.map((paragraph, index) =>
+          renderCopyCard(paragraph, index + 1),
+        )}
+      </div>
+    ) : null;
 
   return (
     <div className="command-room__console-screen">
@@ -64,9 +95,24 @@ export function CommandConsoleScreen({
             data-panel-id={activePanel.id}
             key={activePanel.id}
           >
-            {renderPanelBackdrop?.(activePanel)}
-            <div className="command-room__panel-header">
-              {primaryPanelBody ? renderCopyCard(primaryPanelBody, 0) : null}
+            <div
+              className={`command-room__panel-header ${
+                panelVisual ? "command-room__panel-header--with-visual" : ""
+              }`}
+            >
+              {panelVisual ? (
+                <div className="command-room__panel-copy-column">
+                  {primaryPanelBody ? renderCopyCard(primaryPanelBody, 0) : null}
+                  {renderSecondaryCopyStack()}
+                </div>
+              ) : primaryPanelBody ? (
+                renderCopyCard(primaryPanelBody, 0)
+              ) : null}
+              {panelVisual ? (
+                <div className="command-room__panel-visual-slot">
+                  {panelVisual}
+                </div>
+              ) : null}
               <div className="command-room__panel-title-card">
                 <h1
                   aria-label={activePanel.title}
@@ -87,13 +133,7 @@ export function CommandConsoleScreen({
                 </p>
               </div>
             </div>
-            {secondaryPanelBody.length > 0 ? (
-              <div className="command-room__panel-copy-stack text-sm leading-7 text-cyan-50/72 md:text-base">
-                {secondaryPanelBody.map((paragraph, index) =>
-                  renderCopyCard(paragraph, index + 1),
-                )}
-              </div>
-            ) : null}
+            {!panelVisual ? renderSecondaryCopyStack() : null}
           </div>
         </div>
       </AnimatedFrame>

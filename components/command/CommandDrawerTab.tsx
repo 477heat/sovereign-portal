@@ -34,7 +34,9 @@ export function CommandDrawerTab({
       disabled={pendingActionId !== null}
       type="button"
     >
-      {drawerOpen ? "Stow" : "Deploy"}
+      <span className="command-room__drawer-tab-label">
+        {drawerOpen ? "Stow" : "Deploy"}
+      </span>
     </button>
   );
 }

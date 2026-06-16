@@ -10,13 +10,20 @@ export type CommandShellSounds = {
   stow: string;
 };
 
+export type CommandPanelCopy =
+  | string
+  | {
+      label?: string;
+      items: string[];
+    };
+
 export type CommandPanel = {
   id: string;
   number?: string;
   label: string;
   value: string;
   title: string;
-  body: string | string[];
+  body: CommandPanelCopy | CommandPanelCopy[];
   link?: {
     href: string;
     label: string;
