@@ -4519,6 +4519,12 @@ body {
   width: 100%;
 }
 
+.command-room__panel-visual-card--portrait {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .command-room__panel-visual-image {
   height: 100%;
   max-height: 100%;

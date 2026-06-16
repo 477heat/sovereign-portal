@@ -22,7 +22,7 @@ const originPanels: CommandPanel[] = [
       height: 900,
       mode: "portrait",
       priority: true,
-      src: "/whitepaper-assets/genesis-soul-deed-portrait.webp",
+      src: "/whitepaper-assets/t-bre-soul-deed-portrait.png",
       width: 656,
     },
   },
