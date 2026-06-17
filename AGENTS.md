@@ -27,6 +27,38 @@ This repo does not own protected Engine truth. Do not recalculate zodiac stats,
 rewrite minted metadata rules, change Lambda image generation, or alter contract
 logic here unless the owner explicitly asks for that full-stack change.
 
+## Command Shell Direction
+
+The Command Shell is the active visual system for Sovereign Engine pages.
+
+Use the shared command components in:
+
+```text
+/Users/thebridge/Desktop/sovereign-portal/components/command/
+```
+
+Preserve the named patterns:
+
+- `Command Tab`: deploy/stow drawer control.
+- `Command Quad Button Group`: 2x2 chamfered panel buttons.
+- `Command Console Screen`: transparent black/cyan view screen.
+
+Shell pages can use:
+
+- ghost diagnostic assets inside console panels
+- drawer micro-icons
+- bottom dock modules
+- sound-backed interactions
+- black/grid/light-line backgrounds with cyan and yellow as accents
+
+Do not add giant decorative backgrounds or heavy media without checking mobile
+performance.
+
+The Portal may share the Command Shell aesthetic, but its live minting behavior
+is protected. Visual changes are allowed only when they do not alter payment,
+EAS, checkout, mint orders, API payloads, contracts, env, admin auth, or token
+metadata behavior.
+
 ## Critical Boundaries
 
 Do not casually edit these areas:
@@ -51,6 +83,18 @@ For Coinbase listing polish:
 - Do not add `/.well-known/farcaster.json` unless Base.dev or Farcaster
   explicitly requires signed account association.
 - Keep listing assets compressed and avoid large video/media additions.
+
+## Copy Direction
+
+- Write confirmed product direction in active language: `is`, `are`, `will`,
+  and `receive`.
+- Do not write Vanguard benefits as `may`, `might`, or `possibly` when the live
+  Vanguard page already states them as benefits.
+- Keep unreleased mechanics honest. Natal Stat, Progeny mint interfaces,
+  Kindred Creature contracts, and developer APIs are not live until implemented.
+- Explain zodiac/Soul Attribute logic clearly and respectfully. Horoscope
+  language is acceptable as an entry point, but the product framing is birth
+  signals, zodiac cultures, elements, and deterministic Soul Attributes.
 
 Asset source folder:
 

@@ -737,7 +737,9 @@ body {
   }
 
   .home-page-fixed-backdrop {
-    background-size: contain;
+    background-image: url("/media/mobile-origin-closeup.jpg");
+    background-position: center center;
+    background-size: cover;
   }
 }
 
