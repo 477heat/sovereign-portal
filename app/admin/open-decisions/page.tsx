@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 
 type Decision = {
   id: string;
@@ -16,9 +16,10 @@ type SavedAnswer = {
 
 type StoredAnswers = Record<string, SavedAnswer>;
 
-const STORAGE_KEY = "sovereign-portal-open-decisions-answers";
+const ANSWER_STORAGE_KEY = "sovereign-portal-open-decisions-answers";
+const DECISION_STORAGE_KEY = "sovereign-portal-open-decisions-questions";
 
-const decisions: Decision[] = [
+const baseDecisions: Decision[] = [
   {
     id: "natal-scope",
     title: "Natal Stat Scope",
@@ -81,20 +82,90 @@ const decisions: Decision[] = [
   },
 ];
 
+function sanitizeDecisions(raw: unknown): Decision[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  return raw
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") {
+        return null;
+      }
+
+      const candidate = entry as {
+        id?: unknown;
+        title?: unknown;
+        question?: unknown;
+      };
+
+      if (
+        typeof candidate.id !== "string" ||
+        typeof candidate.title !== "string" ||
+        typeof candidate.question !== "string"
+      ) {
+        return null;
+      }
+
+      return {
+        id: candidate.id,
+        title: candidate.title,
+        question: candidate.question,
+      };
+    })
+    .filter((entry): entry is Decision => entry !== null);
+}
+
+function loadStoredDecisions(): Decision[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const raw = window.localStorage.getItem(DECISION_STORAGE_KEY);
+
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return sanitizeDecisions(parsed);
+  } catch {
+    return [];
+  }
+}
+
+function mergeDecisions(): Decision[] {
+  const saved = loadStoredDecisions();
+  const baseIds = new Set(baseDecisions.map((item) => item.id));
+  const custom = saved.filter((item) => !baseIds.has(item.id));
+  return [...baseDecisions, ...custom];
+}
+
+function persistDecisions(next: Decision[]) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const baseIds = new Set(baseDecisions.map((item) => item.id));
+  const customOnly = next.filter((item) => !baseIds.has(item.id));
+  window.localStorage.setItem(DECISION_STORAGE_KEY, JSON.stringify(customOnly));
+}
+
 function loadStoredAnswers(): StoredAnswers {
   if (typeof window === "undefined") {
     return {};
   }
 
-  const raw = window.localStorage.getItem(STORAGE_KEY);
+  const raw = window.localStorage.getItem(ANSWER_STORAGE_KEY);
 
   if (!raw) {
     return {};
   }
 
   try {
-    const parsed = JSON.parse(raw) as StoredAnswers;
-    return parsed && typeof parsed === "object" ? parsed : {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? (parsed as StoredAnswers) : {};
   } catch {
     return {};
   }
@@ -124,10 +195,10 @@ function formatTimestamp(value?: string) {
   }
 }
 
-function buildPmReport(answers: StoredAnswers) {
+function buildPmReport(answers: StoredAnswers, activeDecisions: Decision[]) {
   const lines = ["# Open Decisions — Current Answers", "", `Exported: ${nowIso()}`, ""];
 
-  for (const decision of decisions) {
+  for (const decision of activeDecisions) {
     const answer = answers[decision.id];
     lines.push(`## ${decision.title}`);
     lines.push(decision.question);
@@ -140,24 +211,41 @@ function buildPmReport(answers: StoredAnswers) {
 }
 
 export default function OpenDecisionsPage() {
+  const [decisions, setDecisions] = useState<Decision[]>(() => mergeDecisions());
   const [answers, setAnswers] = useState<StoredAnswers>(() => loadStoredAnswers());
-  const [selectedDecisionId, setSelectedDecisionId] = useState(decisions[0]?.id || "");
+  const [selectedDecisionIndex, setSelectedDecisionIndex] = useState(0);
   const [answerInput, setAnswerInput] = useState(() => {
-    const storedAnswers = loadStoredAnswers();
-    return storedAnswers[decisions[0]?.id || ""]?.answer ?? "";
+    const initialAnswers = loadStoredAnswers();
+    const firstDecision = mergeDecisions()[0];
+    return firstDecision ? initialAnswers[firstDecision.id]?.answer ?? "" : "";
   });
   const [isEditing, setIsEditing] = useState(true);
   const [statusMessage, setStatusMessage] = useState("");
   const [pmNoteCopied, setPmNoteCopied] = useState(false);
+  const [newDecisionTitle, setNewDecisionTitle] = useState("");
+  const [newDecisionQuestion, setNewDecisionQuestion] = useState("");
+  const [newDecisionError, setNewDecisionError] = useState("");
 
-  const selectedDecision = useMemo(
-    () => decisions.find((item) => item.id === selectedDecisionId) ?? decisions[0],
-    [selectedDecisionId],
-  );
+  const selectedDecision = decisions[selectedDecisionIndex] ?? decisions[0];
+  const selectedAnswer = selectedDecision ? answers[selectedDecision.id] : undefined;
 
-  function persist(next: StoredAnswers) {
+  function persistAnswers(next: StoredAnswers) {
     setAnswers(next);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.setItem(ANSWER_STORAGE_KEY, JSON.stringify(next));
+  }
+
+  function selectDecision(nextIndex: number) {
+    const safeIndex = ((nextIndex % decisions.length) + decisions.length) % decisions.length;
+    const nextDecision = decisions[safeIndex];
+
+    setSelectedDecisionIndex(safeIndex);
+    setAnswerInput(nextDecision ? answers[nextDecision.id]?.answer ?? "" : "");
+    setIsEditing(true);
+    setStatusMessage("");
+  }
+
+  function cycleDecision() {
+    selectDecision(selectedDecisionIndex + 1);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -175,7 +263,7 @@ export default function OpenDecisionsPage() {
       },
     };
 
-    persist(next);
+    persistAnswers(next);
     setIsEditing(false);
     setStatusMessage("Answer saved. This is the current value for this question.");
 
@@ -184,15 +272,50 @@ export default function OpenDecisionsPage() {
     }, 3000);
   }
 
+  function handleAddDecision(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const title = newDecisionTitle.trim();
+    const question = newDecisionQuestion.trim();
+
+    if (!title || !question) {
+      setNewDecisionError("Both title and question are required.");
+      return;
+    }
+
+    const newDecision: Decision = {
+      id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      title,
+      question,
+    };
+
+    setDecisions((previous) => {
+      const nextDecisions = [...previous, newDecision];
+      persistDecisions(nextDecisions);
+      setSelectedDecisionIndex(nextDecisions.length - 1);
+      setAnswerInput("");
+      setIsEditing(true);
+      setStatusMessage("New question added. Enter the PM answer and press Submit.");
+      window.setTimeout(() => {
+        setStatusMessage("");
+      }, 2600);
+      return nextDecisions;
+    });
+
+    setNewDecisionTitle("");
+    setNewDecisionQuestion("");
+    setNewDecisionError("");
+  }
+
   function handleCopyPmReport() {
-    const report = buildPmReport(answers);
+    const report = buildPmReport(answers, decisions);
     void navigator.clipboard.writeText(report);
     setPmNoteCopied(true);
     setTimeout(() => setPmNoteCopied(false), 2500);
   }
 
   function handleDownloadPmReport() {
-    const content = buildPmReport(answers);
+    const content = buildPmReport(answers, decisions);
     const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -245,34 +368,24 @@ export default function OpenDecisionsPage() {
         </header>
 
         <section className="grid gap-5 border border-white/10 bg-black/50 p-5 md:p-6">
-          <div className="grid gap-2">
-            <label className="text-xs uppercase tracking-[0.28em] text-white/45" htmlFor="decision-select">
-              Select decision
-            </label>
-            <select
-              className="min-h-11 w-full border border-white/15 bg-black/70 px-3 text-sm text-white outline-none transition focus:border-yellow-200/70"
-              id="decision-select"
-              onChange={(event) => {
-                const nextId = event.target.value;
-                setSelectedDecisionId(nextId);
-                setAnswerInput(answers[nextId]?.answer ?? "");
-                setIsEditing(false);
-                setStatusMessage("");
-              }}
-              value={selectedDecisionId}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="text-xs uppercase tracking-[0.28em] text-white/45">
+              Decision {Math.min(selectedDecisionIndex + 1, decisions.length)} of {decisions.length}
+            </div>
+            <button
+              className="min-h-11 border border-cyan-200/55 bg-cyan-200/10 px-4 text-xs font-medium uppercase tracking-[0.22em] text-cyan-100 transition hover:bg-cyan-200/20"
+              onClick={cycleDecision}
+              type="button"
             >
-              {decisions.map((item) => (
-                <option className="bg-black" key={item.id} value={item.id}>
-                  {item.title}
-                </option>
-              ))}
-            </select>
+              Cycle decision
+            </button>
           </div>
 
           {selectedDecision && (
             <form className="grid gap-4" onSubmit={handleSubmit}>
               <div className="grid gap-3 border border-white/10 bg-white/[0.03] p-4">
                 <h2 className="text-sm uppercase tracking-[0.18em] text-white/70">Question</h2>
+                <p className="text-xs uppercase tracking-[0.22em] text-white/60">{selectedDecision.title}</p>
                 <p className="text-sm leading-7 text-white/72">{selectedDecision.question}</p>
               </div>
 
@@ -314,13 +427,46 @@ export default function OpenDecisionsPage() {
 
           <div className="text-xs uppercase tracking-[0.22em] text-white/45">
             <p>
-              Current status: {answers[selectedDecisionId]?.updatedAt ? "saved" : "not answered"}
-              {answers[selectedDecisionId]?.updatedAt
-                ? ` (last saved ${formatTimestamp(answers[selectedDecisionId].updatedAt)})`
+              Current status: {selectedAnswer?.updatedAt ? "saved" : "not answered"}
+              {selectedAnswer?.updatedAt
+                ? ` (last saved ${formatTimestamp(selectedAnswer.updatedAt)})`
                 : ""}
             </p>
             {statusMessage && <p className="mt-2 text-emerald-200">{statusMessage}</p>}
           </div>
+        </section>
+
+        <section className="grid gap-4 border border-white/10 bg-black/50 p-5 md:p-6">
+          <h2 className="text-sm uppercase tracking-[0.22em] text-white/70">Add new decision</h2>
+          <form className="grid gap-4" onSubmit={handleAddDecision}>
+            <label className="grid gap-2 text-xs uppercase tracking-[0.18em] text-white/45" htmlFor="new-decision-title">
+              New question title
+            </label>
+            <input
+              className="min-h-11 w-full border border-white/15 bg-black/70 px-3 text-sm tracking-normal text-white outline-none transition focus:border-yellow-200/70"
+              id="new-decision-title"
+              onChange={(event) => setNewDecisionTitle(event.target.value)}
+              placeholder="Example: API Integration Priority"
+              value={newDecisionTitle}
+            />
+            <label className="grid gap-2 text-xs uppercase tracking-[0.18em] text-white/45" htmlFor="new-decision-question">
+              New question text
+            </label>
+            <textarea
+              className="min-h-[110px] w-full border border-white/15 bg-black/70 p-3 text-sm tracking-normal text-white outline-none transition focus:border-yellow-200/70"
+              id="new-decision-question"
+              onChange={(event) => setNewDecisionQuestion(event.target.value)}
+              placeholder="What is still unresolved?"
+              value={newDecisionQuestion}
+            />
+            {newDecisionError && <p className="text-xs uppercase tracking-[0.18em] text-rose-200">{newDecisionError}</p>}
+            <button
+              className="min-h-11 border border-cyan-200/55 bg-cyan-200/10 px-4 text-xs font-medium uppercase tracking-[0.22em] text-cyan-100 transition hover:bg-cyan-200/20"
+              type="submit"
+            >
+              Add decision
+            </button>
+          </form>
         </section>
 
         <section className="grid gap-4 border border-white/10 bg-black/50 p-5 md:p-6">
