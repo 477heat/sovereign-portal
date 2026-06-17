@@ -20,8 +20,8 @@ const statusPanels: CommandPanel[] = [
     value: "Early",
     title: "Vanguard",
     body: [
-      "Vanguards are early adopters and supporters.",
-      "Current mint price is $3 plus gas for a limited time. All other perks are in the Vanguard Perks tab. Most future mints are planned to cost less than a quarter.",
+      "Vanguards will never pay a membership or Subscription.",
+      "During pre-launch, support is crucial and deeply appreciated by the solo developer creating this Alliant Studio branch.",
     ],
     ghostAsset: vanguardGhostAsset,
     icon: "badge",
@@ -33,9 +33,9 @@ const statusPanels: CommandPanel[] = [
     value: "Forever",
     title: "Early Access",
     body: [
-      "Early support matters. Vanguards keep their privileges in perpetuity.",
-      "If you help open the door early, you won't have to earn the same place again later.",
-      "It is a recognition policy for people who supported first: access is not gated by later hype cycles or follower spikes; the original support lane remains tied to you.",
+      "Early support stays with you.",
+      "That support matters before launch, when the branch is still being built and every early wallet helps carry it forward.",
+      "The original support lane stays tied to the wallet instead of being replaced by later hype.",
     ],
     ghostAsset: vanguardGhostAsset,
     icon: "wallet",
