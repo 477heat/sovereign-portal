@@ -386,7 +386,7 @@ export default function OpenDecisionsPage() {
               <div className="grid gap-3 border border-white/10 bg-white/[0.03] p-4">
                 <h2 className="text-sm uppercase tracking-[0.18em] text-white/70">Question</h2>
                 <p className="text-xs uppercase tracking-[0.22em] text-white/60">{selectedDecision.title}</p>
-                <p className="text-sm leading-7 text-white/72">{selectedDecision.question}</p>
+                <p className="text-base leading-7 text-white/72">{selectedDecision.question}</p>
               </div>
 
               <label className="grid gap-2 text-xs uppercase tracking-[0.18em] text-white/45" htmlFor="decision-answer">
