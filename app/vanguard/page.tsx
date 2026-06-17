@@ -62,6 +62,13 @@ const statusPanels: CommandPanel[] = [
     body: [
       "Your wallet is the anchor that keeps your profile connected to you across the platform.",
       "Once your wallet is confirmed, each mint carries that same link so the system recognizes you as Vanguard and routes royalties back to your wallet when marketplace systems support it.",
+      {
+        label: "Chain Trust",
+        items: [
+          "Blockchain activity is permanent by design, so wallet history stays visible over time.",
+          "Wallets are the way people verify assets across Bitcoin, Ethereum, Base, and other chains you can route through in this ecosystem.",
+        ],
+      },
     ],
     ghostAsset: vanguardGhostAsset,
     icon: "royalty",
