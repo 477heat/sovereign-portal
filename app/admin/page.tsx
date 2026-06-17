@@ -951,6 +951,12 @@ function AdminContent() {
               Operations
             </Link>
             <Link
+              className="text-[10px] uppercase tracking-[0.35em] text-white/50 transition hover:text-white"
+              href="/admin/open-decisions"
+            >
+              Open Decisions
+            </Link>
+            <Link
               className="border border-yellow-200/35 bg-yellow-200/10 px-3 py-1 text-[10px] uppercase tracking-[0.28em] text-yellow-100 transition hover:bg-yellow-200/20"
               href="/admin/token-inspector"
             >
