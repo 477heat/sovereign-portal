@@ -6,6 +6,7 @@ import {
   type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
+import { preLaunchOffer, preLaunchOfferSummary } from "@/lib/preLaunchOffer";
 
 const vanguardGhostAsset = {
   src: "/vanguard-assets/golden-v-vanguard-badge.png",
@@ -21,7 +22,7 @@ const statusPanels: CommandPanel[] = [
     title: "Vanguard",
     body: [
       "Vanguard is the initial-supporter status for wallets that helped Sovereign Engine before the full public launch path is finished.",
-      "It is meant to keep early supporters visible as the Engine grows, so later launches can recognize who was here at the beginning.",
+      `The current entry offer is ${preLaunchOfferSummary} It is meant to keep early supporters visible as the Engine grows, so later launches can recognize who was here at the beginning.`,
       {
         label: "Status",
         items: [
@@ -112,7 +113,7 @@ const policyPanels: CommandPanel[] = [
     value: "Creature",
     title: "Progeny Creature",
     body: [
-      "Kindred Creature is planned as the first Vanguard Progeny mint on Launch Day. It is the first example of a project branching from the same origin as your Genesis path.",
+      `Kindred Creature is planned as the first Vanguard Progeny mint on Launch Day. The Genesis entry rate is currently ${preLaunchOffer.displayPrice} for the ${preLaunchOffer.audience}, including ${preLaunchOffer.honor}.`,
       "Instead of letting users reroll until they like the result, the creature begins from profile-linked attributes. That keeps each user's creature tied to the same starting identity logic.",
       {
         label: "Launch Use",

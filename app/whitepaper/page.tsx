@@ -4,6 +4,7 @@ import {
   type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
+import { preLaunchOfferSummary } from "@/lib/preLaunchOffer";
 
 const soulDeedContractAddress = "0x2df9151c4e32082a05c686bd3092180134d17deb";
 
@@ -40,7 +41,7 @@ const originPanels: CommandPanel[] = [
     title: "Genesis Origin",
     body: [
       "Sovereign Engine begins with a Genesis Access mint. An eligible Base wallet passes Coinbase EAS, completes the mint path, receives generated metadata, and gets a Soul Deed artifact minted on Base.",
-      "The important idea is simple: one real participant starts one origin, and future Engine branches can build from that origin instead of starting over every time.",
+      `The current public-facing pre-launch offer is ${preLaunchOfferSummary} The important idea is simple: one real participant starts one origin, and future Engine branches can build from that origin instead of starting over every time.`,
       {
         label: "Genesis Path",
         items: [

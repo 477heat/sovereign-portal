@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
+import { preLaunchOffer, preLaunchOfferSummary } from "@/lib/preLaunchOffer";
 
 const dayOneLaunchAt = Date.UTC(2026, 5, 24, 15, 0, 0);
 const architectTokenMetadataUrl =
@@ -59,16 +60,16 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
 
 const protocolCards = [
   {
-    label: "Story Origin",
-    title: "Machine Economy",
-    body: "AI came first. SI followed and was quickly sold as Superior. Search, markets, and games learned to reward synthetic advantage. Sovereign Engine starts with the part machines still have to fake: a real origin.",
-    href: "/whitepaper",
-    destination: "Litepaper",
+    label: "Pre-Launch",
+    title: "Founding Rate",
+    body: `The Genesis mint is ${preLaunchOfferSummary} This is an early access rate for people who want their origin wallet recognized before the public path is fully opened.`,
+    href: "/portal",
+    destination: "Mint Path",
   },
   {
     label: "Base-native",
     title: "Genesis Artifact",
-    body: "The Soul Deed is the first Access Token: a Title of Ownership minted to the wallet behind a verified human path, not to an empty account swarm.",
+    body: "The Soul Deed is the first Access Token: a Certificate of Title minted to the wallet behind a verified human path, not to an empty account swarm.",
     href: "/portal",
     destination: "Soul Registry Portal",
   },
@@ -318,7 +319,7 @@ export default function HomePage() {
         <div className="home-hero-command-stack relative z-10 lg:col-span-2">
           <div className="chamfer-panel chamfer-panel--hero-copy max-w-[28rem] px-5 py-4 md:w-[35vw] md:max-w-none md:px-7 md:py-3">
             <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80 md:mb-1">
-              Human Signal Initializing
+              Pre-Launch Access
             </p>
             <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
               Sovereign Engine
@@ -326,9 +327,12 @@ export default function HomePage() {
             <p className="mt-5 max-w-[24rem] text-lg leading-7 text-white/68 md:mt-3 md:max-w-[46rem] md:text-base md:leading-6">
               <GlossaryText
                 terms={homeGlossaryTerms}
-                text="AI scaled the noise. SI made it look human. Sovereign Engine starts from the opposite signal: one person, one Genesis mint, no empty-wallet swarm."
+                text={`Mint before launch for ${preLaunchOffer.displayPrice} if you are among the ${preLaunchOffer.audience}. The mint includes ${preLaunchOffer.honor}: early wallet recognition for people who enter before the public path is fully opened.`}
               />
             </p>
+            <div className="mt-4 inline-flex border border-yellow-200/45 bg-yellow-100/[0.08] px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-yellow-100 md:mt-3">
+              {preLaunchOffer.displayPrice} / {preLaunchOffer.audience} / {preLaunchOffer.honor}
+            </div>
           </div>
 
           <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-4">
@@ -440,7 +444,7 @@ export default function HomePage() {
           <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-base leading-7 text-white/68 md:text-lg md:leading-8">
             <GlossaryText
               terms={homeGlossaryTerms}
-              text="The Engine starts with fixed human inputs, not rerolls. DOB-derived Western and Chinese signs establish the first 12 attributes; EAS and the mint ledger keep Genesis from becoming another machine-scaled claim farm."
+              text="The Engine starts with fixed human inputs, not rerolls. The first profile uses astrologically based stats more complex than only being an Aries, Capricorn, or any other single sign. EAS and the mint ledger help keep Genesis from becoming another machine-scaled claim farm."
             />
           </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">

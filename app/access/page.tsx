@@ -4,6 +4,7 @@ import {
   type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
+import { preLaunchOfferSummary } from "@/lib/preLaunchOffer";
 
 const accessGhostAsset = {
   src: "/Blueprint.png",
@@ -28,7 +29,7 @@ const accessPanels = [
     value: "Access",
     body: [
       "Vanguard access is the early-supporter lane for wallets that enter during the Genesis phase.",
-      "It gives the Engine a clear way to recognize those wallets later, so future in-house mints, discounts, and claim windows can identify who helped before the public path was fully opened.",
+      `The current pre-launch offer is ${preLaunchOfferSummary} It gives the Engine a clear way to recognize those wallets later, so future in-house mints, discounts, and claim windows can identify who helped before the public path was fully opened.`,
       {
         label: "User Value",
         items: [
@@ -105,7 +106,7 @@ const policyPanels = [
     title: "One Genesis",
     body: [
       "Genesis is built around one person, one mint path. The point is to make the first origin scarce because the person behind it is unique.",
-      "The first stats come from birthday-based Western and Chinese zodiac logic, then every user runs through the same Engine rules instead of rerolling until the output looks perfect.",
+      "The first stats are astrologically based, but the profile is more complex than simply being an Aries, Capricorn, or any other single sign. Every user runs through the same Engine rules instead of rerolling until the output looks perfect.",
       {
         label: "Why It Matters",
         items: [

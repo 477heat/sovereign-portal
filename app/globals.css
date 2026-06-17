@@ -741,6 +741,10 @@ body {
     background-position: center center;
     background-size: cover;
   }
+
+  .home-page-fixed-backdrop::after {
+    background: rgba(0, 0, 0, 0.5);
+  }
 }
 
 .chamfer-panel--interactive {
@@ -6452,9 +6456,22 @@ body {
     min-height: calc(100svh - 1.4rem) !important;
   }
 
+  .command-room__console-screen .command-room__viewport--fullscreen {
+    height: calc(100% - var(--command-console-screen-top));
+    max-height: calc(100% - var(--command-console-screen-top));
+    min-height: calc(100% - var(--command-console-screen-top)) !important;
+  }
+
   .command-room-page .command-room__viewport-content--fullscreen {
     gap: 1.05rem !important;
     padding: 1.05rem 0.8rem 0.72rem !important;
+  }
+
+  .command-room__console-screen .command-room__viewport-content--fullscreen {
+    height: 100%;
+    max-height: 100%;
+    min-height: 100% !important;
+    overflow-y: auto;
   }
 
   .command-room__console-frame-rails {

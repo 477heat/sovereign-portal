@@ -31,6 +31,7 @@ import {
   buildMintOrderStatusMessage,
   buildMintRecoveryMessage,
 } from "@/lib/portalMessages";
+import { preLaunchOffer, preLaunchOfferSummary } from "@/lib/preLaunchOffer";
 import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
 import type {
   IdentityField,
@@ -69,7 +70,7 @@ const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
   : null;
 const defaultPaymentAmount =
-  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? "5.00";
+  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? preLaunchOffer.amount;
 const defaultPaymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
 const defaultPaymentTokenAddress =
   process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;
@@ -288,6 +289,7 @@ function PortalContent() {
   const directPaymentEnabled =
     directPaymentConfigured && directPaymentAllowedForWallet;
   const paymentAmount = activeOrder?.paymentAmount ?? paymentSettings.paymentAmount;
+  const paymentDisplayAmount = `$${paymentAmount.replace(/\.00$/, "")}`;
   const paymentSeller = paymentSettings.paymentSeller;
   const paymentTokenAddress = paymentSettings.paymentTokenAddress;
   const paymentTokenDecimals =
@@ -1034,7 +1036,7 @@ function PortalContent() {
         : paymentRequired
           ? orderPaid
             ? "Paid"
-            : "Required"
+            : paymentDisplayAmount
           : "Bypassed",
       complete: orderPaid,
       enabled: deedAccepted,
@@ -1348,6 +1350,9 @@ function PortalContent() {
                         <div className="text-[11px] uppercase tracking-[0.3em] text-yellow-300/70">
                           Live Mint Console
                         </div>
+                        <div className="mt-2 inline-flex border border-yellow-200/35 bg-yellow-100/[0.06] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-yellow-100">
+                          {paymentDisplayAmount} pre-launch / Vanguard Honor included
+                        </div>
                       </div>
                     </div>
 
@@ -1653,6 +1658,14 @@ function PortalContent() {
                               >
                                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Checkout
+                                </div>
+                                <div className="mt-3 control-surface-soft border border-yellow-200/35 bg-yellow-100/[0.06] px-3 py-3">
+                                  <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-yellow-100">
+                                    {preLaunchOffer.label}
+                                  </div>
+                                  <p className="mt-2 text-sm leading-5 text-white/72">
+                                    Current order amount: {paymentDisplayAmount}. {preLaunchOfferSummary}
+                                  </p>
                                 </div>
 
                                 {orderPaid ? (
