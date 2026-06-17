@@ -106,9 +106,14 @@ export function CommandDrawer({
     >
       <div className="command-room__drawer-content" id={drawerContentId}>
         <div className="command-room__drawer-groups">
-          {groups.map((group) => (
-            <section className="command-room__drawer-group" key={group.label}>
-              <div className="command-room__drawer-label">{group.label}</div>
+          {groups.map((group, groupIndex) => (
+            <section
+              className="command-room__drawer-group"
+              key={`${group.label || "group"}-${groupIndex}`}
+            >
+              {group.label ? (
+                <div className="command-room__drawer-label">{group.label}</div>
+              ) : null}
               <div className="command-room__drawer-button-grid">
                 {group.panels.map((panel, index) => (
                   <button

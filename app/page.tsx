@@ -76,7 +76,7 @@ const protocolCards = [
     label: "Coinbase EAS",
     title: "1 Soul, 1 Mint",
     body: "The live path uses Coinbase EAS and contract mint history to keep Genesis scarce: one verified origin, one starting profile, one human signal in the Engine.",
-    href: "/economics",
+    href: "/access",
     destination: "Access and Progeny",
   },
 ];
@@ -85,7 +85,7 @@ const navLinks = [
   ["Portal", "/portal"],
   ["Engine", "/engine"],
   ["Vanguard", "/vanguard"],
-  ["Access", "/economics"],
+  ["Access", "/access"],
   ["Litepaper", "/whitepaper"],
 ] as const;
 
@@ -350,7 +350,7 @@ export default function HomePage() {
               <Link
                 aria-label="Open Access page for Launch Day countdown details"
                 className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
-                href="/economics"
+                href="/access"
               >
                 <div className="home-countdown-title text-[0.68rem] uppercase leading-4 tracking-[0.16em] text-neutral-950">
                   Launch Day
@@ -362,7 +362,7 @@ export default function HomePage() {
               <Link
                 aria-label="Open Access page for Launch Day countdown timer"
                 className="chamfer-countdown-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
-                href="/economics"
+                href="/access"
               >
                 <div className="grid grid-cols-4 gap-1">
                   {dayOneCountdown.map(([value, label]) => (

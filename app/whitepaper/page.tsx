@@ -38,8 +38,19 @@ const originPanels: CommandPanel[] = [
     label: "Origin",
     value: "Genesis",
     title: "Genesis Origin",
-    body:
-      "Sovereign Engine is live as a Genesis Access mint: an eligible Base wallet passes Coinbase EAS, completes checkout, receives generated metadata, and gets a Soul Deed artifact minted on Base. Thank you for reading early; this moved from premise to working rails quickly, and your support is why the next Engine branches can be built.",
+    body: [
+      "Sovereign Engine begins with a Genesis Access mint. An eligible Base wallet passes Coinbase EAS, completes the mint path, receives generated metadata, and gets a Soul Deed artifact minted on Base.",
+      "The important idea is simple: one real participant starts one origin, and future Engine branches can build from that origin instead of starting over every time.",
+      {
+        label: "Genesis Path",
+        items: [
+          "Base wallet",
+          "Coinbase EAS check",
+          "Generated metadata",
+          "Soul Deed artifact",
+        ],
+      },
+    ],
   },
   {
     id: "live-contract",
@@ -48,6 +59,7 @@ const originPanels: CommandPanel[] = [
     value: "SLDD",
     title: "Live Contract",
     body: [
+      "This is the current live Soul Deed contract used by the Portal. The earlier pilot contract was superseded during the clean public reset and should not be treated as the active address.",
       {
         label: "Current Address",
         items: [
@@ -59,7 +71,7 @@ const originPanels: CommandPanel[] = [
           "UUPS proxy contract",
         ],
       },
-      "This is the current live Soul Deed contract used by the Portal. The earlier pilot contract was superseded during the clean public reset and should not be treated as the active address.",
+      "For normal users, this means the Portal should point to one current contract path, not a mix of older test addresses and current public mint rails.",
     ],
   },
   {
@@ -69,6 +81,8 @@ const originPanels: CommandPanel[] = [
     value: "EAS",
     title: "Eligibility Gate",
     body: [
+      "Coinbase EAS is used as the live eligibility signal for the one-person, one-Genesis posture.",
+      "It is not presented as perfect legal identity or absolute Sybil prevention. It is a practical verified-account gate that helps reduce empty wallets, bot farming, and duplicate claims.",
       {
         label: "Mint Gate",
         items: [
@@ -80,7 +94,6 @@ const originPanels: CommandPanel[] = [
           "Backend-only contract mint",
         ],
       },
-      "Coinbase EAS is used as the live eligibility signal. We do not pretend it is perfect legal identity or absolute Sybil prevention; it is a practical verified-account gate for a one-person, one-Genesis posture.",
     ],
   },
 ];
@@ -93,6 +106,8 @@ const implementationPanels: CommandPanel[] = [
     value: "Engine",
     title: "Mint Pipeline",
     body: [
+      "The mint pipeline is the protected path from Portal input to final onchain token.",
+      "The browser does not mint directly. The Portal owns the user journey, the Engine owns generation truth, and the worker executes the onchain write with backend authority.",
       {
         label: "Execution Path",
         items: [
@@ -106,7 +121,6 @@ const implementationPanels: CommandPanel[] = [
           "Thirdweb Engine calls backendMint",
         ],
       },
-      "The browser never mints directly. The Portal owns the user journey, the Engine owns generation truth, and the worker executes the onchain write with backend authority.",
     ],
   },
   {
@@ -116,6 +130,8 @@ const implementationPanels: CommandPanel[] = [
     value: "Hash",
     title: "Image Burner",
     body: [
+      "The image burner creates the final visible artifact after the Engine has the approved inputs.",
+      "Raw DOB is not public NFT metadata. The public image receives readable marks and a cryptographic marker, while private source inputs stay out of the marketplace trait list.",
       {
         label: "Artifact Burn",
         items: [
@@ -129,7 +145,6 @@ const implementationPanels: CommandPanel[] = [
           "Metadata receives encrypted_hash",
         ],
       },
-      "Raw DOB is not public NFT metadata. The public artifact receives a cryptographic marker and readable visual marks, while the private source inputs stay out of the marketplace trait list.",
     ],
   },
   {
@@ -139,6 +154,7 @@ const implementationPanels: CommandPanel[] = [
     value: "Onchain",
     title: "Contract Powers",
     body: [
+      "These are real contract rails, not decorative language. They let the project protect the live system, preserve original-minter history, and support future Engine behavior without casually breaking minted tokens.",
       {
         label: "Current Powers",
         items: [
@@ -154,7 +170,7 @@ const implementationPanels: CommandPanel[] = [
           "Upgradeable implementation",
         ],
       },
-      "These are real contract rails, not decorative language. They let us protect the live system, preserve original-minter history, and add future Engine behavior without casually breaking minted tokens.",
+      "For users, the key point is that minting, reveal, transfer controls, and metadata protections are contract-level concerns, not just frontend promises.",
     ],
   },
 ];
@@ -167,6 +183,8 @@ const forwardPanels: CommandPanel[] = [
     value: "Split",
     title: "Royalty Rails",
     body: [
+      "Royalty rails are configured to support creator and original-minter attribution where marketplaces honor the signal and route payment correctly.",
+      "This is user-beneficial, but not universal enforcement. Public wording should stay honest: supported markets can send royalties to the token splitter.",
       {
         label: "Configured Route",
         items: [
@@ -180,7 +198,6 @@ const forwardPanels: CommandPanel[] = [
           "Marketplace support required",
         ],
       },
-      "The royalty route is configured and user-beneficial where marketplaces honor the signal and route payment correctly. It is not universal enforcement, so public language stays honest: supported markets can send royalties to the token splitter.",
     ],
   },
   {
@@ -190,6 +207,8 @@ const forwardPanels: CommandPanel[] = [
     value: "Build",
     title: "Dev Direction",
     body: [
+      "The next direction is to stabilize Genesis first, make the zodiac stat layer legible, then let future items, creatures, developer systems, and preview branches grow from a real minted origin.",
+      "That keeps the public mint path understandable while leaving room for richer Progeny projects once the foundation is steady.",
       {
         label: "Next Branches",
         items: [
@@ -203,26 +222,26 @@ const forwardPanels: CommandPanel[] = [
           "Command Shell template hardening",
         ],
       },
-      "The direction is deliberate: stabilize Genesis first, make the zodiac stat layer legible, then let future items, creatures, developer systems, and preview branches grow from a real minted origin.",
     ],
   },
 ];
 
 const whitepaperGroups: CommandPanelGroup[] = [
   {
-    label: "System Paper",
+    label: "",
     eyebrow: "Whitepaper Control",
-    panels: withWhitepaperShellAssets(originPanels),
+    panels: withWhitepaperShellAssets([
+      ...originPanels,
+      implementationPanels[0],
+    ]),
   },
   {
-    label: "Implementation",
+    label: "",
     eyebrow: "Whitepaper Control",
-    panels: withWhitepaperShellAssets(implementationPanels),
-  },
-  {
-    label: "Forward Rails",
-    eyebrow: "Whitepaper Control",
-    panels: withWhitepaperShellAssets(forwardPanels),
+    panels: withWhitepaperShellAssets([
+      ...implementationPanels.slice(1),
+      ...forwardPanels,
+    ]),
   },
 ];
 
@@ -230,8 +249,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/", label: "Home" },
   { href: "/engine-lab", label: "Engine Lab", variant: "opposite" },
   { href: "/vanguard", label: "Vanguard", variant: "opposite" },
-  { href: "/economics", label: "Access" },
-  { href: "/developer", label: "Developer" },
+  { href: "/access", label: "Access" },
   { href: "/portal", label: "Portal", variant: "primary" },
 ];
 

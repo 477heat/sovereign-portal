@@ -7,7 +7,7 @@ const PAGE_LABELS_BY_PATH: Record<string, string> = {
   "/vanguard": "Vanguard",
   "/engine": "Engine",
   "/whitepaper": "Whitepaper",
-  "/economics": "Economics",
+  "/access": "Access",
   "/portal": "Portal",
   "/artifact": "Artifact",
   "/developer": "Developer",

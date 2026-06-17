@@ -4309,11 +4309,12 @@ body {
   --command-drawer-tab-long: 10.25rem;
   --command-drawer-tab-short: 4.55rem;
   left: clamp(1.35rem, 3vw, 2.25rem);
+  max-width: 40%;
   pointer-events: auto;
   position: absolute;
   right: auto;
   top: 0.104rem;
-  width: min(48%, calc(100% - 4.5rem));
+  width: min(40%, calc(100% - 4.5rem));
   z-index: 6;
 }
 
@@ -6464,6 +6465,7 @@ body {
     --command-drawer-tab-long: 8.45rem;
     --command-drawer-tab-short: 3.95rem;
     left: clamp(0.72rem, 4vw, 1.25rem);
+    max-width: min(80%, calc(100% - 2rem));
     top: 0.052rem;
     width: min(80%, calc(100% - 2rem));
   }
