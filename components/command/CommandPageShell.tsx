@@ -124,7 +124,7 @@ export function CommandPageShell({
     event.preventDefault();
     queueCommandAction(
       `drawer-action-${action.href}`,
-      action.variant === "primary" ? commandSounds.primary : commandSounds.menu,
+      action.variant === "primary" ? commandSounds.primary : commandSounds.deploy,
       () => {
         router.push(action.href);
       },
@@ -139,7 +139,7 @@ export function CommandPageShell({
     const nextDrawerOpen = !drawerOpen;
     queueCommandAction(
       nextDrawerOpen ? "drawer-deploy" : "drawer-stow",
-      nextDrawerOpen ? commandSounds.deploy : commandSounds.stow,
+      nextDrawerOpen ? "/sounds/button_select.mp3" : commandSounds.stow,
       () => {
         setDrawerOpen(nextDrawerOpen);
       },
@@ -147,7 +147,7 @@ export function CommandPageShell({
   }
 
   function handlePanelSelect(panelId: string) {
-    queueCommandAction(`panel-${panelId}`, commandSounds.panel, () => {
+    queueCommandAction(`panel-${panelId}`, commandSounds.deploy, () => {
       setActivePanelId(panelId);
       setDrawerOpen(false);
     });

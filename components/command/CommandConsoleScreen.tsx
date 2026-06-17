@@ -59,8 +59,8 @@ export function CommandConsoleScreen({
       typeof copy === "string"
         ? variant === "upper"
           ? index === 0
-            ? "Public Summary"
-            : "Next Needed"
+            ? "Signal Overview"
+            : "Policy"
           : `Readout ${String(index + 1).padStart(2, "0")}`
         : copy.label ?? (index === 0 ? "Readout" : "Context");
 
