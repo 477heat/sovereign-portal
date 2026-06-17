@@ -1,10 +1,5 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-
-const COMMAND_TITLE_TAB_USED_KEY = "sovereign-command-title-tab-used";
-const COMMAND_TITLE_TAB_USED_EVENT = "sovereign-command-title-tab-used-change";
-
 type CommandDrawerTabProps = {
   drawerContentId: string;
   drawerLabel: string;
@@ -15,24 +10,6 @@ type CommandDrawerTabProps = {
   pendingActionId: string | null;
 };
 
-function getTitleTabUsedSnapshot() {
-  return window.localStorage.getItem(COMMAND_TITLE_TAB_USED_KEY) === "true";
-}
-
-function getTitleTabUsedServerSnapshot() {
-  return false;
-}
-
-function subscribeTitleTabUsed(onStoreChange: () => void) {
-  window.addEventListener("storage", onStoreChange);
-  window.addEventListener(COMMAND_TITLE_TAB_USED_EVENT, onStoreChange);
-
-  return () => {
-    window.removeEventListener("storage", onStoreChange);
-    window.removeEventListener(COMMAND_TITLE_TAB_USED_EVENT, onStoreChange);
-  };
-}
-
 export function CommandDrawerTab({
   drawerContentId,
   drawerLabel,
@@ -42,20 +19,10 @@ export function CommandDrawerTab({
   onClick,
   pendingActionId,
 }: CommandDrawerTabProps) {
-  const titleTabUsed = useSyncExternalStore(
-    subscribeTitleTabUsed,
-    getTitleTabUsedSnapshot,
-    getTitleTabUsedServerSnapshot,
-  );
   const displayLabel = label ?? (drawerOpen ? "Stow" : "Deploy");
-  const shouldShowTitleCue = embedded && !drawerOpen && !titleTabUsed;
+  const shouldShowTitleCue = embedded && !drawerOpen;
 
   function handleClick() {
-    if (embedded && !titleTabUsed) {
-      window.localStorage.setItem(COMMAND_TITLE_TAB_USED_KEY, "true");
-      window.dispatchEvent(new Event(COMMAND_TITLE_TAB_USED_EVENT));
-    }
-
     onClick();
   }
 
