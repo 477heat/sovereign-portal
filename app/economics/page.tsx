@@ -4,24 +4,6 @@ import {
   type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
-import type { GlossaryTermKey } from "@/lib/glossary";
-
-const economicsGlossaryTerms: GlossaryTermKey[] = [
-  "Access Token",
-  "Attribute Tree",
-  "Contract Address",
-  "Genesis",
-  "Genesis Mint",
-  "Lineage",
-  "Marketplace",
-  "Mint",
-  "Progeny",
-  "Royalty",
-  "Traceable",
-  "Vanguard",
-  "Wallet",
-  "wallet-linked",
-];
 
 const economicsGhostAsset = {
   src: "/Blueprint.png",
@@ -165,7 +147,6 @@ export default function EconomicsPage() {
       drawerActions={drawerActions}
       drawerContentId="economics-drawer"
       drawerLabel="Access drawer"
-      glossaryTerms={economicsGlossaryTerms}
       groups={economicsGroups}
     />
   );

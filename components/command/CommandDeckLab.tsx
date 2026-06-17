@@ -313,6 +313,7 @@ export function CommandDeckLab() {
       drawerLabel="Engine Lab drawer"
       drawerOpen={drawerOpen}
       embedded={embedded}
+      label={embedded ? activeEntry.title : undefined}
       onClick={toggleDrawer}
       pendingActionId={null}
     />
@@ -429,8 +430,6 @@ export function CommandDeckLab() {
               : "command-room__drawer-shell--closed"
           } ${drawerPinned ? "command-lab__drawer-shell--pinned" : ""}`}
         >
-          {drawerOpen ? renderDrawerTab() : null}
-
           <AssemblingPanel
             className="command-room__drawer command-lab__drawer border border-cyan-200/15 bg-black/50 p-4"
             delay="medium"

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { GlossaryText } from "@/components/GlossaryTerm";
-import type { GlossaryTermKey } from "@/lib/glossary";
 
 const coinbaseBackgroundImage =
   "/coinbase-assets/tall-console-scroll-background.jpg";
@@ -43,22 +41,6 @@ const readinessChips = [
   "Base-native",
   "Coinbase Verified Account check",
   "One Genesis Mint",
-];
-
-const coinbaseGlossaryTerms: GlossaryTermKey[] = [
-  "AI",
-  "Artifact",
-  "Base",
-  "Base-native",
-  "Genesis",
-  "Genesis Mint",
-  "Progeny",
-  "Originality",
-  "SI",
-  "Sovereign Engine",
-  "Soul Mint",
-  "Verified Account",
-  "Verified Human Soul",
 ];
 
 export default function CoinbaseEntryPage() {
@@ -113,10 +95,7 @@ export default function CoinbaseEntryPage() {
             }}
           >
             <p className="mb-4 text-[0.68rem] uppercase tracking-[0.32em] text-cyan-100/55">
-              <GlossaryText
-                terms={coinbaseGlossaryTerms}
-                text="Sovereign Engine"
-              />
+              Sovereign Engine
             </p>
             <h1 className="max-w-4xl text-3xl font-semibold uppercase leading-none tracking-normal text-cyan-50 max-sm:text-[1.7rem] max-sm:[overflow-wrap:anywhere] md:text-5xl">
               <span className="block">Your Origin,</span>
@@ -127,10 +106,15 @@ export default function CoinbaseEntryPage() {
               Verify your Humanity, Claim you Soul.
             </p>
             <p className="mt-7 max-w-2xl text-sm leading-6 text-cyan-50/72 max-sm:[overflow-wrap:anywhere] md:text-base">
-              <GlossaryText
-                terms={coinbaseGlossaryTerms}
-                text="The future belonged first to AI but it was the arrival of SI that destroyed the digital realm. Ther Wealthy used it to shape everything: search, commerce, gaming, and visibility; all at scale. Real-time optimization made it harder for small sellers, creators, and players to compete unless they could pay to stay in view. Then Alliant introduced the Engine. A way for humans to prove personhood and compete in a fair market. Verify your humanity, claim your Soul. Retain your individuality in a machine-driven world."
-              />
+              The future belonged first to AI but it was the arrival of SI that
+              destroyed the digital realm. Ther Wealthy used it to shape
+              everything: search, commerce, gaming, and visibility; all at
+              scale. Real-time optimization made it harder for small sellers,
+              creators, and players to compete unless they could pay to stay in
+              view. Then Alliant introduced the Engine. A way for humans to
+              prove personhood and compete in a fair market. Verify your
+              humanity, claim your Soul. Retain your individuality in a
+              machine-driven world.
             </p>
 
             <div className="mt-7 flex max-w-full min-w-0 flex-wrap gap-2">

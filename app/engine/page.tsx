@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { GlossaryTerm } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   buildEngineProfile,
@@ -513,7 +512,7 @@ export default function EnginePage() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/65">
-                      <GlossaryTerm term="Engine Room">Engine Room</GlossaryTerm>
+                      Engine Room
                     </div>
                     <h1 className="mt-3 text-xl font-light uppercase tracking-[0.14em] text-white md:text-2xl">
                       Mock Input Console

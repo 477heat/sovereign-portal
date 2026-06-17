@@ -3,26 +3,6 @@ import {
   type CommandDrawerAction,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
-import type { GlossaryTermKey } from "@/lib/glossary";
-
-const developerGlossaryTerms: GlossaryTermKey[] = [
-  "Actual Supply",
-  "Attributes",
-  "Attribute Tree",
-  "Coinbase EAS",
-  "Deterministic Profile",
-  "Genesis Mint",
-  "Lineage",
-  "Metadata",
-  "Progeny",
-  "Royalty",
-  "Sovereign Engine",
-  "Token ID",
-  "Traceable",
-  "Vanguard",
-  "Wallet",
-  "wallet-linked",
-];
 
 const builderPanels = [
   {
@@ -203,7 +183,6 @@ export default function DeveloperPage() {
       drawerActions={drawerActions}
       drawerContentId="developer-drawer"
       drawerLabel="Developer drawer"
-      glossaryTerms={developerGlossaryTerms}
       groups={developerGroups}
     />
   );

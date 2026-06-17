@@ -6,25 +6,6 @@ import {
   type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
-import type { GlossaryTermKey } from "@/lib/glossary";
-
-const vanguardGlossaryTerms: GlossaryTermKey[] = [
-  "Access Token",
-  "Artifact Item",
-  "Base network gas",
-  "Genesis",
-  "Genesis Mint",
-  "Full Natal Chart",
-  "Kindred Creature",
-  "Marketplace",
-  "Royalty",
-  "Sovereign Engine",
-  "Token",
-  "Traceable",
-  "Vanguard",
-  "Wallet",
-  "wallet-linked",
-];
 
 const vanguardGhostAsset = {
   src: "/vanguard-assets/golden-v-vanguard-badge.png",
@@ -179,7 +160,6 @@ export default function VanguardPrivilegesPage() {
       drawerActions={drawerActions}
       drawerContentId="vanguard-drawer"
       drawerLabel="Vanguard drawer"
-      glossaryTerms={vanguardGlossaryTerms}
       groups={drawerGroups}
     />
   );

@@ -22,13 +22,11 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import { GlossaryText } from "@/components/GlossaryTerm";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   encodeErc20TransferCalldata,
   isDirectPaymentWalletAllowed,
 } from "@/lib/directBuilderPayment";
-import type { GlossaryTermKey } from "@/lib/glossary";
 import {
   buildMintOrderStatusMessage,
   buildMintRecoveryMessage,
@@ -52,12 +50,6 @@ import {
   PortalTermsChecklist,
   PortalTermsReviewModal,
 } from "./portal-components";
-
-const portalEasGlossaryTerms: GlossaryTermKey[] = [
-  "Attestation",
-  "Coinbase EAS",
-  "Wallet",
-];
 
 const plainEnglishCertificateSummary = [
   "This certificate was built around the human story behind the Genesis Soul Registry mint. It is meant for real people with real lives, not bots, machines, or automated processes trying to participate without a human behind them.",
@@ -1509,10 +1501,10 @@ function PortalContent() {
                                     </span>
                                   </div>
                                   <p className="mt-4 text-lg leading-8 text-white/76">
-                                    <GlossaryText
-                                      terms={portalEasGlossaryTerms}
-                                      text="Coinbase EAS checks whether your connected wallet belongs to a verified human account. If this wallet was already verified, this gate would be green."
-                                    />
+                                    Coinbase EAS checks whether your connected
+                                    wallet belongs to a verified human account.
+                                    If this wallet was already verified, this
+                                    gate would be green.
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
                                     If you are verified on Coinbase but this

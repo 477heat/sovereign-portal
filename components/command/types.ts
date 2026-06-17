@@ -1,5 +1,3 @@
-import type { GlossaryTermKey } from "@/lib/glossary";
-
 export type CommandShellSounds = {
   deploy: string;
   cycle: string;
@@ -38,6 +36,8 @@ export type CommandPanel = {
   value: string;
   title: string;
   body: CommandPanelCopy | CommandPanelCopy[];
+  upperReadouts?: CommandPanelCopy[];
+  supportReadouts?: CommandPanelCopy[];
   link?: {
     href: string;
     label: string;
@@ -67,7 +67,6 @@ export type CommandPageShellProps = {
   drawerActions?: CommandDrawerAction[];
   drawerContentId?: string;
   drawerLabel?: string;
-  glossaryTerms?: GlossaryTermKey[];
   groups: CommandPanelGroup[];
   initialPanelId?: string;
   interactionDelayMs?: number;

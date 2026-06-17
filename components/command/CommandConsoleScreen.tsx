@@ -3,8 +3,6 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { AnimatedFrame } from "@/components/command/AnimatedFrame";
-import { GlossaryText } from "@/components/GlossaryTerm";
-import type { GlossaryTermKey } from "@/lib/glossary";
 import type {
   CommandPanelCopy,
   CommandShellPanel,
@@ -13,19 +11,21 @@ import type {
 type CommandConsoleScreenProps = {
   activePanel: CommandShellPanel;
   drawerTabSlot: ReactNode;
-  glossaryTerms: GlossaryTermKey[];
 };
 
 export function CommandConsoleScreen({
   activePanel,
   drawerTabSlot,
-  glossaryTerms,
 }: CommandConsoleScreenProps) {
   const activePanelBody = Array.isArray(activePanel.body)
     ? activePanel.body
     : [activePanel.body];
-  const [primaryPanelBody, ...secondaryPanelBody] = activePanelBody;
-  const activePanelTitleWords = activePanel.title.split(/\s+/).filter(Boolean);
+  const upperReadouts = (
+    activePanel.upperReadouts ?? activePanelBody.slice(0, 2)
+  ).filter(hasCopyContent);
+  const supportReadouts = (
+    activePanel.supportReadouts ?? activePanelBody.slice(2, 6)
+  ).filter(hasCopyContent);
   const panelGhost = activePanel.ghostAsset ? (
     <div
       aria-hidden="true"
@@ -42,35 +42,45 @@ export function CommandConsoleScreen({
       />
     </div>
   ) : null;
-  const renderGlossaryText = (text: string) =>
-    glossaryTerms.length > 0 ? (
-      <GlossaryText terms={glossaryTerms} text={text} />
-    ) : (
-      text
-    );
-  const renderCopyCard = (copy: CommandPanelCopy, index: number) => {
+  function hasCopyContent(copy: CommandPanelCopy) {
+    if (typeof copy === "string") {
+      return copy.trim().length > 0;
+    }
+
+    return copy.items.some((item) => item.trim().length > 0);
+  }
+
+  const renderCopyCard = (
+    copy: CommandPanelCopy,
+    index: number,
+    variant: "upper" | "support",
+  ) => {
     const cardLabel =
       typeof copy === "string"
-        ? index === 0
-          ? "Readout"
-          : "Context"
+        ? variant === "upper"
+          ? index === 0
+            ? "Public Summary"
+            : "Next Needed"
+          : `Readout ${String(index + 1).padStart(2, "0")}`
         : copy.label ?? (index === 0 ? "Readout" : "Context");
 
     return (
       <section
-        className={`command-room__panel-copy-card ${
-          index === 0 ? "command-room__panel-copy-card--primary" : ""
+        className={`command-room__panel-copy-card command-room__panel-copy-card--${variant} ${
+          index === 0 && variant === "upper"
+            ? "command-room__panel-copy-card--primary"
+            : ""
         } ${typeof copy === "string" ? "" : "command-room__panel-copy-card--list"}`}
         key={`${activePanel.id}-${index}`}
       >
         <span>{cardLabel}</span>
         {typeof copy === "string" ? (
-          <p>{renderGlossaryText(copy)}</p>
+          <p>{copy}</p>
         ) : (
           <ul className="command-room__panel-copy-list">
             {copy.items.map((item) => (
               <li key={`${activePanel.id}-${cardLabel}-${item}`}>
-                {renderGlossaryText(item)}
+                {item}
               </li>
             ))}
           </ul>
@@ -78,11 +88,14 @@ export function CommandConsoleScreen({
       </section>
     );
   };
-  const renderSecondaryCopyStack = () =>
-    secondaryPanelBody.length > 0 ? (
-      <div className="command-room__panel-copy-stack text-sm leading-7 text-cyan-50/72 md:text-base">
-        {secondaryPanelBody.map((paragraph, index) =>
-          renderCopyCard(paragraph, index + 1),
+
+  const renderSupportReadouts = () =>
+    supportReadouts.length > 0 ? (
+      <div
+        className={`command-room__readout-quad command-room__readout-quad--count-${supportReadouts.length}`}
+      >
+        {supportReadouts.map((readout, index) =>
+          renderCopyCard(readout, index, "support"),
         )}
       </div>
     ) : null;
@@ -102,6 +115,7 @@ export function CommandConsoleScreen({
           className="engine-sweep absolute inset-x-0 top-0 h-28"
           aria-hidden="true"
         />
+        {panelGhost}
 
         <div className="command-room__viewport-content command-room__viewport-content--fullscreen relative z-10 grid content-start gap-6 p-5 md:p-8">
           <div
@@ -109,30 +123,14 @@ export function CommandConsoleScreen({
             data-panel-id={activePanel.id}
             key={activePanel.id}
           >
-            {panelGhost}
-            <div className="command-room__panel-header">
-              {primaryPanelBody ? renderCopyCard(primaryPanelBody, 0) : null}
-              <div className="command-room__panel-title-card">
-                <h1
-                  aria-label={activePanel.title}
-                  className="command-lab__headline uppercase text-cyan-50"
-                >
-                  {activePanelTitleWords.map((word, index) => (
-                    <span
-                      aria-hidden="true"
-                      className="command-lab__headline-word"
-                      key={`${activePanel.id}-title-${word}-${index}`}
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </h1>
-                <p className="command-room__active-value text-sm uppercase tracking-[0.24em] text-yellow-100/78">
-                  {activePanel.value}
-                </p>
+            {upperReadouts.length > 0 ? (
+              <div className="command-room__readout-pair">
+                {upperReadouts.map((readout, index) =>
+                  renderCopyCard(readout, index, "upper"),
+                )}
               </div>
-            </div>
-            {renderSecondaryCopyStack()}
+            ) : null}
+            {renderSupportReadouts()}
           </div>
         </div>
       </AnimatedFrame>

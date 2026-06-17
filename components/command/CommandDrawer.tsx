@@ -172,7 +172,15 @@ export function CommandDrawer({
                   key={`${action.href}-${action.label}`}
                   onClick={(event) => onActionClick(event, action)}
                 >
-                  {action.label}
+                  <span className="command-room__drawer-action-label">
+                    {action.label}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="command-room__drawer-action-label-mobile"
+                  >
+                    {action.label.split(/\s+/)[0]}
+                  </span>
                 </Link>
               );
             })}

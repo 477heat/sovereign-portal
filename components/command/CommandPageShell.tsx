@@ -21,7 +21,6 @@ export type {
 } from "@/components/command/types";
 
 const DEFAULT_COMMAND_DELAY_MS = 500;
-
 const defaultCommandSounds: CommandShellSounds = {
   deploy: "/sounds/deploy.mp3",
   cycle: "/sounds/interface_swoosh.mp3",
@@ -35,7 +34,6 @@ export function CommandPageShell({
   drawerActions = [],
   drawerContentId = "command-drawer",
   drawerLabel = "Command drawer",
-  glossaryTerms = [],
   groups,
   initialPanelId,
   interactionDelayMs = DEFAULT_COMMAND_DELAY_MS,
@@ -134,6 +132,10 @@ export function CommandPageShell({
   }
 
   function handleDrawerTabClick() {
+    if (drawerOpen) {
+      return;
+    }
+
     const nextDrawerOpen = !drawerOpen;
     queueCommandAction(
       nextDrawerOpen ? "drawer-deploy" : "drawer-stow",
@@ -219,6 +221,7 @@ export function CommandPageShell({
       drawerLabel={drawerLabel}
       drawerOpen={drawerOpen}
       embedded={embedded}
+      label={embedded ? activePanel.title : undefined}
       onClick={handleDrawerTabClick}
       pendingActionId={pendingActionId}
     />
@@ -233,6 +236,26 @@ export function CommandPageShell({
       <div className="command-room relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col">
         <section className="command-room__grid command-room__grid--drawer grid flex-1 gap-5 py-5">
           <section className="command-room__console-body">
+            <svg
+              aria-hidden="true"
+              className="command-room__console-frame-rails"
+              focusable="false"
+              preserveAspectRatio="none"
+              viewBox="0 0 100 100"
+            >
+              <path
+                className="command-room__console-frame-rail command-room__console-frame-rail--outer"
+                d="M8 1 H92 L99 8 V92 L92 99 H8 L1 92 V8 Z"
+              />
+              <path
+                className="command-room__console-frame-rail command-room__console-frame-rail--inner"
+                d="M14 7 H86 L93 14 V86 L86 93 H14 L7 86 V14 Z"
+              />
+              <path
+                className="command-room__console-frame-corner"
+                d="M8 1 H28 M1 8 V28 M72 1 H92 L99 8 V28 M99 72 V92 L92 99 H72 M28 99 H8 L1 92 V72"
+              />
+            </svg>
             <CommandConsoleScreen
               activePanel={activePanel}
               drawerTabSlot={
@@ -242,7 +265,6 @@ export function CommandPageShell({
                   </div>
                 ) : null
               }
-              glossaryTerms={glossaryTerms}
             />
 
             <CommandConsoleDock
@@ -259,8 +281,6 @@ export function CommandPageShell({
                 : "command-room__drawer-shell--closed"
             }`}
           >
-            {drawerOpen ? renderDrawerTab() : null}
-
             <CommandDrawer
               activePanelId={activePanelId}
               drawerActions={drawerActions}
