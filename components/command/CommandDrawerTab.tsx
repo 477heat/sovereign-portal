@@ -20,6 +20,7 @@ export function CommandDrawerTab({
   pendingActionId,
 }: CommandDrawerTabProps) {
   const displayLabel = label ?? (drawerOpen ? "Stow" : "Deploy");
+  const displayLabelWords = displayLabel.split(/\s+/).filter(Boolean);
   const shouldShowTitleCue = embedded && !drawerOpen;
 
   function handleClick() {
@@ -46,7 +47,16 @@ export function CommandDrawerTab({
       disabled={pendingActionId !== null}
       type="button"
     >
-      <span className="command-room__drawer-tab-label">{displayLabel}</span>
+      <span
+        className="command-room__drawer-tab-label"
+        data-word-count={displayLabelWords.length}
+      >
+        {displayLabelWords.map((word) => (
+          <span className="command-room__drawer-tab-label-word" key={word}>
+            {word}
+          </span>
+        ))}
+      </span>
       {embedded ? (
         <span aria-hidden="true" className="command-room__drawer-tab-chevrons">
           <span />
