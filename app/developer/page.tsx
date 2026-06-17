@@ -266,7 +266,19 @@ const developerGroups: CommandPanelGroup[] = [
   {
     label: "Integration Queue",
     eyebrow: "Progeny Structures",
-    panels: developerSections.map((section) => ({
+    panels: developerSections.slice(0, 4).map((section) => ({
+      id: section.id,
+      number: section.number,
+      label: section.label,
+      value: section.value,
+      title: section.title,
+      body: section.body,
+    })),
+  },
+  {
+    label: "Developer Boundary",
+    eyebrow: "Scoped Access",
+    panels: developerSections.slice(4).map((section) => ({
       id: section.id,
       number: section.number,
       label: section.label,
@@ -279,10 +291,10 @@ const developerGroups: CommandPanelGroup[] = [
 
 const drawerActions: CommandDrawerAction[] = [
   { href: "/", label: "Home" },
-  { href: "/engine-lab", label: "Engine Lab", variant: "opposite" },
   { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
   { href: "/access", label: "Access", variant: "opposite" },
   { href: "/vanguard", label: "Vanguard" },
+  { href: "/developer", label: "Developer" },
   { href: "/portal", label: "Portal", variant: "primary" },
 ];
 

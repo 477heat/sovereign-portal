@@ -207,7 +207,7 @@ const accessGroups: CommandPanelGroup[] = [
 
 const drawerActions: CommandDrawerAction[] = [
   { href: "/", label: "Home" },
-  { href: "/engine-lab", label: "Engine Lab", variant: "opposite" },
+  { href: "/access", label: "Access", variant: "opposite" },
   { href: "/vanguard", label: "Vanguard", variant: "opposite" },
   { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
   { href: "/developer", label: "Developer" },

@@ -8,7 +8,7 @@ import {
 const soulDeedContractAddress = "0x2df9151c4e32082a05c686bd3092180134d17deb";
 
 const whitepaperGhostAsset = {
-  src: "/whitepaper-assets/t-bre-soul-deed-portrait.png",
+  src: "/whitepaper-assets/Frameless_Deed.jpg",
   variant: "card" as const,
 };
 
@@ -247,9 +247,10 @@ const whitepaperGroups: CommandPanelGroup[] = [
 
 const drawerActions: CommandDrawerAction[] = [
   { href: "/", label: "Home" },
-  { href: "/engine-lab", label: "Engine Lab", variant: "opposite" },
   { href: "/vanguard", label: "Vanguard", variant: "opposite" },
   { href: "/access", label: "Access" },
+  { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
+  { href: "/developer", label: "Developer" },
   { href: "/portal", label: "Portal", variant: "primary" },
 ];
 

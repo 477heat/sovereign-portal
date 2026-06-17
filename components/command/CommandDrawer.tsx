@@ -2,6 +2,7 @@
 
 import type { MouseEvent } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AssemblingPanel } from "@/components/command/AssemblingPanel";
 import type {
   CommandDrawerAction,
@@ -99,6 +100,15 @@ export function CommandDrawer({
   pendingActionId,
   soundMuted,
 }: CommandDrawerProps) {
+  const pathname = usePathname();
+  const homeAction = drawerActions.find((action) => action.href === "/");
+  const visibleDrawerActions = drawerActions
+    .filter((action) => {
+      const actionPath = action.href.split("#")[0].split("?")[0];
+      return action.href !== "/" && actionPath !== pathname;
+    })
+    .slice(0, 4);
+
   return (
     <AssemblingPanel
       className="command-room__drawer border border-cyan-200/15 bg-black/50 p-4"
@@ -149,7 +159,7 @@ export function CommandDrawer({
 
         {drawerActions.length > 0 ? (
           <div className="command-room__drawer-actions">
-            {drawerActions.map((action) => {
+            {visibleDrawerActions.map((action) => {
               const actionClassName = [
                 "chamfer-nav-link chamfer-nav-link--compact",
                 action.variant === "opposite"
@@ -220,10 +230,36 @@ export function CommandDrawer({
                   )}
                 </svg>
               </button>
-              <div
-                aria-hidden="true"
-                className="command-room__drawer-sound-slot"
-              />
+              {homeAction ? (
+                <div className="command-room__drawer-sound-slot command-room__drawer-home-slot">
+                  <Link
+                    aria-label="Go home"
+                    className="command-room__drawer-home-link"
+                    data-command-action="menu"
+                    data-command-action-pending={
+                      pendingActionId === "drawer-action-/" ? "true" : undefined
+                    }
+                    href={homeAction.href}
+                    onClick={(event) => onActionClick(event, homeAction)}
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="command-room__drawer-home-icon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M4.5 11.2 12 5l7.5 6.2" />
+                      <path d="M6.7 10.4v8.1h10.6v-8.1" />
+                      <path d="M10 18.5v-4.7h4v4.7" />
+                    </svg>
+                  </Link>
+                </div>
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="command-room__drawer-sound-slot"
+                />
+              )}
             </div>
           </div>
         ) : null}
