@@ -102,10 +102,17 @@ export function CommandDrawer({
 }: CommandDrawerProps) {
   const pathname = usePathname();
   const homeAction = drawerActions.find((action) => action.href === "/");
+  const primaryAction = drawerActions.find(
+    (action) => action.variant === "primary",
+  );
   const visibleDrawerActions = drawerActions
     .filter((action) => {
       const actionPath = action.href.split("#")[0].split("?")[0];
-      return action.href !== "/" && actionPath !== pathname;
+      return (
+        action.href !== "/" &&
+        action.variant !== "primary" &&
+        actionPath !== pathname
+      );
     })
     .slice(0, 4);
 
@@ -199,6 +206,30 @@ export function CommandDrawer({
                 </Link>
               );
             })}
+            {primaryAction ? (
+              <Link
+                className="chamfer-nav-link chamfer-nav-link--compact command-room__drawer-action--primary"
+                data-command-action="primary"
+                data-command-action-pending={
+                  pendingActionId === `drawer-action-${primaryAction.href}`
+                    ? "true"
+                    : undefined
+                }
+                href={primaryAction.href}
+                key={`${primaryAction.href}-${primaryAction.label}`}
+                onClick={(event) => onActionClick(event, primaryAction)}
+              >
+                <span className="command-room__drawer-action-label">
+                  {primaryAction.label}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="command-room__drawer-action-label-mobile"
+                >
+                  {primaryAction.label.split(/\s+/)[0]}
+                </span>
+              </Link>
+            ) : null}
             <div className="command-room__drawer-sound-row">
               <button
                 aria-label={

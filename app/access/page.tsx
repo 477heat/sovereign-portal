@@ -212,6 +212,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/vanguard", label: "Vanguard", variant: "opposite" },
   { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
   { href: "/developer", label: "Developer" },
+  { href: "/engine", label: "Engine" },
   { href: "/portal", label: "Portal", variant: "primary" },
 ];
 

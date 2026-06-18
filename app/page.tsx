@@ -153,9 +153,34 @@ export default function HomePage() {
   const lastScrollY = useRef(0);
   const mobileHeaderRevealTimer = useRef<number | null>(null);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
+  const [contractNoticeOpen, setContractNoticeOpen] = useState(false);
   const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
+
+  useEffect(() => {
+    const noticeDismissed = window.sessionStorage.getItem(
+      "sovereign-contract-terms-notice-dismissed",
+    );
+
+    if (!noticeDismissed) {
+      const noticeTimer = window.setTimeout(() => {
+        setContractNoticeOpen(true);
+      }, 0);
+
+      return () => window.clearTimeout(noticeTimer);
+    }
+
+    return undefined;
+  }, []);
+
+  const dismissContractNotice = () => {
+    window.sessionStorage.setItem(
+      "sovereign-contract-terms-notice-dismissed",
+      "true",
+    );
+    setContractNoticeOpen(false);
+  };
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -344,10 +369,10 @@ export default function HomePage() {
                 Mint Path
               </Link>
               <Link
-                href="/engine"
+                href="/contract-terms"
                 className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
-                Engine Room
+                Contract Terms
               </Link>
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
@@ -557,6 +582,9 @@ export default function HomePage() {
           <Link href="/privacy-policy" className="chamfer-nav-link">
             Privacy
           </Link>
+          <Link href="/contract-terms" className="chamfer-nav-link">
+            Terms
+          </Link>
           <a
             className="chamfer-nav-link"
             href="https://discord.com/channels/1510790887125291138/1510791200234406040"
@@ -567,6 +595,51 @@ export default function HomePage() {
           </a>
         </div>
       </footer>
+
+      {contractNoticeOpen ? (
+        <section
+          aria-label="Contract terms notice"
+          className="fixed bottom-4 right-4 z-[70] w-[min(31rem,calc(100vw-2rem))] max-sm:inset-x-3 max-sm:bottom-3 max-sm:w-auto"
+        >
+          <div className="chamfer-panel chamfer-panel--all-corners border border-yellow-100/60 bg-black/90 p-4 shadow-[0_0_44px_rgba(254,240,138,0.22)] backdrop-blur-xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[0.62rem] uppercase tracking-[0.32em] text-yellow-100/82">
+                  Contract Notice
+                </p>
+                <h2 className="mt-2 text-lg uppercase tracking-[0.14em] text-white">
+                  Formal terms apply
+                </h2>
+              </div>
+              <button
+                aria-label="Dismiss contract terms notice"
+                className="chamfer-nav-link chamfer-nav-link--compact"
+                onClick={dismissContractNotice}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-white/70">
+              The Genesis mint includes formal agreement wording. It is written as
+              part legal contract, part ceremonial artifact, and should be reviewed
+              before entering the mint path.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link
+                className="chamfer-nav-link"
+                href="/contract-terms"
+                onClick={dismissContractNotice}
+              >
+                Review Terms
+              </Link>
+              <Link className="chamfer-nav-link chamfer-nav-link--opposite" href="/portal">
+                Mint Path
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

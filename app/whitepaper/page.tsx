@@ -252,6 +252,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/access", label: "Access" },
   { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
   { href: "/developer", label: "Developer" },
+  { href: "/engine", label: "Engine" },
   { href: "/portal", label: "Portal", variant: "primary" },
 ];
 
