@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, ReactNode, useCallback, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import {
   createThirdwebClient,
   getContract,
@@ -16,22 +22,20 @@ import {
   useActiveAccount,
 } from "thirdweb/react";
 import { formatEther, parseEther } from "ethers";
-import { SOUL_DEED_CONTRACT_ADDRESS } from "@/lib/soulContract";
+import {
+  ADMIN_TOKEN_CONTRACTS,
+  CUSTOM_ADMIN_TOKEN_CONTRACT_ID,
+  DEFAULT_ADMIN_TOKEN_CONTRACT_ID,
+  createCustomAdminTokenContract,
+  getAdminTokenContractById,
+  isContractAddress,
+} from "@/lib/adminTokenContracts";
 
-const CONTRACT_ADDRESS = SOUL_DEED_CONTRACT_ADDRESS;
-const ADDRESS_PATTERN = /^0x[a-fA-F0-9]{40}$/;
 const SETTINGS_REFRESH_ATTEMPTS = 6;
 const SETTINGS_REFRESH_DELAY_MS = 1200;
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
-  : null;
-const soulContract = thirdwebClient
-  ? getContract({
-      client: thirdwebClient,
-      chain: base,
-      address: CONTRACT_ADDRESS,
-    })
   : null;
 
 type ContractSettings = {
@@ -85,7 +89,7 @@ function wait(milliseconds: number) {
 }
 
 function isAddress(value: string) {
-  return ADDRESS_PATTERN.test(value.trim());
+  return isContractAddress(value);
 }
 
 function shortAddress(address: string) {
@@ -349,6 +353,10 @@ function CommandTile({
 
 function AdminContent() {
   const account = useActiveAccount();
+  const [selectedContractId, setSelectedContractId] = useState(
+    DEFAULT_ADMIN_TOKEN_CONTRACT_ID,
+  );
+  const [customContractAddress, setCustomContractAddress] = useState("");
   const [owner, setOwner] = useState("");
   const [settings, setSettings] = useState<ContractSettings | null>(null);
   const [portalMintSettings, setPortalMintSettings] =
@@ -380,6 +388,24 @@ function AdminContent() {
   const [compReason, setCompReason] = useState("");
   const [complimentaryOrder, setComplimentaryOrder] =
     useState<ComplimentaryOrder | null>(null);
+  const selectedTokenContract = useMemo(() => {
+    if (selectedContractId === CUSTOM_ADMIN_TOKEN_CONTRACT_ID) {
+      return createCustomAdminTokenContract(customContractAddress);
+    }
+
+    return getAdminTokenContractById(selectedContractId);
+  }, [customContractAddress, selectedContractId]);
+  const selectedBaseContract = useMemo(() => {
+    if (!thirdwebClient || !selectedTokenContract) {
+      return null;
+    }
+
+    return getContract({
+      client: thirdwebClient,
+      chain: base,
+      address: selectedTokenContract.address,
+    });
+  }, [selectedTokenContract]);
 
   const ownerConnected = Boolean(
     owner &&
@@ -389,6 +415,27 @@ function AdminContent() {
 
   const busy = Boolean(pendingAction);
   const compPublicMark = buildPublicMark(compFirstName, compLastName);
+
+  function resetSelectedContractState() {
+    setOwner("");
+    setSettings(null);
+    setNotice("");
+    setError("");
+    setLastTransactionHash("");
+    setLoadedTokenURIId("");
+    setLoadedTokenURIValue("");
+    setComplimentaryOrder(null);
+  }
+
+  function handleSelectedContractChange(value: string) {
+    setSelectedContractId(value);
+    resetSelectedContractState();
+  }
+
+  function handleCustomContractAddressChange(value: string) {
+    setCustomContractAddress(value);
+    resetSelectedContractState();
+  }
 
   const syncFormFields = useCallback((nextSettings: ContractSettings) => {
     setMintPrice(formatEther(nextSettings.mintPriceWei));
@@ -403,7 +450,7 @@ function AdminContent() {
   }, []);
 
   const loadSettings = useCallback(async (options: LoadSettingsOptions = {}) => {
-    if (!soulContract) {
+    if (!selectedBaseContract) {
       return null;
     }
 
@@ -435,79 +482,79 @@ function AdminContent() {
         currentDynamicURIEndpoint,
       ] = await Promise.all([
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function mintPrice() view returns (uint256)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function burnFee() view returns (uint256)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function platformVault() view returns (address)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function backendMinter() view returns (address)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function backendBurner() view returns (address)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function founderWallet() view returns (address)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function splitterImplementation() view returns (address)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function totalRoyaltyBps() view returns (uint96)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function tradingAllowed() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function isSoulbound() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function operatorFilterEnabled() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function publicMintActive() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function burnActive() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function paused() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function metadataFrozen() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function isRevealed() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function dynamicStatsActive() view returns (bool)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function placeholderURI() view returns (string)",
         }),
         readContract({
-          contract: soulContract,
+          contract: selectedBaseContract,
           method: "function dynamicURIEndpoint() view returns (string)",
         }),
       ]);
@@ -548,7 +595,7 @@ function AdminContent() {
     } finally {
       setLoading(false);
     }
-  }, [syncFormFields]);
+  }, [selectedBaseContract, syncFormFields]);
 
   async function loadPortalMintSettings() {
     const response = await fetch("/api/admin/mint-settings", {
@@ -568,7 +615,7 @@ function AdminContent() {
   }
 
   async function openAdmin() {
-    if (!soulContract || !account?.address) {
+    if (!selectedBaseContract || !account?.address) {
       return;
     }
 
@@ -581,7 +628,7 @@ function AdminContent() {
 
     try {
       const nextOwner = await readContract({
-        contract: soulContract,
+        contract: selectedBaseContract,
         method: "function owner() view returns (address)",
       });
 
@@ -636,7 +683,7 @@ function AdminContent() {
     params: WriteParam[] = [],
     options: WriteOptions = {},
   ) {
-    if (!soulContract || !account || !ownerConnected) {
+    if (!selectedBaseContract || !account || !ownerConnected) {
       return;
     }
 
@@ -646,7 +693,7 @@ function AdminContent() {
 
     try {
       const transaction = prepareContractCall({
-        contract: soulContract,
+        contract: selectedBaseContract,
         method,
         params,
       } as never);
@@ -865,7 +912,7 @@ function AdminContent() {
   }
 
   async function readCurrentTokenURI() {
-    if (!soulContract || !ownerConnected) {
+    if (!selectedBaseContract || !ownerConnected) {
       return;
     }
 
@@ -876,7 +923,7 @@ function AdminContent() {
     try {
       const nextTokenId = parseTokenId(tokenURIId);
       const currentTokenURI = await readContract({
-        contract: soulContract,
+        contract: selectedBaseContract,
         method: "function tokenURI(uint256 tokenId) view returns (string)",
         params: [nextTokenId],
       });
@@ -921,7 +968,7 @@ function AdminContent() {
     await writeContract("Metadata freeze", "function freezeMetadata()");
   }
 
-  if (!thirdwebClient || !soulContract) {
+  if (!thirdwebClient) {
     return (
       <main className="min-h-screen bg-[#050505] px-4 py-6 text-white md:px-8">
         <div className="mx-auto max-w-3xl">
@@ -964,19 +1011,67 @@ function AdminContent() {
             </Link>
           </div>
           <div className="text-[10px] uppercase tracking-[0.3em] text-yellow-300/70">
-            Soul Admin
+            Token Admin
           </div>
         </nav>
 
         <section className="grid gap-4 border border-white/10 bg-black/55 p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:p-5">
           <div className="grid gap-3">
             <div className="text-xs uppercase tracking-[0.28em] text-white/45">
-              Base Mainnet Contract
+              Base Mainnet Token Contract
             </div>
-            <h1 className="break-all text-2xl font-medium text-white md:text-3xl">
-              {CONTRACT_ADDRESS}
+            <div className="grid gap-3 lg:grid-cols-[260px_minmax(0,1fr)]">
+              <label className="grid gap-2 text-xs uppercase tracking-[0.18em] text-white/45">
+                <span>Collection target</span>
+                <select
+                  className="min-h-11 w-full border border-white/15 bg-black/70 px-3 text-sm tracking-normal text-white outline-none transition focus:border-yellow-200/70"
+                  onChange={(event) =>
+                    handleSelectedContractChange(event.target.value)
+                  }
+                  value={selectedContractId}
+                >
+                  {ADMIN_TOKEN_CONTRACTS.map((contract) => (
+                    <option key={contract.id} value={contract.id}>
+                      {contract.name} / {contract.symbol}
+                    </option>
+                  ))}
+                  <option value={CUSTOM_ADMIN_TOKEN_CONTRACT_ID}>
+                    Custom ERC-721-compatible
+                  </option>
+                </select>
+              </label>
+              {selectedContractId === CUSTOM_ADMIN_TOKEN_CONTRACT_ID ? (
+                <Field
+                  label="Custom contract address"
+                  onChange={handleCustomContractAddressChange}
+                  placeholder="0x..."
+                  value={customContractAddress}
+                />
+              ) : (
+                <div className="grid gap-2 text-xs uppercase tracking-[0.18em] text-white/45">
+                  <span>Selected address</span>
+                  <div className="min-h-11 break-all border border-white/15 bg-black/50 px-3 py-3 text-sm normal-case tracking-normal text-white/85">
+                    {selectedTokenContract?.address ?? "No contract selected"}
+                  </div>
+                </div>
+              )}
+            </div>
+            <h1 className="break-all text-xl font-medium text-white md:text-2xl">
+              {selectedTokenContract
+                ? `${selectedTokenContract.name} (${selectedTokenContract.symbol})`
+                : "Enter a valid custom contract address"}
             </h1>
+            <p className="max-w-4xl text-sm leading-6 text-white/55">
+              {selectedTokenContract?.description ??
+                "Custom targets must be Base ERC-721-compatible contracts with the same owner/admin function shape before this admin can read or write them."}
+            </p>
             <div className="flex flex-wrap gap-2 text-xs text-white/60">
+              <span className="border border-white/10 bg-white/[0.03] px-3 py-2">
+                Target{" "}
+                {selectedTokenContract
+                  ? shortAddress(selectedTokenContract.address)
+                  : "Invalid"}
+              </span>
               <span className="border border-white/10 bg-white/[0.03] px-3 py-2">
                 Owner {owner ? shortAddress(owner) : "Unchecked"}
               </span>
@@ -990,7 +1085,7 @@ function AdminContent() {
             {account?.address && (
               <button
                 className="min-h-11 border border-yellow-200/55 bg-yellow-200/10 px-4 text-xs font-medium uppercase tracking-[0.22em] text-yellow-100 transition hover:bg-yellow-200/20 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/30"
-                disabled={busy}
+                disabled={busy || !selectedBaseContract}
                 onClick={openAdmin}
                 type="button"
               >
@@ -1000,7 +1095,7 @@ function AdminContent() {
             {ownerConnected && (
               <button
                 className="min-h-11 border border-cyan-200/45 bg-cyan-200/10 px-4 text-xs font-medium uppercase tracking-[0.22em] text-cyan-100 transition hover:bg-cyan-200/20 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-white/30"
-                disabled={busy || loading}
+                disabled={busy || loading || !selectedBaseContract}
                 onClick={() => void loadSettings()}
                 type="button"
               >
@@ -1012,6 +1107,12 @@ function AdminContent() {
 
         {!account?.address && (
           <StatusLine tone="idle">Connect the contract owner wallet.</StatusLine>
+        )}
+
+        {account?.address && !selectedBaseContract && (
+          <StatusLine tone="warn">
+            Enter a valid Base contract address before opening custom admin mode.
+          </StatusLine>
         )}
 
         {account?.address && owner && !ownerConnected && (
@@ -1120,79 +1221,89 @@ function AdminContent() {
               </div>
             </Panel>
 
-            <Foldout
-              defaultOpen
-              subtitle="Checkout pricing and complimentary mint orders."
-              title="Mint Operations"
-            >
-              <div className="grid gap-5 xl:grid-cols-2">
-                <form className="grid gap-3" onSubmit={handlePortalMintPrice}>
-                  <div className="grid gap-2">
-                    <Field
-                      label="User checkout price in USDC"
-                      onChange={setPortalPaymentAmount}
-                      placeholder="5.00"
-                      step="0.01"
-                      type="number"
-                      value={portalPaymentAmount}
-                    />
-                    <p className="text-xs leading-5 text-white/50">
-                      This changes the Portal checkout amount for future mint
-                      orders. It does not change the on-chain ETH mint price
-                      below. Sub-dollar crypto checkout tests are allowed, but
-                      card/onramp routes may still enforce provider minimums.
-                    </p>
-                    {portalMintSettings?.updatedAt && (
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/35">
-                        Last updated {portalMintSettings.updatedAt}
+            {selectedContractId === DEFAULT_ADMIN_TOKEN_CONTRACT_ID ? (
+              <Foldout
+                defaultOpen
+                subtitle="Checkout pricing and complimentary mint orders."
+                title="Mint Operations"
+              >
+                <div className="grid gap-5 xl:grid-cols-2">
+                  <form className="grid gap-3" onSubmit={handlePortalMintPrice}>
+                    <div className="grid gap-2">
+                      <Field
+                        label="User checkout price in USDC"
+                        onChange={setPortalPaymentAmount}
+                        placeholder="5.00"
+                        step="0.01"
+                        type="number"
+                        value={portalPaymentAmount}
+                      />
+                      <p className="text-xs leading-5 text-white/50">
+                        This changes the Portal checkout amount for future mint
+                        orders. It does not change the on-chain ETH mint price
+                        below. Sub-dollar crypto checkout tests are allowed, but
+                        card/onramp routes may still enforce provider minimums.
                       </p>
-                    )}
-                  </div>
-                  <SubmitButton disabled={busy || loading} label="Set Portal Price" />
-                </form>
-
-                <form className="grid gap-3" onSubmit={handleComplimentaryMint}>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <Field
-                      label="First name"
-                      onChange={setCompFirstName}
-                      value={compFirstName}
-                    />
-                    <Field
-                      label="Last name"
-                      onChange={setCompLastName}
-                      value={compLastName}
-                    />
-                  </div>
-                  <Field
-                    label="Recipient wallet"
-                    onChange={setCompWallet}
-                    placeholder="0x..."
-                    value={compWallet}
-                  />
-                  <Field
-                    label="Admin note"
-                    onChange={setCompReason}
-                    placeholder="Optional reason"
-                    value={compReason}
-                  />
-                  <div className="border border-white/10 bg-white/[0.03] px-3 py-3 text-sm text-white/65">
-                    Public mark:{" "}
-                    <span className="font-semibold text-yellow-100">
-                      {compPublicMark}
-                    </span>
-                  </div>
-                  <SubmitButton disabled={busy || loading} label="Give Mint Away" />
-                  {complimentaryOrder && (
-                    <div className="border border-emerald-300/30 bg-emerald-300/10 px-3 py-3 text-sm leading-6 text-emerald-100">
-                      Complimentary order {complimentaryOrder.orderId} is paid
-                      for {complimentaryOrder.publicMark}. The user still has
-                      to pass wallet, EAS, identity, and terms.
+                      {portalMintSettings?.updatedAt && (
+                        <p className="text-xs uppercase tracking-[0.18em] text-white/35">
+                          Last updated {portalMintSettings.updatedAt}
+                        </p>
+                      )}
                     </div>
-                  )}
-                </form>
-              </div>
-            </Foldout>
+                    <SubmitButton disabled={busy || loading} label="Set Portal Price" />
+                  </form>
+
+                  <form className="grid gap-3" onSubmit={handleComplimentaryMint}>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Field
+                        label="First name"
+                        onChange={setCompFirstName}
+                        value={compFirstName}
+                      />
+                      <Field
+                        label="Last name"
+                        onChange={setCompLastName}
+                        value={compLastName}
+                      />
+                    </div>
+                    <Field
+                      label="Recipient wallet"
+                      onChange={setCompWallet}
+                      placeholder="0x..."
+                      value={compWallet}
+                    />
+                    <Field
+                      label="Admin note"
+                      onChange={setCompReason}
+                      placeholder="Optional reason"
+                      value={compReason}
+                    />
+                    <div className="border border-white/10 bg-white/[0.03] px-3 py-3 text-sm text-white/65">
+                      Public mark:{" "}
+                      <span className="font-semibold text-yellow-100">
+                        {compPublicMark}
+                      </span>
+                    </div>
+                    <SubmitButton disabled={busy || loading} label="Give Mint Away" />
+                    {complimentaryOrder && (
+                      <div className="border border-emerald-300/30 bg-emerald-300/10 px-3 py-3 text-sm leading-6 text-emerald-100">
+                        Complimentary order {complimentaryOrder.orderId} is paid
+                        for {complimentaryOrder.publicMark}. The user still has
+                        to pass wallet, EAS, identity, and terms.
+                      </div>
+                    )}
+                  </form>
+                </div>
+              </Foldout>
+            ) : (
+              <Panel eyebrow="Scope Guard" title="Portal Mint Operations Locked" tone="gold">
+                <p className="text-sm leading-6 text-white/58">
+                  Checkout price changes and complimentary mint orders are tied
+                  to the live Soul Deed mint ledger. They stay hidden while a
+                  custom token contract is selected.
+                </p>
+              </Panel>
+            )}
 
             <Foldout
               subtitle="On-chain prices and transfer state toggles. Use deliberately."
