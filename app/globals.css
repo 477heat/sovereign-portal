@@ -4834,6 +4834,145 @@ body {
     0 0 22px rgba(147, 197, 253, 0.08);
 }
 
+.command-room__storyboard {
+  display: grid;
+  gap: clamp(0.82rem, 1.7vw, 1.28rem);
+  margin-top: 2.25rem;
+  min-width: 0;
+}
+
+.command-room__storyboard-top {
+  align-items: stretch;
+  display: grid;
+  gap: clamp(0.82rem, 1.7vw, 1.28rem);
+  grid-template-columns: minmax(0, 0.96fr) minmax(22rem, 1.04fr);
+  min-width: 0;
+}
+
+.command-room__storyboard-story {
+  align-content: stretch;
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.command-room__storyboard-support-row {
+  display: grid;
+  gap: clamp(0.72rem, 1.25vw, 1rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.command-room__storyboard-image {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(147, 197, 253, 0.58);
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.58),
+    0 0 28px rgba(125, 211, 252, 0.12);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+  margin: 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.command-room__storyboard-image--feature {
+  aspect-ratio: 16 / 9;
+}
+
+.command-room__storyboard-image--support {
+  aspect-ratio: 16 / 9;
+  border-color: rgba(165, 243, 252, 0.5);
+}
+
+.command-room__storyboard-image--single {
+  aspect-ratio: 16 / 9;
+  min-height: min(54vh, 36rem);
+}
+
+.command-room__storyboard-img {
+  object-fit: cover;
+}
+
+.command-room__storyboard-img--mobile {
+  display: none;
+}
+
+.command-room__storyboard-placeholder {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(14, 116, 144, 0.12), rgba(254, 240, 138, 0.035)),
+    rgba(0, 0, 0, 0.34);
+  color: rgba(236, 254, 255, 0.82);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  inset: 1px;
+  justify-content: center;
+  padding: 1rem;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.command-room__storyboard-placeholder span {
+  font-size: clamp(0.72rem, 0.85vw, 0.92rem);
+  letter-spacing: 0.2em;
+}
+
+.command-room__storyboard-placeholder small {
+  color: rgba(254, 249, 195, 0.62);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  line-height: 1.45;
+}
+
+.command-room__storyboard-caption {
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.78));
+  bottom: 0;
+  color: rgba(236, 254, 255, 0.86);
+  font-size: 0.58rem;
+  inset-inline: 0;
+  letter-spacing: 0.18em;
+  padding: 1.8rem 0.82rem 0.72rem;
+  position: absolute;
+  text-transform: uppercase;
+}
+
+.command-room__storyboard--single {
+  min-height: min(62vh, 42rem);
+  position: relative;
+}
+
+.command-room__storyboard--single .command-room__storyboard-image {
+  inset: 0;
+  min-height: 100%;
+  position: absolute;
+}
+
+.command-room__storyboard-overlay {
+  align-self: end;
+  display: grid;
+  gap: 0.7rem;
+  max-width: min(100%, 44rem);
+  padding: clamp(1rem, 3vw, 2rem);
+  position: relative;
+  z-index: 2;
+}
+
+.alliant-storyboard-page .command-room__storyboard-story .command-room__panel-copy-card p,
+.alliant-storyboard-page .command-room__storyboard-story .command-room__panel-copy-list {
+  color: rgba(254, 249, 195, 0.96);
+  text-shadow:
+    0 0 10px rgba(254, 240, 138, 0.28),
+    0 0 24px rgba(0, 0, 0, 0.72);
+}
+
+.alliant-storyboard-page .command-room__storyboard-story .command-room__panel-copy-card p {
+  white-space: pre-line;
+}
+
 .command-room__active-panel .chamfer-nav-link,
 .command-room__active-panel h1,
 .command-room__active-panel p {
@@ -6554,6 +6693,57 @@ body {
     gap: 0.34rem;
     grid-template-columns: minmax(0, 1fr);
     line-height: 1.42;
+  }
+
+  .command-room__storyboard {
+    gap: 0.7rem;
+    margin-top: 2.35rem;
+  }
+
+  .command-room__storyboard-top,
+  .command-room__storyboard-support-row {
+    gap: 0.58rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .command-room__storyboard-image {
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  }
+
+  .command-room__storyboard-image--feature,
+  .command-room__storyboard-image--support {
+    aspect-ratio: 16 / 9;
+  }
+
+  .command-room__storyboard-image--single {
+    aspect-ratio: 9 / 16;
+    min-height: min(68vh, 38rem);
+  }
+
+  .command-room__storyboard-image[data-has-mobile="true"] .command-room__storyboard-img--web {
+    display: none;
+  }
+
+  .command-room__storyboard-img--mobile {
+    display: block;
+  }
+
+  .command-room__storyboard-placeholder span {
+    font-size: 0.66rem;
+  }
+
+  .command-room__storyboard-placeholder small {
+    font-size: 0.5rem;
+  }
+
+  .command-room__storyboard-caption {
+    font-size: 0.5rem;
+    padding: 1.45rem 0.62rem 0.58rem;
+  }
+
+  .command-room__storyboard-overlay {
+    max-width: 100%;
+    padding: 0.7rem;
   }
 
   .command-room__active-panel p,

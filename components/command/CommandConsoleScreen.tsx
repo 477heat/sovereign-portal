@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatedFrame } from "@/components/command/AnimatedFrame";
 import type {
   CommandPanelCopy,
+  CommandStoryboardImage,
   CommandShellPanel,
 } from "@/components/command/types";
 
@@ -100,6 +101,112 @@ export function CommandConsoleScreen({
       </div>
     ) : null;
 
+  const renderStoryboardImage = (
+    image: CommandStoryboardImage,
+    variant: "feature" | "support" | "single",
+    index = 0,
+  ) => {
+    const imageSizes =
+      variant === "single"
+        ? "(max-width: 767px) 92vw, 78vw"
+        : variant === "feature"
+          ? "(max-width: 767px) 92vw, 38vw"
+          : "(max-width: 767px) 92vw, 24vw";
+    const hasImage = Boolean(image.src || image.mobileSrc);
+
+    return (
+      <figure
+        className={`command-room__storyboard-image command-room__storyboard-image--${variant}`}
+        data-has-image={hasImage ? "true" : "false"}
+        data-has-mobile={image.mobileSrc ? "true" : "false"}
+        key={`${activePanel.id}-${variant}-${index}-${image.label}`}
+      >
+        {image.src ? (
+          <Image
+            alt={image.alt ?? image.label}
+            className="command-room__storyboard-img command-room__storyboard-img--web"
+            fill
+            priority={variant === "single"}
+            sizes={imageSizes}
+            src={image.src}
+          />
+        ) : null}
+        {image.mobileSrc ? (
+          <Image
+            alt={image.alt ?? image.label}
+            className="command-room__storyboard-img command-room__storyboard-img--mobile"
+            fill
+            priority={variant === "single"}
+            sizes={imageSizes}
+            src={image.mobileSrc}
+          />
+        ) : null}
+        {!hasImage ? (
+          <div className="command-room__storyboard-placeholder">
+            <span>{image.label}</span>
+            {image.note ? <small>{image.note}</small> : null}
+          </div>
+        ) : null}
+        {hasImage ? (
+          <figcaption className="command-room__storyboard-caption">
+            {image.label}
+          </figcaption>
+        ) : null}
+      </figure>
+    );
+  };
+
+  const renderStoryboardStory = (
+    story: CommandPanelCopy | CommandPanelCopy[],
+  ) => {
+    const storyCards = (Array.isArray(story) ? story : [story]).filter(
+      hasCopyContent,
+    );
+
+    if (storyCards.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="command-room__storyboard-story">
+        {storyCards.map((copy, index) => renderCopyCard(copy, index, "upper"))}
+      </div>
+    );
+  };
+
+  const renderStoryboard = () => {
+    if (!activePanel.storyboard) {
+      return null;
+    }
+
+    if (activePanel.storyboard.layout === "single-image") {
+      return (
+        <div className="command-room__storyboard command-room__storyboard--single">
+          {renderStoryboardImage(activePanel.storyboard.image, "single")}
+          <div className="command-room__storyboard-overlay">
+            {renderStoryboardStory(activePanel.storyboard.story)}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="command-room__storyboard command-room__storyboard--multi">
+        <div className="command-room__storyboard-top">
+          {renderStoryboardStory(activePanel.storyboard.story)}
+          {renderStoryboardImage(activePanel.storyboard.featureImage, "feature")}
+        </div>
+        <div className="command-room__storyboard-support-row">
+          {activePanel.storyboard.supportImages
+            .slice(0, 3)
+            .map((image, index) =>
+              renderStoryboardImage(image, "support", index),
+            )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="command-room__console-screen">
       <AnimatedFrame
@@ -123,7 +230,9 @@ export function CommandConsoleScreen({
             data-panel-id={activePanel.id}
             key={activePanel.id}
           >
-            {upperReadouts.length > 0 ? (
+            {activePanel.storyboard ? (
+              renderStoryboard()
+            ) : upperReadouts.length > 0 ? (
               <div className="command-room__readout-pair">
                 {upperReadouts.map((readout, index) =>
                   renderCopyCard(readout, index, "upper"),

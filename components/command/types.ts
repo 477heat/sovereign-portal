@@ -20,6 +20,27 @@ export type CommandPanelGhostAsset = {
   variant?: "badge" | "card" | "network" | "orbital" | "creature";
 };
 
+export type CommandStoryboardImage = {
+  alt?: string;
+  label: string;
+  mobileSrc?: string;
+  note?: string;
+  src?: string;
+};
+
+export type CommandStoryboard =
+  | {
+      layout: "multi-panel";
+      story: CommandPanelCopy | CommandPanelCopy[];
+      featureImage: CommandStoryboardImage;
+      supportImages: CommandStoryboardImage[];
+    }
+  | {
+      layout: "single-image";
+      story: CommandPanelCopy | CommandPanelCopy[];
+      image: CommandStoryboardImage;
+    };
+
 export type CommandPanelIcon =
   | "badge"
   | "wallet"
@@ -38,6 +59,7 @@ export type CommandPanel = {
   body: CommandPanelCopy | CommandPanelCopy[];
   upperReadouts?: CommandPanelCopy[];
   supportReadouts?: CommandPanelCopy[];
+  storyboard?: CommandStoryboard;
   link?: {
     href: string;
     label: string;
