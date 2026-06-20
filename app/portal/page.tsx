@@ -9,12 +9,9 @@ import {
 import { base } from "thirdweb/chains";
 import {
   CheckoutWidget,
-  ConnectButton,
   ThirdwebProvider,
   useActiveAccount,
-  useActiveWallet,
   useConnectModal,
-  useDisconnect,
 } from "thirdweb/react";
 import { createWallet, walletConnect } from "thirdweb/wallets";
 import {
@@ -137,26 +134,12 @@ const portalWallets = [
   createWallet("io.metamask"),
   walletConnect(),
 ];
-const portalConnectButton = {
-  className: "portal-connect-wallet-button",
-  label: "Connect Wallet",
-};
-const portalSwitchButton = {
-  label: "Switch To Base",
-};
 const portalConnectModal = {
   title: "Connect Base Wallet",
   titleIcon: "",
   size: "compact",
   showThirdwebBranding: false,
 } as const;
-const portalDetailsModal = {
-  hideBuyFunds: true,
-  hideSendFunds: true,
-  manageWallet: {
-    allowLinkingProfiles: false,
-  },
-};
 const previewReceipt: MintReceipt = {
   status: "submitted",
   deedName: "Certificate of Title for Spiritual Ownership of K. Mil",
@@ -243,9 +226,7 @@ function shortAddress(address?: string) {
 
 function PortalContent() {
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
   const { connect: openConnectModal, isConnecting } = useConnectModal();
-  const { disconnect } = useDisconnect();
   const firstNameInputRef = useRef<HTMLInputElement | null>(null);
   const lastNameInputRef = useRef<HTMLInputElement | null>(null);
   const dobInputRef = useRef<HTMLInputElement | null>(null);
@@ -1027,7 +1008,10 @@ function PortalContent() {
     if (selectedGate === "wallet") {
       if (!account?.address) {
         await handleWalletChipConnect();
+        return;
       }
+
+      setSelectedGate("eas");
       return;
     }
 
@@ -1265,7 +1249,7 @@ function PortalContent() {
         : "Gate confirmed. If you edit earlier entries, review the later steps again."
     : null;
   const gateEnterEnabled = {
-    wallet: !account?.address && Boolean(thirdwebClient) && !isConnecting,
+    wallet: Boolean(account?.address) || (Boolean(thirdwebClient) && !isConnecting),
     eas: Boolean(account?.address) && !checkingAttestation,
     identity: identityInputReady && !hasIdentity,
     artifact: artifactInputReady && !hasArtifact,
@@ -1277,7 +1261,7 @@ function PortalContent() {
     mint: canMint,
   }[selectedGate];
   const gateEnterLabel = {
-    wallet: isConnecting ? "Connecting" : "Enter Wallet",
+    wallet: account?.address ? "Submit" : isConnecting ? "Connecting" : "Connect Wallet",
     eas: checkingAttestation
       ? "Checking"
       : verification?.eligible
@@ -1287,7 +1271,7 @@ function PortalContent() {
           : "Check EAS",
     identity: hasIdentity ? "Confirmed" : "Enter Identity",
     artifact: hasArtifact ? "Locked" : "Lock Artifact",
-    terms: deedAccepted ? "Submit" : "Submit",
+    terms: deedAccepted ? "Submit" : "Read Terms",
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
     mint: minting
       ? "Minting"
@@ -1572,57 +1556,27 @@ function PortalContent() {
                             {selectedGate === "wallet" && (
                               <div className={`grid gap-3 ${walletStatusClass}`}>
                                 <div className="control-surface-soft portal-wallet-recipient border p-3">
-                                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                                    Recipient
+                                  <div className="portal-wallet-recipient__header">
+                                    <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                      Recipient
+                                    </div>
                                   </div>
                                   <div className="mt-2 break-all font-mono text-sm text-cyan-50/78">
                                     {account?.address ?? "No wallet connected"}
                                   </div>
                                 </div>
                                 <div
-                                  className={`portal-wallet-action portal-panel-button-row ${
-                                    account?.address
-                                      ? "portal-panel-button-row--one"
-                                      : "portal-panel-button-row--two"
-                                  }`}
+                                  className="portal-wallet-action portal-panel-button-row portal-panel-button-row--one"
                                 >
                                   {thirdwebClient ? (
-                                    account?.address ? (
-                                      <button
-                                        className="console-key-button"
-                                        onClick={() => {
-                                          if (activeWallet) {
-                                            disconnect(activeWallet);
-                                          }
-                                        }}
-                                        type="button"
-                                      >
-                                        Disconnect
-                                      </button>
-                                    ) : (
-                                      <>
-                                        <ConnectButton
-                                          client={thirdwebClient}
-                                          chain={base}
-                                          appMetadata={portalAppMetadata}
-                                          connectButton={portalConnectButton}
-                                          connectModal={portalConnectModal}
-                                          detailsModal={portalDetailsModal}
-                                          recommendedWallets={portalWallets}
-                                          showAllWallets={false}
-                                          switchButton={portalSwitchButton}
-                                          wallets={portalWallets}
-                                        />
-                                        <button
-                                          className="portal-connect-wallet-button"
-                                          disabled={!gateEnterEnabled}
-                                          onClick={() => void handleGateEnter()}
-                                          type="button"
-                                        >
-                                          {gateEnterLabel}
-                                        </button>
-                                      </>
-                                    )
+                                    <button
+                                      className="portal-connect-wallet-button"
+                                      disabled={!gateEnterEnabled}
+                                      onClick={() => void handleGateEnter()}
+                                      type="button"
+                                    >
+                                      {gateEnterLabel}
+                                    </button>
                                   ) : (
                                     <div className="text-sm leading-6 text-white/65">
                                       Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live
@@ -1822,10 +1776,14 @@ function PortalContent() {
                                   accuracyAccepted={accuracyAccepted}
                                   certificateOpened={certificateOpened}
                                   contractAccepted={contractAccepted}
-                                  enterTermsEnabled={gateEnterEnabled}
+                                  enterTermsEnabled={deedAccepted ? gateEnterEnabled : true}
                                   gateEnterLabel={gateEnterLabel}
-                                  onEnterTerms={() => void handleGateEnter()}
-                                  onReadTerms={() => {
+                                  onEnterTerms={() => {
+                                    if (deedAccepted) {
+                                      void handleGateEnter();
+                                      return;
+                                    }
+
                                     setCertificateOpened(true);
                                     setTermsReviewOpen(true);
                                   }}
