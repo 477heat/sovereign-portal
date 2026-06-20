@@ -84,7 +84,7 @@ const protocolCards = [
 
 const navLinks = [
   ["Portal", "/portal"],
-  ["Engine", "/engine"],
+  ["Alliant", "/alliant"],
   ["Vanguard", "/vanguard"],
   ["Access", "/access"],
   ["Litepaper", "/whitepaper"],
@@ -584,6 +584,9 @@ export default function HomePage() {
           </Link>
           <Link href="/contract-terms" className="chamfer-nav-link">
             Terms
+          </Link>
+          <Link href="/engine" className="chamfer-nav-link">
+            Engine
           </Link>
           <a
             className="chamfer-nav-link"

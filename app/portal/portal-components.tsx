@@ -590,10 +590,10 @@ export function PortalMobileSelectDrawer({
             </Link>
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact command-room__drawer-action--primary portal-mobile-drawer-action"
-              href="/engine-lab"
+              href="/alliant"
               onClick={onClose}
             >
-              Engine Room
+              Alliant
             </Link>
           </nav>
         </div>
