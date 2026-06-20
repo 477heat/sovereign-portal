@@ -24,6 +24,7 @@ type MintRequest = {
   wallet?: string;
   firstName?: string;
   lastName?: string;
+  characterName?: string;
   dob?: string;
   publicMark?: string;
   contractAccepted?: boolean;
@@ -130,6 +131,7 @@ function mintWorkerEndpoint(url: string) {
 function forgetRawIdentity(payload: MintRequest) {
   payload.firstName = undefined;
   payload.lastName = undefined;
+  payload.characterName = undefined;
   payload.dob = undefined;
 }
 
@@ -142,6 +144,7 @@ async function requestMetadata(payload: MintRequest, engineUrl: string) {
     body: JSON.stringify({
       firstName: payload.firstName,
       lastName: payload.lastName,
+      characterName: payload.characterName,
       dob: payload.dob,
       walletAddress: payload.wallet,
       output: "mint_metadata",

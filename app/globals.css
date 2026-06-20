@@ -4963,10 +4963,11 @@ body {
 
 .alliant-storyboard-page .command-room__storyboard-story .command-room__panel-copy-card p,
 .alliant-storyboard-page .command-room__storyboard-story .command-room__panel-copy-list {
-  color: rgba(254, 249, 195, 0.96);
-  font-weight: 850;
+  color: rgba(255, 253, 211, 0.99);
+  font-size: calc(1em + 1px);
+  font-weight: 950;
   text-shadow:
-    0 0 10px rgba(254, 240, 138, 0.28),
+    0 0 12px rgba(254, 240, 138, 0.34),
     0 0 24px rgba(0, 0, 0, 0.72);
 }
 

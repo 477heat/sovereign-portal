@@ -44,6 +44,17 @@ export function PortalGateIcon({ gate }: { gate: PortalGate }) {
     );
   }
 
+  if (gate === "artifact") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M5 5.5h14v13H5v-13Z" />
+        <path d="M8 9h8" />
+        <path d="M8 12h5" />
+        <path d="m14.5 15.5 2-2 1.8 1.8-2 2H14.5v-1.8Z" />
+      </svg>
+    );
+  }
+
   if (gate === "terms") {
     return (
       <svg {...sharedProps}>

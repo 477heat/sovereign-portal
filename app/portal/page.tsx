@@ -104,6 +104,17 @@ const previewShellEnabled =
   process.env.VERCEL_ENV === "preview";
 const coinbaseEasUrl =
   "https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification";
+const EAS_DATABASE_SEARCH_DELAY_MS = 4000;
+const GATE_DELAY_MS = {
+  artifact: 650,
+  terms: 780,
+  payment: 620,
+  autoMint: 1180,
+};
+
+function wait(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
 
 const portalAppMetadata = {
   name: "Sovereign Portal",
@@ -203,6 +214,14 @@ function buildPublicMark(firstName: string, lastName: string) {
   }`;
 }
 
+function isValidArtifactName(value: string) {
+  const normalized = value.trim().replace(/\s+/g, " ");
+  return (
+    !normalized ||
+    /^[A-Za-z0-9][A-Za-z0-9 .'\-&]{0,31}$/.test(normalized)
+  );
+}
+
 function shortAddress(address?: string) {
   if (!address) {
     return "Not connected";
@@ -219,11 +238,16 @@ function PortalContent() {
   const firstNameInputRef = useRef<HTMLInputElement | null>(null);
   const lastNameInputRef = useRef<HTMLInputElement | null>(null);
   const dobInputRef = useRef<HTMLInputElement | null>(null);
+  const characterNameInputRef = useRef<HTMLInputElement | null>(null);
   const mobileGateTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const autoMintOrderRef = useRef<string | null>(null);
+  const handleMintRef = useRef<(() => Promise<void>) | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [characterName, setCharacterName] = useState("");
   const [dob, setDob] = useState("");
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
+  const [artifactConfirmed, setArtifactConfirmed] = useState(false);
   const [identityFocus, setIdentityFocus] = useState<IdentityField>("firstName");
   const [selectedGate, setSelectedGate] = useState<PortalGate>("wallet");
   const [verification, setVerification] = useState<VerificationState | null>(
@@ -270,12 +294,17 @@ function PortalContent() {
     () => buildPublicMark(firstName, lastName),
     [firstName, lastName],
   );
+  const artifactNameValid = isValidArtifactName(characterName);
+  const burnedArtifactName = characterName.trim() || publicMark;
   const identityInputReady =
     Boolean(firstName.trim()) &&
     Boolean(lastName.trim()) &&
     Boolean(dob) &&
     publicMark !== "_. ___";
   const hasIdentity = identityInputReady && identityConfirmed;
+  const artifactInputReady =
+    hasIdentity && artifactNameValid && burnedArtifactName !== "_. ___";
+  const hasArtifact = artifactInputReady && artifactConfirmed;
   const deedAccepted =
     accuracyAccepted && publicMarkAccepted && contractAccepted;
   const activeOrder =
@@ -302,6 +331,7 @@ function PortalContent() {
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
     hasIdentity &&
+    hasArtifact &&
     deedAccepted;
   const orderPaid =
     !paymentRequired ||
@@ -312,11 +342,12 @@ function PortalContent() {
     Boolean(account?.address) &&
     Boolean(verification?.eligible) &&
     hasIdentity &&
+    hasArtifact &&
     deedAccepted &&
     orderPaid &&
     !receipt &&
     !minting;
-  const termsAwaitingIdentity = !hasIdentity && !deedAccepted;
+  const termsAwaitingArtifact = !hasArtifact && !deedAccepted;
   const paymentAwaitingTerms = !deedAccepted;
   const checkoutPrerequisitesComplete = checkoutReady;
   const checkoutPanelState = checkoutPrerequisitesComplete
@@ -420,11 +451,16 @@ function PortalContent() {
   }, []);
 
   useEffect(() => {
-    if (selectedGate !== "identity") {
+    if (selectedGate !== "identity" && selectedGate !== "artifact") {
       return;
     }
 
     const focusTimer = window.setTimeout(() => {
+      if (selectedGate === "artifact") {
+        characterNameInputRef.current?.focus();
+        return;
+      }
+
       const target =
         identityFocus === "firstName"
           ? firstNameInputRef.current
@@ -465,15 +501,32 @@ function PortalContent() {
         return;
       }
 
+      setSelectedGate((currentGate) =>
+        currentGate === "wallet" ? "eas" : currentGate,
+      );
+      setVerification(null);
       setCheckingAttestation(true);
       setError("");
 
       try {
+        await wait(EAS_DATABASE_SEARCH_DELAY_MS);
+
+        if (ignore) {
+          return;
+        }
+
         const response = await fetch(`/api/attestation?address=${account.address}`);
         const result = (await response.json()) as VerificationState;
 
         if (!ignore) {
           setVerification(result);
+          if (result.eligible) {
+            window.setTimeout(() => {
+              if (!ignore) {
+                setSelectedGate("identity");
+              }
+            }, 850);
+          }
         }
       } catch {
         if (!ignore) {
@@ -550,6 +603,7 @@ function PortalContent() {
           wallet: account.address,
           firstName,
           lastName,
+          characterName,
           dob,
           publicMark,
           contractAccepted,
@@ -585,6 +639,31 @@ function PortalContent() {
       setMinting(false);
     }
   }
+
+  useEffect(() => {
+    handleMintRef.current = handleMint;
+  });
+
+  useEffect(() => {
+    if (!canMint || !account?.address || !orderPaid) {
+      return;
+    }
+
+    const autoMintKey = activeOrder?.orderId ?? account.address.toLowerCase();
+
+    if (autoMintOrderRef.current === autoMintKey) {
+      return;
+    }
+
+    autoMintOrderRef.current = autoMintKey;
+    setSelectedGate("mint");
+
+    const autoMintTimer = window.setTimeout(() => {
+      void handleMintRef.current?.();
+    }, GATE_DELAY_MS.autoMint);
+
+    return () => window.clearTimeout(autoMintTimer);
+  }, [account?.address, activeOrder?.orderId, canMint, orderPaid]);
 
   async function createOrder() {
     if (!checkoutReady || !account?.address) {
@@ -866,15 +945,18 @@ function PortalContent() {
       return;
     }
 
+    setVerification(null);
     setCheckingAttestation(true);
     setError("");
 
     try {
+      await wait(EAS_DATABASE_SEARCH_DELAY_MS);
       const response = await fetch(`/api/attestation?address=${account.address}`);
       const result = (await response.json()) as VerificationState;
       setVerification(result);
 
       if (result.eligible) {
+        await wait(850);
         setSelectedGate("identity");
       }
     } catch {
@@ -885,12 +967,23 @@ function PortalContent() {
     }
   }
 
-  function confirmIdentityEntry() {
+  async function confirmIdentityEntry() {
     if (!identityInputReady) {
       return;
     }
 
     setIdentityConfirmed(true);
+    await wait(GATE_DELAY_MS.artifact);
+    setSelectedGate("artifact");
+  }
+
+  async function confirmArtifactEntry() {
+    if (!artifactInputReady) {
+      return;
+    }
+
+    setArtifactConfirmed(true);
+    await wait(GATE_DELAY_MS.terms);
     setSelectedGate("terms");
   }
 
@@ -915,7 +1008,7 @@ function PortalContent() {
     }
 
     if (field === "dob" && identityInputReady) {
-      confirmIdentityEntry();
+      void confirmIdentityEntry();
     }
   }
 
@@ -928,7 +1021,7 @@ function PortalContent() {
     }
 
     if (selectedGate === "eas") {
-      if (account?.address && !verification?.eligible) {
+      if (account?.address && verification && !verification.eligible) {
         window.open(coinbaseEasUrl, "_blank", "noopener,noreferrer");
         return;
       }
@@ -938,12 +1031,18 @@ function PortalContent() {
     }
 
     if (selectedGate === "identity") {
-      confirmIdentityEntry();
+      await confirmIdentityEntry();
+      return;
+    }
+
+    if (selectedGate === "artifact") {
+      await confirmArtifactEntry();
       return;
     }
 
     if (selectedGate === "terms") {
       if (deedAccepted) {
+        await wait(GATE_DELAY_MS.payment);
         setSelectedGate("payment");
       }
       return;
@@ -959,10 +1058,6 @@ function PortalContent() {
       }
       return;
     }
-
-    if (selectedGate === "mint") {
-      await handleMint();
-    }
   }
 
   function selectGate(gate: PortalGate) {
@@ -970,7 +1065,11 @@ function PortalContent() {
 
     if (gate === "identity") {
       setIdentityFocus(
-        firstName.trim() ? (lastName.trim() ? "dob" : "lastName") : "firstName",
+        firstName.trim()
+          ? lastName.trim()
+            ? "dob"
+            : "lastName"
+          : "firstName",
       );
     }
   }
@@ -1009,8 +1108,18 @@ function PortalContent() {
       label: "Identity",
       value: hasIdentity ? publicMark : identityInputReady ? "Enter" : "Verify",
       complete: hasIdentity,
-      enabled: true,
+      enabled: Boolean(verification?.eligible) || hasIdentity,
       stateClass: hasIdentity
+        ? "console-key-button--entered"
+        : "console-key-button--complete",
+    },
+    {
+      key: "artifact",
+      label: "Artifact",
+      value: hasArtifact ? burnedArtifactName : artifactNameValid ? "Name" : "Fix",
+      complete: hasArtifact,
+      enabled: hasIdentity,
+      stateClass: hasArtifact
         ? "console-key-button--entered"
         : "console-key-button--complete",
     },
@@ -1019,11 +1128,11 @@ function PortalContent() {
       label: "Terms",
       value: deedAccepted
         ? "Agreed"
-        : termsAwaitingIdentity
+        : termsAwaitingArtifact
           ? "Waiting"
           : "Verify",
       complete: deedAccepted,
-      enabled: hasIdentity || deedAccepted,
+      enabled: hasArtifact || deedAccepted,
       stateClass: deedAccepted
         ? "console-key-button--entered"
         : "console-key-button--complete",
@@ -1044,18 +1153,22 @@ function PortalContent() {
         ? "console-key-button--entered"
         : "console-key-button--complete",
     },
-    {
-      key: "mint",
-      label: "Mint",
-      value: receipt ? "Submitted" : canMint ? "Active" : "Locked",
-      complete: Boolean(receipt),
-      enabled: canMint || Boolean(receipt),
-      stateClass: canMint
-        ? "console-key-button--active"
-        : receipt
-          ? "console-key-button--entered"
-          : "console-key-button--complete",
-    },
+    ...(canMint || minting || receipt || activeOrder?.status === "mint_submitted"
+      ? [
+          {
+            key: "mint" as const,
+            label: "Mint",
+            value: receipt ? "Submitted" : minting ? "Running" : "Auto",
+            complete: Boolean(receipt),
+            enabled: canMint || minting || Boolean(receipt),
+            stateClass: minting
+              ? "console-key-button--active"
+              : receipt
+                ? "console-key-button--entered"
+                : "console-key-button--complete",
+          },
+        ]
+      : []),
   ];
 
   const walletStatusClass = account?.address
@@ -1082,9 +1195,16 @@ function PortalContent() {
     wallet: account?.address ? "Wallet Connected" : "User Wallet",
     eas: verification?.eligible ? "Human Verified" : "EAS Verification",
     identity: hasIdentity ? "Identity Confirmed" : "Identity Entry",
+    artifact: hasArtifact ? "Artifact Name Locked" : "Artifact Name",
     terms: deedAccepted ? "Terms Agreed" : "Terms Agreement",
     payment: orderPaid ? "Payment Confirmed" : "Payment Gate",
-    mint: receipt ? "Mint Submitted" : canMint ? "Mint Authorization" : "Mint Locked",
+    mint: receipt
+      ? "Mint Submitted"
+      : minting
+        ? "Mint In Progress"
+        : canMint
+          ? "Mint Starting"
+          : "Mint Locked",
   }[selectedGate];
   const selectedGateStatus = {
     wallet: account?.address
@@ -1100,11 +1220,14 @@ function PortalContent() {
     identity: hasIdentity
       ? "Identity input has been confirmed for this session."
       : "Enter name and DOB, then press ENTER to confirm.",
+    artifact: hasArtifact
+      ? `Artifact name locked as ${burnedArtifactName}.`
+      : "Choose the name burned into the NFT image. Leave it blank to use the public mark.",
     terms: deedAccepted
       ? "Agreement gates are complete."
-      : hasIdentity
+      : hasArtifact
         ? "Open the certificate and accept each required term."
-        : "Identity must be confirmed before terms can arm.",
+        : "Artifact name must be locked before terms can arm.",
     payment: orderPaid
       ? "Payment gate is clear for this environment."
       : deedAccepted
@@ -1116,21 +1239,24 @@ function PortalContent() {
         : "Terms must be agreed before payment can arm.",
     mint: receipt
       ? "Mint submitted. Receipt details are shown below."
-      : canMint
-        ? "All gates are green. Mint is ready."
-        : "Pass all gates to mint your token.",
+      : minting
+        ? "Mint is being submitted automatically."
+        : canMint
+          ? "Payment is clear. Mint submission is starting automatically."
+          : "Pass all gates to mint your token.",
   }[selectedGate];
   const selectedGateCompleteNotice = selectedGateReadout.complete
     ? selectedGate === "mint"
       ? "Mint submitted. Save the receipt details below for tracking."
       : selectedGate === "payment"
-        ? "Payment recorded. Continue to mint authorization."
+        ? "Payment recorded. Mint submission will start automatically."
         : "Gate confirmed. If you edit earlier entries, review the later steps again."
     : null;
   const gateEnterEnabled = {
     wallet: !account?.address && Boolean(thirdwebClient) && !isConnecting,
     eas: Boolean(account?.address) && !checkingAttestation,
     identity: identityInputReady && !hasIdentity,
+    artifact: artifactInputReady && !hasArtifact,
     terms: deedAccepted,
     payment:
       orderPaid ||
@@ -1144,8 +1270,11 @@ function PortalContent() {
       ? "Checking"
       : verification?.eligible
         ? "Refresh EAS"
-        : "Open EAS",
+        : verification
+          ? "Open EAS"
+          : "Check EAS",
     identity: hasIdentity ? "Confirmed" : "Enter Identity",
+    artifact: hasArtifact ? "Locked" : "Lock Artifact",
     terms: deedAccepted ? "Submit" : "Submit",
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
     mint: minting
@@ -1153,7 +1282,7 @@ function PortalContent() {
       : receipt
         ? "Mint Submitted"
         : canMint
-          ? "Mint"
+          ? "Auto Mint"
           : "Mint Locked",
   }[selectedGate];
   function downloadFormalTerms() {
@@ -1517,8 +1646,8 @@ function PortalContent() {
                                     connect this wallet to your account.
                                   </p>
                                   <p className="mt-3 text-base leading-7 text-white/66">
-                                    Every chip in the Select Panel must turn
-                                    green before minting can open.
+                                    The verification chip turns green after the
+                                    database check returns a verified result.
                                   </p>
                                   {verification?.message && (
                                     <p className="mt-4 text-sm leading-6 text-cyan-50/72">
@@ -1564,6 +1693,7 @@ function PortalContent() {
                                       value={firstName}
                                       onChange={(event) => {
                                         setIdentityConfirmed(false);
+                                        setArtifactConfirmed(false);
                                         setFirstName(event.target.value);
                                       }}
                                       onFocus={() => setIdentityFocus("firstName")}
@@ -1584,6 +1714,7 @@ function PortalContent() {
                                       value={lastName}
                                       onChange={(event) => {
                                         setIdentityConfirmed(false);
+                                        setArtifactConfirmed(false);
                                         setLastName(event.target.value);
                                       }}
                                       onFocus={() => setIdentityFocus("lastName")}
@@ -1604,6 +1735,7 @@ function PortalContent() {
                                       value={dob}
                                       onChange={(event) => {
                                         setIdentityConfirmed(false);
+                                        setArtifactConfirmed(false);
                                         setDob(event.target.value);
                                       }}
                                       onFocus={() => setIdentityFocus("dob")}
@@ -1617,7 +1749,61 @@ function PortalContent() {
                                 </div>
                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Name and DOB should match your Coinbase identity records.
+                                  This confirms the human record before the artifact name
+                                  is engraved.
                                 </p>
+                              </div>
+                            )}
+
+                            {selectedGate === "artifact" && (
+                              <div className="grid gap-3">
+                                <label className="console-input-field portal-input-shell relative block">
+                                  <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
+                                    Artifact Name
+                                  </span>
+                                  <input
+                                    ref={characterNameInputRef}
+                                    value={characterName}
+                                    maxLength={32}
+                                    onChange={(event) => {
+                                      setArtifactConfirmed(false);
+                                      setCharacterName(event.target.value);
+                                    }}
+                                    onKeyDown={(event) => {
+                                      if (event.key !== "Enter") {
+                                        return;
+                                      }
+
+                                      event.preventDefault();
+                                      void confirmArtifactEntry();
+                                    }}
+                                    className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                    placeholder={publicMark}
+                                  />
+                                </label>
+                                <div className="control-surface-soft border border-white/10 bg-black/80 p-4">
+                                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                    Image Engraving
+                                  </div>
+                                  <p className="mt-3 text-base leading-7 text-white/72">
+                                    This name is burned into the NFT image. It can be
+                                    a nickname, character name, or public mark. If you
+                                    leave it blank, the artifact uses{" "}
+                                    <span className="text-yellow-100">{publicMark}</span>.
+                                  </p>
+                                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50/75">
+                                    Current engraving:{" "}
+                                    <span className="text-yellow-100">
+                                      {burnedArtifactName}
+                                    </span>
+                                  </p>
+                                </div>
+                                {!artifactNameValid && (
+                                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-200">
+                                    Artifact Name supports letters, numbers, spaces,
+                                    apostrophes, periods, hyphens, and ampersands.
+                                  </p>
+                                )}
                               </div>
                             )}
 
@@ -1711,8 +1897,8 @@ function PortalContent() {
                                     <div className="portal-pay-button portal-pay-button--waiting">
                                       <span>Sequence Not Completed</span>
                                       <small>
-                                        Wallet, EAS, identity, and terms must be green
-                                        first.
+                                        Wallet, EAS, identity, artifact, and terms must
+                                        be green first.
                                       </small>
                                     </div>
                                   </div>
@@ -1749,8 +1935,11 @@ function PortalContent() {
                                           name="Certificate of Title for Spiritual Ownership"
                                           onSuccess={() => {
                                             setPaymentNotice(
-                                              "Checkout completed. Refresh until the verified webhook marks this mint order paid.",
+                                              "Checkout completed. Verifying the order, then mint submission starts automatically.",
                                             );
+                                            window.setTimeout(() => {
+                                              void refreshOrder();
+                                            }, GATE_DELAY_MS.payment + 950);
                                           }}
                                           purchaseData={{
                                             orderId: activeOrder.orderId,
@@ -1841,9 +2030,11 @@ function PortalContent() {
                                 <p className="mt-3 text-sm leading-6 text-white/62">
                                   {receipt
                                     ? "Mint submitted. Use the receipt below to track the transaction and token metadata."
-                                    : canMint
-                                      ? "All checks are complete. Press Mint once to submit the deed."
-                                      : "Mint unlocks after wallet, EAS, identity, terms, and payment gates are green."}
+                                    : minting
+                                      ? "Mint submission is running automatically. Keep this screen open."
+                                      : canMint
+                                        ? "All checks are complete. Mint submission starts automatically."
+                                        : "Mint unlocks after wallet, EAS, identity, artifact, terms, and payment gates are green."}
                                 </p>
                               </div>
                             )}
@@ -1856,7 +2047,9 @@ function PortalContent() {
                                 : ""
                             }`}
                           >
-                            {selectedGate !== "wallet" && selectedGate !== "terms" && (
+                            {selectedGate !== "wallet" &&
+                              selectedGate !== "terms" &&
+                              selectedGate !== "mint" && (
                               <button
                                 className={`portal-console-enter ${
                                   gateEnterEnabled

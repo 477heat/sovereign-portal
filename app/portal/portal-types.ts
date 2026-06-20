@@ -47,7 +47,14 @@ export type PortalPaymentFlow =
   | "disabled"
   | "thirdweb_checkout";
 
-export type PortalGate = "wallet" | "eas" | "identity" | "terms" | "payment" | "mint";
+export type PortalGate =
+  | "wallet"
+  | "eas"
+  | "identity"
+  | "artifact"
+  | "terms"
+  | "payment"
+  | "mint";
 export type IdentityField = "firstName" | "lastName" | "dob";
 
 export type PortalGateReadout = {
