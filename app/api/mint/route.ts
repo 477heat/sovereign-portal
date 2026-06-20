@@ -19,6 +19,8 @@ import { SOUL_DEED_CONTRACT_ADDRESS } from "@/lib/soulContract";
 
 const BASE_MAINNET_CHAIN_ID = 8453;
 const GENESIS_CONTRACT_ADDRESS = SOUL_DEED_CONTRACT_ADDRESS;
+const ARTIFACT_NAME_MAX_LENGTH = 12;
+const ARTIFACT_NAME_PATTERN = /^[A-Z0-9][A-Z0-9 ]{0,11}$/;
 
 type MintRequest = {
   wallet?: string;
@@ -63,6 +65,25 @@ function hasRequiredIdentity(payload: MintRequest) {
       payload.publicMark !== "_. ___" &&
       payload.contractAccepted,
   );
+}
+
+function normalizeArtifactName(value: string | undefined) {
+  const normalized = (value ?? "").trim().replace(/\s+/g, " ").toUpperCase();
+
+  if (!normalized) {
+    return "";
+  }
+
+  if (
+    normalized.length > ARTIFACT_NAME_MAX_LENGTH ||
+    !ARTIFACT_NAME_PATTERN.test(normalized)
+  ) {
+    throw new Error(
+      "Artifact Name must be 12 characters or fewer and use only uppercase letters, numbers, or spaces.",
+    );
+  }
+
+  return normalized;
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -197,6 +218,19 @@ export async function POST(request: NextRequest) {
         status: "rejected",
         message:
           "Wallet, name, DOB, public mark, and contract acceptance are required.",
+      },
+      { status: 400 },
+    );
+  }
+
+  try {
+    payload.characterName = normalizeArtifactName(payload.characterName);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        status: "rejected",
+        message:
+          error instanceof Error ? error.message : "Invalid Artifact Name.",
       },
       { status: 400 },
     );

@@ -104,6 +104,7 @@ const previewShellEnabled =
   process.env.VERCEL_ENV === "preview";
 const coinbaseEasUrl =
   "https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification";
+const ARTIFACT_NAME_MAX_LENGTH = 12;
 const EAS_DATABASE_SEARCH_DELAY_MS = 4000;
 const GATE_DELAY_MS = {
   artifact: 650,
@@ -215,11 +216,21 @@ function buildPublicMark(firstName: string, lastName: string) {
 }
 
 function isValidArtifactName(value: string) {
-  const normalized = value.trim().replace(/\s+/g, " ");
+  const normalized = value.trim();
   return (
     !normalized ||
-    /^[A-Za-z0-9][A-Za-z0-9 .'\-&]{0,31}$/.test(normalized)
+    (normalized.length <= ARTIFACT_NAME_MAX_LENGTH &&
+      /^[A-Z0-9][A-Z0-9 ]*$/.test(normalized))
   );
+}
+
+function normalizeArtifactNameInput(value: string) {
+  return value
+    .toUpperCase()
+    .replace(/[^A-Z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trimStart()
+    .slice(0, ARTIFACT_NAME_MAX_LENGTH);
 }
 
 function shortAddress(address?: string) {
@@ -1764,10 +1775,12 @@ function PortalContent() {
                                   <input
                                     ref={characterNameInputRef}
                                     value={characterName}
-                                    maxLength={32}
+                                    maxLength={ARTIFACT_NAME_MAX_LENGTH}
                                     onChange={(event) => {
                                       setArtifactConfirmed(false);
-                                      setCharacterName(event.target.value);
+                                      setCharacterName(
+                                        normalizeArtifactNameInput(event.target.value),
+                                      );
                                     }}
                                     onKeyDown={(event) => {
                                       if (event.key !== "Enter") {
@@ -1800,8 +1813,8 @@ function PortalContent() {
                                 </div>
                                 {!artifactNameValid && (
                                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-200">
-                                    Artifact Name supports letters, numbers, spaces,
-                                    apostrophes, periods, hyphens, and ampersands.
+                                    Artifact Name supports up to 12 uppercase
+                                    letters, numbers, or spaces only.
                                   </p>
                                 )}
                               </div>
