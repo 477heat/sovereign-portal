@@ -298,7 +298,7 @@ function PortalContent() {
   const [receiptCopied, setReceiptCopied] = useState(false);
   const [error, setError] = useState("");
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
-  const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(true);
+  const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
   const previewShellActive = previewShellEnabled && previewShellRequested;
 
   const publicMark = useMemo(
@@ -1217,6 +1217,7 @@ function PortalContent() {
           ? "Mint Starting"
           : "Mint Locked",
   }[selectedGate];
+  const selectedGateTitleWords = selectedGateTitle.split(/\s+/).filter(Boolean);
   const selectedGateStatus = {
     wallet: account?.address
       ? "Connected wallet is the live mint recipient."
@@ -1528,32 +1529,34 @@ function PortalContent() {
                             <button
                               aria-controls="portal-mobile-select-drawer"
                               aria-expanded={mobileGateDrawerOpen}
-                              aria-label="Deploy mint controls"
-                              className="console-key-button portal-command-tab portal-gate-deploy-tab portal-mobile-select-trigger portal-mobile-select-trigger--attention"
+                              aria-label={`Open mint controls for ${selectedGateTitle}`}
+                              className="portal-command-title-tab portal-command-title-tab--attention"
                               onClick={() => setMobileGateDrawerOpen(true)}
                               ref={mobileGateTriggerRef}
                               type="button"
                             >
-                              <span>Deploy</span>
-                              <small>Mint Controls</small>
+                              <span
+                                className="portal-command-title-tab__label"
+                                data-word-count={selectedGateTitleWords.length}
+                              >
+                                {selectedGateTitleWords.map((word) => (
+                                  <span
+                                    className="portal-command-title-tab__word"
+                                    key={word}
+                                  >
+                                    {word}
+                                  </span>
+                                ))}
+                              </span>
+                              <span
+                                aria-hidden="true"
+                                className="portal-command-title-tab__chevrons"
+                              >
+                                <span />
+                                <span />
+                                <span />
+                              </span>
                             </button>
-                            <div className="portal-gate-header">
-                              <div className="portal-gate-title-box">
-                                <div className="portal-gate-title-card min-w-0">
-                                  <h2 className="mt-2 text-2xl font-black uppercase leading-none tracking-[0.12em] text-cyan-50 md:text-4xl">
-                                    {selectedGate === "wallet" &&
-                                    !account?.address ? (
-                                      "User Wallet"
-                                    ) : (
-                                      selectedGateTitle
-                                    )}
-                                  </h2>
-                                  <div className="portal-gate-title-box__label">
-                                    Active Entry
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
                           </div>
                           <div
                             className={`relative z-10 flex min-h-full flex-col ${
@@ -1645,27 +1648,19 @@ function PortalContent() {
                                           : "Verify"}
                                     </span>
                                   </div>
-                                  <p className="mt-4 text-lg leading-8 text-white/76">
-                                    Coinbase EAS checks whether your connected
-                                    wallet belongs to a verified human account.
-                                    If this wallet was already verified, this
-                                    gate would be green.
+                                  <p className="mt-2 text-xl leading-8 text-white/76">
+                                    EAS is our way of proving you&apos;re not a robot.
                                   </p>
-                                  <p className="mt-3 text-base leading-7 text-white/66">
-                                    If you are verified on Coinbase but this
-                                    wallet is not green, open Coinbase EAS and
-                                    connect this wallet to your account.
-                                  </p>
-                                  <p className="mt-3 text-base leading-7 text-white/66">
-                                    The verification chip turns green after the
-                                    database check returns a verified result.
+                                  <p className="mt-1.5 text-lg leading-7 text-white/66">
+                                    Reverify with Coinbase if your attestation is
+                                    not approved.
                                   </p>
                                   {verification?.message && (
-                                    <p className="mt-4 text-sm leading-6 text-cyan-50/72">
+                                    <p className="mt-2 text-sm leading-6 text-cyan-50/72">
                                       {verification.message}
                                     </p>
                                   )}
-                                  <div className="mt-4 portal-panel-button-row portal-panel-button-row--two">
+                                  <div className="mt-2 portal-panel-button-row portal-panel-button-row--two">
                                     <a
                                       className="console-key-button portal-eas-open-button"
                                       href={coinbaseEasUrl}
@@ -1696,9 +1691,6 @@ function PortalContent() {
                               <div className="grid gap-3">
                                 <div className="grid gap-2 sm:grid-cols-3">
                                   <label className="console-input-field portal-input-shell relative block">
-                                    <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
-                                      First Name
-                                    </span>
                                     <input
                                       ref={firstNameInputRef}
                                       value={firstName}
@@ -1712,14 +1704,14 @@ function PortalContent() {
                                         handleIdentityKeyDown(event, "firstName")
                                       }
                                       className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
-                                      placeholder="As it Appears on Coinbase Acct."
+                                      placeholder="First Name"
                                     />
+                                    <span className="portal-input-helper mt-1 block text-[8px] font-semibold uppercase tracking-[0.16em] text-cyan-50/62">
+                                      Must Match Coinbase Records
+                                    </span>
                                   </label>
 
                                   <label className="console-input-field portal-input-shell relative block">
-                                    <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
-                                      Last Name
-                                    </span>
                                     <input
                                       ref={lastNameInputRef}
                                       value={lastName}
@@ -1733,14 +1725,14 @@ function PortalContent() {
                                         handleIdentityKeyDown(event, "lastName")
                                       }
                                       className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
-                                      placeholder="As it Appears on Coinbase Acct."
+                                      placeholder="Last Name"
                                     />
+                                    <span className="portal-input-helper mt-1 block text-[8px] font-semibold uppercase tracking-[0.16em] text-cyan-50/62">
+                                      Must Match Coinbase Records
+                                    </span>
                                   </label>
 
                                   <label className="console-input-field portal-input-shell relative block">
-                                    <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
-                                      DOB
-                                    </span>
                                     <input
                                       ref={dobInputRef}
                                       value={dob}
@@ -1756,9 +1748,12 @@ function PortalContent() {
                                       type="date"
                                       className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
                                     />
+                                    <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                      DOB
+                                    </span>
                                   </label>
                                 </div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                <p className="portal-identity-confirmation-copy font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Name and DOB should match your Coinbase identity records.
                                   This confirms the human record before the artifact name
                                   is engraved.
@@ -1769,9 +1764,6 @@ function PortalContent() {
                             {selectedGate === "artifact" && (
                               <div className="grid gap-3">
                                 <label className="console-input-field portal-input-shell relative block">
-                                  <span className="console-input-label mb-1.5 block text-[9px] font-semibold uppercase tracking-[0.18em]">
-                                    Artifact Name
-                                  </span>
                                   <input
                                     ref={characterNameInputRef}
                                     value={characterName}
@@ -1794,17 +1786,11 @@ function PortalContent() {
                                     placeholder={publicMark}
                                   />
                                 </label>
-                                <div className="control-surface-soft border border-white/10 bg-black/80 p-4">
-                                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                                    Image Engraving
-                                  </div>
-                                  <p className="mt-3 text-base leading-7 text-white/72">
-                                    This name is burned into the NFT image. It can be
-                                    a nickname, character name, or public mark. If you
-                                    leave it blank, the artifact uses{" "}
-                                    <span className="text-yellow-100">{publicMark}</span>.
+                                <div className="control-surface-soft portal-artifact-engraving-box border border-white/10 bg-black/80 p-4">
+                                  <p className="portal-artifact-engraving-prompt text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50">
+                                    Choose an Engraved Name
                                   </p>
-                                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50/75">
+                                  <p className="portal-artifact-engraving-current text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50/75">
                                     Current engraving:{" "}
                                     <span className="text-yellow-100">
                                       {burnedArtifactName}
@@ -2064,6 +2050,7 @@ function PortalContent() {
                               selectedGate !== "terms" &&
                               selectedGate !== "mint" && (
                               <button
+                                aria-label={gateEnterLabel}
                                 className={`portal-console-enter ${
                                   gateEnterEnabled
                                     ? "portal-console-enter--ready"
@@ -2073,7 +2060,7 @@ function PortalContent() {
                                 onClick={() => void handleGateEnter()}
                                 type="button"
                               >
-                                {gateEnterLabel}
+                                SUBMIT
                               </button>
                             )}
 
