@@ -10,6 +10,19 @@ Give beginner-friendly explanations and recommend best practices. Be direct
 when something is risky, stale, or likely to affect money, minting, metadata, or
 production.
 
+## Engine PM Scope Boundary
+
+If a task touches the Portal mint path, payment path, EAS verification, admin
+token tools, token inspection, metadata display, contract addresses, or anything
+that could change what is minted, read the Engine PM scope file before editing:
+
+```text
+/Users/thebridge/Desktop/SynthesisisZodiacEngine/PROJECT_MANAGER_ENGINE_SCOPE.md
+```
+
+Do not read broad lore/planning material first for those tasks. The Engine PM
+scope file is the compressed source-of-truth map for protected mint behavior.
+
 ## Project Role
 
 This repo owns the public website and minting user journey:
