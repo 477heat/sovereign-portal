@@ -103,11 +103,19 @@ For Coinbase listing polish:
   and `receive`.
 - Do not write Vanguard benefits as `may`, `might`, or `possibly` when the live
   Vanguard page already states them as benefits.
-- Keep unreleased mechanics honest. Natal Stat, Progeny mint interfaces,
-  Kindred Creature contracts, and developer APIs are not live until implemented.
+- Keep unreleased mechanics honest without weakening owner-approved roadmap
+  language. Do not say Natal Stat, Full Astro Stats, Creature Creation, Progeny
+  mint interfaces, Kindred Creature contracts, or developer APIs are live until
+  implemented. It is acceptable to say they are coming, planned, or included in
+  the Vanguard direction when that is the owner's chosen public wording.
+- Agents may flag a factual, legal, or operational risk in proposed copy, but
+  they must not silently rewrite owner-approved wording into softer `may`,
+  `might`, `could`, or `possibly` language.
 - Explain zodiac/Soul Attribute logic clearly and respectfully. Horoscope
   language is acceptable as an entry point, but the product framing is birth
   signals, zodiac cultures, elements, and deterministic Soul Attributes.
+- Use plain English for public copy: beginner-readable, concise, and
+  explanatory enough that a normal visitor understands why a feature matters.
 
 Asset source folder:
 

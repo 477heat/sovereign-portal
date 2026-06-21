@@ -4032,6 +4032,105 @@ body {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.portal-gate-feedback {
+  --portal-feedback-accent: rgba(125, 211, 252, 0.92);
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(6, 22, 32, 0.58)),
+    rgba(0, 0, 0, 0.72);
+  border: 1px solid var(--portal-feedback-accent);
+  box-shadow:
+    inset 0 0 20px rgba(125, 211, 252, 0.08),
+    0 0 22px rgba(125, 211, 252, 0.12);
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  color: rgb(255, 255, 255);
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  justify-self: center;
+  margin-top: 0.15rem;
+  max-width: min(100%, 34rem);
+  min-height: 4.1rem;
+  padding: 0.85rem 1rem;
+  position: relative;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.portal-gate-feedback::before {
+  animation: portal-gate-feedback-scan 1.25s linear infinite;
+  background: linear-gradient(90deg, transparent, var(--portal-feedback-accent), transparent);
+  content: "";
+  height: 1px;
+  inset: 0 auto auto 0;
+  opacity: 0.78;
+  position: absolute;
+  width: 44%;
+}
+
+.portal-gate-feedback--confirmed {
+  --portal-feedback-accent: rgba(74, 222, 128, 0.96);
+  animation: portal-gate-feedback-confirm 680ms ease-out both;
+}
+
+.portal-gate-feedback--blocked {
+  --portal-feedback-accent: rgba(248, 113, 113, 0.96);
+}
+
+.portal-gate-feedback__signal {
+  animation: portal-gate-feedback-pulse 1.05s ease-in-out infinite;
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 12%, transparent 13%),
+    conic-gradient(from 0deg, transparent 0 36%, var(--portal-feedback-accent) 37% 54%, transparent 55% 100%);
+  border: 1px solid var(--portal-feedback-accent);
+  border-radius: 999px;
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--portal-feedback-accent) 52%, transparent),
+    inset 0 0 16px rgba(255, 255, 255, 0.08);
+  display: block;
+  height: 2.35rem;
+}
+
+.portal-gate-feedback--confirmed .portal-gate-feedback__signal {
+  animation: portal-gate-feedback-confirm 680ms ease-out both;
+  background:
+    linear-gradient(135deg, transparent 42%, rgb(255, 255, 255) 43% 53%, transparent 54%),
+    linear-gradient(45deg, transparent 48%, rgb(255, 255, 255) 49% 59%, transparent 60%),
+    radial-gradient(circle, rgba(74, 222, 128, 0.4), rgba(21, 128, 61, 0.18));
+}
+
+.portal-gate-feedback--blocked .portal-gate-feedback__signal {
+  animation: none;
+  background:
+    linear-gradient(45deg, transparent 44%, rgb(255, 255, 255) 45% 55%, transparent 56%),
+    linear-gradient(135deg, transparent 44%, rgb(255, 255, 255) 45% 55%, transparent 56%),
+    radial-gradient(circle, rgba(248, 113, 113, 0.32), rgba(127, 29, 29, 0.2));
+}
+
+.portal-gate-feedback__copy {
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+.portal-gate-feedback__copy strong {
+  color: rgb(255, 255, 255);
+  font-size: clamp(0.82rem, 1.7vw, 1.05rem);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  line-height: 1.05;
+  text-shadow: 0 0 13px rgba(255, 255, 255, 0.28);
+}
+
+.portal-gate-feedback__copy small {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(0.64rem, 1.2vw, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+}
+
 .portal-control-page .portal-panel-button-row .console-key-button:not(.portal-terms-action-button),
 .portal-control-page .portal-panel-button-row .portal-pay-button,
 .portal-control-page .portal-panel-button-row .chamfer-nav-link,
@@ -4228,6 +4327,24 @@ body {
     letter-spacing: 0.08em;
   }
 
+  .portal-gate-feedback {
+    gap: 0.58rem;
+    min-height: 3.4rem;
+    padding: 0.68rem 0.75rem;
+  }
+
+  .portal-gate-feedback__signal {
+    height: 1.85rem;
+  }
+
+  .portal-gate-feedback__copy strong {
+    font-size: 0.68rem;
+  }
+
+  .portal-gate-feedback__copy small {
+    font-size: 0.52rem;
+  }
+
   .portal-control-page .portal-gate-view--matrix .portal-connect-wallet-button {
     font-size: 0.56rem !important;
     min-height: 2.35rem !important;
@@ -4384,6 +4501,42 @@ body {
   color: inherit;
   filter: none;
   transform: none;
+}
+
+@keyframes portal-gate-feedback-scan {
+  0% {
+    transform: translateX(-55%);
+  }
+  100% {
+    transform: translateX(230%);
+  }
+}
+
+@keyframes portal-gate-feedback-pulse {
+  0%,
+  100% {
+    filter: brightness(0.92);
+    transform: scale(0.94) rotate(0deg);
+  }
+  50% {
+    filter: brightness(1.3);
+    transform: scale(1.04) rotate(160deg);
+  }
+}
+
+@keyframes portal-gate-feedback-confirm {
+  0% {
+    filter: brightness(0.95);
+    transform: scale(0.96);
+  }
+  45% {
+    filter: brightness(1.45);
+    transform: scale(1.045);
+  }
+  100% {
+    filter: brightness(1.08);
+    transform: scale(1);
+  }
 }
 
 .console-active-field--entered {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createThirdwebClient,
   prepareTransaction,
@@ -108,6 +108,24 @@ const GATE_DELAY_MS = {
   terms: 780,
   payment: 620,
   autoMint: 1180,
+};
+const GATE_FEEDBACK_DELAY_MS = {
+  wallet: 1800,
+  eas: EAS_DATABASE_SEARCH_DELAY_MS,
+  identity: 2600,
+  artifact: 2400,
+  terms: 1800,
+  payment: 2600,
+  mint: 2200,
+} satisfies Record<PortalGate, number>;
+
+type GateFeedbackPhase = "blocked" | "confirmed" | "processing";
+
+type GateFeedbackState = {
+  detail: string;
+  gate: PortalGate;
+  message: string;
+  phase: GateFeedbackPhase;
 };
 
 function wait(ms: number) {
@@ -234,6 +252,7 @@ function PortalContent() {
   const mobileGateTriggerRef = useRef<HTMLButtonElement | null>(null);
   const autoMintOrderRef = useRef<string | null>(null);
   const handleMintRef = useRef<(() => Promise<void>) | null>(null);
+  const gateFeedbackTimersRef = useRef<number[]>([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [characterName, setCharacterName] = useState("");
@@ -277,6 +296,9 @@ function PortalContent() {
   const [recoveryBusy, setRecoveryBusy] = useState(false);
   const [receiptCopied, setReceiptCopied] = useState(false);
   const [error, setError] = useState("");
+  const [gateFeedback, setGateFeedback] = useState<GateFeedbackState | null>(
+    null,
+  );
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
   const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
   const previewShellActive = previewShellEnabled && previewShellRequested;
@@ -383,6 +405,43 @@ function PortalContent() {
         .filter(Boolean)
         .join("\n")
     : "";
+
+  const clearGateFeedbackTimers = useCallback(() => {
+    gateFeedbackTimersRef.current.forEach((timerId) =>
+      window.clearTimeout(timerId),
+    );
+    gateFeedbackTimersRef.current = [];
+  }, []);
+
+  const showGateFeedback = useCallback((
+    gate: PortalGate,
+    phase: GateFeedbackPhase,
+    message: string,
+    detail: string,
+    autoClearMs = phase === "processing" ? 0 : 2200,
+  ) => {
+    clearGateFeedbackTimers();
+    setGateFeedback({
+      detail,
+      gate,
+      message,
+      phase,
+    });
+
+    if (autoClearMs > 0) {
+      const clearTimer = window.setTimeout(() => {
+        setGateFeedback(null);
+      }, autoClearMs);
+      gateFeedbackTimersRef.current.push(clearTimer);
+    }
+  }, [clearGateFeedbackTimers]);
+
+  useEffect(() => {
+    return () => {
+      clearGateFeedbackTimers();
+    };
+  }, [clearGateFeedbackTimers]);
+
   useEffect(() => {
     const previewShellTimer = window.setTimeout(
       () => {
@@ -489,6 +548,7 @@ function PortalContent() {
       if (!account?.address) {
         setVerification(null);
         setCheckingAttestation(false);
+        setGateFeedback(null);
         return;
       }
 
@@ -498,6 +558,12 @@ function PortalContent() {
       setVerification(null);
       setCheckingAttestation(true);
       setError("");
+      showGateFeedback(
+        "eas",
+        "processing",
+        "EAS sweep running",
+        "Searching Coinbase attestations for this wallet.",
+      );
 
       try {
         await wait(EAS_DATABASE_SEARCH_DELAY_MS);
@@ -512,17 +578,39 @@ function PortalContent() {
         if (!ignore) {
           setVerification(result);
           if (result.eligible) {
+            showGateFeedback(
+              "eas",
+              "confirmed",
+              "Human verification confirmed",
+              "Coinbase EAS attestation is attached to this wallet.",
+            );
             window.setTimeout(() => {
               if (!ignore) {
                 setSelectedGate("identity");
+                setGateFeedback(null);
               }
-            }, 850);
+            }, 1700);
+          } else {
+            showGateFeedback(
+              "eas",
+              "blocked",
+              "EAS check complete",
+              "No verified human attestation was found for this wallet.",
+              3200,
+            );
           }
         }
       } catch {
         if (!ignore) {
           setError("Attestation service is not responding yet.");
           setVerification(null);
+          showGateFeedback(
+            "eas",
+            "blocked",
+            "EAS check interrupted",
+            "The attestation service did not answer. Try again in a moment.",
+            3200,
+          );
         }
       } finally {
         if (!ignore) {
@@ -536,7 +624,7 @@ function PortalContent() {
     return () => {
       ignore = true;
     };
-  }, [account?.address]);
+  }, [account?.address, showGateFeedback]);
 
   useEffect(() => {
     let ignore = false;
@@ -583,8 +671,15 @@ function PortalContent() {
     setMinting(true);
     setError("");
     setReceipt(null);
+    showGateFeedback(
+      "mint",
+      "processing",
+      "Mint sequence transmitting",
+      "Submitting the protected mint request to the backend.",
+    );
 
     try {
+      await wait(GATE_FEEDBACK_DELAY_MS.mint);
       const response = await fetch("/api/mint", {
         method: "POST",
         headers: {
@@ -612,6 +707,12 @@ function PortalContent() {
 
       const result = (await response.json()) as MintReceipt;
       setReceipt(result);
+      showGateFeedback(
+        "mint",
+        "confirmed",
+        "Mint request confirmed",
+        "Receipt data returned from the mint route.",
+      );
       if (activeOrder) {
         setMintOrder({
           ...activeOrder,
@@ -625,6 +726,13 @@ function PortalContent() {
         caughtError instanceof Error
           ? caughtError.message
           : "Mint request failed. The backend route is ready for wiring.",
+      );
+      showGateFeedback(
+        "mint",
+        "blocked",
+        "Mint sequence stopped",
+        "The backend did not accept the mint request.",
+        3200,
       );
     } finally {
       setMinting(false);
@@ -664,8 +772,15 @@ function PortalContent() {
     setOrderBusy(true);
     setError("");
     setPaymentNotice("");
+    showGateFeedback(
+      "payment",
+      "processing",
+      "Order gate processing",
+      "Preparing the verified mint order.",
+    );
 
     try {
+      await wait(GATE_FEEDBACK_DELAY_MS.payment);
       const response = await fetch("/api/mint-order", {
         method: "POST",
         headers: {
@@ -685,11 +800,24 @@ function PortalContent() {
       }
 
       setMintOrder(result);
+      showGateFeedback(
+        "payment",
+        "confirmed",
+        "Order gate confirmed",
+        "Mint order is prepared for checkout.",
+      );
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
           ? caughtError.message
           : "Could not prepare checkout.",
+      );
+      showGateFeedback(
+        "payment",
+        "blocked",
+        "Order gate stopped",
+        "Checkout could not be prepared.",
+        3200,
       );
     } finally {
       setOrderBusy(false);
@@ -713,6 +841,12 @@ function PortalContent() {
     setDirectPaymentBusy(true);
     setError("");
     setPaymentNotice("Confirm the Base USDC payment in your wallet.");
+    showGateFeedback(
+      "payment",
+      "processing",
+      "Payment verification running",
+      "Waiting for wallet confirmation and order verification.",
+    );
 
     try {
       const amountUnits = parseTokenUnits(paymentAmount, paymentTokenDecimals);
@@ -766,12 +900,25 @@ function PortalContent() {
         },
       );
       setPaymentNotice("Direct Base payment verified. Mint control armed.");
+      showGateFeedback(
+        "payment",
+        "confirmed",
+        "Payment gate confirmed",
+        "Base payment was verified and mint control is armed.",
+      );
       setSelectedGate("mint");
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
           ? caughtError.message
           : "Direct payment was not confirmed.",
+      );
+      showGateFeedback(
+        "payment",
+        "blocked",
+        "Payment gate stopped",
+        "Direct payment was not confirmed.",
+        3200,
       );
     } finally {
       setDirectPaymentBusy(false);
@@ -785,8 +932,15 @@ function PortalContent() {
 
     setOrderBusy(true);
     setError("");
+    showGateFeedback(
+      "payment",
+      "processing",
+      "Order status scanning",
+      "Checking the latest payment and mint order status.",
+    );
 
     try {
+      await wait(GATE_FEEDBACK_DELAY_MS.payment);
       const signature = await account.signMessage({
         message: buildMintOrderStatusMessage({
           wallet: account.address,
@@ -811,6 +965,12 @@ function PortalContent() {
       }
 
       setMintOrder(result.order ?? result);
+      showGateFeedback(
+        "payment",
+        "confirmed",
+        "Order status confirmed",
+        "Latest order status has been received.",
+      );
 
       if (result.receipt) {
         setReceipt(result.receipt);
@@ -826,6 +986,13 @@ function PortalContent() {
         caughtError instanceof Error
           ? caughtError.message
           : "Could not refresh payment status.",
+      );
+      showGateFeedback(
+        "payment",
+        "blocked",
+        "Order scan stopped",
+        "Payment status could not be refreshed.",
+        3200,
       );
     } finally {
       setOrderBusy(false);
@@ -916,6 +1083,7 @@ function PortalContent() {
     setCertificateOpened(false);
     setPaymentNotice("");
     setError("");
+    setGateFeedback(null);
     setSelectedGate("identity");
   }
 
@@ -955,6 +1123,12 @@ function PortalContent() {
     setVerification(null);
     setCheckingAttestation(true);
     setError("");
+    showGateFeedback(
+      "eas",
+      "processing",
+      "EAS sweep running",
+      "Searching Coinbase attestations for this wallet.",
+    );
 
     try {
       await wait(EAS_DATABASE_SEARCH_DELAY_MS);
@@ -963,12 +1137,33 @@ function PortalContent() {
       setVerification(result);
 
       if (result.eligible) {
-        await wait(850);
+        showGateFeedback(
+          "eas",
+          "confirmed",
+          "Human verification confirmed",
+          "Coinbase EAS attestation is attached to this wallet.",
+        );
+        await wait(1700);
         setSelectedGate("identity");
+      } else {
+        showGateFeedback(
+          "eas",
+          "blocked",
+          "EAS check complete",
+          "No verified human attestation was found for this wallet.",
+          3200,
+        );
       }
     } catch {
       setError("Attestation service is not responding yet.");
       setVerification(null);
+      showGateFeedback(
+        "eas",
+        "blocked",
+        "EAS check interrupted",
+        "The attestation service did not answer. Try again in a moment.",
+        3200,
+      );
     } finally {
       setCheckingAttestation(false);
     }
@@ -979,8 +1174,21 @@ function PortalContent() {
       return;
     }
 
+    showGateFeedback(
+      "identity",
+      "processing",
+      "Identity scan running",
+      "Matching name, date, and public marker for this session.",
+    );
+    await wait(GATE_FEEDBACK_DELAY_MS.identity);
     setIdentityConfirmed(true);
-    await wait(GATE_DELAY_MS.artifact);
+    showGateFeedback(
+      "identity",
+      "confirmed",
+      "Identity entry confirmed",
+      "Name, date, and public marker are locked for the next gate.",
+    );
+    await wait(GATE_DELAY_MS.artifact + 900);
     setSelectedGate("artifact");
   }
 
@@ -989,8 +1197,21 @@ function PortalContent() {
       return;
     }
 
+    showGateFeedback(
+      "artifact",
+      "processing",
+      "Artifact engraving scan",
+      "Checking the public mark and display name before lock-in.",
+    );
+    await wait(GATE_FEEDBACK_DELAY_MS.artifact);
     setArtifactConfirmed(true);
-    await wait(GATE_DELAY_MS.terms);
+    showGateFeedback(
+      "artifact",
+      "confirmed",
+      "Artifact name locked",
+      `${burnedArtifactName} is ready for certificate review.`,
+    );
+    await wait(GATE_DELAY_MS.terms + 900);
     setSelectedGate("terms");
   }
 
@@ -1026,6 +1247,20 @@ function PortalContent() {
         return;
       }
 
+      showGateFeedback(
+        "wallet",
+        "processing",
+        "Wallet link processing",
+        "Confirming this address as the live mint recipient.",
+      );
+      await wait(GATE_FEEDBACK_DELAY_MS.wallet);
+      showGateFeedback(
+        "wallet",
+        "confirmed",
+        "Wallet recipient confirmed",
+        "This address is now staged for EAS verification.",
+      );
+      await wait(900);
       setSelectedGate("eas");
       return;
     }
@@ -1052,7 +1287,20 @@ function PortalContent() {
 
     if (selectedGate === "terms") {
       if (deedAccepted) {
-        await wait(GATE_DELAY_MS.payment);
+        showGateFeedback(
+          "terms",
+          "processing",
+          "Terms gate processing",
+          "Confirming certificate review and agreement checks.",
+        );
+        await wait(GATE_FEEDBACK_DELAY_MS.terms);
+        showGateFeedback(
+          "terms",
+          "confirmed",
+          "Terms gate confirmed",
+          "Agreement checks are complete.",
+        );
+        await wait(GATE_DELAY_MS.payment + 800);
         setSelectedGate("payment");
       }
       return;
@@ -1281,7 +1529,10 @@ function PortalContent() {
         ? "Payment recorded. Mint submission will start automatically."
         : "Gate confirmed. If you edit earlier entries, review the later steps again."
     : null;
-  const gateEnterEnabled = {
+  const activeGateFeedback =
+    gateFeedback?.gate === selectedGate ? gateFeedback : null;
+  const gateProcessing = activeGateFeedback?.phase === "processing";
+  const gateEnterEnabled = !gateProcessing && {
     wallet: Boolean(account?.address) || (Boolean(thirdwebClient) && !isConnecting),
     eas: Boolean(account?.address) && !checkingAttestation,
     identity: identityInputReady && !hasIdentity,
@@ -2051,6 +2302,23 @@ function PortalContent() {
                                         ? "All checks are complete. Mint submission starts automatically."
                                         : "Mint unlocks after wallet, EAS, identity, artifact, terms, and payment gates are green."}
                                 </p>
+                              </div>
+                            )}
+
+                            {activeGateFeedback && (
+                              <div
+                                aria-live="polite"
+                                className={`portal-gate-feedback portal-gate-feedback--${activeGateFeedback.phase}`}
+                                role="status"
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className="portal-gate-feedback__signal"
+                                />
+                                <span className="portal-gate-feedback__copy">
+                                  <strong>{activeGateFeedback.message}</strong>
+                                  <small>{activeGateFeedback.detail}</small>
+                                </span>
                               </div>
                             )}
                           </div>
