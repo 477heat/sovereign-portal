@@ -3234,6 +3234,27 @@ body {
   z-index: 9999;
 }
 
+.portal-command-console-dock {
+  margin-top: -0.18rem;
+  position: relative;
+  z-index: 4;
+}
+
+.portal-command-console-dock__module {
+  background:
+    linear-gradient(135deg, rgba(147, 197, 253, 0.018), rgba(254, 240, 138, 0.01)),
+    rgba(0, 0, 0, 0.34);
+  border-color: rgba(165, 243, 252, 0.16);
+}
+
+.portal-command-console-dock__cycle {
+  border-color: rgba(125, 211, 252, 0.28);
+}
+
+.portal-command-console-dock__module strong {
+  font-size: clamp(0.62rem, 1.45vw, 0.92rem);
+}
+
 .portal-control-page .portal-console-edge-lines__stroke {
   background: linear-gradient(90deg, transparent 0, currentColor 0);
   display: block;
@@ -3317,6 +3338,15 @@ body {
 @media (max-width: 640px) {
   .portal-control-page .portal-console-edge-lines {
     inset: -0.72rem;
+  }
+
+  .portal-command-console-dock {
+    gap: 0.32rem;
+    margin-top: -0.04rem;
+  }
+
+  .portal-command-console-dock__module {
+    padding-inline: 0.4rem;
   }
 
   .portal-control-page .portal-console-edge-lines__stroke--top-cyan {

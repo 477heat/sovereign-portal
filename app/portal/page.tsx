@@ -1173,6 +1173,28 @@ function PortalContent() {
       : "portal-wallet-status--empty";
   const selectedGateReadout =
     gateReadouts.find((gate) => gate.key === selectedGate) ?? gateReadouts[0];
+  const selectedGateIndex = gateReadouts.findIndex(
+    (gate) => gate.key === selectedGate,
+  );
+  const confirmedGateCount = gateReadouts.filter((gate) => gate.complete).length;
+  const portalDockSequenceLabel = `${Math.max(
+    selectedGateIndex + 1,
+    1,
+  )}/${gateReadouts.length}`;
+  function cyclePortalGate(direction: "next" | "previous") {
+    if (gateReadouts.length < 2) {
+      return;
+    }
+
+    const currentIndex = Math.max(selectedGateIndex, 0);
+    const nextIndex =
+      direction === "next"
+        ? (currentIndex + 1) % gateReadouts.length
+        : (currentIndex - 1 + gateReadouts.length) % gateReadouts.length;
+
+    selectGate(gateReadouts[nextIndex].key);
+  }
+
   const gateIconState = (gate: (typeof gateReadouts)[number]) => {
     if (gate.key === selectedGate) {
       return "portal-step-icon--current";
@@ -2058,6 +2080,55 @@ function PortalContent() {
                               )}
                             </div>
                           )}
+                        </div>
+                        <div
+                          aria-label="Portal console dock"
+                          className="command-room__console-dock portal-command-console-dock"
+                        >
+                          <div className="command-room__console-dock-cell command-room__console-dock-module command-room__console-dock-module--current-page portal-command-console-dock__module">
+                            <span>Gate</span>
+                            <strong title={selectedGateTitle}>
+                              {selectedGateReadout.label}
+                            </strong>
+                          </div>
+                          <div className="command-room__console-dock-cell command-room__console-dock-module portal-command-console-dock__module">
+                            <span>Sequence</span>
+                            <strong title={`${confirmedGateCount} gates confirmed`}>
+                              {portalDockSequenceLabel} / {confirmedGateCount} green
+                            </strong>
+                          </div>
+                          <button
+                            aria-label="Previous portal gate"
+                            className="command-room__console-dock-cell command-room__console-cycle-button portal-command-console-dock__cycle"
+                            disabled={gateReadouts.length < 2}
+                            onClick={() => cyclePortalGate("previous")}
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              className="command-room__console-cycle-icon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M14.5 5.5 8 12l6.5 6.5" />
+                            </svg>
+                          </button>
+                          <button
+                            aria-label="Next portal gate"
+                            className="command-room__console-dock-cell command-room__console-cycle-button command-room__console-cycle-button--next portal-command-console-dock__cycle"
+                            disabled={gateReadouts.length < 2}
+                            onClick={() => cyclePortalGate("next")}
+                            type="button"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              className="command-room__console-cycle-icon"
+                              focusable="false"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
+                            </svg>
+                          </button>
                         </div>
                         <div className="portal-console-edge-lines" aria-hidden="true">
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--top-cyan" />
