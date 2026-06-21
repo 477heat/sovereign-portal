@@ -1303,6 +1303,70 @@ function PortalContent() {
           ? "Auto Mint"
           : "Mint Locked",
   }[selectedGate];
+  const actionClusterGates = (["identity", "artifact", "wallet", "eas"] as const)
+    .map((key) => gateReadouts.find((gate) => gate.key === key))
+    .filter((gate): gate is PortalGateReadout => Boolean(gate));
+  const accessPairComplete = Boolean(account?.address) && Boolean(verification?.eligible);
+  const recordPairComplete = hasIdentity && hasArtifact;
+  const finalMintClusterReady = accessPairComplete && recordPairComplete && deedAccepted;
+  const primaryActionEnabled =
+    selectedGate === "terms"
+      ? hasArtifact || deedAccepted
+      : selectedGate === "mint"
+        ? canMint
+        : gateEnterEnabled;
+  const primaryActionLabel =
+    selectedGate === "wallet" || selectedGate === "terms"
+      ? gateEnterLabel
+      : selectedGate === "mint"
+        ? "Mint"
+        : "Submit";
+  const primaryActionWords = primaryActionLabel.split(/\s+/).filter(Boolean);
+
+  function handlePrimaryGateAction() {
+    if (selectedGate === "terms" && !deedAccepted) {
+      setCertificateOpened(true);
+      setTermsReviewOpen(true);
+      return;
+    }
+
+    if (selectedGate === "mint") {
+      if (canMint) {
+        void handleMintRef.current?.();
+      }
+      return;
+    }
+
+    void handleGateEnter();
+  }
+
+  function handleTermsClusterAction() {
+    if (!recordPairComplete) {
+      return;
+    }
+
+    setSelectedGate("terms");
+
+    if (!deedAccepted) {
+      setCertificateOpened(true);
+      setTermsReviewOpen(true);
+    }
+  }
+
+  function handleMintClusterAction() {
+    if (!finalMintClusterReady) {
+      return;
+    }
+
+    if (canMint) {
+      setSelectedGate("mint");
+      void handleMintRef.current?.();
+      return;
+    }
+
+    setSelectedGate(orderPaid ? "mint" : "payment");
+  }
+
   function downloadFormalTerms() {
     const termsText = [
       `Sovereign Engine Certificate Terms`,
@@ -1503,20 +1567,6 @@ function PortalContent() {
                       </div>
                     </div>
 
-                    {hasIdentity && (
-                      <div className="control-surface-soft console-status-tile--entered mt-4 min-w-0 border p-3">
-                        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                          Artifact Marker
-                        </div>
-                        <div className="portal-artifact-marker-value mt-1 truncate text-green-50">
-                          {publicMark}
-                        </div>
-                        <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-200">
-                          Do not mint duplicates or incorrect info. Failed eligibility or identity checks may block minting after checkout begins.
-                        </p>
-                      </div>
-                    )}
-
                       <div className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative">
                         <div
                           className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[30rem] md:min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
@@ -1571,7 +1621,7 @@ function PortalContent() {
                           >
 
                           <div
-                            className={`grid flex-1 content-start ${
+                            className={`grid content-start ${
                               selectedGate === "terms" ? "gap-0" : "gap-3"
                             }`}
                           >
@@ -1587,25 +1637,12 @@ function PortalContent() {
                                     {account?.address ?? "No wallet connected"}
                                   </div>
                                 </div>
-                                <div
-                                  className="portal-wallet-action portal-panel-button-row portal-panel-button-row--one"
-                                >
-                                  {thirdwebClient ? (
-                                    <button
-                                      className="portal-connect-wallet-button"
-                                      disabled={!gateEnterEnabled}
-                                      onClick={() => void handleGateEnter()}
-                                      type="button"
-                                    >
-                                      {gateEnterLabel}
-                                    </button>
-                                  ) : (
-                                    <div className="text-sm leading-6 text-white/65">
-                                      Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live
-                                      wallet connector.
-                                    </div>
-                                  )}
-                                </div>
+                                {!thirdwebClient && (
+                                  <div className="text-sm leading-6 text-white/65">
+                                    Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live
+                                    wallet connector.
+                                  </div>
+                                )}
                               </div>
                             )}
 
@@ -1798,17 +1835,6 @@ function PortalContent() {
                                   accuracyAccepted={accuracyAccepted}
                                   certificateOpened={certificateOpened}
                                   contractAccepted={contractAccepted}
-                                  enterTermsEnabled={deedAccepted ? gateEnterEnabled : true}
-                                  gateEnterLabel={gateEnterLabel}
-                                  onEnterTerms={() => {
-                                    if (deedAccepted) {
-                                      void handleGateEnter();
-                                      return;
-                                    }
-
-                                    setCertificateOpened(true);
-                                    setTermsReviewOpen(true);
-                                  }}
                                   publicMarkAccepted={publicMarkAccepted}
                                   setAccuracyAccepted={setAccuracyAccepted}
                                   setContractAccepted={setContractAccepted}
@@ -2020,53 +2046,140 @@ function PortalContent() {
                           </div>
 
                           <div
-                            className={`portal-gate-bottom-row mt-auto ${
+                            className={`portal-gate-bottom-row ${
                               selectedGate === "terms"
                                 ? "portal-gate-bottom-row--terms"
                                 : ""
                             }`}
                           >
-                            {selectedGate !== "wallet" &&
-                              selectedGate !== "terms" &&
-                              selectedGate !== "mint" && (
+                            <div className="portal-gate-action-cell portal-gate-action-cell--submit">
+                              {selectedGate !== "mint" || canMint ? (
                               <button
                                 aria-label={gateEnterLabel}
                                 className={`portal-console-enter ${
-                                  gateEnterEnabled
+                                  primaryActionEnabled
                                     ? "portal-console-enter--ready"
                                     : "portal-console-enter--locked"
                                 }`}
-                                disabled={!gateEnterEnabled}
-                                onClick={() => void handleGateEnter()}
+                                disabled={!primaryActionEnabled}
+                                onClick={handlePrimaryGateAction}
                                 type="button"
                               >
-                                SUBMIT
-                              </button>
-                            )}
-
-                            <div
-                              aria-label="Mint sequence status"
-                              className="portal-step-strip portal-step-strip--dock"
-                              role="list"
-                            >
-                              {gateReadouts.map((gate) => (
-                                <div
-                                  key={gate.key}
-                                  role="listitem"
+                                <span
+                                  className={`portal-console-enter__label ${
+                                    primaryActionWords.length > 1
+                                      ? "portal-console-enter__label--stacked"
+                                      : ""
+                                  }`}
                                 >
-                                  <button
-                                    aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
-                                    className={`portal-step-icon ${gateIconState(gate)}`}
-                                    disabled={!gate.enabled && !gate.complete}
-                                    onClick={() => selectGate(gate.key)}
-                                    title={`${gate.label}: ${gate.value}`}
-                                    type="button"
-                                  >
-                                    <PortalGateIcon gate={gate.key} />
-                                    <span>{gate.label}</span>
-                                  </button>
-                                </div>
-                              ))}
+                                  {primaryActionWords.map((word, index) => (
+                                    <span key={`${word}-${index}`}>{word}</span>
+                                  ))}
+                                </span>
+                              </button>
+                              ) : (
+                                <span aria-hidden="true" className="portal-action-placeholder" />
+                              )}
+                            </div>
+
+                            <div className="portal-gate-action-cell portal-gate-action-cell--cluster">
+                              <div
+                                aria-label="Mint sequence status"
+                                className={`portal-action-cluster ${
+                                  finalMintClusterReady
+                                    ? "portal-action-cluster--final"
+                                    : ""
+                                }`}
+                                role="list"
+                              >
+                                {finalMintClusterReady ? (
+                                  <div className="portal-action-merged-slot portal-action-merged-slot--final" role="listitem">
+                                    <button
+                                      aria-label={
+                                        canMint
+                                          ? "Mint token"
+                                          : "Open the protected mint path"
+                                      }
+                                      className={`portal-merged-action portal-merged-action--final ${
+                                        canMint ? "" : "portal-merged-action--guarded"
+                                      }`}
+                                      onClick={handleMintClusterAction}
+                                      type="button"
+                                    >
+                                      MINT
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <>
+                                    {recordPairComplete ? (
+                                      <div className="portal-action-merged-slot portal-action-merged-slot--terms" role="listitem">
+                                        <button
+                                          aria-label={
+                                            "Open Terms control"
+                                          }
+                                          className="portal-merged-action portal-merged-action--terms"
+                                          onClick={handleTermsClusterAction}
+                                          type="button"
+                                        >
+                                          Terms
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      actionClusterGates.slice(0, 2).map((gate) => (
+                                        <div key={gate.key} role="listitem">
+                                          <button
+                                            aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+                                            className={`portal-step-icon ${gateIconState(gate)}`}
+                                            disabled={!gate.enabled && !gate.complete}
+                                            onClick={() => selectGate(gate.key)}
+                                            title={`${gate.label}: ${gate.value}`}
+                                            type="button"
+                                          >
+                                            <PortalGateIcon gate={gate.key} />
+                                            <span>{gate.label}</span>
+                                          </button>
+                                        </div>
+                                      ))
+                                    )}
+
+                                    {accessPairComplete ? (
+                                      <div className="portal-action-merged-slot portal-action-merged-slot--mint" role="listitem">
+                                        <button
+                                          aria-label={
+                                            deedAccepted
+                                              ? "Mint control armed"
+                                              : "Mint unlocks after Terms are complete"
+                                          }
+                                          className={`portal-merged-action portal-merged-action--mint-waiting ${
+                                            deedAccepted ? "portal-merged-action--mint-armed" : ""
+                                          }`}
+                                          disabled={!deedAccepted}
+                                          onClick={handleMintClusterAction}
+                                          type="button"
+                                        >
+                                          Mint
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      actionClusterGates.slice(2, 4).map((gate) => (
+                                        <div key={gate.key} role="listitem">
+                                          <button
+                                            aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+                                            className={`portal-step-icon ${gateIconState(gate)}`}
+                                            disabled={!gate.enabled && !gate.complete}
+                                            onClick={() => selectGate(gate.key)}
+                                            title={`${gate.label}: ${gate.value}`}
+                                            type="button"
+                                          >
+                                            <PortalGateIcon gate={gate.key} />
+                                            <span>{gate.label}</span>
+                                          </button>
+                                        </div>
+                                      ))
+                                    )}
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
 
