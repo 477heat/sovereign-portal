@@ -3826,6 +3826,22 @@ body {
   align-items: center;
 }
 
+.portal-control-page .portal-panel-button-row .portal-pay-button--waiting {
+  color: rgb(255, 255, 255) !important;
+  opacity: 1;
+}
+
+.portal-control-page .portal-panel-button-row .portal-pay-button--waiting span,
+.portal-control-page .portal-panel-button-row .portal-pay-button--waiting small {
+  color: rgb(255, 255, 255) !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.24);
+}
+
+.portal-control-page .portal-payment-offer-copy {
+  color: rgb(255, 255, 255) !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
+}
+
 .portal-control-page .portal-panel-button-row .portal-pay-button span {
   font-size: 0.68rem;
   line-height: 1.08;

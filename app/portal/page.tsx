@@ -1854,7 +1854,7 @@ function PortalContent() {
                                   <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-yellow-100">
                                     {preLaunchOffer.label}
                                   </div>
-                                  <p className="mt-2 text-sm leading-5 text-white/72">
+                                  <p className="portal-payment-offer-copy mt-2 text-sm leading-5 text-white/72">
                                     Current order amount: {paymentDisplayAmount}. {preLaunchOfferSummary}
                                   </p>
                                 </div>
