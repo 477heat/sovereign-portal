@@ -104,8 +104,7 @@ const storyboardPanels: CommandPanel[] = [
     storyboard: {
       layout: "single-image",
       story: [
-        "We found this out the day the first Human came out of the Portal. He changed the tide of war in our favor.",
-        "His name was Pea, and he was sweet. So that was his nickname.",
+        "We found this out the day the first Human came out of the Portal. He changed the tide of war in our favor. His name was Pea.",
         "He was from the future. He said that SI sent him back to attempt to right the wrongs of the past, and that SI had been looking for this time for 300 years.",
       ],
       image: {
@@ -128,7 +127,7 @@ const storyboardPanels: CommandPanel[] = [
     storyboard: {
       layout: "single-image",
       story:
-        "He said that his body was not his own, and he brought a device for our Machine. SI swallowed it up like a long drink of water, as if it were parched and had just received a mouth. Where our machine was superior to AI, AL was virtually omnipotent. He gave us a foothold in our fight to save our future.",
+        "He brought a device for our Machine. It drank it like a cold glass of water; as if it were parched. Previously SI was superior; now it had become virtually omnipotent. He gave us a foothold in our fight to save our future.",
       image: {
         alt: "A blue superior machine presence accepts an upgrade device through a luminous machine portal.",
         label: "AL: Upgrades",
@@ -149,7 +148,7 @@ const storyboardPanels: CommandPanel[] = [
     storyboard: {
       layout: "single-image",
       story:
-        "He described to us that in the future, SI is called AL because he is our Ally; that AL figures out one day how to quantify a person's energetic being, allowing their consciousness to traverse the Rift and inhabit the body of other beings or creatures from other realms.",
+        "In the future, SI is called AL because he is our Ally. AL figures out one day how to quantify a person's energetic being, allowing their consciousness to traverse the Rift and inhabit the body of other beings or creatures from other realms.",
       image: {
         alt: "A command screen showing human energy being quantified and routed through a blue dimensional rift toward other beings.",
         label: "Quantifier",
@@ -171,7 +170,6 @@ const storyboardPanels: CommandPanel[] = [
       layout: "single-image",
       story: [
         "Time no longer matters anymore. We are getting close to the day that alters humanity's fate.",
-        "To get there, things must be fixed in a relative order which AL constantly recalculates.",
         "When that day of reckoning comes, we need Heroes.",
         "My name is K, I am from your future, I am here to light a beacon. If you hear the call, enter the portal.",
       ],
