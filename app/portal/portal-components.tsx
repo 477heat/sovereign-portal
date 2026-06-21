@@ -295,9 +295,6 @@ export function PortalTermsChecklist({
   setContractAccepted,
   setAccuracyAccepted,
   setPublicMarkAccepted,
-  onEnterTerms,
-  gateEnterLabel,
-  enterTermsEnabled,
 }: {
   contractAccepted: boolean;
   accuracyAccepted: boolean;
@@ -306,9 +303,6 @@ export function PortalTermsChecklist({
   setContractAccepted: (value: boolean) => void;
   setAccuracyAccepted: (value: boolean) => void;
   setPublicMarkAccepted: (value: boolean) => void;
-  onEnterTerms: () => void;
-  gateEnterLabel: string;
-  enterTermsEnabled: boolean;
 }) {
   return (
     <div className="grid gap-4">
@@ -365,16 +359,6 @@ export function PortalTermsChecklist({
             Public deed uses shortened mark.
           </span>
         </label>
-      </div>
-      <div className="mt-1 flex justify-center">
-        <button
-          className="console-key-button console-key-button--gold"
-          disabled={!enterTermsEnabled}
-          onClick={onEnterTerms}
-          type="button"
-        >
-          {gateEnterLabel}
-        </button>
       </div>
     </div>
   );
