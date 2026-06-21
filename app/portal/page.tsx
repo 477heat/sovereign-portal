@@ -28,7 +28,7 @@ import {
   buildMintOrderStatusMessage,
   buildMintRecoveryMessage,
 } from "@/lib/portalMessages";
-import { preLaunchOffer, preLaunchOfferSummary } from "@/lib/preLaunchOffer";
+import { preLaunchOffer } from "@/lib/preLaunchOffer";
 import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
 import type {
   IdentityField,
@@ -275,7 +275,6 @@ function PortalContent() {
   const [directPaymentBusy, setDirectPaymentBusy] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState("");
   const [recoveryBusy, setRecoveryBusy] = useState(false);
-  const [recoveryNotice, setRecoveryNotice] = useState("");
   const [receiptCopied, setReceiptCopied] = useState(false);
   const [error, setError] = useState("");
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
@@ -840,7 +839,7 @@ function PortalContent() {
     }
 
     setRecoveryBusy(true);
-    setRecoveryNotice("");
+    setPaymentNotice("");
     setError("");
 
     try {
@@ -873,11 +872,11 @@ function PortalContent() {
       if (result.receipt) {
         setReceipt(result.receipt);
         setSelectedGate("mint");
-        setRecoveryNotice("Receipt restored. Save or copy it before leaving.");
+        setPaymentNotice("Receipt restored. Save or copy it before leaving.");
         return;
       }
 
-      setRecoveryNotice(
+      setPaymentNotice(
         result.message ??
           "Latest order found, but no submitted mint receipt is available yet.",
       );
@@ -902,6 +901,22 @@ function PortalContent() {
     setPaymentNotice(
       "Pending order cleared. Create a fresh order to use the current checkout price.",
     );
+  }
+
+  function clearPortalFormData() {
+    setFirstName("");
+    setLastName("");
+    setDob("");
+    setCharacterName("");
+    setIdentityConfirmed(false);
+    setArtifactConfirmed(false);
+    setAccuracyAccepted(false);
+    setContractAccepted(false);
+    setPublicMarkAccepted(false);
+    setCertificateOpened(false);
+    setPaymentNotice("");
+    setError("");
+    setSelectedGate("identity");
   }
 
   async function handleWalletChipConnect() {
@@ -1176,11 +1191,7 @@ function PortalContent() {
   const selectedGateIndex = gateReadouts.findIndex(
     (gate) => gate.key === selectedGate,
   );
-  const confirmedGateCount = gateReadouts.filter((gate) => gate.complete).length;
-  const portalDockSequenceLabel = `${Math.max(
-    selectedGateIndex + 1,
-    1,
-  )}/${gateReadouts.length}`;
+
   function cyclePortalGate(direction: "next" | "previous") {
     if (gateReadouts.length < 2) {
       return;
@@ -1567,9 +1578,9 @@ function PortalContent() {
                       </div>
                     </div>
 
-                      <div className="portal-console-shell portal-console-border-shell mt-4 grid gap-4 relative">
+                      <div className="portal-console-shell mt-4 grid gap-4 relative">
                         <div
-                          className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix relative min-h-[30rem] md:min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
+                          className={`control-surface-soft portal-gate-view portal-gate-view--soft portal-gate-view--matrix portal-console-border-shell relative min-h-[30rem] md:min-h-[26rem] overflow-hidden border p-4 shadow-[0_0_90px_rgba(80,190,255,0.14)] ${
                             selectedGateReadout.complete
                               ? "console-status-tile--entered"
                               : selectedGate === "mint"
@@ -1825,7 +1836,7 @@ function PortalContent() {
                                   <div className="text-xs font-semibold uppercase tracking-[0.2em] text-yellow-100">
                                     Terms Agreement
                                   </div>
-                                  <p className="mt-0 text-sm leading-5 text-white/68">
+                                  <p className="portal-terms-intro mt-0 text-sm leading-5 text-white/68">
                                     Read the terms first, then confirm each
                                   agreement item. The full contract opens only
                                   when you choose Read Terms.
@@ -1850,17 +1861,15 @@ function PortalContent() {
                                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Checkout
                                 </div>
-                                <div className="mt-3 control-surface-soft border border-yellow-200/35 bg-yellow-100/[0.06] px-3 py-3">
-                                  <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-yellow-100">
-                                    {preLaunchOffer.label}
+                                <div className="portal-payment-grid mt-3">
+                                  <div className="control-surface-soft border border-yellow-200/35 bg-yellow-100/[0.06] px-3 py-3">
+                                    <p className="portal-payment-offer-copy text-sm leading-5 text-white/72">
+                                      Early pricing is {paymentDisplayAmount} for the first supporters, including Vanguard Honor, as appreciation while the Engine opens.
+                                    </p>
                                   </div>
-                                  <p className="portal-payment-offer-copy mt-2 text-sm leading-5 text-white/72">
-                                    Current order amount: {paymentDisplayAmount}. {preLaunchOfferSummary}
-                                  </p>
-                                </div>
 
                                 {orderPaid ? (
-                                  <div className="portal-panel-button-row portal-panel-button-row--one mt-4">
+                                  <div className="portal-panel-button-row portal-panel-button-row--one">
                                     <div className="portal-pay-button portal-pay-button--confirmed">
                                       <span>
                                         {activeOrder?.paymentKind === "complimentary"
@@ -1875,7 +1884,7 @@ function PortalContent() {
                                     </div>
                                   </div>
                                 ) : checkoutPrerequisitesComplete ? (
-                                  <div className="portal-panel-button-row portal-panel-button-row--one mt-4">
+                                  <div className="portal-panel-button-row portal-panel-button-row--one">
                                     <button
                                       className="portal-pay-button portal-pay-button--ready"
                                       disabled={
@@ -1898,7 +1907,7 @@ function PortalContent() {
                                     </button>
                                   </div>
                                 ) : (
-                                  <div className="portal-panel-button-row portal-panel-button-row--one mt-4">
+                                  <div className="portal-panel-button-row portal-panel-button-row--one">
                                     <div className="portal-pay-button portal-pay-button--waiting">
                                       <span>Sequence Not Completed</span>
                                       <small>
@@ -1908,6 +1917,7 @@ function PortalContent() {
                                     </div>
                                   </div>
                                 )}
+                                </div>
 
                                 {checkoutPrerequisitesComplete && !paymentRequired && (
                                   <p className="mt-3 text-xs uppercase tracking-[0.18em] text-yellow-100/70">
@@ -2194,61 +2204,67 @@ function PortalContent() {
                             </div>
                           )}
                         </div>
-                        <div
-                          aria-label="Portal console dock"
-                          className="command-room__console-dock portal-command-console-dock"
-                        >
-                          <div className="command-room__console-dock-cell command-room__console-dock-module command-room__console-dock-module--current-page portal-command-console-dock__module">
-                            <span>Gate</span>
-                            <strong title={selectedGateTitle}>
-                              {selectedGateReadout.label}
-                            </strong>
-                          </div>
-                          <div className="command-room__console-dock-cell command-room__console-dock-module portal-command-console-dock__module">
-                            <span>Sequence</span>
-                            <strong title={`${confirmedGateCount} gates confirmed`}>
-                              {portalDockSequenceLabel} / {confirmedGateCount} green
-                            </strong>
-                          </div>
-                          <button
-                            aria-label="Previous portal gate"
-                            className="command-room__console-dock-cell command-room__console-cycle-button portal-command-console-dock__cycle"
-                            disabled={gateReadouts.length < 2}
-                            onClick={() => cyclePortalGate("previous")}
-                            type="button"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              className="command-room__console-cycle-icon"
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M14.5 5.5 8 12l6.5 6.5" />
-                            </svg>
-                          </button>
-                          <button
-                            aria-label="Next portal gate"
-                            className="command-room__console-dock-cell command-room__console-cycle-button command-room__console-cycle-button--next portal-command-console-dock__cycle"
-                            disabled={gateReadouts.length < 2}
-                            onClick={() => cyclePortalGate("next")}
-                            type="button"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              className="command-room__console-cycle-icon"
-                              focusable="false"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
-                            </svg>
-                          </button>
-                        </div>
                         <div className="portal-console-edge-lines" aria-hidden="true">
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--top-cyan" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--right-gold" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--bottom-cyan" />
                           <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--left-gold" />
                         </div>
+                      </div>
+                      <div
+                        aria-label="Portal console dock"
+                        className="portal-console-dock"
+                      >
+                        <button
+                          className="portal-console-dock-cell portal-console-dock-cell--action"
+                          disabled={recoveryBusy}
+                          onClick={() => void recoverMintReceipt()}
+                          type="button"
+                        >
+                          <span>Receipt</span>
+                          <strong>Recovery</strong>
+                        </button>
+                        <button
+                          className="portal-console-dock-cell portal-console-dock-cell--action"
+                          disabled={minting || orderBusy}
+                          onClick={clearPortalFormData}
+                          type="button"
+                        >
+                          <span>Clear</span>
+                          <strong>Form</strong>
+                        </button>
+                        <button
+                          aria-label="Previous portal gate"
+                          className="portal-console-dock-cell portal-console-dock-cell--cycle"
+                          disabled={gateReadouts.length < 2}
+                          onClick={() => cyclePortalGate("previous")}
+                          type="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            className="portal-console-dock-icon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M14.5 5.5 8 12l6.5 6.5" />
+                          </svg>
+                        </button>
+                        <button
+                          aria-label="Next portal gate"
+                          className="portal-console-dock-cell portal-console-dock-cell--cycle portal-console-dock-cell--cycle-next"
+                          disabled={gateReadouts.length < 2}
+                          onClick={() => cyclePortalGate("next")}
+                          type="button"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            className="portal-console-dock-icon"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
+                          </svg>
+                        </button>
                       </div>
                     </div>
 
@@ -2262,34 +2278,6 @@ function PortalContent() {
                 </div>
           </section>
 
-          <div className="control-surface portal-surface-cyan border border-cyan-100/20 bg-cyan-100/[0.04] px-4 py-3 text-sm leading-6 text-cyan-50/72">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="max-w-2xl">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-100/75">
-                  Receipt Recovery
-                </div>
-                <p className="mt-1">
-                  Already minted or lost the final screen? Connect the same
-                  wallet and recover the latest receipt recorded for it.
-                </p>
-              </div>
-              <div className="portal-panel-button-row portal-panel-button-row--one">
-                <button
-                  className="console-key-button"
-                  disabled={recoveryBusy}
-                  onClick={() => void recoverMintReceipt()}
-                  type="button"
-                >
-                  {recoveryBusy ? "Recovering" : "Recover Receipt"}
-                </button>
-              </div>
-            </div>
-            {recoveryNotice && (
-              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-yellow-100/78">
-                {recoveryNotice}
-              </p>
-            )}
-          </div>
             </>
           )}
 
