@@ -1850,6 +1850,53 @@ body {
   position: absolute;
 }
 
+.portal-console-frame-rails {
+  inset-inline: 0.42rem;
+  height: var(--portal-console-frame-height, 12.8rem);
+  opacity: 0.92;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  width: calc(100% - 0.84rem);
+  z-index: 22;
+}
+
+.portal-console-frame-rails--top {
+  --portal-console-frame-height: var(--portal-console-frame-height-top, 12.8rem);
+  top: var(--portal-console-frame-top, 0.42rem);
+}
+
+.portal-console-frame-rails--bottom {
+  --portal-console-frame-height: var(--portal-console-frame-height-bottom, 12.8rem);
+  bottom: var(--portal-console-frame-bottom, 0.42rem);
+}
+
+.portal-console-frame-rail,
+.portal-console-frame-corner {
+  animation: command-rail-draw 920ms ease-out 120ms both;
+  fill: none;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  vector-effect: non-scaling-stroke;
+}
+
+.portal-console-frame-rail--outer {
+  stroke: rgba(165, 243, 252, 0.64);
+  stroke-width: 0.58;
+}
+
+.portal-console-frame-rail--inner {
+  animation-delay: 220ms;
+  stroke: rgba(254, 240, 138, 0.26);
+  stroke-width: 0.34;
+}
+
+.portal-console-frame-corner {
+  animation-delay: 340ms;
+  stroke: rgba(236, 254, 255, 0.78);
+  stroke-width: 0.76;
+}
+
 .portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft, .control-input-surface) {
   --portal-surface-fill: rgba(0, 0, 0, 0);
   background-color: transparent !important;
