@@ -55,6 +55,24 @@ export function PortalGateIcon({ gate }: { gate: PortalGate }) {
     );
   }
 
+  if (gate === "location") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M12 20.5s6-5.2 6-10.2a6 6 0 1 0-12 0c0 5 6 10.2 6 10.2Z" />
+        <path d="M12 12.2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+      </svg>
+    );
+  }
+
+  if (gate === "time") {
+    return (
+      <svg {...sharedProps}>
+        <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+        <path d="M12 7.5V12l3 2" />
+      </svg>
+    );
+  }
+
   if (gate === "terms") {
     return (
       <svg {...sharedProps}>
@@ -484,6 +502,40 @@ export function PortalMobileSelectDrawer({
     return null;
   }
 
+  const primaryGateKeys: PortalGate[] = ["wallet", "eas", "identity", "artifact"];
+  const lowerGateKeys: PortalGate[] = ["location", "time", "terms", "payment"];
+  const primaryGates = primaryGateKeys
+    .map((key) => gateReadouts.find((gate) => gate.key === key))
+    .filter((gate): gate is PortalGateReadout => Boolean(gate));
+  const lowerGates = lowerGateKeys
+    .map((key) => gateReadouts.find((gate) => gate.key === key))
+    .filter((gate): gate is PortalGateReadout => Boolean(gate));
+  const remainingGates = gateReadouts.filter(
+    (gate) =>
+      !primaryGateKeys.includes(gate.key) && !lowerGateKeys.includes(gate.key),
+  );
+  const renderGateButton = (gate: PortalGateReadout, index: number) => (
+    <button
+      aria-pressed={selectedGate === gate.key}
+      className={`chamfer-hero-link console-key-button command-room__drawer-button portal-gate-button portal-mobile-select-chip ${
+        index % 2 === 1 ? "chamfer-hero-link--opposite" : ""
+      } ${
+        selectedGate === gate.key
+          ? "portal-gate-button--selected"
+          : ""
+      } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
+      key={gate.key}
+      onClick={() => {
+        onSelectGate(gate.key);
+        onClose();
+      }}
+      type="button"
+    >
+      <span>{gate.label}</span>
+      <small>{gate.value}</small>
+    </button>
+  );
+
   return (
     <div className="portal-mobile-select-layer">
       <button
@@ -518,28 +570,16 @@ export function PortalMobileSelectDrawer({
             <section className="command-room__drawer-group">
               <div className="command-room__drawer-label">Mint Path</div>
               <div className="command-room__drawer-button-grid portal-mobile-select-grid">
-                {gateReadouts.map((gate, index) => (
-                  <button
-                    aria-pressed={selectedGate === gate.key}
-                    className={`chamfer-hero-link console-key-button command-room__drawer-button portal-gate-button portal-mobile-select-chip ${
-                      index % 2 === 1 ? "chamfer-hero-link--opposite" : ""
-                    } ${
-                      selectedGate === gate.key
-                        ? "portal-gate-button--selected"
-                        : ""
-                    } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
-                    key={gate.key}
-                    onClick={() => {
-                      onSelectGate(gate.key);
-                      onClose();
-                    }}
-                    type="button"
-                  >
-                    <span>{gate.label}</span>
-                    <small>{gate.value}</small>
-                  </button>
-                ))}
+                {primaryGates.map(renderGateButton)}
               </div>
+              <div className="command-room__drawer-button-grid portal-mobile-select-grid portal-mobile-select-grid--secondary">
+                {lowerGates.map(renderGateButton)}
+              </div>
+              {remainingGates.length > 0 && (
+                <div className="command-room__drawer-button-grid portal-mobile-select-grid portal-mobile-select-grid--remaining">
+                  {remainingGates.map(renderGateButton)}
+                </div>
+              )}
             </section>
           </div>
           <nav

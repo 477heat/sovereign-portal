@@ -111,6 +111,8 @@ const ARTIFACT_NAME_MAX_LENGTH = 12;
 const EAS_DATABASE_SEARCH_DELAY_MS = 4000;
 const GATE_DELAY_MS = {
   artifact: 650,
+  location: 680,
+  time: 680,
   terms: 780,
   payment: 620,
   autoMint: 1180,
@@ -120,6 +122,8 @@ const GATE_FEEDBACK_DELAY_MS = {
   eas: EAS_DATABASE_SEARCH_DELAY_MS,
   identity: 2600,
   artifact: 2400,
+  location: 1800,
+  time: 1800,
   terms: 1800,
   payment: 2600,
   mint: 2200,
@@ -295,6 +299,8 @@ function PortalContent() {
   const [fullSoulStatMessage, setFullSoulStatMessage] = useState("");
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [artifactConfirmed, setArtifactConfirmed] = useState(false);
+  const [locationConfirmed, setLocationConfirmed] = useState(false);
+  const [timeConfirmed, setTimeConfirmed] = useState(false);
   const [identityFocus, setIdentityFocus] = useState<IdentityField>("firstName");
   const [selectedGate, setSelectedGate] = useState<PortalGate>("wallet");
   const [verification, setVerification] = useState<VerificationState | null>(
@@ -351,16 +357,17 @@ function PortalContent() {
   const selectedBirthRegion = birthRegionOptions.find(
     (region) => region.code === birthRegionCode,
   );
-  const birthLocationReady = Boolean(birthTime && birthLocation?.verified);
+  const timeInputReady = Boolean(dob && birthTime);
+  const locationInputReady = Boolean(birthLocation?.verified);
   const artifactNameValid = isValidArtifactName(characterName);
   const burnedArtifactName = characterName.trim() || publicMark;
   const identityInputReady =
     Boolean(firstName.trim()) &&
     Boolean(lastName.trim()) &&
-    Boolean(dob) &&
-    birthLocationReady &&
     publicMark !== "_. ___";
   const hasIdentity = identityInputReady && identityConfirmed;
+  const hasLocation = locationInputReady && locationConfirmed;
+  const hasTime = timeInputReady && timeConfirmed;
   const artifactInputReady =
     hasIdentity && artifactNameValid && burnedArtifactName !== "_. ___";
   const hasArtifact = artifactInputReady && artifactConfirmed;
@@ -391,6 +398,8 @@ function PortalContent() {
     Boolean(verification?.eligible) &&
     hasIdentity &&
     hasArtifact &&
+    hasLocation &&
+    hasTime &&
     deedAccepted;
   const orderPaid =
     !paymentRequired ||
@@ -402,11 +411,13 @@ function PortalContent() {
     Boolean(verification?.eligible) &&
     hasIdentity &&
     hasArtifact &&
+    hasLocation &&
+    hasTime &&
     deedAccepted &&
     orderPaid &&
     !receipt &&
     !minting;
-  const termsAwaitingArtifact = !hasArtifact && !deedAccepted;
+  const termsAwaitingArtifact = (!hasArtifact || !hasLocation || !hasTime) && !deedAccepted;
   const paymentAwaitingTerms = !deedAccepted;
   const checkoutPrerequisitesComplete = checkoutReady;
   const checkoutPanelState = checkoutPrerequisitesComplete
@@ -705,13 +716,32 @@ function PortalContent() {
   ]);
 
   useEffect(() => {
-    if (selectedGate !== "identity" && selectedGate !== "artifact") {
+    if (
+      selectedGate !== "identity" &&
+      selectedGate !== "artifact" &&
+      selectedGate !== "location" &&
+      selectedGate !== "time"
+    ) {
       return;
     }
 
     const focusTimer = window.setTimeout(() => {
       if (selectedGate === "artifact") {
         characterNameInputRef.current?.focus();
+        return;
+      }
+
+      if (selectedGate === "location") {
+        birthCityInputRef.current?.focus();
+        return;
+      }
+
+      if (selectedGate === "time") {
+        if (dob) {
+          birthTimeInputRef.current?.focus();
+        } else {
+          dobInputRef.current?.focus();
+        }
         return;
       }
 
@@ -730,7 +760,7 @@ function PortalContent() {
     }, 0);
 
     return () => window.clearTimeout(focusTimer);
-  }, [identityFocus, selectedGate]);
+  }, [dob, identityFocus, selectedGate]);
 
   useEffect(() => {
     if (!mobileGateDrawerOpen) {
@@ -1296,9 +1326,12 @@ function PortalContent() {
     setBirthLocationSuggestions([]);
     setBirthLocationStatus("idle");
     setBirthLocationMessage("");
+    resetFullSoulStatPreview();
     setCharacterName("");
     setIdentityConfirmed(false);
     setArtifactConfirmed(false);
+    setLocationConfirmed(false);
+    setTimeConfirmed(false);
     setAccuracyAccepted(false);
     setContractAccepted(false);
     setPublicMarkAccepted(false);
@@ -1318,7 +1351,7 @@ function PortalContent() {
   }
 
   async function requestFullSoulStatPreview() {
-    if (!identityInputReady || !birthLocation) {
+    if (!identityInputReady || !timeInputReady || !locationInputReady || !birthLocation) {
       return;
     }
 
@@ -1462,9 +1495,8 @@ function PortalContent() {
       "identity",
       "confirmed",
       "Identity entry confirmed",
-      "Name, date, birth coordinates, and public marker are locked for the next gate.",
+      "Name and public marker are locked for the next gate.",
     );
-    void requestFullSoulStatPreview();
     await wait(GATE_DELAY_MS.artifact + 900);
     setSelectedGate("artifact");
   }
@@ -1480,8 +1512,7 @@ function PortalContent() {
     setBirthLocationSuggestions([]);
     setBirthLocationStatus("ready");
     setBirthLocationMessage("Birthplace verified.");
-    setIdentityConfirmed(false);
-    setArtifactConfirmed(false);
+    setLocationConfirmed(false);
   }
 
   async function confirmArtifactEntry() {
@@ -1501,10 +1532,70 @@ function PortalContent() {
       "artifact",
       "confirmed",
       "Artifact name locked",
-      `${burnedArtifactName} is ready for certificate review.`,
+      `${burnedArtifactName} is ready for birth location.`,
     );
-    await wait(GATE_DELAY_MS.terms + 900);
-    setSelectedGate("terms");
+    await wait(GATE_DELAY_MS.location + 900);
+    setSelectedGate("location");
+  }
+
+  async function confirmLocationEntry() {
+    if (!locationInputReady) {
+      return;
+    }
+
+    showGateFeedback(
+      "location",
+      "processing",
+      "Birthplace lock running",
+      "Confirming verified coordinates and timezone for the Engine.",
+    );
+    await wait(GATE_FEEDBACK_DELAY_MS.location);
+    setLocationConfirmed(true);
+    showGateFeedback(
+      "location",
+      "confirmed",
+      "Birthplace confirmed",
+      `${birthLocation?.label ?? "Birthplace"} is ready for the Engine.`,
+    );
+    if (hasTime) {
+      void requestFullSoulStatPreview();
+      await wait(GATE_DELAY_MS.terms + 900);
+      setSelectedGate("terms");
+      return;
+    }
+
+    await wait(GATE_DELAY_MS.time + 900);
+    setSelectedGate("time");
+  }
+
+  async function confirmTimeEntry() {
+    if (!timeInputReady) {
+      return;
+    }
+
+    showGateFeedback(
+      "time",
+      "processing",
+      "Birth time lock running",
+      "Confirming DOB and exact birth time for whole-sign calculation.",
+    );
+    await wait(GATE_FEEDBACK_DELAY_MS.time);
+    setTimeConfirmed(true);
+    showGateFeedback(
+      "time",
+      "confirmed",
+      "Birth time confirmed",
+      "DOB and birth time are ready for Full Soul Stat preparation.",
+    );
+    if (hasLocation) {
+      void requestFullSoulStatPreview();
+      await wait(GATE_DELAY_MS.terms + 900);
+      setSelectedGate("terms");
+      return;
+    }
+
+    await wait(GATE_DELAY_MS.location + 900);
+    setSelectedGate("location");
   }
 
   function handleIdentityKeyDown(
@@ -1523,7 +1614,9 @@ function PortalContent() {
     }
 
     if (field === "lastName" && lastName.trim()) {
-      setIdentityFocus("dob");
+      if (identityInputReady) {
+        void confirmIdentityEntry();
+      }
       return;
     }
 
@@ -1532,16 +1625,13 @@ function PortalContent() {
       return;
     }
 
-    if (field === "birthTime" && birthTime) {
-      setIdentityFocus("birthCity");
+    if (field === "birthTime" && timeInputReady) {
+      void confirmTimeEntry();
       return;
     }
 
-    if (
-      (field === "birthCity" || field === "birthTime" || field === "dob") &&
-      identityInputReady
-    ) {
-      void confirmIdentityEntry();
+    if (field === "birthCity" && locationInputReady) {
+      void confirmLocationEntry();
     }
   }
 
@@ -1590,6 +1680,16 @@ function PortalContent() {
       return;
     }
 
+    if (selectedGate === "location") {
+      await confirmLocationEntry();
+      return;
+    }
+
+    if (selectedGate === "time") {
+      await confirmTimeEntry();
+      return;
+    }
+
     if (selectedGate === "terms") {
       if (deedAccepted) {
         showGateFeedback(
@@ -1627,13 +1727,15 @@ function PortalContent() {
     setSelectedGate(gate);
 
     if (gate === "identity") {
-      setIdentityFocus(
-        firstName.trim()
-          ? lastName.trim()
-            ? "dob"
-            : "lastName"
-          : "firstName",
-      );
+      setIdentityFocus(firstName.trim() ? "lastName" : "firstName");
+    }
+
+    if (gate === "location") {
+      setIdentityFocus("birthCity");
+    }
+
+    if (gate === "time") {
+      setIdentityFocus(dob ? "birthTime" : "dob");
     }
   }
 
@@ -1669,7 +1771,7 @@ function PortalContent() {
     {
       key: "identity",
       label: "Identity",
-      value: hasIdentity ? publicMark : identityInputReady ? "Enter" : "Verify",
+      value: hasIdentity ? publicMark : identityInputReady ? "Submit" : "Name",
       complete: hasIdentity,
       enabled: Boolean(verification?.eligible) || hasIdentity,
       stateClass: hasIdentity
@@ -1687,6 +1789,30 @@ function PortalContent() {
         : "console-key-button--complete",
     },
     {
+      key: "location",
+      label: "Location",
+      value: hasLocation
+        ? "Set"
+        : locationInputReady
+          ? "Submit"
+          : "Select",
+      complete: hasLocation,
+      enabled: true,
+      stateClass: hasLocation
+        ? "console-key-button--entered"
+        : "console-key-button--complete",
+    },
+    {
+      key: "time",
+      label: "Date/Time",
+      value: hasTime ? "Set" : timeInputReady ? "Submit" : "Enter",
+      complete: hasTime,
+      enabled: true,
+      stateClass: hasTime
+        ? "console-key-button--entered"
+        : "console-key-button--complete",
+    },
+    {
       key: "terms",
       label: "Terms",
       value: deedAccepted
@@ -1695,7 +1821,7 @@ function PortalContent() {
           ? "Waiting"
           : "Verify",
       complete: deedAccepted,
-      enabled: hasArtifact || deedAccepted,
+      enabled: (hasArtifact && hasLocation && hasTime) || deedAccepted,
       stateClass: deedAccepted
         ? "console-key-button--entered"
         : "console-key-button--complete",
@@ -1777,6 +1903,8 @@ function PortalContent() {
     eas: verification?.eligible ? "Human Verified" : "EAS Verification",
     identity: hasIdentity ? "Identity Confirmed" : "Identity Entry",
     artifact: hasArtifact ? "Artifact Name Locked" : "Artifact Name",
+    location: hasLocation ? "Location Confirmed" : "Birth Location",
+    time: hasTime ? "Birth Time Confirmed" : "Birth Time",
     terms: deedAccepted ? "Terms Agreed" : "Terms Agreement",
     payment: orderPaid ? "Payment Confirmed" : "Payment Gate",
     mint: receipt
@@ -1801,15 +1929,23 @@ function PortalContent() {
           : "Wallet must be connected before EAS can verify.",
     identity: hasIdentity
       ? "Identity input has been confirmed for this session."
-      : "Enter name, DOB, exact birth time, and verified birthplace.",
+      : "Enter the name that should match the human identity record.",
     artifact: hasArtifact
       ? `Artifact name locked as ${burnedArtifactName}.`
       : "Choose the name burned into the NFT image. Leave it blank to use the public mark.",
+    location: hasLocation
+      ? "Verified birthplace is confirmed for the Engine."
+      : hasArtifact
+        ? "Choose a verified birthplace result so the Engine receives coordinates and timezone."
+        : "Artifact name must be locked before birth location can arm.",
+    time: hasTime
+      ? "DOB and birth time are confirmed for the Engine."
+      : "Enter DOB and exact birth time for whole-sign house calculation.",
     terms: deedAccepted
       ? "Agreement gates are complete."
-      : hasArtifact
+      : hasArtifact && hasLocation && hasTime
         ? "Open the certificate and accept each required term."
-        : "Artifact name must be locked before terms can arm.",
+        : "Artifact, location, and birth time must be locked before terms can arm.",
     payment: orderPaid
       ? "Payment gate is clear for this environment."
       : deedAccepted
@@ -1842,6 +1978,8 @@ function PortalContent() {
     eas: Boolean(account?.address) && !checkingAttestation,
     identity: identityInputReady && !hasIdentity,
     artifact: artifactInputReady && !hasArtifact,
+    location: locationInputReady && !hasLocation,
+    time: timeInputReady && !hasTime,
     terms: deedAccepted,
     payment:
       orderPaid ||
@@ -1860,6 +1998,8 @@ function PortalContent() {
           : "Check EAS",
     identity: hasIdentity ? "Confirmed" : "Enter Identity",
     artifact: hasArtifact ? "Locked" : "Lock Artifact",
+    location: hasLocation ? "Confirmed" : "Submit Location",
+    time: hasTime ? "Confirmed" : "Submit Time",
     terms: deedAccepted ? "Submit" : "Read Terms",
     payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
     mint: minting
@@ -1875,10 +2015,11 @@ function PortalContent() {
     .filter((gate): gate is PortalGateReadout => Boolean(gate));
   const accessPairComplete = Boolean(account?.address) && Boolean(verification?.eligible);
   const recordPairComplete = hasIdentity && hasArtifact;
-  const finalMintClusterReady = accessPairComplete && recordPairComplete && deedAccepted;
+  const finalMintClusterReady =
+    accessPairComplete && recordPairComplete && hasLocation && hasTime && deedAccepted;
   const primaryActionEnabled =
     selectedGate === "terms"
-      ? hasArtifact || deedAccepted
+      ? (hasArtifact && hasLocation && hasTime) || deedAccepted
       : selectedGate === "mint"
         ? canMint
         : gateEnterEnabled;
@@ -1916,6 +2057,16 @@ function PortalContent() {
       return;
     }
 
+    if (!hasLocation) {
+      setSelectedGate("location");
+      return;
+    }
+
+    if (!hasTime) {
+      setSelectedGate("time");
+      return;
+    }
+
     setSelectedGate("terms");
 
     if (!deedAccepted) {
@@ -1926,6 +2077,16 @@ function PortalContent() {
 
   function handleMintClusterAction() {
     if (!finalMintClusterReady) {
+      if (!hasLocation) {
+        setSelectedGate("location");
+        return;
+      }
+
+      if (!hasTime) {
+        setSelectedGate("time");
+        return;
+      }
+
       return;
     }
 
@@ -2332,7 +2493,7 @@ function PortalContent() {
 
                             {selectedGate === "identity" && (
                               <div className="grid gap-3">
-                                <div className="grid gap-2 lg:grid-cols-4 sm:grid-cols-2">
+                                <div className="grid gap-2 sm:grid-cols-2">
                                   <label className="console-input-field portal-input-shell relative block">
                                     <input
                                       ref={firstNameInputRef}
@@ -2376,51 +2537,17 @@ function PortalContent() {
                                       Must Match Coinbase Records
                                     </span>
                                   </label>
-
-                                  <label className="console-input-field portal-input-shell relative block">
-                                    <input
-                                      ref={dobInputRef}
-                                      value={dob}
-                                      onChange={(event) => {
-                                        resetFullSoulStatPreview();
-                                        setIdentityConfirmed(false);
-                                        setArtifactConfirmed(false);
-                                        setDob(event.target.value);
-                                      }}
-                                      onFocus={() => setIdentityFocus("dob")}
-                                      onKeyDown={(event) =>
-                                        handleIdentityKeyDown(event, "dob")
-                                      }
-                                      type="date"
-                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
-                                    />
-                                    <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
-                                      DOB
-                                    </span>
-                                  </label>
-
-                                  <label className="console-input-field portal-input-shell relative block">
-                                    <input
-                                      ref={birthTimeInputRef}
-                                      value={birthTime}
-                                      onChange={(event) => {
-                                        resetFullSoulStatPreview();
-                                        setIdentityConfirmed(false);
-                                        setArtifactConfirmed(false);
-                                        setBirthTime(event.target.value);
-                                      }}
-                                      onFocus={() => setIdentityFocus("birthTime")}
-                                      onKeyDown={(event) =>
-                                        handleIdentityKeyDown(event, "birthTime")
-                                      }
-                                      type="time"
-                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
-                                    />
-                                    <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
-                                      Birth Time
-                                    </span>
-                                  </label>
                                 </div>
+                                <p className="portal-identity-confirmation-copy font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                  Name should match your Coinbase identity records.
+                                  This panel only locks the public human name marker
+                                  used by the next gates.
+                                </p>
+                              </div>
+                            )}
+
+                            {selectedGate === "location" && (
+                              <div className="grid gap-3">
                                 <div className="portal-birth-location-panel control-surface-soft border border-white/10 p-3">
                                   <div className="portal-birth-location-grid">
                                     <label className="console-input-field portal-input-shell relative block">
@@ -2428,8 +2555,7 @@ function PortalContent() {
                                         value={birthCountryCode}
                                         onChange={(event) => {
                                           resetFullSoulStatPreview();
-                                          setIdentityConfirmed(false);
-                                          setArtifactConfirmed(false);
+                                          setLocationConfirmed(false);
                                           setBirthCountryCode(event.target.value);
                                           setBirthRegionCode("");
                                           setBirthCityQuery("");
@@ -2454,8 +2580,7 @@ function PortalContent() {
                                         value={birthRegionCode}
                                         onChange={(event) => {
                                           resetFullSoulStatPreview();
-                                          setIdentityConfirmed(false);
-                                          setArtifactConfirmed(false);
+                                          setLocationConfirmed(false);
                                           setBirthRegionCode(event.target.value);
                                           setBirthCityQuery("");
                                           setBirthLocation(null);
@@ -2488,8 +2613,7 @@ function PortalContent() {
                                           const nextValue = event.target.value;
 
                                           resetFullSoulStatPreview();
-                                          setIdentityConfirmed(false);
-                                          setArtifactConfirmed(false);
+                                          setLocationConfirmed(false);
                                           setBirthLocation(null);
                                           setBirthCityQuery(nextValue);
 
@@ -2554,6 +2678,60 @@ function PortalContent() {
                                       Verified birthplace: {birthLocation.label}
                                     </div>
                                   )}
+                                </div>
+                                <p className="portal-identity-confirmation-copy font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                  Location is selected from verified place data so the
+                                  Engine receives coordinates and timezone instead of
+                                  manually typed city text.
+                                </p>
+                              </div>
+                            )}
+
+                            {selectedGate === "time" && (
+                              <div className="grid gap-3">
+                                <div className="grid gap-2 sm:grid-cols-2">
+                                  <label className="console-input-field portal-input-shell relative block">
+                                    <input
+                                      ref={dobInputRef}
+                                      value={dob}
+                                      onChange={(event) => {
+                                        resetFullSoulStatPreview();
+                                        setTimeConfirmed(false);
+                                        setDob(event.target.value);
+                                      }}
+                                      onFocus={() => setIdentityFocus("dob")}
+                                      onKeyDown={(event) =>
+                                        handleIdentityKeyDown(event, "dob")
+                                      }
+                                      type="date"
+                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                    />
+                                    <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                      DOB
+                                    </span>
+                                  </label>
+
+                                  <label className="console-input-field portal-input-shell relative block">
+                                    <input
+                                      ref={birthTimeInputRef}
+                                      value={birthTime}
+                                      onChange={(event) => {
+                                        resetFullSoulStatPreview();
+                                        setTimeConfirmed(false);
+                                        setBirthTime(event.target.value);
+                                      }}
+                                      onFocus={() => setIdentityFocus("birthTime")}
+                                      onKeyDown={(event) =>
+                                        handleIdentityKeyDown(event, "birthTime")
+                                      }
+                                      type="time"
+                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                    />
+                                    <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                      Birth Time
+                                    </span>
+                                  </label>
+                                </div>
                                   {fullSoulStatStatus !== "idle" && (
                                     <div
                                       className={`portal-full-soul-stat-readout portal-full-soul-stat-readout--${fullSoulStatStatus}`}
@@ -2585,11 +2763,9 @@ function PortalContent() {
                                       )}
                                     </div>
                                   )}
-                                </div>
                                 <p className="portal-identity-confirmation-copy font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                                  Name and DOB should match your Coinbase identity records.
-                                  Birth time and verified birthplace prepare the Full Soul
-                                  Stat before the artifact name is engraved.
+                                  DOB and exact birth time let Swiss Ephemeris prepare
+                                  the whole-sign house placements used by the Engine.
                                 </p>
                               </div>
                             )}

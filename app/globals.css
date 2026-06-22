@@ -3428,6 +3428,11 @@ body {
   justify-items: stretch;
 }
 
+.portal-mobile-select-grid--secondary,
+.portal-mobile-select-grid--remaining {
+  margin-top: 0.55rem;
+}
+
 .portal-mobile-select-chip {
   --portal-gate-chip-corner: 14px;
   aspect-ratio: auto;

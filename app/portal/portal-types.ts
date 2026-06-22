@@ -52,6 +52,8 @@ export type PortalGate =
   | "eas"
   | "identity"
   | "artifact"
+  | "location"
+  | "time"
   | "terms"
   | "payment"
   | "mint";
