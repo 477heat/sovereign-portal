@@ -18,8 +18,6 @@ import {
   contractLanguage,
   contractLanguageVersion,
 } from "./contractLanguage";
-import { BackgroundHashStream } from "@/components/DATA_STREAM";
-import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   encodeErc20TransferCalldata,
   isDirectPaymentWalletAllowed,
@@ -120,6 +118,7 @@ const GATE_FEEDBACK_DELAY_MS = {
 } satisfies Record<PortalGate, number>;
 
 type GateFeedbackPhase = "blocked" | "confirmed" | "processing";
+type PortalSequenceVideoPhase = "complete" | "final" | "idle" | "intro" | "loop";
 
 type GateFeedbackState = {
   detail: string;
@@ -127,6 +126,12 @@ type GateFeedbackState = {
   message: string;
   phase: GateFeedbackPhase;
 };
+
+const PORTAL_SEQUENCE_VIDEO_SRC = "/media/portal-screen.mp4";
+const PORTAL_SEQUENCE_INTRO_END_SECONDS = 6.6;
+const PORTAL_SEQUENCE_LOOP_START_SECONDS = 1.2;
+const PORTAL_SEQUENCE_LOOP_END_SECONDS = 6.6;
+const PORTAL_SEQUENCE_FINAL_START_SECONDS = 3;
 
 function wait(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -250,6 +255,8 @@ function PortalContent() {
   const dobInputRef = useRef<HTMLInputElement | null>(null);
   const characterNameInputRef = useRef<HTMLInputElement | null>(null);
   const mobileGateTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const portalSequenceVideoRef = useRef<HTMLVideoElement | null>(null);
+  const portalSequenceStartedRef = useRef(false);
   const autoMintOrderRef = useRef<string | null>(null);
   const handleMintRef = useRef<(() => Promise<void>) | null>(null);
   const gateFeedbackTimersRef = useRef<number[]>([]);
@@ -273,6 +280,9 @@ function PortalContent() {
   const [plainEnglishTermsOpen, setPlainEnglishTermsOpen] = useState(false);
   const [minting, setMinting] = useState(false);
   const [receipt, setReceipt] = useState<MintReceipt | null>(null);
+  const [receiptRevealReady, setReceiptRevealReady] = useState(false);
+  const [portalSequenceVideoPhase, setPortalSequenceVideoPhase] =
+    useState<PortalSequenceVideoPhase>("idle");
   const [receiptMetadataImageURI, setReceiptMetadataImageURI] = useState<
     string | undefined
   >();
@@ -405,6 +415,7 @@ function PortalContent() {
         .filter(Boolean)
         .join("\n")
     : "";
+  const showReceiptPanel = Boolean(receipt && receiptRevealReady);
 
   const clearGateFeedbackTimers = useCallback(() => {
     gateFeedbackTimersRef.current.forEach((timerId) =>
@@ -436,6 +447,95 @@ function PortalContent() {
     }
   }, [clearGateFeedbackTimers]);
 
+  function playPortalSequenceVideoFrom(startSeconds: number) {
+    const video = portalSequenceVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    video.currentTime = startSeconds;
+    void video.play().catch(() => {
+      // Muted video playback should be allowed, but the flow should keep moving
+      // if a browser still refuses to start media in this moment.
+    });
+  }
+
+  function startPortalSequenceVideo() {
+    if (portalSequenceStartedRef.current) {
+      return;
+    }
+
+    portalSequenceStartedRef.current = true;
+    setPortalSequenceVideoPhase("intro");
+    playPortalSequenceVideoFrom(0);
+  }
+
+  function resetPortalSequenceVideo() {
+    const video = portalSequenceVideoRef.current;
+
+    portalSequenceStartedRef.current = false;
+    setPortalSequenceVideoPhase("idle");
+    setReceiptRevealReady(false);
+
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }
+
+  function startPortalReceiptReveal() {
+    const video = portalSequenceVideoRef.current;
+
+    setReceiptRevealReady(false);
+    setPortalSequenceVideoPhase("final");
+
+    if (!video) {
+      setPortalSequenceVideoPhase("complete");
+      setReceiptRevealReady(true);
+      return;
+    }
+
+    video.currentTime = PORTAL_SEQUENCE_FINAL_START_SECONDS;
+    void video.play().catch(() => {
+      setPortalSequenceVideoPhase("complete");
+      setReceiptRevealReady(true);
+    });
+  }
+
+  function handlePortalSequenceTimeUpdate() {
+    const video = portalSequenceVideoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    if (
+      portalSequenceVideoPhase === "intro" &&
+      video.currentTime >= PORTAL_SEQUENCE_INTRO_END_SECONDS
+    ) {
+      setPortalSequenceVideoPhase("loop");
+      playPortalSequenceVideoFrom(PORTAL_SEQUENCE_LOOP_START_SECONDS);
+      return;
+    }
+
+    if (
+      portalSequenceVideoPhase === "loop" &&
+      video.currentTime >= PORTAL_SEQUENCE_LOOP_END_SECONDS
+    ) {
+      playPortalSequenceVideoFrom(PORTAL_SEQUENCE_LOOP_START_SECONDS);
+    }
+  }
+
+  function handlePortalSequenceEnded() {
+    if (portalSequenceVideoPhase !== "final") {
+      return;
+    }
+
+    setPortalSequenceVideoPhase("complete");
+    setReceiptRevealReady(true);
+  }
+
   useEffect(() => {
     return () => {
       clearGateFeedbackTimers();
@@ -456,6 +556,7 @@ function PortalContent() {
 
         if (requestedPreviewShell && requestedReceiptPreview) {
           setReceipt(previewReceipt);
+          setReceiptRevealReady(true);
           setSelectedGate("mint");
         }
       },
@@ -671,6 +772,8 @@ function PortalContent() {
     setMinting(true);
     setError("");
     setReceipt(null);
+    setReceiptRevealReady(false);
+    startPortalSequenceVideo();
     showGateFeedback(
       "mint",
       "processing",
@@ -707,6 +810,7 @@ function PortalContent() {
 
       const result = (await response.json()) as MintReceipt;
       setReceipt(result);
+      startPortalReceiptReveal();
       showGateFeedback(
         "mint",
         "confirmed",
@@ -974,6 +1078,7 @@ function PortalContent() {
 
       if (result.receipt) {
         setReceipt(result.receipt);
+        setReceiptRevealReady(true);
         setSelectedGate("mint");
         setPaymentNotice("Mint receipt restored. Save or copy it before leaving.");
       } else if ((result.order ?? result).status === "mint_submitted") {
@@ -1038,6 +1143,7 @@ function PortalContent() {
 
       if (result.receipt) {
         setReceipt(result.receipt);
+        setReceiptRevealReady(true);
         setSelectedGate("mint");
         setPaymentNotice("Receipt restored. Save or copy it before leaving.");
         return;
@@ -1084,6 +1190,8 @@ function PortalContent() {
     setPaymentNotice("");
     setError("");
     setGateFeedback(null);
+    setReceipt(null);
+    resetPortalSequenceVideo();
     setSelectedGate("identity");
   }
 
@@ -1592,6 +1700,8 @@ function PortalContent() {
       return;
     }
 
+    startPortalSequenceVideo();
+
     if (selectedGate === "mint") {
       if (canMint) {
         void handleMintRef.current?.();
@@ -1779,12 +1889,6 @@ function PortalContent() {
 
   return (
     <main className="info-control-page portal-control-page relative isolate min-h-screen overflow-x-hidden bg-black px-0 py-5 text-white sm:px-4 md:px-8 md:py-8">
-      <TunnelBackdrop layer="page" variant="diffused" />
-      <BackgroundHashStream
-        className="z-0 opacity-20 md:opacity-25"
-        variant="right"
-      />
-
       <div className="relative z-10 mx-0 flex min-h-[calc(100vh-4rem)] w-full max-w-full flex-col gap-5 pt-1 sm:mx-auto sm:max-w-6xl md:pt-2">
         <section className="flex flex-1 flex-col gap-5">
           {previewShellActive && (
@@ -1800,7 +1904,7 @@ function PortalContent() {
             </div>
           )}
 
-          {receipt ? (
+          {showReceiptPanel && receipt ? (
             <PortalReceiptCompletePanel
               imageUrl={receiptImageUrl}
               onCopyReceipt={() => void copyMintReceipt()}
@@ -1839,10 +1943,21 @@ function PortalContent() {
                                 : "portal-surface-cyan"
                           }`}
                         >
-                          <div className="engine-screen-grid absolute inset-0 opacity-60" aria-hidden="true" />
-                          <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
-                          <div className="absolute inset-x-5 top-1/2 h-px bg-cyan-100/20 shadow-[0_0_24px_rgba(165,243,252,0.38)]" aria-hidden="true" />
-                          <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-px bg-cyan-100/10" aria-hidden="true" />
+                          <div
+                            aria-hidden="true"
+                            className={`portal-sequence-video-shell portal-sequence-video-shell--${portalSequenceVideoPhase}`}
+                          >
+                            <video
+                              className="portal-sequence-video"
+                              muted
+                              onEnded={handlePortalSequenceEnded}
+                              onTimeUpdate={handlePortalSequenceTimeUpdate}
+                              playsInline
+                              preload="auto"
+                              ref={portalSequenceVideoRef}
+                              src={PORTAL_SEQUENCE_VIDEO_SRC}
+                            />
+                          </div>
                           <div className="portal-gate-top-row">
                             <button
                               aria-controls="portal-mobile-select-drawer"
@@ -2471,12 +2586,6 @@ function PortalContent() {
                               )}
                             </div>
                           )}
-                        </div>
-                        <div className="portal-console-edge-lines" aria-hidden="true">
-                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--top-cyan" />
-                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--right-gold" />
-                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--bottom-cyan" />
-                          <span className="portal-console-edge-lines__stroke portal-console-edge-lines__stroke--left-gold" />
                         </div>
                       </div>
                       <div

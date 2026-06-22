@@ -1805,6 +1805,51 @@ body {
   width: 100%;
 }
 
+.portal-sequence-video-shell {
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: scale(1.015);
+  transition:
+    opacity 480ms ease,
+    transform 700ms ease;
+  z-index: 1;
+}
+
+.portal-sequence-video-shell--intro,
+.portal-sequence-video-shell--loop {
+  opacity: 0.84;
+  transform: scale(1);
+}
+
+.portal-sequence-video-shell--final,
+.portal-sequence-video-shell--complete {
+  opacity: 0.94;
+  transform: scale(1);
+}
+
+.portal-sequence-video {
+  filter: brightness(0.92) contrast(1.12) saturate(1.18);
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.portal-sequence-video-shell::after {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(103, 232, 249, 0.12), transparent 42%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.26)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.34), transparent 38%, rgba(0, 0, 0, 0.38));
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
 .portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft, .control-input-surface) {
   --portal-surface-fill: rgba(0, 0, 0, 0);
   background-color: transparent !important;
@@ -3893,11 +3938,8 @@ body {
 
 .portal-control-page .portal-gate-view--soft {
   --portal-surface-corner: 28px;
-  --portal-surface-fill: rgba(0, 0, 0, 0.04);
-  background:
-    linear-gradient(180deg, rgba(147, 197, 253, 0.004), rgba(0, 0, 0, 0.035)),
-    linear-gradient(140deg, rgba(21, 42, 44, 0.1), rgba(0, 0, 0, 0.46) 54%, rgba(0, 0, 0, 0.28)),
-    rgba(0, 0, 0, 0.22) !important;
+  --portal-surface-fill: rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0.06) !important;
   clip-path: polygon(28px 0, calc(100% - 28px) 0, 100% 28px, 100% calc(100% - 28px), calc(100% - 28px) 100%, 28px 100%, 0 calc(100% - 28px), 0 28px);
   height: clamp(25rem, 66svh, 42rem);
   min-height: 25rem;
@@ -3905,9 +3947,7 @@ body {
 }
 
 .portal-control-page .portal-gate-view--soft::after {
-  background:
-    linear-gradient(135deg, rgba(254, 240, 138, 0.008), transparent 34%),
-    rgba(0, 0, 0, 0.07);
+  background: transparent !important;
 }
 
 .portal-control-page .portal-console-shell > .portal-gate-view--soft {
@@ -4459,7 +4499,7 @@ body {
 }
 
 .portal-console-enter--ready {
-  background: rgba(21, 128, 61, 0.9);
+  background: #31543e;
   box-shadow: 0 0 28px rgba(34, 197, 94, 0.3);
   color: rgb(240, 253, 244);
   cursor: pointer;
