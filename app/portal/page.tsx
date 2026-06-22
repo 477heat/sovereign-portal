@@ -128,10 +128,10 @@ type GateFeedbackState = {
 };
 
 const PORTAL_SEQUENCE_VIDEO_SRC = "/media/portal-screen.mp4";
-const PORTAL_SEQUENCE_INTRO_END_SECONDS = 6.6;
+const PORTAL_SEQUENCE_INTRO_END_SECONDS = 6.4;
 const PORTAL_SEQUENCE_LOOP_START_SECONDS = 1.2;
-const PORTAL_SEQUENCE_LOOP_END_SECONDS = 6.6;
-const PORTAL_SEQUENCE_FINAL_START_SECONDS = 3;
+const PORTAL_SEQUENCE_LOOP_END_SECONDS = 6.4;
+const PORTAL_SEQUENCE_FINAL_START_SECONDS = 6.4;
 
 function wait(ms: number) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -447,7 +447,7 @@ function PortalContent() {
     }
   }, [clearGateFeedbackTimers]);
 
-  function playPortalSequenceVideoFrom(startSeconds: number) {
+  const playPortalSequenceVideoFrom = useCallback((startSeconds: number) => {
     const video = portalSequenceVideoRef.current;
 
     if (!video) {
@@ -459,9 +459,9 @@ function PortalContent() {
       // Muted video playback should be allowed, but the flow should keep moving
       // if a browser still refuses to start media in this moment.
     });
-  }
+  }, []);
 
-  function startPortalSequenceVideo() {
+  const startPortalSequenceVideo = useCallback(() => {
     if (portalSequenceStartedRef.current) {
       return;
     }
@@ -469,7 +469,7 @@ function PortalContent() {
     portalSequenceStartedRef.current = true;
     setPortalSequenceVideoPhase("intro");
     playPortalSequenceVideoFrom(0);
-  }
+  }, [playPortalSequenceVideoFrom]);
 
   function resetPortalSequenceVideo() {
     const video = portalSequenceVideoRef.current;
@@ -653,6 +653,7 @@ function PortalContent() {
         return;
       }
 
+      startPortalSequenceVideo();
       setSelectedGate((currentGate) =>
         currentGate === "wallet" ? "eas" : currentGate,
       );
@@ -725,7 +726,7 @@ function PortalContent() {
     return () => {
       ignore = true;
     };
-  }, [account?.address, showGateFeedback]);
+  }, [account?.address, showGateFeedback, startPortalSequenceVideo]);
 
   useEffect(() => {
     let ignore = false;
@@ -1700,7 +1701,9 @@ function PortalContent() {
       return;
     }
 
-    startPortalSequenceVideo();
+    if (selectedGate !== "wallet" || account?.address) {
+      startPortalSequenceVideo();
+    }
 
     if (selectedGate === "mint") {
       if (canMint) {
