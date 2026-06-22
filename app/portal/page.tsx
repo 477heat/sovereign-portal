@@ -19,6 +19,10 @@ import {
   contractLanguageVersion,
 } from "./contractLanguage";
 import {
+  birthCountryOptions,
+  birthRegionOptionsByCountry,
+} from "./birth-location-options";
+import {
   encodeErc20TransferCalldata,
   isDirectPaymentWalletAllowed,
 } from "@/lib/directBuilderPayment";
@@ -30,6 +34,8 @@ import { preLaunchOffer } from "@/lib/preLaunchOffer";
 import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
 import { absoluteUrl, siteUrl } from "@/lib/seo";
 import type {
+  BirthLocationSuggestion,
+  FullSoulStatPreview,
   IdentityField,
   MintOrderState,
   MintReceipt,
@@ -39,6 +45,7 @@ import type {
   PortalPaymentSettings,
   ReceiptDetailRow,
   VerificationState,
+  VerifiedBirthLocation,
 } from "./portal-types";
 import {
   PortalGateIcon,
@@ -254,6 +261,8 @@ function PortalContent() {
   const firstNameInputRef = useRef<HTMLInputElement | null>(null);
   const lastNameInputRef = useRef<HTMLInputElement | null>(null);
   const dobInputRef = useRef<HTMLInputElement | null>(null);
+  const birthTimeInputRef = useRef<HTMLInputElement | null>(null);
+  const birthCityInputRef = useRef<HTMLInputElement | null>(null);
   const characterNameInputRef = useRef<HTMLInputElement | null>(null);
   const mobileGateTriggerRef = useRef<HTMLButtonElement | null>(null);
   const portalSequenceVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -265,6 +274,25 @@ function PortalContent() {
   const [lastName, setLastName] = useState("");
   const [characterName, setCharacterName] = useState("");
   const [dob, setDob] = useState("");
+  const [birthTime, setBirthTime] = useState("");
+  const [birthCountryCode, setBirthCountryCode] = useState("US");
+  const [birthRegionCode, setBirthRegionCode] = useState("");
+  const [birthCityQuery, setBirthCityQuery] = useState("");
+  const [birthLocation, setBirthLocation] =
+    useState<VerifiedBirthLocation | null>(null);
+  const [birthLocationSuggestions, setBirthLocationSuggestions] = useState<
+    BirthLocationSuggestion[]
+  >([]);
+  const [birthLocationStatus, setBirthLocationStatus] = useState<
+    "error" | "idle" | "loading" | "ready"
+  >("idle");
+  const [birthLocationMessage, setBirthLocationMessage] = useState("");
+  const [fullSoulStatPreview, setFullSoulStatPreview] =
+    useState<FullSoulStatPreview | null>(null);
+  const [fullSoulStatStatus, setFullSoulStatStatus] = useState<
+    "error" | "idle" | "loading" | "ready"
+  >("idle");
+  const [fullSoulStatMessage, setFullSoulStatMessage] = useState("");
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [artifactConfirmed, setArtifactConfirmed] = useState(false);
   const [identityFocus, setIdentityFocus] = useState<IdentityField>("firstName");
@@ -318,12 +346,19 @@ function PortalContent() {
     () => buildPublicMark(firstName, lastName),
     [firstName, lastName],
   );
+  const birthRegionOptions =
+    birthRegionOptionsByCountry[birthCountryCode] ?? [];
+  const selectedBirthRegion = birthRegionOptions.find(
+    (region) => region.code === birthRegionCode,
+  );
+  const birthLocationReady = Boolean(birthTime && birthLocation?.verified);
   const artifactNameValid = isValidArtifactName(characterName);
   const burnedArtifactName = characterName.trim() || publicMark;
   const identityInputReady =
     Boolean(firstName.trim()) &&
     Boolean(lastName.trim()) &&
     Boolean(dob) &&
+    birthLocationReady &&
     publicMark !== "_. ___";
   const hasIdentity = identityInputReady && identityConfirmed;
   const artifactInputReady =
@@ -603,6 +638,73 @@ function PortalContent() {
   }, []);
 
   useEffect(() => {
+    const query = birthCityQuery.trim();
+
+    if (query.length < 2) {
+      return;
+    }
+
+    const controller = new AbortController();
+    const lookupTimer = window.setTimeout(async () => {
+      setBirthLocationStatus("loading");
+      setBirthLocationMessage("");
+
+      try {
+        const response = await fetch("/api/location/suggest", {
+          body: JSON.stringify({
+            countryCode: birthCountryCode,
+            limit: 6,
+            region: selectedBirthRegion?.label ?? birthRegionCode,
+            text: query,
+          }),
+          cache: "no-store",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          signal: controller.signal,
+        });
+        const result = (await response.json()) as {
+          message?: string;
+          results?: BirthLocationSuggestion[];
+        };
+
+        if (!response.ok) {
+          throw new Error(result.message ?? "Birthplace lookup failed.");
+        }
+
+        setBirthLocationSuggestions(result.results ?? []);
+        setBirthLocationStatus("ready");
+        setBirthLocationMessage(
+          result.results?.length ? "" : "No verified city matches found.",
+        );
+      } catch (caughtError) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        setBirthLocationSuggestions([]);
+        setBirthLocationStatus("error");
+        setBirthLocationMessage(
+          caughtError instanceof Error
+            ? caughtError.message
+            : "Birthplace lookup failed.",
+        );
+      }
+    }, 320);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(lookupTimer);
+    };
+  }, [
+    birthCityQuery,
+    birthCountryCode,
+    birthRegionCode,
+    selectedBirthRegion?.label,
+  ]);
+
+  useEffect(() => {
     if (selectedGate !== "identity" && selectedGate !== "artifact") {
       return;
     }
@@ -618,7 +720,11 @@ function PortalContent() {
           ? firstNameInputRef.current
           : identityFocus === "lastName"
             ? lastNameInputRef.current
-            : dobInputRef.current;
+            : identityFocus === "dob"
+              ? dobInputRef.current
+              : identityFocus === "birthTime"
+                ? birthTimeInputRef.current
+                : birthCityInputRef.current;
 
       target?.focus();
     }, 0);
@@ -1182,6 +1288,14 @@ function PortalContent() {
     setFirstName("");
     setLastName("");
     setDob("");
+    setBirthTime("");
+    setBirthCountryCode("US");
+    setBirthRegionCode("");
+    setBirthCityQuery("");
+    setBirthLocation(null);
+    setBirthLocationSuggestions([]);
+    setBirthLocationStatus("idle");
+    setBirthLocationMessage("");
     setCharacterName("");
     setIdentityConfirmed(false);
     setArtifactConfirmed(false);
@@ -1195,6 +1309,58 @@ function PortalContent() {
     setReceipt(null);
     resetPortalSequenceVideo();
     setSelectedGate("identity");
+  }
+
+  function resetFullSoulStatPreview() {
+    setFullSoulStatPreview(null);
+    setFullSoulStatStatus("idle");
+    setFullSoulStatMessage("");
+  }
+
+  async function requestFullSoulStatPreview() {
+    if (!identityInputReady || !birthLocation) {
+      return;
+    }
+
+    setFullSoulStatStatus("loading");
+    setFullSoulStatMessage("Calculating Full Soul Stat.");
+
+    try {
+      const response = await fetch("/api/full-soul-stat", {
+        body: JSON.stringify({
+          birthLocation,
+          birthTime,
+          dob,
+          firstName,
+          lastName,
+        }),
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+      const result = (await response.json()) as {
+        fullSoulStat?: FullSoulStatPreview;
+        message?: string;
+      };
+
+      if (!response.ok || !result.fullSoulStat) {
+        throw new Error(result.message ?? "Full Soul Stat calculation failed.");
+      }
+
+      setFullSoulStatPreview(result.fullSoulStat);
+      setFullSoulStatStatus("ready");
+      setFullSoulStatMessage("Full Soul Stat ready.");
+    } catch (error) {
+      setFullSoulStatPreview(null);
+      setFullSoulStatStatus("error");
+      setFullSoulStatMessage(
+        error instanceof Error
+          ? error.message
+          : "Full Soul Stat calculation failed.",
+      );
+    }
   }
 
   async function handleWalletChipConnect() {
@@ -1288,7 +1454,7 @@ function PortalContent() {
       "identity",
       "processing",
       "Identity scan running",
-      "Matching name, date, and public marker for this session.",
+      "Matching name, date, birthplace, and public marker for this session.",
     );
     await wait(GATE_FEEDBACK_DELAY_MS.identity);
     setIdentityConfirmed(true);
@@ -1296,10 +1462,26 @@ function PortalContent() {
       "identity",
       "confirmed",
       "Identity entry confirmed",
-      "Name, date, and public marker are locked for the next gate.",
+      "Name, date, birth coordinates, and public marker are locked for the next gate.",
     );
+    void requestFullSoulStatPreview();
     await wait(GATE_DELAY_MS.artifact + 900);
     setSelectedGate("artifact");
+  }
+
+  function selectBirthLocation(suggestion: BirthLocationSuggestion) {
+    resetFullSoulStatPreview();
+    setBirthLocation({
+      ...suggestion,
+      source: "amazon_location",
+      verified: true,
+    });
+    setBirthCityQuery(suggestion.label);
+    setBirthLocationSuggestions([]);
+    setBirthLocationStatus("ready");
+    setBirthLocationMessage("Birthplace verified.");
+    setIdentityConfirmed(false);
+    setArtifactConfirmed(false);
   }
 
   async function confirmArtifactEntry() {
@@ -1345,7 +1527,20 @@ function PortalContent() {
       return;
     }
 
-    if (field === "dob" && identityInputReady) {
+    if (field === "dob" && dob) {
+      setIdentityFocus("birthTime");
+      return;
+    }
+
+    if (field === "birthTime" && birthTime) {
+      setIdentityFocus("birthCity");
+      return;
+    }
+
+    if (
+      (field === "birthCity" || field === "birthTime" || field === "dob") &&
+      identityInputReady
+    ) {
       void confirmIdentityEntry();
     }
   }
@@ -1606,7 +1801,7 @@ function PortalContent() {
           : "Wallet must be connected before EAS can verify.",
     identity: hasIdentity
       ? "Identity input has been confirmed for this session."
-      : "Enter name and DOB, then press ENTER to confirm.",
+      : "Enter name, DOB, exact birth time, and verified birthplace.",
     artifact: hasArtifact
       ? `Artifact name locked as ${burnedArtifactName}.`
       : "Choose the name burned into the NFT image. Leave it blank to use the public mark.",
@@ -2137,12 +2332,13 @@ function PortalContent() {
 
                             {selectedGate === "identity" && (
                               <div className="grid gap-3">
-                                <div className="grid gap-2 sm:grid-cols-3">
+                                <div className="grid gap-2 lg:grid-cols-4 sm:grid-cols-2">
                                   <label className="console-input-field portal-input-shell relative block">
                                     <input
                                       ref={firstNameInputRef}
                                       value={firstName}
                                       onChange={(event) => {
+                                        resetFullSoulStatPreview();
                                         setIdentityConfirmed(false);
                                         setArtifactConfirmed(false);
                                         setFirstName(event.target.value);
@@ -2164,6 +2360,7 @@ function PortalContent() {
                                       ref={lastNameInputRef}
                                       value={lastName}
                                       onChange={(event) => {
+                                        resetFullSoulStatPreview();
                                         setIdentityConfirmed(false);
                                         setArtifactConfirmed(false);
                                         setLastName(event.target.value);
@@ -2185,6 +2382,7 @@ function PortalContent() {
                                       ref={dobInputRef}
                                       value={dob}
                                       onChange={(event) => {
+                                        resetFullSoulStatPreview();
                                         setIdentityConfirmed(false);
                                         setArtifactConfirmed(false);
                                         setDob(event.target.value);
@@ -2200,11 +2398,198 @@ function PortalContent() {
                                       DOB
                                     </span>
                                   </label>
+
+                                  <label className="console-input-field portal-input-shell relative block">
+                                    <input
+                                      ref={birthTimeInputRef}
+                                      value={birthTime}
+                                      onChange={(event) => {
+                                        resetFullSoulStatPreview();
+                                        setIdentityConfirmed(false);
+                                        setArtifactConfirmed(false);
+                                        setBirthTime(event.target.value);
+                                      }}
+                                      onFocus={() => setIdentityFocus("birthTime")}
+                                      onKeyDown={(event) =>
+                                        handleIdentityKeyDown(event, "birthTime")
+                                      }
+                                      type="time"
+                                      className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                    />
+                                    <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                      Birth Time
+                                    </span>
+                                  </label>
+                                </div>
+                                <div className="portal-birth-location-panel control-surface-soft border border-white/10 p-3">
+                                  <div className="portal-birth-location-grid">
+                                    <label className="console-input-field portal-input-shell relative block">
+                                      <select
+                                        value={birthCountryCode}
+                                        onChange={(event) => {
+                                          resetFullSoulStatPreview();
+                                          setIdentityConfirmed(false);
+                                          setArtifactConfirmed(false);
+                                          setBirthCountryCode(event.target.value);
+                                          setBirthRegionCode("");
+                                          setBirthCityQuery("");
+                                          setBirthLocation(null);
+                                          setBirthLocationSuggestions([]);
+                                        }}
+                                        className="control-input-surface portal-terminal-input portal-terminal-select w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                      >
+                                        {birthCountryOptions.map((country) => (
+                                          <option key={country.code} value={country.code}>
+                                            {country.label}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                        Country
+                                      </span>
+                                    </label>
+
+                                    <label className="console-input-field portal-input-shell relative block">
+                                      <select
+                                        value={birthRegionCode}
+                                        onChange={(event) => {
+                                          resetFullSoulStatPreview();
+                                          setIdentityConfirmed(false);
+                                          setArtifactConfirmed(false);
+                                          setBirthRegionCode(event.target.value);
+                                          setBirthCityQuery("");
+                                          setBirthLocation(null);
+                                          setBirthLocationSuggestions([]);
+                                        }}
+                                        disabled={!birthRegionOptions.length}
+                                        className="control-input-surface portal-terminal-input portal-terminal-select w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition disabled:opacity-45 focus:border-yellow-300/60"
+                                      >
+                                        <option value="">
+                                          {birthRegionOptions.length
+                                            ? "Select State"
+                                            : "Region From City"}
+                                        </option>
+                                        {birthRegionOptions.map((region) => (
+                                          <option key={region.code} value={region.code}>
+                                            {region.label}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                        State
+                                      </span>
+                                    </label>
+
+                                    <label className="console-input-field portal-input-shell portal-birth-city-field relative block">
+                                      <input
+                                        ref={birthCityInputRef}
+                                        value={birthCityQuery}
+                                        onChange={(event) => {
+                                          const nextValue = event.target.value;
+
+                                          resetFullSoulStatPreview();
+                                          setIdentityConfirmed(false);
+                                          setArtifactConfirmed(false);
+                                          setBirthLocation(null);
+                                          setBirthCityQuery(nextValue);
+
+                                          if (nextValue.trim().length < 2) {
+                                            setBirthLocationSuggestions([]);
+                                            setBirthLocationStatus("idle");
+                                            setBirthLocationMessage("");
+                                          }
+                                        }}
+                                        onFocus={() => setIdentityFocus("birthCity")}
+                                        onKeyDown={(event) =>
+                                          handleIdentityKeyDown(event, "birthCity")
+                                        }
+                                        className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                        placeholder="City"
+                                      />
+                                      <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
+                                        City
+                                      </span>
+                                    </label>
+                                  </div>
+
+                                  {(birthLocationStatus === "loading" ||
+                                    birthLocationMessage ||
+                                    birthLocationSuggestions.length > 0) && (
+                                    <div className="portal-location-results">
+                                      {birthLocationStatus === "loading" && (
+                                        <div className="portal-location-status">
+                                          Searching verified places
+                                        </div>
+                                      )}
+                                      {birthLocationMessage && (
+                                        <div
+                                          className={`portal-location-status ${
+                                            birthLocationStatus === "error"
+                                              ? "portal-location-status--error"
+                                              : ""
+                                          }`}
+                                        >
+                                          {birthLocationMessage}
+                                        </div>
+                                      )}
+                                      {birthLocationSuggestions.map((suggestion) => (
+                                        <button
+                                          className="portal-location-result"
+                                          key={suggestion.placeId}
+                                          onClick={() => selectBirthLocation(suggestion)}
+                                          type="button"
+                                        >
+                                          <span>{suggestion.label}</span>
+                                          <small>
+                                            {[suggestion.city, suggestion.region, suggestion.country]
+                                              .filter(Boolean)
+                                              .join(" / ")}
+                                          </small>
+                                        </button>
+                                      ))}
+                                    </div>
+                                  )}
+                                  {birthLocation?.verified && (
+                                    <div className="portal-location-verified">
+                                      Verified birthplace: {birthLocation.label}
+                                    </div>
+                                  )}
+                                  {fullSoulStatStatus !== "idle" && (
+                                    <div
+                                      className={`portal-full-soul-stat-readout portal-full-soul-stat-readout--${fullSoulStatStatus}`}
+                                    >
+                                      <span>{fullSoulStatMessage}</span>
+                                      {fullSoulStatPreview?.full_soul_stat && (
+                                        <div className="portal-full-soul-stat-readout__totals">
+                                          <small>
+                                            Base{" "}
+                                            {fullSoulStatPreview.base_engine?.stat_total ??
+                                              "--"}
+                                          </small>
+                                          <small>
+                                            Natal{" "}
+                                            {fullSoulStatPreview.natal_imprint?.natal_imprint
+                                              ?.stat_total ?? "--"}
+                                          </small>
+                                          <small>
+                                            Pillar{" "}
+                                            {fullSoulStatPreview.pillar_accord?.pillar_accord
+                                              ?.stat_total ?? "--"}
+                                          </small>
+                                          <small>
+                                            Full{" "}
+                                            {fullSoulStatPreview.full_soul_stat.stat_total ??
+                                              "--"}
+                                          </small>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
                                 <p className="portal-identity-confirmation-copy font-semibold uppercase tracking-[0.2em] text-cyan-50">
                                   Name and DOB should match your Coinbase identity records.
-                                  This confirms the human record before the artifact name
-                                  is engraved.
+                                  Birth time and verified birthplace prepare the Full Soul
+                                  Stat before the artifact name is engraved.
                                 </p>
                               </div>
                             )}

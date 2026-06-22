@@ -55,7 +55,52 @@ export type PortalGate =
   | "terms"
   | "payment"
   | "mint";
-export type IdentityField = "firstName" | "lastName" | "dob";
+export type IdentityField =
+  | "birthCity"
+  | "birthTime"
+  | "dob"
+  | "firstName"
+  | "lastName";
+
+export type BirthLocationSuggestion = {
+  city: string;
+  country: string;
+  countryCode: string;
+  label: string;
+  latitude: number;
+  longitude: number;
+  placeId: string;
+  region?: string;
+  regionCode?: string;
+  timeZone?: string;
+};
+
+export type VerifiedBirthLocation = BirthLocationSuggestion & {
+  source: "amazon_location";
+  verified: true;
+};
+
+export type FullSoulStatPreview = {
+  schema_version?: string;
+  status?: string;
+  base_engine?: {
+    stat_total?: number;
+  };
+  natal_imprint?: {
+    natal_imprint?: {
+      stat_total?: number;
+    };
+  };
+  pillar_accord?: {
+    pillar_accord?: {
+      stat_total?: number;
+    };
+  };
+  full_soul_stat?: {
+    stat_total?: number;
+    stats?: Record<string, number>;
+  };
+};
 
 export type PortalGateReadout = {
   key: PortalGate;
