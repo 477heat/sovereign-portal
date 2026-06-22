@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "Plain-language privacy policy for Sovereign Engine, including how Yoti identity verification may be used when enabled.",
-};
+export const metadata: Metadata = createSeoMetadata(seoPages.privacyPolicy);
 
 const privacyCards = [
   {

@@ -52,6 +52,7 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
   "Soul",
   "Soul Mint",
   "Title of Ownership",
+  "TTRPG",
   "Vanguard",
   "Verified Human Soul",
   "Wallet",
@@ -447,7 +448,7 @@ export default function HomePage() {
           <div className="chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mx-auto mt-5 max-w-2xl px-5 py-4 text-center text-base leading-7 text-white/68 md:text-lg md:leading-8">
             <GlossaryText
               terms={homeGlossaryTerms}
-              text="The Engine starts with fixed human inputs, not rerolls. The first profile uses astrologically based stats more complex than only being an Aries, Capricorn, or any other single sign. EAS and the mint ledger help keep Genesis from becoming another machine-scaled claim farm."
+              text="The Engine starts with fixed human inputs, not rerolls. The first profile uses astrologically based stats more complex than only being an Aries, Capricorn, or any other single sign. Coinbase EAS, or verification of personhood through Coinbase, helps restrict users from creating characters through endless rerolls or duplicate origin attempts."
             />
           </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   CommandPageShell,
   type CommandDrawerAction,
@@ -5,6 +6,9 @@ import {
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
 import { preLaunchOfferSummary } from "@/lib/preLaunchOffer";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
+
+export const metadata: Metadata = createSeoMetadata(seoPages.whitepaper);
 
 const soulDeedContractAddress = "0x2df9151c4e32082a05c686bd3092180134d17deb";
 

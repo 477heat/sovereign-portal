@@ -169,6 +169,8 @@ export const glossary = {
     "A certificate showing who owns something. Here, it means the Soul ownership title minted to the user's wallet as the Genesis Artifact.",
   Traceable:
     "Designed so a creation can be followed back to the profile, wallet, or parent it came from.",
+  TTRPG:
+    "Tabletop role playing games. These are games where players build characters and play through a shared story, often guided by a Dungeon Master.",
   "Trading (contract toggle)":
     "A setting that can turn token trading on, limit it, or turn it off.",
   "Upgradeable (contract)":

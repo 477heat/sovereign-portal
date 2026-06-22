@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import { glossary } from "@/lib/glossary";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
+
+export const metadata: Metadata = createSeoMetadata(seoPages.dictionary);
 
 const glossaryEntries = Object.entries(glossary).sort(([first], [second]) =>
   first.localeCompare(second),

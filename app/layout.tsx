@@ -2,19 +2,23 @@ import "./globals.css";
 import React from "react";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-
-const siteTitle = "Sovereign Engine | Genesis Access";
-const siteDescription =
-  "A Base-native Genesis Access artifact for real participants, built for future Engine-driven Progeny creations.";
+import {
+  absoluteUrl,
+  defaultOgImage,
+  seoPages,
+  siteDescription,
+  siteName,
+  siteUrl,
+} from "@/lib/seo";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.sovengine.xyz"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: siteTitle,
+    default: `${siteName} | ${seoPages.home.title}`,
     template: "%s | Sovereign Engine",
   },
   description: siteDescription,
-  applicationName: "Sovereign Engine",
+  applicationName: siteName,
   manifest: "/manifest.json",
   alternates: {
     canonical: "/",
@@ -27,56 +31,83 @@ export const metadata: Metadata = {
     "Coinbase",
     "NFT",
     "Progeny",
+    "Vanguard Honor",
+    "Genesis Mint",
+    "Coinbase EAS",
   ],
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  category: "Web3",
   icons: {
     icon: [
       {
-        url: "/coinbase-assets/app-icon-1024.png",
-        sizes: "1024x1024",
+        url: "/icon.png",
+        sizes: "any",
         type: "image/png",
       },
       {
-        url: "/coinbase-assets/app-icon-512.png",
+        url: "/brand/sovereign-engine-site-logo-512.png",
         sizes: "512x512",
-        type: "image/png",
-      },
-      {
-        url: "/coinbase-assets/app-icon-192.png",
-        sizes: "192x192",
         type: "image/png",
       },
     ],
     apple: [
       {
-        url: "/coinbase-assets/app-icon-180.png",
+        url: "/apple-icon.png",
         sizes: "180x180",
         type: "image/png",
       },
     ],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     type: "website",
     url: "/",
-    siteName: "Sovereign Engine",
-    title: siteTitle,
-    description: siteDescription,
+    siteName,
+    title: `${siteName} | ${seoPages.home.title}`,
+    description: seoPages.home.description,
     images: [
       {
-        url: "/opengraph-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Sovereign Engine Genesis Access preview",
+        url: defaultOgImage.url,
+        width: defaultOgImage.width,
+        height: defaultOgImage.height,
+        alt: defaultOgImage.alt,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteTitle,
-    description: siteDescription,
+    title: `${siteName} | ${seoPages.home.title}`,
+    description: seoPages.home.description,
     images: ["/twitter-image.jpg"],
   },
   other: {
     "base:app_id": "69fb33172763280abf41cd7a",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description: siteDescription,
+  image: absoluteUrl(defaultOgImage.url),
+  potentialAction: {
+    "@type": "ViewAction",
+    target: absoluteUrl(seoPages.portal.path),
+    name: "Open Mint Path",
   },
 };
 
@@ -88,6 +119,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black antialiased font-sans flex flex-col min-h-screen">
+        <script
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          type="application/ld+json"
+        />
         <div className="flex-grow">
           {children}
         </div>

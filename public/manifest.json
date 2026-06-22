@@ -1,29 +1,29 @@
 {
   "name": "Sovereign Engine",
   "short_name": "SovEngine",
-  "description": "A Base-native Genesis Access artifact for real participants, built for future Engine-driven Progeny creations.",
-  "id": "https://www.sovengine.xyz/coinbase",
-  "start_url": "https://www.sovengine.xyz/coinbase",
-  "scope": "https://www.sovengine.xyz/",
+  "description": "Mint a Base-native Genesis Access artifact for real participants, with Vanguard Honor for early supporters and future Engine-driven creations.",
+  "id": "https://soulmaster.xyz/coinbase",
+  "start_url": "https://soulmaster.xyz/coinbase",
+  "scope": "https://soulmaster.xyz/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#02070b",
   "icons": [
     {
-      "src": "https://www.sovengine.xyz/coinbase-assets/app-icon-1024.png",
-      "sizes": "1024x1024",
+      "src": "https://soulmaster.xyz/icon.png",
+      "sizes": "any",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://www.sovengine.xyz/coinbase-assets/app-icon-512.png",
+      "src": "https://soulmaster.xyz/brand/sovereign-engine-site-logo-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://www.sovengine.xyz/coinbase-assets/app-icon-192.png",
-      "sizes": "192x192",
+      "src": "https://soulmaster.xyz/apple-icon.png",
+      "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     }

@@ -4,12 +4,9 @@ import {
   contractLanguage,
   contractLanguageVersion,
 } from "@/app/portal/contractLanguage";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contract Terms",
-  description:
-    "Formal Certificate of Title agreement wording for the Sovereign Engine Genesis mint.",
-};
+export const metadata: Metadata = createSeoMetadata(seoPages.contractTerms);
 
 export default function ContractTermsPage() {
   return (

@@ -1,13 +1,16 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl, siteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/admin", "/api"],
-    },
-    sitemap: "https://www.sovengine.xyz/sitemap.xml",
-    host: "https://www.sovengine.xyz",
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin", "/admin/", "/api", "/api/"],
+      },
+    ],
+    sitemap: absoluteUrl("/sitemap.xml"),
+    host: siteUrl,
   };
 }

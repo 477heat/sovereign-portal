@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
+
+export const metadata: Metadata = createSeoMetadata(seoPages.archive);
 
 const architectTokenMetadataUrl =
   "https://ipfs.io/ipfs/QmT4TMS6rvcqCJidEveQFe6jr62Pg1h2E7157xEtsJi4o4";

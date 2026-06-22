@@ -1,8 +1,12 @@
+import type { Metadata } from "next";
 import {
   CommandPageShell,
   type CommandDrawerAction,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
+
+export const metadata: Metadata = createSeoMetadata(seoPages.developer);
 
 const builderPanels = [
   {

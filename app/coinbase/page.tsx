@@ -1,41 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
 
 const coinbaseBackgroundImage =
   "/coinbase-assets/tall-console-scroll-background.jpg";
 const originArtifactImage =
   coinbaseBackgroundImage;
 
-export const metadata: Metadata = {
-  title: "Coinbase Entry",
-  description:
-    "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
-  alternates: {
-    canonical: "/coinbase",
-  },
-  openGraph: {
-    title: "Sovereign Engine | Coinbase/Base Entry",
-    description:
-      "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
-    url: "/coinbase",
-    images: [
-      {
-        url: "/coinbase-assets/cover-1200x630.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Sovereign Engine Genesis Access preview",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Sovereign Engine | Coinbase/Base Entry",
-    description:
-      "Enter Sovereign Engine from Base: a Genesis Access artifact for real participants and future Progeny creations.",
-    images: ["/coinbase-assets/fallback-1200x630.jpg"],
-  },
-};
+export const metadata: Metadata = createSeoMetadata(seoPages.coinbase);
 
 const readinessChips = [
   "Base-native",

@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import { CommandDeckLab } from "@/components/command/CommandDeckLab";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Engine Lab",
-  description:
-    "A public UI sandbox for the Sovereign Engine command deck interface.",
-  alternates: {
-    canonical: "/engine-lab",
-  },
-};
+export const metadata: Metadata = createSeoMetadata(seoPages.engineLab);
 
 export default function EngineLabPage() {
   return (

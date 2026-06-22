@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import {
   CommandPageShell,
   type CommandDrawerAction,
   type CommandPanel,
   type CommandPanelGroup,
 } from "@/components/command/CommandPageShell";
+import { createSeoMetadata, seoPages } from "@/lib/seo";
+
+export const metadata: Metadata = createSeoMetadata(seoPages.alliant);
 
 const storyboardPanels: CommandPanel[] = [
   {

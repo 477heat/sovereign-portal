@@ -28,6 +28,7 @@ import {
 } from "@/lib/portalMessages";
 import { preLaunchOffer } from "@/lib/preLaunchOffer";
 import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
+import { absoluteUrl, siteUrl } from "@/lib/seo";
 import type {
   IdentityField,
   MintOrderState,
@@ -139,9 +140,9 @@ function wait(ms: number) {
 
 const portalAppMetadata = {
   name: "Sovereign Portal",
-  url: "https://www.sovengine.xyz",
-  description: "Genesis Soul Deed minting portal on Base.",
-  logoUrl: "https://www.sovengine.xyz/coinbase-assets/app-icon-512.png",
+  url: siteUrl,
+  description: "Sovereign Engine Genesis Access mint path on Base.",
+  logoUrl: absoluteUrl("/brand/sovereign-engine-site-logo-512.png"),
 };
 const portalWallets = [
   createWallet("org.base.account", {
