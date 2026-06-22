@@ -691,10 +691,10 @@ body {
 
 .home-page-fixed-backdrop {
   background-color: #000;
-  background-image: url("/media/dopest_image.jpeg");
+  background-image: url("/media/alliant-storyboard/chapter-1/web_01_humanity_rejoices.webp");
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   bottom: 0;
   left: 0;
   pointer-events: none;
@@ -705,7 +705,10 @@ body {
 }
 
 .home-page-fixed-backdrop::after {
-  background: rgba(0, 0, 0, 0.35);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.12) 42%, rgba(0, 0, 0, 0.66)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.08) 35%, rgba(0, 0, 0, 0.72)),
+    rgba(0, 0, 0, 0.16);
   content: "";
   inset: 0;
   position: absolute;
@@ -713,8 +716,80 @@ body {
 
 @media (min-width: 768px) {
   .home-hero-command-stack {
-    margin-left: -1.25rem;
+    margin-left: auto;
   }
+}
+
+.home-story-transmission {
+  margin-left: auto;
+  max-width: 34rem;
+  padding-top: 0.25rem;
+  text-align: right;
+  text-shadow:
+    0 0 18px rgba(0, 0, 0, 0.86),
+    0 0 36px rgba(0, 0, 0, 0.72),
+    0 0 22px rgba(125, 211, 252, 0.18);
+}
+
+.home-story-transmission::before {
+  background: linear-gradient(90deg, transparent, rgba(254, 240, 138, 0.9));
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 0 0 0.85rem auto;
+  width: min(18rem, 72%);
+}
+
+.home-story-transmission__eyebrow {
+  color: rgba(254, 240, 138, 0.82);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+  margin: 0 0 0.8rem;
+  text-transform: uppercase;
+}
+
+.home-story-transmission h1 {
+  color: rgba(255, 255, 255, 0.98);
+  font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(2.15rem, 2.9rem, 3.4rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 0.94;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.home-story-transmission p {
+  color: rgba(255, 253, 235, 0.88);
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.6;
+  margin: 1rem 0 0 auto;
+  max-width: 31rem;
+}
+
+.home-story-transmission__meta {
+  align-items: center;
+  color: rgba(207, 250, 254, 0.82);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.62rem;
+  font-weight: 800;
+  gap: 0.55rem;
+  justify-content: flex-end;
+  letter-spacing: 0.16em;
+  line-height: 1.45;
+  margin-top: 1.05rem;
+  text-transform: uppercase;
+}
+
+.home-story-transmission__meta span {
+  border: 1px solid rgba(165, 243, 252, 0.28);
+  background: rgba(0, 0, 0, 0.28);
+  padding: 0.42rem 0.58rem;
 }
 
 @media (max-width: 640px) {
@@ -737,13 +812,45 @@ body {
   }
 
   .home-page-fixed-backdrop {
-    background-image: url("/media/mobile-origin-closeup.jpg");
+    background-image: url("/media/alliant-storyboard/chapter-1/mobile_01_humanity_rejoices.webp");
     background-position: center center;
     background-size: cover;
   }
 
   .home-page-fixed-backdrop::after {
-    background: rgba(0, 0, 0, 0.5);
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.1) 38%, rgba(0, 0, 0, 0.76)),
+      rgba(0, 0, 0, 0.22);
+  }
+
+  .home-story-hero-stack {
+    max-width: none;
+  }
+
+  .home-story-transmission {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .home-story-transmission::before {
+    margin-left: 0;
+    width: min(16rem, 82%);
+  }
+
+  .home-story-transmission h1 {
+    font-size: 2.05rem;
+    line-height: 0.98;
+  }
+
+  .home-story-transmission p {
+    font-size: 0.96rem;
+    line-height: 1.5;
+    margin-left: 0;
+    max-width: 26rem;
+  }
+
+  .home-story-transmission__meta {
+    justify-content: flex-start;
   }
 }
 
@@ -4774,6 +4881,24 @@ body {
 
 .home-control-page .chamfer-hero-link {
   font-size: 0.8rem;
+}
+
+.home-control-page .home-hero-mint-link {
+  align-content: center;
+  display: grid;
+  gap: 0.18rem;
+  line-height: 1;
+}
+
+.home-control-page .home-hero-mint-link span,
+.home-control-page .home-hero-mint-link small {
+  display: block;
+}
+
+.home-control-page .home-hero-mint-link small {
+  color: rgba(254, 249, 195, 0.78);
+  font-size: 0.54rem;
+  letter-spacing: 0.14em;
 }
 
 .home-control-page .chamfer-panel--interactive::after {

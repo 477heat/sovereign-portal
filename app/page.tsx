@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
-import { preLaunchOffer, preLaunchOfferSummary } from "@/lib/preLaunchOffer";
 
 const dayOneLaunchAt = Date.UTC(2026, 5, 24, 15, 0, 0);
 const architectTokenMetadataUrl =
@@ -61,22 +60,22 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
 const protocolCards = [
   {
     label: "Pre-Launch",
-    title: "Founding Rate",
-    body: `The Genesis mint is ${preLaunchOfferSummary} This is an early access rate for people who want their origin wallet recognized before the public path is fully opened.`,
+    title: "Character Generator",
+    body: "Sovereign Engine is a character generator that uses deterministic algorithms to create 1:1 character sheets aligned to a person's Astrological Attributes. The engine uses an algo that takes the widely viewed attributes of a users Zodiac Traits in Western and Chinese Symbolism and creates Stats for table top and Digital games",
     href: "/portal",
     destination: "Mint Path",
   },
   {
     label: "Base-native",
-    title: "Genesis Artifact",
-    body: "The Soul Deed is the first Access Token: a Certificate of Title minted to the wallet behind a verified human path, not to an empty account swarm.",
+    title: "Smart Contract Characters",
+    body: "Smart contracts can tie each 1:1 character sheet to its source wallet and record. For TTRPG Dungeon Masters and digital world creators, that helps verify a character came from a fixed origin instead of endless rerolls.",
     href: "/portal",
     destination: "Soul Registry Portal",
   },
   {
     label: "Coinbase EAS",
     title: "1 Soul, 1 Mint",
-    body: "The live path uses Coinbase EAS and contract mint history to keep Genesis scarce: one verified origin, one starting profile, one human signal in the Engine.",
+    body: "Anyone can use the Engine for free, but free outputs are not verified as authentic. The Soul Artifact is the permanent marker that makes future mint-generated characters true 1:1 creations tied to one origin. It cannot be minted again, and the Soul contract supports other creation types from that source.",
     href: "/access",
     destination: "Access and Progeny",
   },
@@ -340,39 +339,40 @@ export default function HomePage() {
         </nav>
       </aside>
 
-      <section className="home-hero-section relative z-10 mx-auto grid min-h-[68vh] max-w-7xl items-start gap-6 overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-9 md:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(110px,0.18fr)_minmax(140px,0.24fr)_minmax(170px,0.32fr)_minmax(210px,0.4fr)]">
-        <div className="home-hero-command-stack relative z-10 lg:col-span-2">
-          <div className="chamfer-panel chamfer-panel--hero-copy max-w-[28rem] px-5 py-4 md:w-[35vw] md:max-w-none md:px-7 md:py-3">
-            <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-cyan-200/80 md:mb-1">
-              Pre-Launch Access
+      <section className="home-hero-section relative z-10 mx-auto flex min-h-[74vh] max-w-7xl items-start justify-end overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-9 md:pt-28">
+        <div className="home-hero-command-stack home-story-hero-stack relative z-10 w-full max-w-[34rem]">
+          <div className="home-story-transmission">
+            <p className="home-story-transmission__eyebrow">
+              Alliant Transmission / 01
             </p>
-            <h1 className="max-w-4xl text-2xl font-light uppercase leading-[1.08] tracking-[0.1em] md:text-4xl">
-              Sovereign Engine
-            </h1>
-            <p className="mt-5 max-w-[24rem] text-lg leading-7 text-white/68 md:mt-3 md:max-w-[46rem] md:text-base md:leading-6">
-              <GlossaryText
-                terms={homeGlossaryTerms}
-                text={`Mint before launch for ${preLaunchOffer.displayPrice} if you are among the ${preLaunchOffer.audience}. The mint includes ${preLaunchOffer.honor}: early wallet recognition for people who enter before the public path is fully opened.`}
-              />
+            <h1>Humanity Rejoices</h1>
+            <p>
+              In the very near future, AI creates SI, a Superior Intelligent
+              Machine meant to Save Humanity; We Rejoice!
             </p>
-            <div className="mt-4 inline-flex border border-yellow-200/45 bg-yellow-100/[0.08] px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-yellow-100 md:mt-3">
-              {preLaunchOffer.displayPrice} / {preLaunchOffer.audience} / {preLaunchOffer.honor}
+            <p>
+              It did not last long. Man could never satisfy his drive for
+              Progress.
+            </p>
+            <div className="home-story-transmission__meta">
+              <span>Sovereign Engine</span>
             </div>
           </div>
 
-          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:w-fit sm:gap-4">
+          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:ml-auto sm:w-fit sm:gap-4">
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"
-                className="chamfer-hero-link chamfer-hero-link--primary home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
+                className="chamfer-hero-link chamfer-hero-link--primary home-hero-mobile-button home-hero-mint-link max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
               >
-                Mint Path
+                <span>$3 Mint</span>
+                <small>Early Supporters</small>
               </Link>
               <Link
-                href="/contract-terms"
+                href="/alliant"
                 className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
-                Contract Terms
+                Full Story
               </Link>
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
@@ -412,28 +412,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        <div
-          aria-hidden="true"
-          className="hero-clear-stage relative z-10 hidden min-h-[10rem] w-full lg:block lg:min-h-[18rem]"
-        />
-
-        <div
-          aria-hidden="true"
-          className="hero-clear-stage relative z-10 hidden min-h-[12rem] w-full lg:block lg:min-h-[20rem]"
-        />
-
-        <div
-          aria-hidden="true"
-          className="hero-clear-stage relative z-10 hidden min-h-[9rem] w-full lg:block lg:min-h-[15rem]"
-        />
-
-        <aside className="relative z-10 hidden items-center justify-center lg:flex">
-          <div
-            aria-hidden="true"
-            className="hero-clear-stage relative aspect-square w-full max-w-[27rem]"
-          />
-        </aside>
       </section>
 
       <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-3 md:px-8 md:pt-6">
