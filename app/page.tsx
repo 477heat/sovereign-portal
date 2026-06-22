@@ -8,15 +8,15 @@ import type { GlossaryTermKey } from "@/lib/glossary";
 
 const dayOneLaunchAt = Date.UTC(2026, 5, 24, 15, 0, 0);
 const architectTokenMetadataUrl =
-  "https://ipfs.io/ipfs/QmT4TMS6rvcqCJidEveQFe6jr62Pg1h2E7157xEtsJi4o4";
+  "https://ipfs.io/ipfs/QmSoRCMUXLS9w5dBgfg3VsnxSQhfBJt3RLALyo8DB3DzH2";
 const architectTokenImageUrl =
-  "https://ipfs.io/ipfs/QmYGQiWLkK9CFDPsHEbhpLpT4tU4MxX6VAR7bYAMKKrj2z";
+  "https://gateway.pinata.cloud/ipfs/QmVfRQWBT4Xk2MdQ7xHYaArutxLKdpPqTGXmULDPC342o6";
 const architectTokenTraits = [
-  ["*Token", "Genesis Access"],
-  ["*Rank", "Magister"],
-  ["*Align", "Mirrored"],
-  ["*Line", "Cautious"],
-  ["*Ordo", "Earth + Earth"],
+  ["*Token Type", "Genesis Access"],
+  ["*Mastery Rank", "Magister"],
+  ["*Alignment", "Mirrored"],
+  ["*Lineage", "Cautious"],
+  ["*Ordo Elementa", "(Earth + Earth)"],
 ] as const;
 const architectStatTraits = [
   ["01 Presence", "82"],
@@ -31,6 +31,9 @@ const architectStatTraits = [
   ["10 Prestige", "112"],
   ["11 Influence", "94"],
   ["12 Arcana", "108"],
+  ["xStat Total", "1154"],
+  ["xKarmic Debt", "55"],
+  ["xAge", "46"],
 ] as const;
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
@@ -473,9 +476,9 @@ export default function HomePage() {
           <Image
             alt="Certificate of Title for Spiritual Ownership Genesis Access card for T. Bre"
             className="block aspect-[5/7] w-full bg-black object-contain"
-            height={1960}
-            src="/media/t-bre-soul-deed.jpg"
-            width={1429}
+            height={8064}
+            src={architectTokenImageUrl}
+            width={5881}
           />
         </Link>
         <div className="home-architect-column w-[calc(50%-1rem)] md:w-[22rem]">

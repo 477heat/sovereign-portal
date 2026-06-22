@@ -7,9 +7,9 @@ import { createSeoMetadata, seoPages } from "@/lib/seo";
 export const metadata: Metadata = createSeoMetadata(seoPages.archive);
 
 const architectTokenMetadataUrl =
-  "https://ipfs.io/ipfs/QmT4TMS6rvcqCJidEveQFe6jr62Pg1h2E7157xEtsJi4o4";
+  "https://ipfs.io/ipfs/QmSoRCMUXLS9w5dBgfg3VsnxSQhfBJt3RLALyo8DB3DzH2";
 const architectTokenImageUrl =
-  "https://ipfs.io/ipfs/QmYGQiWLkK9CFDPsHEbhpLpT4tU4MxX6VAR7bYAMKKrj2z";
+  "https://gateway.pinata.cloud/ipfs/QmVfRQWBT4Xk2MdQ7xHYaArutxLKdpPqTGXmULDPC342o6";
 const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x2df9151c4e32082a05c686bd3092180134d17deb/0";
 
@@ -33,10 +33,10 @@ export default function ArchivePage() {
             <Image
               alt="Certificate of Title for Spiritual Ownership Genesis Access card for T. Bre"
               className="block aspect-[5/7] w-full bg-black object-contain"
-              height={1960}
+              height={8064}
               priority
-              src="/media/t-bre-soul-deed.jpg"
-              width={1429}
+              src={architectTokenImageUrl}
+              width={5881}
             />
           </div>
 

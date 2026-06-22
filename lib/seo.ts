@@ -61,9 +61,9 @@ export const seoPages = {
       "View the archived Architect Certificate of Title artifact, metadata links, and Genesis Access display record.",
     image: {
       alt: "Architect Certificate of Title Genesis Access artifact",
-      height: 1200,
-      url: "/media/t-bre-soul-deed.jpg",
-      width: 875,
+      height: 8064,
+      url: "https://gateway.pinata.cloud/ipfs/QmVfRQWBT4Xk2MdQ7xHYaArutxLKdpPqTGXmULDPC342o6",
+      width: 5881,
     },
     path: "/archive",
     priority: 0.52,
