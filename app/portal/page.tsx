@@ -107,6 +107,14 @@ const previewShellEnabled =
   process.env.VERCEL_ENV === "preview";
 const coinbaseEasUrl =
   "https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification";
+const PORTAL_CONSOLE_SOUNDS = {
+  appDrawerButtons: "/sounds/app-drawer-buttons.mp3",
+  bottomCellButtons: "/sounds/bottom-cell-buttons.mp3",
+  commandTabMenu: "/sounds/command-tab-menu.mp3",
+  notSelectable: "/sounds/not-selectable.mp3",
+  stow: "/sounds/command-tab-stow.mp3",
+  walletConnectButton: "/sounds/wallet-connect-button.mp3",
+} as const;
 const ARTIFACT_NAME_MAX_LENGTH = 12;
 const EAS_DATABASE_SEARCH_DELAY_MS = 4000;
 const GATE_DELAY_MS = {
@@ -347,6 +355,15 @@ function PortalContent() {
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
   const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
   const previewShellActive = previewShellEnabled && previewShellRequested;
+
+  const playPortalConsoleSound = useCallback(
+    (sound: keyof typeof PORTAL_CONSOLE_SOUNDS) => {
+      const audio = new Audio(PORTAL_CONSOLE_SOUNDS[sound]);
+      audio.volume = 0.72;
+      void audio.play().catch(() => undefined);
+    },
+    [],
+  );
 
   const publicMark = useMemo(
     () => buildPublicMark(firstName, lastName),
@@ -737,11 +754,12 @@ function PortalContent() {
       }
 
       if (selectedGate === "time") {
-        if (dob) {
-          birthTimeInputRef.current?.focus();
-        } else {
-          dobInputRef.current?.focus();
-        }
+        const target =
+          identityFocus === "birthTime"
+            ? birthTimeInputRef.current
+            : dobInputRef.current;
+
+        target?.focus();
         return;
       }
 
@@ -760,7 +778,7 @@ function PortalContent() {
     }, 0);
 
     return () => window.clearTimeout(focusTimer);
-  }, [dob, identityFocus, selectedGate]);
+  }, [identityFocus, selectedGate]);
 
   useEffect(() => {
     if (!mobileGateDrawerOpen) {
@@ -780,90 +798,18 @@ function PortalContent() {
   }, [mobileGateDrawerOpen]);
 
   useEffect(() => {
-    let ignore = false;
-
-    async function checkAttestation() {
-      if (!account?.address) {
-        setVerification(null);
-        setCheckingAttestation(false);
-        setGateFeedback(null);
-        return;
-      }
-
-      startPortalSequenceVideo();
-      setSelectedGate((currentGate) =>
-        currentGate === "wallet" ? "eas" : currentGate,
-      );
-      setVerification(null);
-      setCheckingAttestation(true);
-      setError("");
-      showGateFeedback(
-        "eas",
-        "processing",
-        "EAS sweep running",
-        "Searching Coinbase attestations for this wallet.",
-      );
-
-      try {
-        await wait(EAS_DATABASE_SEARCH_DELAY_MS);
-
-        if (ignore) {
-          return;
-        }
-
-        const response = await fetch(`/api/attestation?address=${account.address}`);
-        const result = (await response.json()) as VerificationState;
-
-        if (!ignore) {
-          setVerification(result);
-          if (result.eligible) {
-            showGateFeedback(
-              "eas",
-              "confirmed",
-              "Human verification confirmed",
-              "Coinbase EAS attestation is attached to this wallet.",
-            );
-            window.setTimeout(() => {
-              if (!ignore) {
-                setSelectedGate("identity");
-                setGateFeedback(null);
-              }
-            }, 1700);
-          } else {
-            showGateFeedback(
-              "eas",
-              "blocked",
-              "EAS check complete",
-              "No verified human attestation was found for this wallet.",
-              3200,
-            );
-          }
-        }
-      } catch {
-        if (!ignore) {
-          setError("Attestation service is not responding yet.");
-          setVerification(null);
-          showGateFeedback(
-            "eas",
-            "blocked",
-            "EAS check interrupted",
-            "The attestation service did not answer. Try again in a moment.",
-            3200,
-          );
-        }
-      } finally {
-        if (!ignore) {
-          setCheckingAttestation(false);
-        }
-      }
+    if (account?.address) {
+      return;
     }
 
-    checkAttestation();
+    const resetTimer = window.setTimeout(() => {
+      setVerification(null);
+      setCheckingAttestation(false);
+      setGateFeedback(null);
+    }, 0);
 
-    return () => {
-      ignore = true;
-    };
-  }, [account?.address, showGateFeedback, startPortalSequenceVideo]);
+    return () => window.clearTimeout(resetTimer);
+  }, [account?.address]);
 
   useEffect(() => {
     let ignore = false;
@@ -1657,6 +1603,7 @@ function PortalContent() {
       );
       await wait(900);
       setSelectedGate("eas");
+      await refreshWalletAttestation();
       return;
     }
 
@@ -2010,19 +1957,24 @@ function PortalContent() {
           ? "Auto Mint"
           : "Mint Locked",
   }[selectedGate];
-  const actionClusterGates = (["identity", "artifact", "wallet", "eas"] as const)
+  const primaryActionGates = (["identity", "artifact", "wallet", "eas"] as const)
     .map((key) => gateReadouts.find((gate) => gate.key === key))
     .filter((gate): gate is PortalGateReadout => Boolean(gate));
-  const accessPairComplete = Boolean(account?.address) && Boolean(verification?.eligible);
-  const recordPairComplete = hasIdentity && hasArtifact;
-  const finalMintClusterReady =
-    accessPairComplete && recordPairComplete && hasLocation && hasTime && deedAccepted;
+  const secondaryActionGates = (["location", "time", "terms", "payment"] as const)
+    .map((key) => gateReadouts.find((gate) => gate.key === key))
+    .filter((gate): gate is PortalGateReadout => Boolean(gate));
   const primaryActionEnabled =
     selectedGate === "terms"
       ? (hasArtifact && hasLocation && hasTime) || deedAccepted
       : selectedGate === "mint"
         ? canMint
         : gateEnterEnabled;
+  const primaryActionState =
+    !selectedGateReadout.enabled
+      ? "locked"
+      : selectedGateReadout.stateClass.includes("console-key-button--entered")
+        ? "ready"
+        : "pending";
   const primaryActionLabel =
     selectedGate === "wallet" || selectedGate === "terms"
       ? gateEnterLabel
@@ -2038,6 +1990,10 @@ function PortalContent() {
       return;
     }
 
+    if (selectedGate === "wallet" && !account?.address) {
+      playPortalConsoleSound("walletConnectButton");
+    }
+
     if (selectedGate !== "wallet" || account?.address) {
       startPortalSequenceVideo();
     }
@@ -2050,53 +2006,6 @@ function PortalContent() {
     }
 
     void handleGateEnter();
-  }
-
-  function handleTermsClusterAction() {
-    if (!recordPairComplete) {
-      return;
-    }
-
-    if (!hasLocation) {
-      setSelectedGate("location");
-      return;
-    }
-
-    if (!hasTime) {
-      setSelectedGate("time");
-      return;
-    }
-
-    setSelectedGate("terms");
-
-    if (!deedAccepted) {
-      setCertificateOpened(true);
-      setTermsReviewOpen(true);
-    }
-  }
-
-  function handleMintClusterAction() {
-    if (!finalMintClusterReady) {
-      if (!hasLocation) {
-        setSelectedGate("location");
-        return;
-      }
-
-      if (!hasTime) {
-        setSelectedGate("time");
-        return;
-      }
-
-      return;
-    }
-
-    if (canMint) {
-      setSelectedGate("mint");
-      void handleMintRef.current?.();
-      return;
-    }
-
-    setSelectedGate(orderPaid ? "mint" : "payment");
   }
 
   function downloadFormalTerms() {
@@ -2377,8 +2286,11 @@ function PortalContent() {
                               aria-controls="portal-mobile-select-drawer"
                               aria-expanded={mobileGateDrawerOpen}
                               aria-label={`Open mint controls for ${selectedGateTitle}`}
-                              className="portal-command-title-tab portal-command-title-tab--attention"
-                              onClick={() => setMobileGateDrawerOpen(true)}
+                              className={`portal-command-title-tab portal-command-title-tab--attention portal-command-title-tab--${primaryActionState}`}
+                              onClick={() => {
+                                playPortalConsoleSound("commandTabMenu");
+                                setMobileGateDrawerOpen(true);
+                              }}
                               ref={mobileGateTriggerRef}
                               type="button"
                             >
@@ -2418,14 +2330,28 @@ function PortalContent() {
                           >
                             {selectedGate === "wallet" && (
                               <div className={`grid gap-3 ${walletStatusClass}`}>
-                                <div className="control-surface-soft portal-wallet-recipient border p-3">
-                                  <div className="portal-wallet-recipient__header">
-                                    <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
-                                      Recipient
+                                <div className="portal-wallet-recipient-row">
+                                  <div className="control-surface-soft portal-wallet-recipient border p-3">
+                                    <div className="portal-wallet-recipient__header">
+                                      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                        Recipient
+                                      </div>
+                                    </div>
+                                    <div className="mt-2 break-all font-mono text-sm text-cyan-50/78">
+                                      {account?.address ?? "No wallet connected"}
                                     </div>
                                   </div>
-                                  <div className="mt-2 break-all font-mono text-sm text-cyan-50/78">
-                                    {account?.address ?? "No wallet connected"}
+                                  <div className="control-surface-soft portal-wallet-purpose border p-3">
+                                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+                                      Why a DeFi wallet is needed
+                                    </p>
+                                    <p className="mt-2 text-sm font-semibold leading-6 text-cyan-50/76">
+                                      Your wallet is the address that receives the
+                                      minted Soul Artifact, proves which account
+                                      completed the Portal path, and lets the system
+                                      recognize the correct owner for future access
+                                      and routing.
+                                    </p>
                                   </div>
                                 </div>
                                 {!thirdwebClient && (
@@ -2464,9 +2390,9 @@ function PortalContent() {
                                       {verification.message}
                                     </p>
                                   )}
-                                  <div className="mt-2 portal-panel-button-row portal-panel-button-row--two">
+                                  <div className="portal-eas-mini-actions">
                                     <a
-                                      className="console-key-button portal-eas-open-button"
+                                      className="portal-eas-mini-action"
                                       href={coinbaseEasUrl}
                                       rel="noreferrer"
                                       target="_blank"
@@ -2474,7 +2400,7 @@ function PortalContent() {
                                       Open EAS
                                     </a>
                                     <a
-                                      className="console-key-button"
+                                      className="portal-eas-mini-action"
                                       href="https://www.coinbase.com/wallet/getting-started-mobile"
                                       rel="noreferrer"
                                       target="_blank"
@@ -2494,7 +2420,7 @@ function PortalContent() {
                             {selectedGate === "identity" && (
                               <div className="grid gap-3">
                                 <div className="grid gap-2 sm:grid-cols-2">
-                                  <label className="console-input-field portal-input-shell relative block">
+                                  <label className="console-input-field portal-input-shell portal-input-shell--time-entry relative block">
                                     <input
                                       ref={firstNameInputRef}
                                       value={firstName}
@@ -2516,7 +2442,7 @@ function PortalContent() {
                                     </span>
                                   </label>
 
-                                  <label className="console-input-field portal-input-shell relative block">
+                                  <label className="console-input-field portal-input-shell portal-input-shell--time-entry relative block">
                                     <input
                                       ref={lastNameInputRef}
                                       value={lastName}
@@ -2690,7 +2616,10 @@ function PortalContent() {
                             {selectedGate === "time" && (
                               <div className="grid gap-3">
                                 <div className="grid gap-2 sm:grid-cols-2">
-                                  <label className="console-input-field portal-input-shell relative block">
+                                  <label className="console-input-field portal-input-shell portal-input-shell--time-entry relative block">
+                                    <span className="portal-birth-time-disclaimer">
+                                      Must match Coinbase records.
+                                    </span>
                                     <input
                                       ref={dobInputRef}
                                       value={dob}
@@ -2711,7 +2640,10 @@ function PortalContent() {
                                     </span>
                                   </label>
 
-                                  <label className="console-input-field portal-input-shell relative block">
+                                  <label className="console-input-field portal-input-shell portal-input-shell--time-entry relative block">
+                                    <span className="portal-birth-time-disclaimer">
+                                      Time is verified by you. If this is incorrect it cannot be changed.
+                                    </span>
                                     <input
                                       ref={birthTimeInputRef}
                                       value={birthTime}
@@ -2772,39 +2704,52 @@ function PortalContent() {
 
                             {selectedGate === "artifact" && (
                               <div className="grid gap-3">
-                                <label className="console-input-field portal-input-shell relative block">
-                                  <input
-                                    ref={characterNameInputRef}
-                                    value={characterName}
-                                    maxLength={ARTIFACT_NAME_MAX_LENGTH}
-                                    onChange={(event) => {
-                                      setArtifactConfirmed(false);
-                                      setCharacterName(
-                                        normalizeArtifactNameInput(event.target.value),
-                                      );
-                                    }}
-                                    onKeyDown={(event) => {
-                                      if (event.key !== "Enter") {
-                                        return;
-                                      }
+                                <div className="portal-artifact-name-layout">
+                                  <div className="portal-artifact-name-stack">
+                                    <label className="console-input-field portal-input-shell portal-input-shell--artifact-prototype portal-artifact-name-field relative block">
+                                      <input
+                                        ref={characterNameInputRef}
+                                        value={characterName}
+                                        maxLength={ARTIFACT_NAME_MAX_LENGTH}
+                                        onChange={(event) => {
+                                          setArtifactConfirmed(false);
+                                          setCharacterName(
+                                            normalizeArtifactNameInput(event.target.value),
+                                          );
+                                        }}
+                                        onKeyDown={(event) => {
+                                          if (event.key !== "Enter") {
+                                            return;
+                                          }
 
-                                      event.preventDefault();
-                                      void confirmArtifactEntry();
-                                    }}
-                                    className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
-                                    placeholder={publicMark}
-                                  />
-                                </label>
-                                <div className="control-surface-soft portal-artifact-engraving-box border border-white/10 bg-black/80 p-4">
-                                  <p className="portal-artifact-engraving-prompt text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50">
-                                    Choose an Engraved Name
-                                  </p>
-                                  <p className="portal-artifact-engraving-current text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50/75">
-                                    Current engraving:{" "}
-                                    <span className="text-yellow-100">
-                                      {burnedArtifactName}
-                                    </span>
-                                  </p>
+                                          event.preventDefault();
+                                          void confirmArtifactEntry();
+                                        }}
+                                        className="control-input-surface portal-terminal-input portal-terminal-input--artifact-prototype w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
+                                        placeholder={publicMark}
+                                      />
+                                    </label>
+                                    <div className="control-surface-soft portal-artifact-engraving-current-box border border-white/10 bg-black/80 p-4">
+                                      <p className="portal-artifact-engraving-current text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50/75">
+                                        Current engraving:{" "}
+                                        <span className="text-yellow-100">
+                                          {burnedArtifactName}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="control-surface-soft portal-artifact-engraving-prompt-box border border-white/10 bg-black/80 p-4">
+                                    <p className="portal-artifact-engraving-prompt text-xs font-semibold uppercase tracking-[0.18em] text-cyan-50">
+                                      Choose an Engraved Name
+                                    </p>
+                                    <p className="portal-artifact-engraving-copy text-xs font-semibold text-cyan-50/75">
+                                      The Engine customizes your NFT with a name
+                                      you choose to be etched into the minted image.
+                                    </p>
+                                    <p className="portal-artifact-engraving-limit text-[10px] font-semibold uppercase tracking-[0.16em] text-yellow-100/80">
+                                      12 characters max
+                                    </p>
+                                  </div>
                                 </div>
                                 {!artifactNameValid && (
                                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-200">
@@ -3069,9 +3014,11 @@ function PortalContent() {
                               <button
                                 aria-label={gateEnterLabel}
                                 className={`portal-console-enter ${
-                                  primaryActionEnabled
-                                    ? "portal-console-enter--ready"
-                                    : "portal-console-enter--locked"
+                                  primaryActionState === "pending"
+                                    ? "portal-console-enter--pending"
+                                    : primaryActionState === "ready"
+                                      ? "portal-console-enter--ready"
+                                      : "portal-console-enter--locked"
                                 }`}
                                 disabled={!primaryActionEnabled}
                                 onClick={handlePrimaryGateAction}
@@ -3097,100 +3044,59 @@ function PortalContent() {
                             <div className="portal-gate-action-cell portal-gate-action-cell--cluster">
                               <div
                                 aria-label="Mint sequence status"
-                                className={`portal-action-cluster ${
-                                  finalMintClusterReady
-                                    ? "portal-action-cluster--final"
-                                    : ""
-                                }`}
+                                className="portal-action-cluster portal-action-cluster--static"
                                 role="list"
                               >
-                                {finalMintClusterReady ? (
-                                  <div className="portal-action-merged-slot portal-action-merged-slot--final" role="listitem">
-                                    <button
-                                      aria-label={
-                                        canMint
-                                          ? "Mint token"
-                                          : "Open the protected mint path"
-                                      }
-                                      className={`portal-merged-action portal-merged-action--final ${
-                                        canMint ? "" : "portal-merged-action--guarded"
-                                      }`}
-                                      onClick={handleMintClusterAction}
-                                      type="button"
-                                    >
-                                      MINT
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <>
-                                    {recordPairComplete ? (
-                                      <div className="portal-action-merged-slot portal-action-merged-slot--terms" role="listitem">
-                                        <button
-                                          aria-label={
-                                            "Open Terms control"
+                                <div className="portal-action-quad portal-action-quad--primary">
+                                  {primaryActionGates.map((gate) => (
+                                    <div key={gate.key} role="listitem">
+                                      <button
+                                        aria-disabled={!gate.enabled && !gate.complete}
+                                        aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+                                        className={`portal-step-icon ${gateIconState(gate)}`}
+                                        onClick={() => {
+                                          if (!gate.enabled && !gate.complete) {
+                                            playPortalConsoleSound("notSelectable");
+                                            return;
                                           }
-                                          className="portal-merged-action portal-merged-action--terms"
-                                          onClick={handleTermsClusterAction}
-                                          type="button"
-                                        >
-                                          Terms
-                                        </button>
-                                      </div>
-                                    ) : (
-                                      actionClusterGates.slice(0, 2).map((gate) => (
-                                        <div key={gate.key} role="listitem">
-                                          <button
-                                            aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
-                                            className={`portal-step-icon ${gateIconState(gate)}`}
-                                            disabled={!gate.enabled && !gate.complete}
-                                            onClick={() => selectGate(gate.key)}
-                                            title={`${gate.label}: ${gate.value}`}
-                                            type="button"
-                                          >
-                                            <PortalGateIcon gate={gate.key} />
-                                            <span>{gate.label}</span>
-                                          </button>
-                                        </div>
-                                      ))
-                                    )}
 
-                                    {accessPairComplete ? (
-                                      <div className="portal-action-merged-slot portal-action-merged-slot--mint" role="listitem">
-                                        <button
-                                          aria-label={
-                                            deedAccepted
-                                              ? "Mint control armed"
-                                              : "Mint unlocks after Terms are complete"
+                                          playPortalConsoleSound("appDrawerButtons");
+                                          selectGate(gate.key);
+                                        }}
+                                        title={`${gate.label}: ${gate.value}`}
+                                        type="button"
+                                      >
+                                        <PortalGateIcon gate={gate.key} />
+                                        <span>{gate.label}</span>
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div className="portal-action-quad portal-action-quad--secondary">
+                                  {secondaryActionGates.map((gate) => (
+                                    <div key={gate.key} role="listitem">
+                                      <button
+                                        aria-disabled={!gate.enabled && !gate.complete}
+                                        aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+                                        className={`portal-step-icon ${gateIconState(gate)}`}
+                                        onClick={() => {
+                                          if (!gate.enabled && !gate.complete) {
+                                            playPortalConsoleSound("notSelectable");
+                                            return;
                                           }
-                                          className={`portal-merged-action portal-merged-action--mint-waiting ${
-                                            deedAccepted ? "portal-merged-action--mint-armed" : ""
-                                          }`}
-                                          disabled={!deedAccepted}
-                                          onClick={handleMintClusterAction}
-                                          type="button"
-                                        >
-                                          Mint
-                                        </button>
-                                      </div>
-                                    ) : (
-                                      actionClusterGates.slice(2, 4).map((gate) => (
-                                        <div key={gate.key} role="listitem">
-                                          <button
-                                            aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
-                                            className={`portal-step-icon ${gateIconState(gate)}`}
-                                            disabled={!gate.enabled && !gate.complete}
-                                            onClick={() => selectGate(gate.key)}
-                                            title={`${gate.label}: ${gate.value}`}
-                                            type="button"
-                                          >
-                                            <PortalGateIcon gate={gate.key} />
-                                            <span>{gate.label}</span>
-                                          </button>
-                                        </div>
-                                      ))
-                                    )}
-                                  </>
-                                )}
+
+                                          playPortalConsoleSound("appDrawerButtons");
+                                          selectGate(gate.key);
+                                        }}
+                                        title={`${gate.label}: ${gate.value}`}
+                                        type="button"
+                                      >
+                                        <PortalGateIcon gate={gate.key} />
+                                        <span>{gate.label}</span>
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -3214,7 +3120,10 @@ function PortalContent() {
                         <button
                           className="portal-console-dock-cell portal-console-dock-cell--action"
                           disabled={recoveryBusy}
-                          onClick={() => void recoverMintReceipt()}
+                          onClick={() => {
+                            playPortalConsoleSound("bottomCellButtons");
+                            void recoverMintReceipt();
+                          }}
                           type="button"
                         >
                           <span>Receipt</span>
@@ -3223,7 +3132,10 @@ function PortalContent() {
                         <button
                           className="portal-console-dock-cell portal-console-dock-cell--action"
                           disabled={minting || orderBusy}
-                          onClick={clearPortalFormData}
+                          onClick={() => {
+                            playPortalConsoleSound("bottomCellButtons");
+                            clearPortalFormData();
+                          }}
                           type="button"
                         >
                           <span>Clear</span>
@@ -3233,7 +3145,10 @@ function PortalContent() {
                           aria-label="Previous portal gate"
                           className="portal-console-dock-cell portal-console-dock-cell--cycle"
                           disabled={gateReadouts.length < 2}
-                          onClick={() => cyclePortalGate("previous")}
+                          onClick={() => {
+                            playPortalConsoleSound("bottomCellButtons");
+                            cyclePortalGate("previous");
+                          }}
                           type="button"
                         >
                           <svg
@@ -3249,7 +3164,10 @@ function PortalContent() {
                           aria-label="Next portal gate"
                           className="portal-console-dock-cell portal-console-dock-cell--cycle portal-console-dock-cell--cycle-next"
                           disabled={gateReadouts.length < 2}
-                          onClick={() => cyclePortalGate("next")}
+                          onClick={() => {
+                            playPortalConsoleSound("bottomCellButtons");
+                            cyclePortalGate("next");
+                          }}
                           type="button"
                         >
                           <svg
@@ -3303,6 +3221,7 @@ function PortalContent() {
           setMobileGateDrawerOpen(false);
           mobileGateTriggerRef.current?.focus();
         }}
+        onPlaySound={playPortalConsoleSound}
         onSelectGate={selectGate}
         selectedGate={selectedGate}
       />

@@ -490,12 +490,14 @@ export function PortalMobileSelectDrawer({
   gateReadouts,
   selectedGate,
   onClose,
+  onPlaySound,
   onSelectGate,
 }: {
   isOpen: boolean;
   gateReadouts: PortalGateReadout[];
   selectedGate: PortalGate;
   onClose: () => void;
+  onPlaySound?: (sound: "appDrawerButtons" | "notSelectable" | "stow") => void;
   onSelectGate: (gate: PortalGate) => void;
 }) {
   if (!isOpen) {
@@ -526,6 +528,12 @@ export function PortalMobileSelectDrawer({
       } ${gate.enabled ? gate.stateClass : "console-key-button--disabled"}`}
       key={gate.key}
       onClick={() => {
+        if (!gate.enabled && !gate.complete) {
+          onPlaySound?.("notSelectable");
+          return;
+        }
+
+        onPlaySound?.("appDrawerButtons");
         onSelectGate(gate.key);
         onClose();
       }}
@@ -541,7 +549,10 @@ export function PortalMobileSelectDrawer({
       <button
         aria-label="Close Select Panel"
         className="portal-mobile-select-backdrop"
-        onClick={onClose}
+        onClick={() => {
+          onPlaySound?.("stow");
+          onClose();
+        }}
         type="button"
       />
       <aside
@@ -560,7 +571,10 @@ export function PortalMobileSelectDrawer({
             </div>
             <button
               className="console-key-button portal-command-stow portal-mobile-select-close"
-              onClick={onClose}
+              onClick={() => {
+                onPlaySound?.("stow");
+                onClose();
+              }}
               type="button"
             >
               Stow
@@ -589,35 +603,50 @@ export function PortalMobileSelectDrawer({
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
               href="/"
-              onClick={onClose}
+              onClick={() => {
+                onPlaySound?.("appDrawerButtons");
+                onClose();
+              }}
             >
               Home
             </Link>
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
               href="/vanguard"
-              onClick={onClose}
+              onClick={() => {
+                onPlaySound?.("appDrawerButtons");
+                onClose();
+              }}
             >
               Vanguard
             </Link>
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
               href="/whitepaper"
-              onClick={onClose}
+              onClick={() => {
+                onPlaySound?.("appDrawerButtons");
+                onClose();
+              }}
             >
               Whitepaper
             </Link>
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact portal-mobile-drawer-action"
               href="/developer"
-              onClick={onClose}
+              onClick={() => {
+                onPlaySound?.("appDrawerButtons");
+                onClose();
+              }}
             >
               Developer
             </Link>
             <Link
               className="chamfer-nav-link chamfer-nav-link--compact command-room__drawer-action--primary portal-mobile-drawer-action"
               href="/alliant"
-              onClick={onClose}
+              onClick={() => {
+                onPlaySound?.("appDrawerButtons");
+                onClose();
+              }}
             >
               Alliant
             </Link>
