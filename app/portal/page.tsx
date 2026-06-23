@@ -868,6 +868,8 @@ function PortalContent() {
           lastName,
           characterName,
           dob,
+          birthTime,
+          birthLocation,
           publicMark,
           contractAccepted,
           contractLanguageVersion,

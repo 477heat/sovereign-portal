@@ -28,11 +28,26 @@ type MintRequest = {
   lastName?: string;
   characterName?: string;
   dob?: string;
+  birthTime?: string;
+  birthLocation?: BirthLocation;
   publicMark?: string;
   contractAccepted?: boolean;
   contractLanguageVersion?: string;
   tokenURI?: string;
   orderId?: string;
+};
+
+type BirthLocation = {
+  city?: string;
+  country?: string;
+  countryCode?: string;
+  label?: string;
+  latitude?: number;
+  longitude?: number;
+  placeId?: string;
+  region?: string;
+  timeZone?: string;
+  verified?: boolean;
 };
 
 type MintMetadata = {
@@ -61,9 +76,27 @@ function hasRequiredIdentity(payload: MintRequest) {
     payload.firstName?.trim() &&
       payload.lastName?.trim() &&
       payload.dob &&
+      payload.birthTime &&
+      payload.birthLocation?.verified &&
       payload.publicMark &&
       payload.publicMark !== "_. ___" &&
       payload.contractAccepted,
+  );
+}
+
+function hasVerifiedBirthLocation(value: BirthLocation | undefined) {
+  return Boolean(
+    value?.verified &&
+      value.label?.trim() &&
+      value.timeZone?.trim() &&
+      typeof value.latitude === "number" &&
+      Number.isFinite(value.latitude) &&
+      value.latitude >= -90 &&
+      value.latitude <= 90 &&
+      typeof value.longitude === "number" &&
+      Number.isFinite(value.longitude) &&
+      value.longitude >= -180 &&
+      value.longitude <= 180,
   );
 }
 
@@ -154,9 +187,15 @@ function forgetRawIdentity(payload: MintRequest) {
   payload.lastName = undefined;
   payload.characterName = undefined;
   payload.dob = undefined;
+  payload.birthTime = undefined;
+  payload.birthLocation = undefined;
 }
 
 async function requestMetadata(payload: MintRequest, engineUrl: string) {
+  if (!hasVerifiedBirthLocation(payload.birthLocation)) {
+    throw new Error("A verified birth location is required for Full Soul Stat minting.");
+  }
+
   const response = await fetch(engineUrl, {
     method: "POST",
     headers: {
@@ -171,6 +210,23 @@ async function requestMetadata(payload: MintRequest, engineUrl: string) {
       output: "mint_metadata",
       attributeProfile: "genesis",
       statTable: "genesis_engine",
+      engineBirthInput: {
+        schema_version: "engine_birth_input.v1",
+        dob: payload.dob,
+        birth_time: payload.birthTime,
+        birth_location: {
+          city: payload.birthLocation?.city,
+          country: payload.birthLocation?.country,
+          countryCode: payload.birthLocation?.countryCode,
+          label: payload.birthLocation?.label,
+          latitude: payload.birthLocation?.latitude,
+          longitude: payload.birthLocation?.longitude,
+          placeId: payload.birthLocation?.placeId,
+          region: payload.birthLocation?.region,
+          timeZone: payload.birthLocation?.timeZone,
+          verified: payload.birthLocation?.verified,
+        },
+      },
     }),
     cache: "no-store",
   });
@@ -217,7 +273,7 @@ export async function POST(request: NextRequest) {
       {
         status: "rejected",
         message:
-          "Wallet, name, DOB, public mark, and contract acceptance are required.",
+          "Wallet, name, DOB, birth time, verified birth location, public mark, and contract acceptance are required.",
       },
       { status: 400 },
     );
