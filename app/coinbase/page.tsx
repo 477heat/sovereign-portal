@@ -76,18 +76,21 @@ export default function CoinbaseEntryPage() {
               <span className="block">Your Artifact.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-sm font-semibold uppercase leading-6 tracking-[0.18em] text-yellow-100/82 max-sm:text-[0.72rem] max-sm:leading-5 max-sm:tracking-[0.12em] max-sm:[overflow-wrap:anywhere] md:text-base">
-              Verify your Humanity, Claim you Soul.
+              Verify your Humanity, Claim your Soul.
             </p>
             <p className="mt-7 max-w-2xl text-sm leading-6 text-cyan-50/72 max-sm:[overflow-wrap:anywhere] md:text-base">
-              The future belonged first to AI but it was the arrival of SI that
-              destroyed the digital realm. Ther Wealthy used it to shape
-              everything: search, commerce, gaming, and visibility; all at
-              scale. Real-time optimization made it harder for small sellers,
-              creators, and players to compete unless they could pay to stay in
-              view. Then Alliant introduced the Engine. A way for humans to
-              prove personhood and compete in a fair market. Verify your
-              humanity, claim your Soul. Retain your individuality in a
-              machine-driven world.
+              Humanity rejoiced when AI created SI, a superior intelligence
+              built to save us. That future did not stay simple. Sovereign
+              Engine starts with you: your birth date, time, and place become a
+              deterministic astrological profile. Your astrological profile
+              creates the characters you control and shapes the tradeable items
+              you own in the card game.
+            </p>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-cyan-50/68 max-sm:[overflow-wrap:anywhere] md:text-base">
+              Genesis Access marks the first step into that Engine: a
+              Base-native artifact for verified participants who want their
+              identity, creations, and future game-side ownership to carry a
+              real origin point.
             </p>
 
             <div className="mt-7 flex max-w-full min-w-0 flex-wrap gap-2">
