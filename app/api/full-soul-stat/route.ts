@@ -56,13 +56,42 @@ function isObject(value: unknown): value is Record<string, unknown> {
 }
 
 function looksLikeFullSoulStat(value: unknown) {
+  const hasDetailedStatShape =
+    isObject(value) &&
+    isObject(value.full_soul_stat) &&
+    isObject(value.natal_imprint) &&
+    isObject(value.pillar_accord);
+
+  const hasSummaryStatShape =
+    isObject(value) &&
+    value.output_mode === "full_soul_stat" &&
+    typeof value.full_total === "number" &&
+    typeof value.base_total === "number" &&
+    value.has_raw_birth_location_in_public_metadata === false;
+
   return (
     isObject(value) &&
     value.schema_version === "full_soul_stat.v1" &&
-    isObject(value.full_soul_stat) &&
-    isObject(value.natal_imprint) &&
-    isObject(value.pillar_accord)
+    (hasDetailedStatShape || hasSummaryStatShape)
   );
+}
+
+function unwrapLambdaResponse(value: unknown) {
+  if (!isObject(value) || !("body" in value)) {
+    return value;
+  }
+
+  const body = value.body;
+
+  if (typeof body === "string") {
+    try {
+      return JSON.parse(body) as unknown;
+    } catch {
+      return body;
+    }
+  }
+
+  return body;
 }
 
 function validatePayload(payload: FullSoulStatRequest) {
@@ -152,7 +181,9 @@ async function requestFullSoulStat(payload: ReturnType<typeof validatePayload>) 
     },
     method: "POST",
   });
-  const data = (await response.json().catch(() => null)) as unknown;
+  const data = unwrapLambdaResponse(
+    (await response.json().catch(() => null)) as unknown,
+  );
 
   if (!response.ok) {
     throw new Error("The Engine Full Soul Stat request failed.");

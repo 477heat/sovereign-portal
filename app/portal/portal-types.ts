@@ -83,6 +83,10 @@ export type VerifiedBirthLocation = BirthLocationSuggestion & {
 };
 
 export type FullSoulStatPreview = {
+  base_total?: number;
+  full_total?: number;
+  has_raw_birth_location_in_public_metadata?: boolean;
+  output_mode?: "full_soul_stat" | string;
   schema_version?: string;
   status?: string;
   base_engine?: {
