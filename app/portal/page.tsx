@@ -3128,6 +3128,7 @@ function PortalContent() {
                         >
                           <span>Receipt</span>
                           <strong>Recovery</strong>
+                          <span className="sr-only">Recover Receipt</span>
                         </button>
                         <button
                           className="portal-console-dock-cell portal-console-dock-cell--action"
