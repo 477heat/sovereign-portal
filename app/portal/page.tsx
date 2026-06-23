@@ -20,7 +20,6 @@ import {
 } from "./contractLanguage";
 import {
   birthCountryOptions,
-  birthRegionOptionsByCountry,
 } from "./birth-location-options";
 import {
   encodeErc20TransferCalldata,
@@ -288,7 +287,6 @@ function PortalContent() {
   const [dob, setDob] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthCountryCode, setBirthCountryCode] = useState("US");
-  const [birthRegionCode, setBirthRegionCode] = useState("");
   const [birthCityQuery, setBirthCityQuery] = useState("");
   const [birthLocation, setBirthLocation] =
     useState<VerifiedBirthLocation | null>(null);
@@ -368,11 +366,6 @@ function PortalContent() {
   const publicMark = useMemo(
     () => buildPublicMark(firstName, lastName),
     [firstName, lastName],
-  );
-  const birthRegionOptions =
-    birthRegionOptionsByCountry[birthCountryCode] ?? [];
-  const selectedBirthRegion = birthRegionOptions.find(
-    (region) => region.code === birthRegionCode,
   );
   const timeInputReady = Boolean(dob && birthTime);
   const locationInputReady = Boolean(birthLocation?.verified);
@@ -682,7 +675,6 @@ function PortalContent() {
           body: JSON.stringify({
             countryCode: birthCountryCode,
             limit: 6,
-            region: selectedBirthRegion?.label ?? birthRegionCode,
             text: query,
           }),
           cache: "no-store",
@@ -728,8 +720,6 @@ function PortalContent() {
   }, [
     birthCityQuery,
     birthCountryCode,
-    birthRegionCode,
-    selectedBirthRegion?.label,
   ]);
 
   useEffect(() => {
@@ -1266,7 +1256,6 @@ function PortalContent() {
     setDob("");
     setBirthTime("");
     setBirthCountryCode("US");
-    setBirthRegionCode("");
     setBirthCityQuery("");
     setBirthLocation(null);
     setBirthLocationSuggestions([]);
@@ -2483,7 +2472,6 @@ function PortalContent() {
                                           resetFullSoulStatPreview();
                                           setLocationConfirmed(false);
                                           setBirthCountryCode(event.target.value);
-                                          setBirthRegionCode("");
                                           setBirthCityQuery("");
                                           setBirthLocation(null);
                                           setBirthLocationSuggestions([]);
@@ -2498,36 +2486,6 @@ function PortalContent() {
                                       </select>
                                       <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
                                         Country
-                                      </span>
-                                    </label>
-
-                                    <label className="console-input-field portal-input-shell relative block">
-                                      <select
-                                        value={birthRegionCode}
-                                        onChange={(event) => {
-                                          resetFullSoulStatPreview();
-                                          setLocationConfirmed(false);
-                                          setBirthRegionCode(event.target.value);
-                                          setBirthCityQuery("");
-                                          setBirthLocation(null);
-                                          setBirthLocationSuggestions([]);
-                                        }}
-                                        disabled={!birthRegionOptions.length}
-                                        className="control-input-surface portal-terminal-input portal-terminal-select w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition disabled:opacity-45 focus:border-yellow-300/60"
-                                      >
-                                        <option value="">
-                                          {birthRegionOptions.length
-                                            ? "Select State"
-                                            : "Region From City"}
-                                        </option>
-                                        {birthRegionOptions.map((region) => (
-                                          <option key={region.code} value={region.code}>
-                                            {region.label}
-                                          </option>
-                                        ))}
-                                      </select>
-                                      <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
-                                        State
                                       </span>
                                     </label>
 
@@ -2554,10 +2512,10 @@ function PortalContent() {
                                           handleIdentityKeyDown(event, "birthCity")
                                         }
                                         className="control-input-surface portal-terminal-input w-full border border-white/10 bg-black px-3 py-4 text-white outline-none transition focus:border-yellow-300/60"
-                                        placeholder="City"
+                                        placeholder="City of Birth"
                                       />
                                       <span className="portal-identity-field-caption mt-2 block font-semibold uppercase tracking-[0.16em] text-cyan-50">
-                                        City
+                                        City of Birth
                                       </span>
                                     </label>
                                   </div>
