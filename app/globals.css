@@ -736,7 +736,7 @@ body {
   background:
     linear-gradient(rgba(255, 255, 255, 0.78) 2px, transparent 2px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.68) 2px, transparent 2px);
-  background-size: 100% 6.8rem, 8.35rem 100%;
+  background-size: 100% 5.95rem, 7.3rem 100%;
   bottom: -18vh;
   filter:
     drop-shadow(0 0 7px rgba(165, 243, 252, 0.46))
@@ -831,6 +831,20 @@ body {
   line-height: 1.6;
   margin: 1rem 0 0 auto;
   max-width: 31rem;
+}
+
+.home-story-transmission__inline-link {
+  color: rgba(165, 243, 252, 0.96);
+  text-decoration: underline;
+  text-decoration-color: rgba(165, 243, 252, 0.42);
+  text-underline-offset: 0.18em;
+}
+
+.home-story-transmission__inline-link:hover,
+.home-story-transmission__inline-link:focus-visible {
+  color: white;
+  outline: none;
+  text-decoration-color: rgba(255, 255, 255, 0.72);
 }
 
 .home-story-transmission__meta {
@@ -5539,6 +5553,10 @@ body {
   color: rgba(165, 243, 252, 0.96) !important;
 }
 
+.home-control-page .chamfer-countdown-link :where(.home-countdown-title, .home-countdown-date) {
+  color: rgba(165, 243, 252, 0.96) !important;
+}
+
 .home-control-page .chamfer-panel--interactive::after {
   background: rgba(0, 0, 0, 0.82);
 }
@@ -5679,7 +5697,7 @@ body {
   }
 
   .home-control-page .home-countdown-title {
-    color: rgba(10, 10, 8, 0.98) !important;
+    color: rgba(165, 243, 252, 0.96) !important;
     font-size: 0.58rem !important;
     font-weight: 900 !important;
     line-height: 1.2 !important;
@@ -5687,7 +5705,7 @@ body {
   }
 
   .home-control-page .home-countdown-date {
-    color: rgba(10, 10, 8, 0.88) !important;
+    color: rgba(165, 243, 252, 0.9) !important;
     font-size: 0.42rem !important;
     font-weight: 800 !important;
     letter-spacing: 0.04em !important;

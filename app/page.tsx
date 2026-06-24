@@ -128,6 +128,51 @@ const whyThisMatters = [
   },
 ] as const;
 
+const heroSlides = [
+  {
+    eyebrow: "Sovereign Engine / Character Generator",
+    title: "Non-Random Character Generator",
+    body: (
+      <>
+        Sovereign Engine turns your birth data into deterministic character stats
+        and Soul Attributes. Genesis Access anchors your verified origin so
+        future characters, items, and Progeny can build from one source profile.
+      </>
+    ),
+  },
+  {
+    eyebrow: "Quantum Tunnel / Game Development",
+    title: "Characters Built for Play",
+    body: (
+      <>
+        Characters created by the Engine are being developed for ongoing digital
+        and tabletop game projects, including Quantum Tunnel at{" "}
+        <a
+          className="home-story-transmission__inline-link"
+          href="https://alliantstudio.xyz/quantum-tunnel"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          alliantstudio.xyz/quantum-tunnel
+        </a>
+        . Engine creations belong to the user and are built for future game-side
+        ownership, trading, and sales.
+      </>
+    ),
+  },
+  {
+    eyebrow: "Sovereign Engine / Game Worlds",
+    title: "Built for Game Worlds",
+    body: (
+      <>
+        Sovereign Engine is designed for creators who need characters, items,
+        creatures, and future game assets tied to a real source profile instead
+        of random drops or endless rerolls.
+      </>
+    ),
+  },
+] as const;
+
 function getCountdownParts(milliseconds: number | null) {
   if (milliseconds === null) {
     return [
@@ -157,9 +202,11 @@ export default function HomePage() {
   const mobileHeaderRevealTimer = useRef<number | null>(null);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const [contractNoticeOpen, setContractNoticeOpen] = useState(false);
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
+  const heroSlide = heroSlides[heroSlideIndex];
 
   useEffect(() => {
     const noticeDismissed = window.sessionStorage.getItem(
@@ -192,6 +239,14 @@ export default function HomePage() {
 
     updateCountdown();
     const interval = window.setInterval(updateCountdown, 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setHeroSlideIndex((currentIndex) => (currentIndex + 1) % heroSlides.length);
+    }, 9000);
 
     return () => window.clearInterval(interval);
   }, []);
@@ -349,15 +404,10 @@ export default function HomePage() {
         <div className="home-hero-command-stack home-story-hero-stack relative z-10 w-full max-w-[34rem]">
           <div className="home-story-transmission">
             <p className="home-story-transmission__eyebrow">
-              Sovereign Engine / Character Generator
+              {heroSlide.eyebrow}
             </p>
-            <h1>Non-Random Character Generator</h1>
-            <p>
-              Sovereign Engine turns your birth data into deterministic
-              character stats and Soul Attributes. Genesis Access anchors your
-              verified origin so future characters, items, and Progeny can
-              build from one source profile.
-            </p>
+            <h1>{heroSlide.title}</h1>
+            <p>{heroSlide.body}</p>
             <div className="home-story-transmission__meta">
               <span>Sovereign Engine</span>
             </div>
@@ -381,20 +431,8 @@ export default function HomePage() {
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
-                aria-label="Open Access page for Launch Day countdown details"
-                className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
-                href="/access"
-              >
-                <div className="home-countdown-title text-[0.68rem] uppercase leading-4 tracking-[0.16em] text-neutral-950">
-                  Launch Day
-                </div>
-                <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
-                  30 Jun 2026 / 15:00 UTC
-                </div>
-              </Link>
-              <Link
                 aria-label="Open Access page for Launch Day countdown timer"
-                className="chamfer-countdown-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
+                className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
                 href="/access"
               >
                 <div className="grid grid-cols-4 gap-1">
@@ -411,6 +449,18 @@ export default function HomePage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </Link>
+              <Link
+                aria-label="Open Access page for Launch Day countdown details"
+                className="chamfer-countdown-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
+                href="/access"
+              >
+                <div className="home-countdown-title text-[0.68rem] uppercase leading-4 tracking-[0.16em] text-neutral-950">
+                  Launch Day
+                </div>
+                <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
+                  30 Jun 2026 / 15:00 UTC
                 </div>
               </Link>
             </div>
@@ -590,10 +640,10 @@ export default function HomePage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-[0.62rem] uppercase tracking-[0.32em] text-yellow-100/82">
-                  Contract Notice
+                  Soul Deed Notice
                 </p>
                 <h2 className="mt-2 text-lg uppercase tracking-[0.14em] text-white">
-                  Formal terms apply
+                  Soul Deed wording
                 </h2>
               </div>
               <button
@@ -606,9 +656,10 @@ export default function HomePage() {
               </button>
             </div>
             <p className="mt-3 text-sm leading-6 text-white/70">
-              The Genesis mint includes formal agreement wording. It is written as
-              part legal contract, part ceremonial artifact, and should be reviewed
-              before entering the mint path.
+              Read the ceremonial gag wording attached to the Soul Deed NFT before
+              entering the mint path. Because the Soul Deed is an access token,
+              the wording is meant to discourage selling it, though what you do
+              with your NFT is ultimately your choice.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Link
@@ -616,7 +667,7 @@ export default function HomePage() {
                 href="/contract-terms"
                 onClick={dismissContractNotice}
               >
-                Review Terms
+                Read Wording
               </Link>
               <Link className="chamfer-nav-link chamfer-nav-link--opposite" href="/portal">
                 Mint Path
