@@ -776,13 +776,13 @@ body {
   z-index: 1;
 }
 
-@media (min-width: 768px) {
-  .home-hero-command-stack {
-    margin-right: auto;
-  }
+.home-hero-command-stack {
+  margin-left: 0;
+  margin-right: auto;
 }
 
 .home-story-transmission {
+  margin-left: 0;
   margin-right: auto;
   max-width: 34rem;
   padding-top: 0.25rem;
@@ -815,7 +815,7 @@ body {
 .home-story-transmission h1 {
   color: rgba(255, 255, 255, 0.98);
   font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(1.85rem, 2.35rem, 2.375rem);
+  font-size: clamp(1.7rem, 6.8vw, 2.375rem);
   font-style: italic;
   font-weight: 700;
   letter-spacing: 0;
@@ -826,9 +826,9 @@ body {
 
 .home-story-transmission p {
   color: rgba(255, 253, 235, 0.88);
-  font-size: 1.05rem;
+  font-size: clamp(0.96rem, 2.25vw, 1.05rem);
   font-weight: 650;
-  line-height: 1.6;
+  line-height: clamp(1.5, 2vw, 1.6);
   margin: 1rem 0 0;
   max-width: 31rem;
 }
@@ -935,8 +935,8 @@ body {
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
     max-width: none;
-    min-height: 100svh;
-    padding-top: 7.25rem;
+    min-height: clamp(36rem, 100svh, 46rem);
+    padding-top: clamp(5.25rem, 18vw, 7.25rem);
     width: 100vw;
   }
 
@@ -963,14 +963,7 @@ body {
     width: min(16rem, 82%);
   }
 
-  .home-story-transmission h1 {
-    font-size: 1.7rem;
-    line-height: 0.98;
-  }
-
   .home-story-transmission p {
-    font-size: 0.96rem;
-    line-height: 1.5;
     margin-left: 0;
     max-width: 26rem;
   }
@@ -2134,6 +2127,319 @@ body {
   stroke-width: 0.76;
 }
 
+.portal-console-price-readout {
+  align-items: stretch;
+  background: transparent;
+  border: 0;
+  bottom: clamp(0.86rem, 2.1vw, 1.24rem);
+  box-shadow: none;
+  color: rgba(165, 243, 252, 0.94);
+  display: grid;
+  font-family: "Orbitron", "Chakra Petch", ui-monospace, SFMono-Regular, Menlo, monospace;
+  gap: 0.18rem;
+  letter-spacing: 0.12em;
+  min-width: clamp(8.2rem, 18vw, 11rem);
+  opacity: 1;
+  padding: clamp(0.48rem, 1.2vw, 0.68rem) clamp(0.56rem, 1.35vw, 0.82rem);
+  pointer-events: none;
+  position: absolute;
+  right: clamp(0.86rem, 2.1vw, 1.24rem);
+  text-transform: uppercase;
+  z-index: 18;
+}
+
+.portal-console-price-readout::before {
+  background: transparent;
+  content: "";
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.portal-console-price-readout__row,
+.portal-console-price-readout__usd {
+  position: relative;
+  z-index: 1;
+}
+
+.portal-console-price-readout__row {
+  align-items: baseline;
+  display: flex;
+  gap: 0.55rem;
+  justify-content: space-between;
+}
+
+.portal-console-price-readout__row span {
+  color: rgba(207, 250, 254, 0.62);
+  font-size: clamp(0.42rem, 0.9vw, 0.54rem);
+  font-weight: 800;
+}
+
+.portal-console-price-readout__row strong {
+  color: rgba(165, 243, 252, 0.98);
+  font-size: clamp(0.68rem, 1.35vw, 0.94rem);
+  font-weight: 900;
+  text-shadow:
+    0 0 8px rgba(103, 232, 249, 0.34),
+    0 0 18px rgba(103, 232, 249, 0.14);
+}
+
+.portal-console-price-readout__row--gas strong {
+  min-width: 3.25rem;
+  text-align: right;
+}
+
+.portal-console-price-readout__usd {
+  color: rgba(165, 243, 252, 0.72);
+  font-size: clamp(0.4rem, 0.78vw, 0.48rem);
+  font-weight: 800;
+  text-align: right;
+  text-shadow: 0 0 8px rgba(103, 232, 249, 0.16);
+}
+
+.portal-console-telemetry {
+  bottom: clamp(0.9rem, 2.1vw, 1.25rem);
+  display: contents;
+  pointer-events: none;
+  position: absolute;
+  z-index: 17;
+}
+
+.portal-console-telemetry__glyphs,
+.portal-console-telemetry__surges,
+.portal-console-telemetry__pips,
+.portal-console-telemetry__ring {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 420ms ease;
+  z-index: 17;
+}
+
+.portal-console-telemetry--active :where(
+  .portal-console-telemetry__glyphs,
+  .portal-console-telemetry__surges,
+  .portal-console-telemetry__pips,
+  .portal-console-telemetry__ring
+) {
+  opacity: 1;
+}
+
+.portal-console-telemetry__glyphs {
+  bottom: clamp(1.05rem, 2.4vw, 1.5rem);
+  display: flex;
+  gap: clamp(0.28rem, 0.8vw, 0.48rem);
+  left: clamp(0.9rem, 2.4vw, 1.4rem);
+}
+
+.portal-console-telemetry__glyphs span {
+  animation: portal-glyph-flicker 1600ms steps(2, end) infinite paused;
+  background: rgba(165, 243, 252, 0.82);
+  box-shadow: 0 0 10px rgba(103, 232, 249, 0.28);
+  display: block;
+  height: clamp(0.32rem, 0.8vw, 0.48rem);
+  opacity: 0.36;
+  width: clamp(0.72rem, 1.5vw, 1.04rem);
+}
+
+.portal-console-telemetry__glyphs span:nth-child(1),
+.portal-console-telemetry__glyphs span:nth-child(5) {
+  clip-path: polygon(0 45%, 45% 0, 100% 45%, 55% 100%);
+}
+
+.portal-console-telemetry__glyphs span:nth-child(2),
+.portal-console-telemetry__glyphs span:nth-child(6) {
+  animation-delay: 120ms;
+  clip-path: polygon(0 0, 72% 0, 100% 50%, 72% 100%, 0 100%, 24% 50%);
+}
+
+.portal-console-telemetry__glyphs span:nth-child(3),
+.portal-console-telemetry__glyphs span:nth-child(7) {
+  animation-delay: 240ms;
+  background: rgba(254, 240, 138, 0.78);
+  box-shadow: 0 0 10px rgba(254, 240, 138, 0.24);
+  clip-path: polygon(0 0, 100% 0, 82% 100%, 18% 100%);
+}
+
+.portal-console-telemetry__glyphs span:nth-child(4) {
+  animation-delay: 360ms;
+  clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
+}
+
+.portal-console-telemetry__surges {
+  align-items: end;
+  bottom: clamp(2.05rem, 5vw, 3.15rem);
+  display: flex;
+  gap: clamp(0.18rem, 0.45vw, 0.28rem);
+  left: clamp(1rem, 2.7vw, 1.65rem);
+}
+
+.portal-console-telemetry__surges span {
+  animation: portal-surge-rise 1450ms ease-in-out infinite paused;
+  background: linear-gradient(180deg, rgba(254, 240, 138, 0.88), rgba(103, 232, 249, 0.72));
+  box-shadow: 0 0 12px rgba(103, 232, 249, 0.2);
+  display: block;
+  height: clamp(0.5rem, 1.5vw, 1rem);
+  opacity: 0.56;
+  width: 2px;
+}
+
+.portal-console-telemetry__surges span:nth-child(2) {
+  animation-delay: 90ms;
+  height: clamp(0.9rem, 2vw, 1.45rem);
+}
+
+.portal-console-telemetry__surges span:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.portal-console-telemetry__surges span:nth-child(4) {
+  animation-delay: 270ms;
+  height: clamp(1.1rem, 2.6vw, 1.8rem);
+}
+
+.portal-console-telemetry__surges span:nth-child(5) {
+  animation-delay: 360ms;
+}
+
+.portal-console-telemetry__pips {
+  align-items: center;
+  display: flex;
+  gap: clamp(0.22rem, 0.6vw, 0.38rem);
+  right: clamp(1rem, 2.6vw, 1.55rem);
+  top: clamp(5.1rem, 12vw, 7.5rem);
+}
+
+.portal-console-telemetry__pips span {
+  animation: portal-pip-scan 1800ms linear infinite paused;
+  background: rgba(165, 243, 252, 0.82);
+  box-shadow: 0 0 10px rgba(103, 232, 249, 0.26);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  display: block;
+  height: clamp(0.28rem, 0.7vw, 0.42rem);
+  opacity: 0.24;
+  width: clamp(0.28rem, 0.7vw, 0.42rem);
+}
+
+.portal-console-telemetry__pips span:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.portal-console-telemetry__pips span:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+.portal-console-telemetry__pips span:nth-child(4) {
+  animation-delay: 300ms;
+}
+
+.portal-console-telemetry__pips span:nth-child(5) {
+  animation-delay: 400ms;
+}
+
+.portal-console-telemetry__ring {
+  border: 1px solid rgba(103, 232, 249, 0.32);
+  border-radius: 999px;
+  height: clamp(1.25rem, 3vw, 1.8rem);
+  left: clamp(1rem, 2.7vw, 1.7rem);
+  opacity: 0.7;
+  top: clamp(4.95rem, 12vw, 7.3rem);
+  width: clamp(1.25rem, 3vw, 1.8rem);
+}
+
+.portal-console-telemetry__ring::before {
+  animation: portal-ring-spin 3200ms linear infinite paused;
+  border: 2px solid transparent;
+  border-right-color: rgba(254, 240, 138, 0.68);
+  border-top-color: rgba(165, 243, 252, 0.72);
+  border-radius: inherit;
+  content: "";
+  inset: 0.16rem;
+  position: absolute;
+}
+
+.portal-console-telemetry__ring span {
+  background: rgba(165, 243, 252, 0.74);
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform-origin: 0 0;
+  width: 42%;
+}
+
+.portal-console-telemetry__ring span:nth-child(1) {
+  transform: rotate(18deg);
+}
+
+.portal-console-telemetry__ring span:nth-child(2) {
+  opacity: 0.42;
+  transform: rotate(142deg);
+}
+
+.portal-console-telemetry__ring span:nth-child(3) {
+  opacity: 0.28;
+  transform: rotate(252deg);
+}
+
+.portal-console-telemetry--active :where(
+  .portal-console-telemetry__glyphs span,
+  .portal-console-telemetry__surges span,
+  .portal-console-telemetry__pips span,
+  .portal-console-telemetry__ring::before
+) {
+  animation-play-state: running;
+}
+
+@media (max-width: 680px) {
+  .portal-console-price-readout {
+    bottom: 0.68rem;
+    min-width: 7.4rem;
+    opacity: 0.82;
+    padding: 0.4rem 0.48rem;
+    right: 0.68rem;
+  }
+
+  .portal-console-price-readout__row span {
+    font-size: 0.36rem;
+  }
+
+  .portal-console-price-readout__row strong {
+    font-size: 0.62rem;
+  }
+
+  .portal-console-price-readout__usd {
+    font-size: 0.35rem;
+  }
+
+  .portal-console-telemetry__glyphs {
+    bottom: 0.82rem;
+    gap: 0.22rem;
+    left: 0.7rem;
+  }
+
+  .portal-console-telemetry__glyphs span:nth-child(n + 6),
+  .portal-console-telemetry__surges span:nth-child(n + 5) {
+    display: none;
+  }
+
+  .portal-console-telemetry__surges {
+    bottom: 1.72rem;
+    left: 0.78rem;
+  }
+
+  .portal-console-telemetry__pips {
+    right: 0.78rem;
+    top: 4.55rem;
+  }
+
+  .portal-console-telemetry__ring {
+    left: 0.78rem;
+    top: 4.4rem;
+  }
+}
+
 .portal-control-page .portal-gate-view--matrix :where(.control-surface, .control-surface-strong, .control-surface-large, .control-surface-soft, .control-input-surface) {
   --portal-surface-fill: rgba(0, 0, 0, 0);
   background-color: transparent !important;
@@ -2653,7 +2959,7 @@ body {
 }
 
 .portal-gate-action-cell--cluster {
-  justify-self: start;
+  justify-self: end;
 }
 
 .portal-action-placeholder {
@@ -2698,6 +3004,10 @@ body {
   grid-template-columns: repeat(2, var(--portal-action-chip-width));
   min-height: calc(var(--portal-action-chip-height) * 2 + var(--portal-action-chip-gap));
   min-width: calc(var(--portal-action-chip-width) * 2 + var(--portal-action-chip-gap));
+}
+
+.portal-action-quad--secondary {
+  justify-self: start;
 }
 
 .portal-action-quad > [role="listitem"] {
@@ -2782,6 +3092,50 @@ body {
   letter-spacing: 0.045em;
   opacity: 1;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.2) !important;
+}
+
+@media (max-width: 1120px) {
+  .portal-gate-bottom-row {
+    column-gap: clamp(0.65rem, 3vw, 1.65rem);
+    grid-template-columns: max-content max-content;
+    justify-content: start;
+    justify-items: start;
+    max-width: 100%;
+  }
+
+  .portal-gate-action-cell {
+    justify-items: start;
+  }
+
+  .portal-gate-action-cell--submit,
+  .portal-gate-action-cell--cluster {
+    justify-self: start;
+  }
+
+  .portal-action-cluster {
+    --portal-action-chip-gap: clamp(0.18rem, 0.75vw, 0.32rem);
+    --portal-action-chip-height: clamp(1.82rem, 4vw, 2.12rem);
+    --portal-action-chip-width: clamp(2.95rem, 7.5vw, 4.05rem);
+  }
+
+  .portal-action-cluster--static {
+    column-gap: clamp(0.85rem, 4vw, 2.35rem);
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
+    justify-items: start;
+  }
+
+  .portal-action-quad {
+    justify-self: start;
+  }
+
+  .portal-console-enter {
+    font-size: clamp(0.68rem, 1.55vw, 0.84rem);
+    height: clamp(2.35rem, 4.35vw, 2.75rem);
+    min-height: clamp(2.35rem, 4.35vw, 2.75rem);
+    min-width: clamp(6.9rem, 14vw, 8.6rem);
+    padding-inline: clamp(0.55rem, 1.4vw, 0.8rem);
+  }
 }
 
 .portal-merged-action {
@@ -2910,33 +3264,120 @@ body {
   }
 }
 
+@keyframes portal-glyph-flicker {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes portal-surge-rise {
+  0%,
+  100% {
+    opacity: 0.24;
+    transform: scaleY(0.42);
+  }
+  44% {
+    opacity: 0.92;
+    transform: scaleY(1);
+  }
+  58% {
+    opacity: 0.46;
+    transform: scaleY(0.66);
+  }
+}
+
+@keyframes portal-pip-scan {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: scale(0.82);
+  }
+  45% {
+    opacity: 0.96;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes portal-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes portal-type-on-readout {
+  from {
+    width: 0;
+  }
+  to {
+    width: 19ch;
+  }
+}
+
+@keyframes portal-type-on-readout-clip {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes portal-type-on-readout-price {
+  from {
+    width: 0;
+  }
+  to {
+    width: 5ch;
+  }
+}
+
+@keyframes portal-type-on-readout-price-usd {
+  from {
+    width: 0;
+  }
+  to {
+    width: 14ch;
+  }
+}
+
 @media (max-width: 680px) {
   .portal-gate-bottom-row {
-    column-gap: clamp(0.55rem, 4vw, 1.1rem);
-    grid-template-columns: minmax(6.8rem, 0.92fr) minmax(8.9rem, 1.08fr);
+    column-gap: clamp(0.42rem, 2.6vw, 0.72rem);
+    grid-template-columns: max-content max-content;
+    justify-content: start;
+    justify-items: start;
     margin-top: 0.45rem !important;
     max-width: 100%;
     padding-bottom: 0.55rem;
+    row-gap: 0.5rem;
   }
 
   .portal-gate-action-cell--submit,
   .portal-gate-action-cell--cluster {
-    justify-self: center;
+    justify-self: start;
   }
 
   .portal-action-cluster {
     --portal-action-chip-gap: 6px;
     --portal-action-chip-height: clamp(36px, 9vw, 42px);
-    --portal-action-chip-width: clamp(73px, 31.5vw, 85px);
+    --portal-action-chip-width: clamp(54px, 21vw, 76px);
   }
 
   .portal-action-cluster--static {
-    grid-template-columns: 1fr;
-    justify-items: center;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
+    justify-items: start;
   }
 
   .portal-action-quad {
-    --portal-action-chip-width: clamp(62px, 25vw, 76px);
+    --portal-action-chip-width: clamp(54px, 21vw, 76px);
+    justify-self: start;
   }
 
   .portal-action-cluster .portal-step-icon {
@@ -2987,10 +3428,31 @@ body {
   }
 }
 
+@media (max-width: 520px) {
+  .portal-gate-bottom-row {
+    column-gap: 0;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.5rem;
+  }
+
+  .portal-gate-action-cell--submit,
+  .portal-gate-action-cell--cluster {
+    grid-column: 1;
+  }
+
+  .portal-gate-action-cell--submit {
+    grid-row: 1;
+  }
+
+  .portal-gate-action-cell--cluster {
+    grid-row: 2;
+  }
+}
+
 @media (max-width: 390px) {
   .portal-gate-bottom-row {
-    column-gap: 0.36rem;
-    grid-template-columns: minmax(6.5rem, 0.88fr) minmax(8.15rem, 1.12fr);
+    column-gap: 0;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .portal-action-cluster {
@@ -3006,7 +3468,15 @@ body {
   .portal-merged-action--terms,
   .portal-merged-action--mint-waiting,
   .portal-merged-action--final,
-  .portal-action-cluster--final {
+  .portal-action-cluster--final,
+  .portal-console-telemetry__glyphs span,
+  .portal-console-telemetry__surges span,
+  .portal-console-telemetry__pips span,
+  .portal-console-telemetry__ring::before,
+  .portal-type-on-readout,
+  .portal-type-on-readout--artifact-copy,
+  .portal-type-on-readout--price-value,
+  .portal-type-on-readout--price-usd {
     animation: none;
     transition: none;
   }
@@ -4544,14 +5014,17 @@ body {
 }
 
 .portal-control-page .portal-input-shell--time-entry::after,
-.portal-control-page .portal-input-shell--time-entry:focus-within::after {
+.portal-control-page .portal-input-shell--time-entry:focus-within::after,
+.portal-control-page .portal-birth-city-field::after,
+.portal-control-page .portal-birth-city-field:focus-within::after {
   animation: none !important;
   content: none !important;
   display: none !important;
   opacity: 0 !important;
 }
 
-.portal-control-page .portal-input-shell--time-entry .portal-terminal-input {
+.portal-control-page .portal-input-shell--time-entry .portal-terminal-input,
+.portal-control-page .portal-birth-city-field .portal-terminal-input {
   caret-color: transparent;
 }
 
@@ -5724,9 +6197,9 @@ body {
 
 @media (max-width: 640px) {
   .home-control-page .home-hero-section {
-    min-height: 56vh !important;
+    min-height: clamp(36rem, 100svh, 46rem) !important;
     padding-bottom: 1rem !important;
-    padding-top: 5.25rem !important;
+    padding-top: clamp(5.25rem, 18vw, 7.25rem) !important;
   }
 
   .home-control-page .chamfer-panel--hero-copy {
@@ -5735,16 +6208,6 @@ body {
 
   .home-control-page .chamfer-panel--hero-copy p:first-child {
     margin-bottom: 0.55rem !important;
-  }
-
-  .home-control-page .chamfer-panel--hero-copy h1 {
-    font-size: 1.35rem !important;
-  }
-
-  .home-control-page .chamfer-panel--hero-copy p:last-child {
-    font-size: 0.95rem !important;
-    line-height: 1.55 !important;
-    margin-top: 1rem !important;
   }
 
   .home-control-page .home-hero-controls {
@@ -9226,6 +9689,36 @@ body {
   opacity: 1 !important;
   stroke: #ffffff !important;
   -webkit-text-fill-color: #ffffff;
+}
+
+.portal-type-on-readout {
+  animation: portal-type-on-readout 720ms steps(19, end) both;
+  display: inline-block;
+  max-width: max-content;
+  overflow: hidden;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.portal-type-on-readout--artifact-copy {
+  animation: portal-type-on-readout-clip 1050ms steps(82, end) both;
+  max-width: 100%;
+  text-transform: none;
+  white-space: normal;
+}
+
+.portal-type-on-readout--price-value {
+  animation: portal-type-on-readout-price 420ms steps(5, end) both;
+  text-transform: none;
+  width: 5ch;
+}
+
+.portal-type-on-readout--price-usd {
+  animation: portal-type-on-readout-price-usd 520ms steps(14, end) both;
+  display: block;
+  max-width: none;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .portal-control-page .portal-action-cluster .portal-step-icon--locked,

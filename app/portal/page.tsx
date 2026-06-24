@@ -135,6 +135,13 @@ const GATE_FEEDBACK_DELAY_MS = {
   payment: 2600,
   mint: 2200,
 } satisfies Record<PortalGate, number>;
+const PORTAL_GAS_READOUTS_GWEI = [0.002, 0.004, 0.006, 0.008] as const;
+const PORTAL_GAS_READOUT_ETH_USD = 3500;
+const PORTAL_GAS_READOUT_UNITS = 21000;
+
+function formatPortalGasReadoutUsd(gwei: number) {
+  return (gwei * PORTAL_GAS_READOUT_UNITS * 1e-9 * PORTAL_GAS_READOUT_ETH_USD).toFixed(4);
+}
 
 type GateFeedbackPhase = "blocked" | "confirmed" | "processing";
 type PortalSequenceVideoPhase = "complete" | "final" | "idle" | "intro" | "loop";
@@ -352,6 +359,7 @@ function PortalContent() {
   );
   const [previewShellRequested, setPreviewShellRequested] = useState(false);
   const [mobileGateDrawerOpen, setMobileGateDrawerOpen] = useState(false);
+  const [gasReadoutIndex, setGasReadoutIndex] = useState(0);
   const previewShellActive = previewShellEnabled && previewShellRequested;
 
   const playPortalConsoleSound = useCallback(
@@ -602,6 +610,16 @@ function PortalContent() {
       clearGateFeedbackTimers();
     };
   }, [clearGateFeedbackTimers]);
+
+  useEffect(() => {
+    const gasReadoutTimer = window.setInterval(() => {
+      setGasReadoutIndex((currentIndex) => (
+        currentIndex + 1
+      ) % PORTAL_GAS_READOUTS_GWEI.length);
+    }, 3200);
+
+    return () => window.clearInterval(gasReadoutTimer);
+  }, []);
 
   useEffect(() => {
     const previewShellTimer = window.setTimeout(
@@ -1912,6 +1930,9 @@ function PortalContent() {
         ? "Payment recorded. Mint submission will start automatically."
         : "Gate confirmed. If you edit earlier entries, review the later steps again."
     : null;
+  const activeGasReadoutGwei =
+    PORTAL_GAS_READOUTS_GWEI[gasReadoutIndex] ?? PORTAL_GAS_READOUTS_GWEI[0];
+  const activeGasReadoutUsd = formatPortalGasReadoutUsd(activeGasReadoutGwei);
   const activeGateFeedback =
     gateFeedback?.gate === selectedGate ? gateFeedback : null;
   const gateProcessing = activeGateFeedback?.phase === "processing";
@@ -2276,6 +2297,64 @@ function PortalContent() {
                               />
                             </g>
                           </svg>
+                          <div className="portal-console-price-readout" aria-live="polite">
+                            <div className="portal-console-price-readout__row">
+                              <span>Mint Price</span>
+                              <strong>$3</strong>
+                            </div>
+                            <div className="portal-console-price-readout__row portal-console-price-readout__row--gas">
+                              <span>Gas in Gwei</span>
+                              <strong
+                                className="portal-type-on-readout portal-type-on-readout--price-value"
+                                key={`gas-${activeGasReadoutGwei}`}
+                              >
+                                {activeGasReadoutGwei.toFixed(3)}
+                              </strong>
+                            </div>
+                            <div
+                              className="portal-console-price-readout__usd portal-type-on-readout portal-type-on-readout--price-usd"
+                              key={`gas-usd-${activeGasReadoutUsd}`}
+                            >
+                              = USD ${activeGasReadoutUsd}
+                            </div>
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            className={`portal-console-telemetry ${
+                              portalSequenceVideoPhase === "idle"
+                                ? ""
+                                : "portal-console-telemetry--active"
+                            }`}
+                          >
+                            <div className="portal-console-telemetry__glyphs">
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                            </div>
+                            <div className="portal-console-telemetry__surges">
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                            </div>
+                            <div className="portal-console-telemetry__pips">
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                              <span />
+                            </div>
+                            <div className="portal-console-telemetry__ring">
+                              <span />
+                              <span />
+                              <span />
+                            </div>
+                          </div>
                           <div className="portal-gate-top-row">
                             <button
                               aria-controls="portal-mobile-select-drawer"
@@ -2333,7 +2412,13 @@ function PortalContent() {
                                       </div>
                                     </div>
                                     <div className="mt-2 break-all font-mono text-sm text-cyan-50/78">
-                                      {account?.address ?? "No wallet connected"}
+                                      {account?.address ? (
+                                        account.address
+                                      ) : (
+                                        <span className="portal-type-on-readout">
+                                          No wallet connected
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                   <div className="control-surface-soft portal-wallet-purpose border p-3">
@@ -2707,8 +2792,10 @@ function PortalContent() {
                                       Choose an Engraved Name
                                     </p>
                                     <p className="portal-artifact-engraving-copy text-xs font-semibold text-cyan-50/75">
-                                      The Engine customizes your NFT with a name
-                                      you choose to be etched into the minted image.
+                                      <span className="portal-type-on-readout portal-type-on-readout--artifact-copy">
+                                        The Engine customizes your NFT with a name
+                                        you choose to be etched into the minted image.
+                                      </span>
                                     </p>
                                     <p className="portal-artifact-engraving-limit text-[10px] font-semibold uppercase tracking-[0.16em] text-yellow-100/80">
                                       12 characters max
