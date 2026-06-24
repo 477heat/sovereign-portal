@@ -43,6 +43,8 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
   "Attribute Tree",
   "Attributes",
   "Coinbase EAS",
+  "DC",
+  "Deterministically Calculated",
   "DOB",
   "EAS",
   "Genesis",
@@ -65,7 +67,7 @@ const protocolCards = [
   {
     label: "Pre-Launch",
     title: "Character Generator",
-    body: "Sovereign Engine is a non-random character generator. It turns birth-rooted zodiac signals into stable Soul Attributes and character stats for tabletop games, digital worlds, and future Engine creations.",
+    body: "Sovereign Engine is a Deterministically Calculated (DC) character generator. It turns birth-rooted zodiac signals into stable Soul Attributes and character stats for tabletop games, digital worlds, and future Engine creations.",
     href: "/portal",
     destination: "Mint Path",
   },
@@ -131,12 +133,13 @@ const whyThisMatters = [
 const heroSlides = [
   {
     eyebrow: "Sovereign Engine / Character Generator",
-    title: "Non-Random Character Generator",
+    title: "Deterministically Calculated Character Generator",
     body: (
       <>
-        Sovereign Engine turns your birth data into deterministic character stats
-        and Soul Attributes. Genesis Access anchors your verified origin so
-        future characters, items, and Progeny can build from one source profile.
+        Sovereign Engine turns your birth data into Deterministically Calculated
+        (DC) character stats and Soul Attributes. Genesis Access anchors your
+        verified origin so future characters, items, and Progeny can build from
+        one source profile.
       </>
     ),
   },
