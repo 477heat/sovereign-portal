@@ -7,6 +7,7 @@ import {
   type PortalGate,
   type PortalGateReadout,
   type ReceiptDetailRow,
+  type VerificationState,
 } from "./portal-types";
 import { getGateIconState } from "./portal-gates";
 
@@ -14,6 +15,117 @@ type PortalConsolePanelSound =
   | "appDrawerButtons"
   | "commandTabMenu"
   | "notSelectable";
+
+export function PortalWalletGatePanel({
+  accountAddress,
+  thirdwebClientReady,
+  walletStatusClass,
+}: {
+  accountAddress?: string;
+  thirdwebClientReady: boolean;
+  walletStatusClass: string;
+}) {
+  return (
+    <div className={`grid gap-3 ${walletStatusClass}`}>
+      <div className="portal-wallet-recipient-row">
+        <div className="control-surface-soft portal-wallet-recipient border p-3">
+          <div className="portal-wallet-recipient__header">
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+              Recipient
+            </div>
+          </div>
+          <div className="mt-2 break-all font-mono text-sm text-cyan-50/78">
+            {accountAddress ? (
+              accountAddress
+            ) : (
+              <span className="portal-type-on-readout portal-type-on-readout--wallet-empty">
+                No wallet connected
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="control-surface-soft portal-wallet-purpose border p-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+            Why a DeFi wallet is needed
+          </p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-cyan-50/76">
+            Your wallet is the address that receives the minted Soul Artifact,
+            proves which account completed the Portal path, and lets the system
+            recognize the correct owner for future access and routing.
+          </p>
+        </div>
+      </div>
+      {!thirdwebClientReady && (
+        <div className="text-sm leading-6 text-white/65">
+          Add NEXT_PUBLIC_THIRDWEB_CLIENT_ID to enable the live wallet connector.
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function PortalEasGatePanel({
+  checkingAttestation,
+  coinbaseEasUrl,
+  verification,
+}: {
+  checkingAttestation: boolean;
+  coinbaseEasUrl: string;
+  verification?: VerificationState | null;
+}) {
+  return (
+    <div className="grid gap-3">
+      <div className="control-surface-soft border border-white/10 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+            Coinbase EAS
+          </span>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+            {checkingAttestation
+              ? "Checking"
+              : verification?.eligible
+                ? "Human"
+                : "Verify"}
+          </span>
+        </div>
+        <p className="mt-2 text-xl leading-8 text-white/76">
+          EAS is our way of proving you&apos;re not a robot.
+        </p>
+        <p className="mt-1.5 text-lg leading-7 text-white/66">
+          Reverify with Coinbase if your attestation is not approved.
+        </p>
+        {verification?.message && (
+          <p className="mt-2 text-sm leading-6 text-cyan-50/72">
+            {verification.message}
+          </p>
+        )}
+        <div className="portal-eas-mini-actions">
+          <a
+            className="portal-eas-mini-action"
+            href={coinbaseEasUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Open EAS
+          </a>
+          <a
+            className="portal-eas-mini-action"
+            href="https://www.coinbase.com/wallet/getting-started-mobile"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Get Wallet
+          </a>
+        </div>
+      </div>
+      {verification?.mode === "mock" && (
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-50">
+          Mock attestation mode
+        </p>
+      )}
+    </div>
+  );
+}
 
 export function PortalCommandTitleTab({
   isOpen,

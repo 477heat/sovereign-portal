@@ -1450,6 +1450,12 @@ body {
 }
 
 .portal-pay-button {
+  --portal-pay-button-border: rgb(134, 239, 172);
+  --portal-pay-button-border-width: 1px;
+  --portal-pay-button-fill: rgb(4, 8, 10);
+  --portal-pay-button-backglow:
+    0 0 34px rgba(224, 242, 254, 0.16),
+    0 0 68px rgba(125, 211, 252, 0.1);
   align-items: center;
   border: 0;
   clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
@@ -1457,6 +1463,7 @@ body {
   flex-direction: column;
   gap: 0.45rem;
   justify-content: center;
+  isolation: isolate;
   min-height: 6.1rem;
   padding: 1rem;
   position: relative;
@@ -1471,11 +1478,38 @@ body {
   width: fit-content;
 }
 
+.portal-pay-button--ready::before,
+.portal-pay-button--ready::after,
+.portal-pay-button--confirmed::before,
+.portal-pay-button--confirmed::after {
+  clip-path: inherit;
+  content: "";
+  opacity: 1;
+  pointer-events: none;
+  position: absolute;
+}
+
+.portal-pay-button--ready::before,
+.portal-pay-button--confirmed::before {
+  background: var(--portal-pay-button-border);
+  inset: 0;
+  z-index: -2;
+}
+
+.portal-pay-button--ready::after,
+.portal-pay-button--confirmed::after {
+  background: var(--portal-pay-button-fill);
+  inset: var(--portal-pay-button-border-width);
+  z-index: -1;
+}
+
 .portal-pay-button span {
   font-size: clamp(1.05rem, 3.5vw, 1.9rem);
   font-weight: 900;
   letter-spacing: 0.12em;
   line-height: 1.05;
+  position: relative;
+  z-index: 1;
 }
 
 .portal-pay-button small {
@@ -1483,6 +1517,8 @@ body {
   font-weight: 700;
   letter-spacing: 0.2em;
   line-height: 1.45;
+  position: relative;
+  z-index: 1;
 }
 
 .portal-pay-button--waiting {
@@ -1495,11 +1531,13 @@ body {
 
 .portal-pay-button--ready,
 .portal-pay-button--confirmed {
-  background: rgba(18, 96, 51, 0.82);
+  background: transparent;
   box-shadow:
-    inset 0 0 0 1px rgba(187, 247, 208, 0.22),
-    0 0 30px rgba(34, 197, 94, 0.32);
-  color: rgb(220, 252, 231);
+    var(--portal-pay-button-backglow),
+    0 0 0 1px rgba(134, 239, 172, 0.18),
+    0 0 28px rgba(34, 197, 94, 0.28);
+  color: rgb(240, 253, 244);
+  opacity: 1;
 }
 
 .portal-pay-button--waiting,
@@ -1517,8 +1555,9 @@ body {
 .portal-pay-button--ready:not(:disabled):hover,
 .portal-pay-button--ready:not(:disabled):focus-visible {
   box-shadow:
-    inset 0 0 0 1px rgba(220, 252, 231, 0.34),
-    0 0 40px rgba(34, 197, 94, 0.48);
+    var(--portal-pay-button-backglow),
+    0 0 0 1px rgba(134, 239, 172, 0.28),
+    0 0 44px rgba(34, 197, 94, 0.46);
   filter: brightness(1.1);
   outline: none;
   transform: translateY(-1px);
@@ -9698,6 +9737,11 @@ body {
   overflow: hidden;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.portal-type-on-readout--wallet-empty {
+  animation: portal-type-on-readout-clip 720ms steps(19, end) both;
+  max-width: 100%;
 }
 
 .portal-type-on-readout--artifact-copy {
