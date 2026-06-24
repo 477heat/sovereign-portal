@@ -133,7 +133,7 @@ const whyThisMatters = [
 const heroSlides = [
   {
     eyebrow: "Sovereign Engine / Character Generator",
-    title: "Deterministically Calculated Character Generator",
+    title: "Non-Random Character Generator",
     body: (
       <>
         Sovereign Engine turns your birth data into Deterministically Calculated
@@ -235,6 +235,10 @@ export default function HomePage() {
     setContractNoticeOpen(false);
   };
 
+  const selectHeroSlide = (nextIndex: number) => {
+    setHeroSlideIndex(nextIndex);
+  };
+
   useEffect(() => {
     const updateCountdown = () => {
       setDayOneRemaining(Math.max(0, dayOneLaunchAt - Date.now()));
@@ -249,7 +253,7 @@ export default function HomePage() {
   useEffect(() => {
     const interval = window.setInterval(() => {
       setHeroSlideIndex((currentIndex) => (currentIndex + 1) % heroSlides.length);
-    }, 11000);
+    }, 14000);
 
     return () => window.clearInterval(interval);
   }, []);
@@ -403,7 +407,7 @@ export default function HomePage() {
         </nav>
       </aside>
 
-      <section className="home-hero-section relative z-10 mx-auto flex min-h-[74vh] max-w-7xl items-start justify-end overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-9 md:pt-28">
+      <section className="home-hero-section relative z-10 mx-auto flex min-h-[74vh] max-w-7xl items-start justify-start overflow-hidden px-5 pb-6 pt-40 md:px-8 md:pb-9 md:pt-28">
         <div className="home-hero-command-stack home-story-hero-stack relative z-10 w-full max-w-[34rem]">
           <div className="home-story-transmission">
             <p className="home-story-transmission__eyebrow">
@@ -414,9 +418,24 @@ export default function HomePage() {
             <div className="home-story-transmission__meta">
               <span>Sovereign Engine</span>
             </div>
+            <div className="home-story-transmission__controls" aria-label="Hero slide controls">
+              {heroSlides.map((slide, index) => (
+                <button
+                  aria-label={`Show hero topic ${index + 1}: ${slide.title}`}
+                  aria-pressed={heroSlideIndex === index}
+                  className="home-story-transmission__control"
+                  data-active={heroSlideIndex === index ? "true" : "false"}
+                  key={slide.title}
+                  onClick={() => selectHeroSlide(index)}
+                  type="button"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:ml-auto sm:w-fit sm:gap-4">
+          <div className="home-hero-controls mt-5 grid w-full max-w-[22.5rem] gap-3 sm:mr-auto sm:w-fit sm:gap-4">
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
                 href="/portal"

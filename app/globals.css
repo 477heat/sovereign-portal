@@ -778,15 +778,15 @@ body {
 
 @media (min-width: 768px) {
   .home-hero-command-stack {
-    margin-left: auto;
+    margin-right: auto;
   }
 }
 
 .home-story-transmission {
-  margin-left: auto;
+  margin-right: auto;
   max-width: 34rem;
   padding-top: 0.25rem;
-  text-align: right;
+  text-align: left;
   text-shadow:
     0 0 18px rgba(0, 0, 0, 0.86),
     0 0 36px rgba(0, 0, 0, 0.72),
@@ -794,11 +794,11 @@ body {
 }
 
 .home-story-transmission::before {
-  background: linear-gradient(90deg, transparent, rgba(254, 240, 138, 0.9));
+  background: linear-gradient(90deg, rgba(254, 240, 138, 0.9), transparent);
   content: "";
   display: block;
   height: 1px;
-  margin: 0 0 0.85rem auto;
+  margin: 0 0 0.85rem;
   width: min(18rem, 72%);
 }
 
@@ -829,7 +829,7 @@ body {
   font-size: 1.05rem;
   font-weight: 650;
   line-height: 1.6;
-  margin: 1rem 0 0 auto;
+  margin: 1rem 0 0;
   max-width: 31rem;
 }
 
@@ -855,7 +855,7 @@ body {
   font-size: 0.62rem;
   font-weight: 800;
   gap: 0.55rem;
-  justify-content: flex-end;
+  justify-content: flex-start;
   letter-spacing: 0.16em;
   line-height: 1.45;
   margin-top: 1.05rem;
@@ -866,6 +866,68 @@ body {
   border: 1px solid rgba(165, 243, 252, 0.28);
   background: rgba(0, 0, 0, 0.28);
   padding: 0.42rem 0.58rem;
+}
+
+.home-story-transmission__controls {
+  display: flex;
+  gap: 0.38rem;
+  justify-content: flex-start;
+  margin-top: 0.65rem;
+}
+
+.home-story-transmission__control {
+  background: transparent;
+  border: 0;
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  color: rgba(165, 243, 252, 0.72);
+  cursor: pointer;
+  font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.56rem;
+  font-weight: 800;
+  height: 1.45rem;
+  isolation: isolate;
+  letter-spacing: 0.12em;
+  min-width: 2.05rem;
+  position: relative;
+  text-align: center;
+  transition:
+    color 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
+.home-story-transmission__control::before,
+.home-story-transmission__control::after {
+  clip-path: inherit;
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.home-story-transmission__control::before {
+  background: rgba(165, 243, 252, 0.35);
+  z-index: -2;
+}
+
+.home-story-transmission__control::after {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.11), transparent 48%),
+    rgba(4, 14, 18, 0.84);
+  inset: 1px;
+  z-index: -1;
+}
+
+.home-story-transmission__control:hover,
+.home-story-transmission__control:focus-visible,
+.home-story-transmission__control[data-active="true"] {
+  color: rgba(254, 240, 138, 0.96);
+  filter: brightness(1.16);
+  outline: none;
+}
+
+.home-story-transmission__control[data-active="true"]::before {
+  background: rgba(254, 240, 138, 0.82);
 }
 
 @media (max-width: 640px) {
@@ -914,6 +976,10 @@ body {
   }
 
   .home-story-transmission__meta {
+    justify-content: flex-start;
+  }
+
+  .home-story-transmission__controls {
     justify-content: flex-start;
   }
 }
