@@ -455,7 +455,7 @@ body {
 .home-deed-preview img {
   clip-path: inherit;
   position: relative;
-  z-index: 1;
+  z-index: 5;
 }
 
 .home-architect-artifact::before {
@@ -690,13 +690,15 @@ body {
 }
 
 .home-page-fixed-backdrop {
-  background-color: #000;
-  background-image: url("/media/alliant-storyboard/chapter-1/web_01_humanity_rejoices.webp");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72), transparent 32%, transparent 68%, rgba(0, 0, 0, 0.74)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.64), transparent 32%, rgba(0, 0, 0, 0.72) 100%),
+    radial-gradient(ellipse at 50% 38%, rgba(165, 243, 252, 0.028) 0%, rgba(14, 165, 233, 0.01) 11%, transparent 24%),
+    radial-gradient(ellipse at 50% 105%, rgba(255, 255, 255, 0.035) 0%, transparent 42%),
+    linear-gradient(180deg, #020607 0%, #000 42%, #000 100%);
   bottom: 0;
   left: 0;
+  overflow: hidden;
   pointer-events: none;
   position: fixed;
   right: 0;
@@ -704,14 +706,74 @@ body {
   z-index: 0;
 }
 
+.home-page-fixed-backdrop::before,
 .home-page-fixed-backdrop::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.home-page-fixed-backdrop::before {
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.12) 42%, rgba(0, 0, 0, 0.66)),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.08) 35%, rgba(0, 0, 0, 0.72)),
-    rgba(0, 0, 0, 0.16);
+    linear-gradient(rgba(255, 255, 255, 0.72) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.62) 2px, transparent 2px);
+  background-size: 100% 3.4rem, 4.2rem 100%;
+  bottom: -4vh;
+  filter:
+    drop-shadow(0 0 7px rgba(165, 243, 252, 0.42))
+    drop-shadow(0 0 16px rgba(255, 255, 255, 0.2));
+  height: 68vh;
+  left: -32vw;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.92) 48%, rgba(0, 0, 0, 0.48) 78%, transparent 100%);
+  opacity: 0;
+  right: -32vw;
+  transform: perspective(34rem) rotateX(63deg);
+  transform-origin: bottom center;
+  z-index: 2;
+}
+
+.home-tunnel-grid {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.78) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.68) 2px, transparent 2px);
+  background-size: 100% 6.8rem, 8.35rem 100%;
+  bottom: -18vh;
+  filter:
+    drop-shadow(0 0 7px rgba(165, 243, 252, 0.46))
+    drop-shadow(0 0 18px rgba(255, 255, 255, 0.2));
+  height: 742vh;
+  left: -245vw;
+  opacity: 0.98;
+  pointer-events: none;
+  position: absolute;
+  right: -245vw;
+  transform: perspective(42rem) rotateX(56deg);
+  transform-origin: bottom center;
+  z-index: 1;
+}
+
+.home-tunnel-grid::after {
+  background:
+    radial-gradient(ellipse 229rem 240rem at 50% 14rem, transparent 0%, transparent 72%, rgba(0, 0, 0, 0.58) 82%, #000 94%),
+    linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.18) 74%, rgba(0, 0, 0, 0.82) 96%, #000 100%);
   content: "";
   inset: 0;
+  pointer-events: none;
   position: absolute;
+}
+
+.home-page-fixed-backdrop::after {
+  background:
+    radial-gradient(ellipse 42px 148px at center, rgba(255, 255, 255, 0.82) 0%, rgba(207, 250, 254, 0.5) 18%, rgba(125, 211, 252, 0.18) 44%, rgba(56, 189, 248, 0.052) 72%, transparent 100%),
+    radial-gradient(ellipse 72px 210px at center, rgba(255, 255, 255, 0.18) 0%, rgba(165, 243, 252, 0.07) 38%, transparent 100%);
+  filter: blur(0.35px);
+  height: 23rem;
+  left: 50%;
+  top: 18vh;
+  transform: translateX(-50%);
+  opacity: 0.83;
+  width: 9.35rem;
+  z-index: 1;
 }
 
 @media (min-width: 768px) {
@@ -753,7 +815,7 @@ body {
 .home-story-transmission h1 {
   color: rgba(255, 255, 255, 0.98);
   font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(2.15rem, 2.9rem, 3.4rem);
+  font-size: clamp(1.85rem, 2.35rem, 2.375rem);
   font-style: italic;
   font-weight: 700;
   letter-spacing: 0;
@@ -826,7 +888,7 @@ body {
   }
 
   .home-story-transmission h1 {
-    font-size: 2.05rem;
+    font-size: 1.7rem;
     line-height: 0.98;
   }
 
@@ -7941,7 +8003,7 @@ body {
   box-shadow: 0 0 14px rgba(147, 197, 253, 0.08);
   text-transform: uppercase;
   top: 1.1rem;
-  z-index: 5;
+  z-index: 0;
 }
 
 .command-animated-frame__chrome-overlay {

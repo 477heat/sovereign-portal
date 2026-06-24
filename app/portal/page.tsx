@@ -393,7 +393,11 @@ function PortalContent() {
   );
   const directPaymentEnabled =
     directPaymentConfigured && directPaymentAllowedForWallet;
-  const paymentAmount = activeOrder?.paymentAmount ?? paymentSettings.paymentAmount;
+  const complimentaryOrderActive =
+    activeOrder?.paymentKind === "complimentary";
+  const paymentAmount = complimentaryOrderActive
+    ? "0"
+    : activeOrder?.paymentAmount ?? paymentSettings.paymentAmount;
   const paymentDisplayAmount = `$${paymentAmount.replace(/\.00$/, "")}`;
   const paymentSeller = paymentSettings.paymentSeller;
   const paymentTokenAddress = paymentSettings.paymentTokenAddress;
@@ -2762,13 +2766,13 @@ function PortalContent() {
                                   <div className="portal-panel-button-row portal-panel-button-row--one">
                                     <div className="portal-pay-button portal-pay-button--confirmed">
                                       <span>
-                                        {activeOrder?.paymentKind === "complimentary"
-                                          ? "Comped"
+                                        {complimentaryOrderActive
+                                          ? "$0"
                                           : "Completed"}
                                       </span>
                                       <small>
-                                        {activeOrder?.paymentKind === "complimentary"
-                                          ? "Admin-issued mint order armed."
+                                        {complimentaryOrderActive
+                                          ? "Complimentary mint order armed."
                                           : "Mint control armed."}
                                       </small>
                                     </div>

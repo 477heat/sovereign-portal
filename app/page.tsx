@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 5, 24, 15, 0, 0);
+const dayOneLaunchAt = Date.UTC(2026, 5, 30, 15, 0, 0);
 const architectTokenMetadataUrl =
   "https://ipfs.io/ipfs/QmSoRCMUXLS9w5dBgfg3VsnxSQhfBJt3RLALyo8DB3DzH2";
 const architectTokenImageUrl =
@@ -247,7 +247,9 @@ export default function HomePage() {
 
   return (
     <main className="home-control-page relative isolate min-h-screen overflow-hidden bg-black text-white">
-      <div aria-hidden="true" className="home-page-fixed-backdrop" />
+      <div aria-hidden="true" className="home-page-fixed-backdrop">
+        <div className="home-tunnel-grid" />
+      </div>
       <header
         className={`fixed left-0 right-0 top-0 z-40 border-b border-cyan-200/15 bg-black/85 shadow-[0_18px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-700 ease-out max-sm:will-change-transform ${
           mobileHeaderHidden
@@ -347,16 +349,14 @@ export default function HomePage() {
         <div className="home-hero-command-stack home-story-hero-stack relative z-10 w-full max-w-[34rem]">
           <div className="home-story-transmission">
             <p className="home-story-transmission__eyebrow">
-              Alliant Transmission / 01
+              Sovereign Engine / Character Generator
             </p>
-            <h1>Humanity Rejoices</h1>
+            <h1>Non-Random Character Generator</h1>
             <p>
-              In the very near future, AI creates SI, a Superior Intelligent
-              Machine meant to Save Humanity; We Rejoice!
-            </p>
-            <p>
-              It did not last long. Man could never satisfy his drive for
-              Progress.
+              Sovereign Engine turns your birth data into deterministic
+              character stats and Soul Attributes. Genesis Access anchors your
+              verified origin so future characters, items, and Progeny can
+              build from one source profile.
             </p>
             <div className="home-story-transmission__meta">
               <span>Sovereign Engine</span>
@@ -376,7 +376,7 @@ export default function HomePage() {
                 href="/alliant"
                 className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2 max-sm:!text-[0.68rem]"
               >
-                Full Story
+                Game Story
               </Link>
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
@@ -389,7 +389,7 @@ export default function HomePage() {
                   Launch Day
                 </div>
                 <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
-                  24 Jun 2026 / 15:00 UTC
+                  30 Jun 2026 / 15:00 UTC
                 </div>
               </Link>
               <Link
