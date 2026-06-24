@@ -74,7 +74,7 @@ const protocolCards = [
   {
     label: "Base-native",
     title: "Smart Contract Characters",
-    body: "Smart contracts can connect each generated character sheet to its source wallet and origin record. For TTRPG Dungeon Masters and digital world creators, that helps show a character came from a fixed profile instead of endless rerolls.",
+    body: "Smart contracts can connect each generated character sheet to its source wallet and origin record. For TTRPG Dungeon Masters and digital world creators, that helps show a character came from a fixed profile instead of endless rerolls, while letting developers set or raise creation limits to fit the world they are building.",
     href: "/portal",
     destination: "Soul Registry Portal",
   },

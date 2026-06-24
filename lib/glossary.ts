@@ -56,9 +56,9 @@ export const glossary = {
   "Deed of Spiritual Conveyance":
     "A formal title for the Soul Deed and its transfer language.",
   DC:
-    "Short for Deterministically Calculated. Here, it means the Engine creates stats from fixed birth-rooted inputs instead of random rolls.",
+    "Short for Deterministically Calculated. Here, it means the Engine creates stats from fixed birth-rooted inputs instead of user-controlled random rolls. The result can still feel surprising, but the user cannot keep rerolling until they get the outcome they want.",
   "Deterministically Calculated":
-    "Created from fixed inputs and repeatable rules instead of chance. Here, it means the Engine calculates character stats from birth-rooted signals rather than random rerolls.",
+    "Created from fixed inputs and repeatable rules instead of user-controlled chance. Here, it means the Engine calculates character stats from birth-rooted signals, so the result can still feel unpredictable without being something the user can control through endless rerolls.",
   "Deterministic Profile":
     "A profile made from fixed inputs instead of random rolls. Here, it means the same person keeps the same core stats every time.",
   DOB:
