@@ -811,18 +811,6 @@ body {
     min-height: 3.95rem !important;
   }
 
-  .home-page-fixed-backdrop {
-    background-image: url("/media/alliant-storyboard/chapter-1/mobile_01_humanity_rejoices.webp");
-    background-position: center center;
-    background-size: cover;
-  }
-
-  .home-page-fixed-backdrop::after {
-    background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.1) 38%, rgba(0, 0, 0, 0.76)),
-      rgba(0, 0, 0, 0.22);
-  }
-
   .home-story-hero-stack {
     max-width: none;
   }
