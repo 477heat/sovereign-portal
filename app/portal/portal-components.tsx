@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { RefObject } from "react";
 
 import {
   type MintReceipt,
@@ -7,6 +8,183 @@ import {
   type PortalGateReadout,
   type ReceiptDetailRow,
 } from "./portal-types";
+import { getGateIconState } from "./portal-gates";
+
+type PortalConsolePanelSound =
+  | "appDrawerButtons"
+  | "commandTabMenu"
+  | "notSelectable";
+
+export function PortalCommandTitleTab({
+  isOpen,
+  onOpen,
+  primaryActionState,
+  selectedGateTitle,
+  triggerRef,
+}: {
+  isOpen: boolean;
+  onOpen: () => void;
+  primaryActionState: string;
+  selectedGateTitle: string;
+  triggerRef: RefObject<HTMLButtonElement | null>;
+}) {
+  const selectedGateTitleWords = selectedGateTitle.split(/\s+/).filter(Boolean);
+
+  return (
+    <div className="portal-gate-top-row">
+      <button
+        aria-controls="portal-mobile-select-drawer"
+        aria-expanded={isOpen}
+        aria-label={`Open mint controls for ${selectedGateTitle}`}
+        className={`portal-command-title-tab portal-command-title-tab--attention portal-command-title-tab--${primaryActionState}`}
+        onClick={onOpen}
+        ref={triggerRef}
+        type="button"
+      >
+        <span
+          className="portal-command-title-tab__label"
+          data-word-count={selectedGateTitleWords.length}
+        >
+          {selectedGateTitleWords.map((word) => (
+            <span className="portal-command-title-tab__word" key={word}>
+              {word}
+            </span>
+          ))}
+        </span>
+        <span aria-hidden="true" className="portal-command-title-tab__chevrons">
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+    </div>
+  );
+}
+
+export function PortalGateActionDeck({
+  canMint,
+  gateEnterLabel,
+  onPlaySound,
+  onPrimaryAction,
+  onSelectGate,
+  primaryActionEnabled,
+  primaryActionGates,
+  primaryActionLabel,
+  primaryActionState,
+  secondaryActionGates,
+  selectedGate,
+  selectedGateCompleteNotice,
+  selectedGateStatus,
+}: {
+  canMint: boolean;
+  gateEnterLabel: string;
+  onPlaySound: (sound: PortalConsolePanelSound) => void;
+  onPrimaryAction: () => void;
+  onSelectGate: (gate: PortalGate) => void;
+  primaryActionEnabled: boolean;
+  primaryActionGates: PortalGateReadout[];
+  primaryActionLabel: string;
+  primaryActionState: string;
+  secondaryActionGates: PortalGateReadout[];
+  selectedGate: PortalGate;
+  selectedGateCompleteNotice: string | null;
+  selectedGateStatus: string;
+}) {
+  const primaryActionWords = primaryActionLabel.split(/\s+/).filter(Boolean);
+  const renderGateButton = (gate: PortalGateReadout) => (
+    <div key={gate.key} role="listitem">
+      <button
+        aria-disabled={!gate.enabled && !gate.complete}
+        aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
+        className={`portal-step-icon ${getGateIconState(gate, selectedGate)}`}
+        onClick={() => {
+          if (!gate.enabled && !gate.complete) {
+            onPlaySound("notSelectable");
+            return;
+          }
+
+          onPlaySound("appDrawerButtons");
+          onSelectGate(gate.key);
+        }}
+        title={`${gate.label}: ${gate.value}`}
+        type="button"
+      >
+        <PortalGateIcon gate={gate.key} />
+        <span>{gate.label}</span>
+      </button>
+    </div>
+  );
+
+  return (
+    <>
+      <div
+        className={`portal-gate-bottom-row ${
+          selectedGate === "terms" ? "portal-gate-bottom-row--terms" : ""
+        }`}
+      >
+        <div className="portal-gate-action-cell portal-gate-action-cell--submit">
+          {selectedGate !== "mint" || canMint ? (
+            <button
+              aria-label={gateEnterLabel}
+              className={`portal-console-enter ${
+                primaryActionState === "pending"
+                  ? "portal-console-enter--pending"
+                  : primaryActionState === "ready"
+                    ? "portal-console-enter--ready"
+                    : "portal-console-enter--locked"
+              }`}
+              disabled={!primaryActionEnabled}
+              onClick={onPrimaryAction}
+              type="button"
+            >
+              <span
+                className={`portal-console-enter__label ${
+                  primaryActionWords.length > 1
+                    ? "portal-console-enter__label--stacked"
+                    : ""
+                }`}
+              >
+                {primaryActionWords.map((word, index) => (
+                  <span key={`${word}-${index}`}>{word}</span>
+                ))}
+              </span>
+            </button>
+          ) : (
+            <span aria-hidden="true" className="portal-action-placeholder" />
+          )}
+        </div>
+
+        <div className="portal-gate-action-cell portal-gate-action-cell--cluster">
+          <div
+            aria-label="Mint sequence status"
+            className="portal-action-cluster portal-action-cluster--static"
+            role="list"
+          >
+            <div className="portal-action-quad portal-action-quad--primary">
+              {primaryActionGates.map(renderGateButton)}
+            </div>
+            <div className="portal-action-quad portal-action-quad--secondary">
+              {secondaryActionGates.map(renderGateButton)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {(selectedGateStatus || selectedGateCompleteNotice) && (
+        <div className="portal-gate-bottom-status">
+          {selectedGateStatus && (
+            <p className="portal-gate-bottom-status__text">{selectedGateStatus}</p>
+          )}
+          {selectedGateCompleteNotice && (
+            <p className="portal-gate-bottom-status__notice">
+              {selectedGateCompleteNotice}
+            </p>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
 
 export function PortalGateIcon({ gate }: { gate: PortalGate }) {
   const sharedProps = {

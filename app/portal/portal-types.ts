@@ -64,6 +64,22 @@ export type IdentityField =
   | "firstName"
   | "lastName";
 
+export type GateFeedbackPhase = "blocked" | "confirmed" | "processing";
+
+export type PortalSequenceVideoPhase =
+  | "complete"
+  | "final"
+  | "idle"
+  | "intro"
+  | "loop";
+
+export type GateFeedbackState = {
+  detail: string;
+  gate: PortalGate;
+  message: string;
+  phase: GateFeedbackPhase;
+};
+
 export type BirthLocationSuggestion = {
   city: string;
   country: string;

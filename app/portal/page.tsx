@@ -29,139 +29,84 @@ import {
   buildMintOrderStatusMessage,
   buildMintRecoveryMessage,
 } from "@/lib/portalMessages";
-import { preLaunchOffer } from "@/lib/preLaunchOffer";
 import { ipfsGatewayUrl, ipfsGatewayUrls } from "@/lib/ipfs";
 import { absoluteUrl, siteUrl } from "@/lib/seo";
 import type {
   BirthLocationSuggestion,
   FullSoulStatPreview,
+  GateFeedbackPhase,
+  GateFeedbackState,
   IdentityField,
   MintOrderState,
   MintReceipt,
   PortalGate,
-  PortalGateReadout,
-  PortalPaymentFlow,
   PortalPaymentSettings,
+  PortalSequenceVideoPhase,
   ReceiptDetailRow,
   VerificationState,
   VerifiedBirthLocation,
 } from "./portal-types";
 import {
-  PortalGateIcon,
+  ARTIFACT_NAME_MAX_LENGTH,
+  EAS_DATABASE_SEARCH_DELAY_MS,
+  GATE_DELAY_MS,
+  GATE_FEEDBACK_DELAY_MS,
+  PORTAL_CONSOLE_SOUNDS,
+  PORTAL_GAS_READOUTS_GWEI,
+  PORTAL_SEQUENCE_FINAL_START_SECONDS,
+  PORTAL_SEQUENCE_INTRO_END_SECONDS,
+  PORTAL_SEQUENCE_LOOP_END_SECONDS,
+  PORTAL_SEQUENCE_LOOP_START_SECONDS,
+  PORTAL_SEQUENCE_VIDEO_SRC,
+  coinbaseEasUrl,
+  defaultBuilderCodeDataSuffix,
+  defaultCheckoutEnabled,
+  defaultDirectPaymentAllowedWallets,
+  defaultDirectPaymentEnabled,
+  defaultPaymentAmount,
+  defaultPaymentFlow,
+  defaultPaymentSeller,
+  defaultPaymentTokenAddress,
+  defaultPaymentTokenDecimals,
+  plainEnglishCertificateSummary,
+  previewReceipt,
+  previewShellEnabled,
+} from "./portal-constants";
+import {
+  PortalCommandTitleTab,
+  PortalGateActionDeck,
   PortalMobileSelectDrawer,
   PortalReceiptCompletePanel,
   PortalTermsChecklist,
   PortalTermsReviewModal,
 } from "./portal-components";
-
-const plainEnglishCertificateSummary = [
-  "This certificate was built around the human story behind the Genesis Soul Registry mint. It is meant for real people with real lives, not bots, machines, or automated processes trying to participate without a human behind them.",
-  "The token can show a public marker and basic contract information, but the private identity details used by the Portal are not meant to be blasted out as ordinary public metadata. The point is to prove the mint came from a real person without turning that person's private details into decoration.",
-  "Before the mint, the Portal gathers the required name, date, wallet, and agreement steps so the mint can be tied to the correct person and wallet. That process is what helps make sure the user is recorded as the Original Minter and that the user's wallet is used as the royalty receiver where the contract and marketplace routing support it.",
-  "If you transfer the token, the new holder gets the token and the access tied to it. That does not mean anyone owns your actual life, body, choices, or soul in the real world. I know the formal language gets wild, but the practical point is that the token itself can move.",
-  "The formal contract makes a huge theatrical joke about afterlife ownership and eternal servitude. It is supposed to feel comically intense. Part of the joke is also a warning: do not casually sell this like a random collectible, because it is also an access token for the project.",
-  "The real smart contract does normal blockchain things. It can mint an ERC-721 token, remember the original minter wallet, manage metadata, show royalty information, and use project controls like pause, reveal, freeze, blacklist, and burn settings if those features are turned on.",
-  "Vanguard status simply means the original wallet was here early in the Genesis phase. I want early supporters to matter, but future benefits need to be written down in published project terms, not promised through vague hype.",
-  "When a user creates Artifacts, the intended setup gives that user's originating wallet a 3.5% royalty share when supported marketplaces route royalties correctly. After an Artifact is minted, the first sale price or listing price is up to the user who controls it.",
-  "Royalties are not magic. The contract can point to them, but marketplaces still have to honor the routing. In some cases there may also be claim, withdrawal, or splitter steps before money actually reaches a wallet.",
-  "This Plain English Summary is here so people can understand the idea without needing to decode every joke and legal-sounding phrase. The Formal Terms are still the version used for the agreement.",
-];
+import {
+  PRIMARY_ACTION_GATE_KEYS,
+  SECONDARY_ACTION_GATE_KEYS,
+  buildPortalGateReadouts,
+  getGateEnterEnabled,
+  getGateEnterLabel,
+  getPrimaryActionEnabled,
+  getPrimaryActionLabel,
+  getPrimaryActionState,
+  getSelectedGateCompleteNotice,
+  getSelectedGateStatus,
+  getSelectedGateTitle,
+  pickPortalGates,
+} from "./portal-gates";
+import {
+  buildPublicMark,
+  formatPortalGasReadoutUsd,
+  isValidArtifactName,
+  normalizeArtifactNameInput,
+  parseTokenUnits,
+  wait,
+} from "./portal-utils";
 
 const thirdwebClientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID;
 const thirdwebClient = thirdwebClientId
   ? createThirdwebClient({ clientId: thirdwebClientId })
   : null;
-const defaultPaymentAmount =
-  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_AMOUNT ?? preLaunchOffer.amount;
-const defaultPaymentSeller = process.env.NEXT_PUBLIC_PORTAL_PAYMENT_SELLER;
-const defaultPaymentTokenAddress =
-  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_ADDRESS;
-const defaultPaymentTokenDecimals = Number.parseInt(
-  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_TOKEN_DECIMALS ?? "6",
-  10,
-);
-const defaultBuilderCodeDataSuffix =
-  process.env.NEXT_PUBLIC_BASE_BUILDER_CODE_DATA_SUFFIX;
-const defaultDirectPaymentAllowedWallets =
-  process.env.NEXT_PUBLIC_PORTAL_DIRECT_PAYMENT_ALLOWED_WALLETS;
-const defaultPaymentFlow: PortalPaymentFlow =
-  process.env.NEXT_PUBLIC_PORTAL_PAYMENT_FLOW === "base_usdc_direct_attributed"
-    ? "base_usdc_direct_attributed"
-    : process.env.NEXT_PUBLIC_PORTAL_PAYMENT_MODE === "checkout"
-      ? "thirdweb_checkout"
-      : "disabled";
-const defaultCheckoutEnabled =
-  defaultPaymentFlow === "thirdweb_checkout" &&
-  Boolean(defaultPaymentSeller && defaultPaymentTokenAddress);
-const defaultDirectPaymentEnabled =
-  defaultPaymentFlow === "base_usdc_direct_attributed" &&
-  Boolean(
-    defaultPaymentSeller &&
-      defaultPaymentTokenAddress &&
-      defaultBuilderCodeDataSuffix,
-  );
-const previewShellEnabled =
-  process.env.NEXT_PUBLIC_PORTAL_PREVIEW_SHELL === "true" ||
-  process.env.NODE_ENV === "development" ||
-  process.env.VERCEL_ENV === "preview";
-const coinbaseEasUrl =
-  "https://help.coinbase.com/en/coinbase/getting-started/verify-my-account/onchain-verification";
-const PORTAL_CONSOLE_SOUNDS = {
-  appDrawerButtons: "/sounds/app-drawer-buttons.mp3",
-  bottomCellButtons: "/sounds/bottom-cell-buttons.mp3",
-  commandTabMenu: "/sounds/command-tab-menu.mp3",
-  notSelectable: "/sounds/not-selectable.mp3",
-  stow: "/sounds/command-tab-stow.mp3",
-  walletConnectButton: "/sounds/wallet-connect-button.mp3",
-} as const;
-const ARTIFACT_NAME_MAX_LENGTH = 12;
-const EAS_DATABASE_SEARCH_DELAY_MS = 4000;
-const GATE_DELAY_MS = {
-  artifact: 650,
-  location: 680,
-  time: 680,
-  terms: 780,
-  payment: 620,
-  autoMint: 1180,
-};
-const GATE_FEEDBACK_DELAY_MS = {
-  wallet: 1800,
-  eas: EAS_DATABASE_SEARCH_DELAY_MS,
-  identity: 2600,
-  artifact: 2400,
-  location: 1800,
-  time: 1800,
-  terms: 1800,
-  payment: 2600,
-  mint: 2200,
-} satisfies Record<PortalGate, number>;
-const PORTAL_GAS_READOUTS_GWEI = [0.002, 0.004, 0.006, 0.008] as const;
-const PORTAL_GAS_READOUT_ETH_USD = 3500;
-const PORTAL_GAS_READOUT_UNITS = 21000;
-
-function formatPortalGasReadoutUsd(gwei: number) {
-  return (gwei * PORTAL_GAS_READOUT_UNITS * 1e-9 * PORTAL_GAS_READOUT_ETH_USD).toFixed(4);
-}
-
-type GateFeedbackPhase = "blocked" | "confirmed" | "processing";
-type PortalSequenceVideoPhase = "complete" | "final" | "idle" | "intro" | "loop";
-
-type GateFeedbackState = {
-  detail: string;
-  gate: PortalGate;
-  message: string;
-  phase: GateFeedbackPhase;
-};
-
-const PORTAL_SEQUENCE_VIDEO_SRC = "/media/portal-screen.mp4";
-const PORTAL_SEQUENCE_INTRO_END_SECONDS = 6.4;
-const PORTAL_SEQUENCE_LOOP_START_SECONDS = 1.2;
-const PORTAL_SEQUENCE_LOOP_END_SECONDS = 6.4;
-const PORTAL_SEQUENCE_FINAL_START_SECONDS = 6.4;
-
-function wait(ms: number) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
-}
 
 const portalAppMetadata = {
   name: "Sovereign Portal",
@@ -189,89 +134,6 @@ const portalConnectModal = {
   size: "compact",
   showThirdwebBranding: false,
 } as const;
-const previewReceipt: MintReceipt = {
-  status: "submitted",
-  deedName: "Certificate of Title for Spiritual Ownership of K. Mil",
-  mode: "live",
-  chainId: 8453,
-  contractAddress: "0x2df9151c4e32082a05c686bd3092180134d17deb",
-  orderId: "preview-order-a74ce28e",
-  transactionId: "a74ce28e-b3da-43d2-a821-640dea0ae3a1",
-  transactionHash:
-    "0xaa68adcf2dc5f2b2741b8f3c1df8a9ede6a52f48f2364c25424784d0ff5e1861",
-  tokenURI: "ipfs://QmeAcwMSCHMngHo11qWWiwdgn8cPBiumBbH9yCpAv4Sis2",
-  metadataUrl: "https://ipfs.io/ipfs/QmeAcwMSCHMngHo11qWWiwdgn8cPBiumBbH9yCpAv4Sis2",
-  ipfsHash: "QmeAcwMSCHMngHo11qWWiwdgn8cPBiumBbH9yCpAv4Sis2",
-  imageURI: "ipfs://Qmf2cpm1J2iBa87qgbSY1NmsYTkWS2DF9gS6Nr3Qpjh1tE",
-  imageUrl: "https://ipfs.io/ipfs/Qmf2cpm1J2iBa87qgbSY1NmsYTkWS2DF9gS6Nr3Qpjh1tE",
-};
-
-function parseTokenUnits(amount: string, decimals: number) {
-  const trimmed = amount.trim().startsWith(".")
-    ? `0${amount.trim()}`
-    : amount.trim();
-
-  if (!trimmed.match(/^\d+(\.\d+)?$/)) {
-    throw new Error("Payment amount must be a positive decimal.");
-  }
-
-  if (!Number.isInteger(decimals) || decimals < 0) {
-    throw new Error("Payment token decimals are not configured.");
-  }
-
-  const [whole = "0", rawFraction = ""] = trimmed.split(".");
-
-  if (rawFraction.length > decimals) {
-    throw new Error(`Payment amount supports at most ${decimals} decimal places.`);
-  }
-
-  const units = BigInt(`${whole}${rawFraction.padEnd(decimals, "0")}`);
-
-  if (units <= BigInt(0)) {
-    throw new Error("Payment amount must be greater than zero.");
-  }
-
-  return units;
-}
-
-function buildPublicMark(firstName: string, lastName: string) {
-  const firstInitial = firstName.trim().charAt(0).toUpperCase();
-  const surnameRoot = lastName.replace(/[^a-z]/gi, "").slice(0, 3);
-
-  if (!firstInitial || !surnameRoot) {
-    return "_. ___";
-  }
-
-  return `${firstInitial}. ${
-    surnameRoot.charAt(0).toUpperCase() + surnameRoot.slice(1).toLowerCase()
-  }`;
-}
-
-function isValidArtifactName(value: string) {
-  const normalized = value.trim();
-  return (
-    !normalized ||
-    (normalized.length <= ARTIFACT_NAME_MAX_LENGTH &&
-      /^[A-Z0-9][A-Z0-9 ]*$/.test(normalized))
-  );
-}
-
-function normalizeArtifactNameInput(value: string) {
-  return value
-    .toUpperCase()
-    .replace(/[^A-Z0-9 ]/g, "")
-    .replace(/\s+/g, " ")
-    .trimStart()
-    .slice(0, ARTIFACT_NAME_MAX_LENGTH);
-}
-
-function shortAddress(address?: string) {
-  if (!address) {
-    return "Not connected";
-  }
-
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
 
 function PortalContent() {
   const account = useActiveAccount();
@@ -1699,126 +1561,32 @@ function PortalContent() {
     }
   }
 
-  const gateReadouts: PortalGateReadout[] = [
-    {
-      key: "wallet",
-      label: "Wallet",
-      value: account?.address
-        ? shortAddress(account.address)
-        : isConnecting
-          ? "Connecting"
-          : "Connect",
-      complete: Boolean(account?.address),
-      enabled: true,
-      stateClass: Boolean(account?.address)
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "eas",
-      label: "EAS",
-      value: checkingAttestation
-        ? "Checking"
-        : verification?.eligible
-          ? "Human"
-          : "Verify",
-      complete: Boolean(verification?.eligible),
-      enabled: Boolean(account?.address),
-      stateClass: verification?.eligible
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "identity",
-      label: "Identity",
-      value: hasIdentity ? publicMark : identityInputReady ? "Submit" : "Name",
-      complete: hasIdentity,
-      enabled: Boolean(verification?.eligible) || hasIdentity,
-      stateClass: hasIdentity
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "artifact",
-      label: "Artifact",
-      value: hasArtifact ? burnedArtifactName : artifactNameValid ? "Name" : "Fix",
-      complete: hasArtifact,
-      enabled: hasIdentity,
-      stateClass: hasArtifact
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "location",
-      label: "Location",
-      value: hasLocation
-        ? "Set"
-        : locationInputReady
-          ? "Submit"
-          : "Select",
-      complete: hasLocation,
-      enabled: true,
-      stateClass: hasLocation
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "time",
-      label: "Date/Time",
-      value: hasTime ? "Set" : timeInputReady ? "Submit" : "Enter",
-      complete: hasTime,
-      enabled: true,
-      stateClass: hasTime
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "terms",
-      label: "Terms",
-      value: deedAccepted
-        ? "Agreed"
-        : termsAwaitingArtifact
-          ? "Waiting"
-          : "Verify",
-      complete: deedAccepted,
-      enabled: (hasArtifact && hasLocation && hasTime) || deedAccepted,
-      stateClass: deedAccepted
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    {
-      key: "payment",
-      label: "Order",
-      value: paymentAwaitingTerms
-        ? "Waiting"
-        : paymentRequired
-          ? orderPaid
-            ? "Paid"
-            : paymentDisplayAmount
-          : "Bypassed",
-      complete: orderPaid,
-      enabled: deedAccepted,
-      stateClass: orderPaid
-        ? "console-key-button--entered"
-        : "console-key-button--complete",
-    },
-    ...(canMint || minting || receipt || activeOrder?.status === "mint_submitted"
-      ? [
-          {
-            key: "mint" as const,
-            label: "Mint",
-            value: receipt ? "Submitted" : minting ? "Running" : "Auto",
-            complete: Boolean(receipt),
-            enabled: canMint || minting || Boolean(receipt),
-            stateClass: minting
-              ? "console-key-button--active"
-              : receipt
-                ? "console-key-button--entered"
-                : "console-key-button--complete",
-          },
-        ]
-      : []),
-  ];
+  const gateReadouts = buildPortalGateReadouts({
+    accountAddress: account?.address,
+    activeOrderStatus: activeOrder?.status,
+    artifactNameValid,
+    burnedArtifactName,
+    canMint,
+    checkingAttestation,
+    deedAccepted,
+    hasArtifact,
+    hasIdentity,
+    hasLocation,
+    hasReceipt: Boolean(receipt),
+    hasTime,
+    identityInputReady,
+    isConnecting,
+    locationInputReady,
+    minting,
+    orderPaid,
+    paymentAwaitingTerms,
+    paymentDisplayAmount,
+    paymentRequired,
+    publicMark,
+    termsAwaitingArtifact,
+    timeInputReady,
+    verification,
+  });
 
   const walletStatusClass = account?.address
     ? "portal-wallet-status--ready"
@@ -1845,159 +1613,111 @@ function PortalContent() {
     selectGate(gateReadouts[nextIndex].key);
   }
 
-  const gateIconState = (gate: (typeof gateReadouts)[number]) => {
-    if (gate.key === selectedGate) {
-      return "portal-step-icon--current";
-    }
-
-    if (gate.complete) {
-      return "portal-step-icon--complete";
-    }
-
-    return gate.enabled
-      ? "portal-step-icon--available"
-      : "portal-step-icon--locked";
-  };
-  const selectedGateTitle = {
-    wallet: account?.address ? "Wallet Connected" : "User Wallet",
-    eas: verification?.eligible ? "Human Verified" : "EAS Verification",
-    identity: hasIdentity ? "Identity Confirmed" : "Identity Entry",
-    artifact: hasArtifact ? "Artifact Name Locked" : "Artifact Name",
-    location: hasLocation ? "Location Confirmed" : "Birth Location",
-    time: hasTime ? "Birth Time Confirmed" : "Birth Time",
-    terms: deedAccepted ? "Terms Agreed" : "Terms Agreement",
-    payment: orderPaid ? "Payment Confirmed" : "Payment Gate",
-    mint: receipt
-      ? "Mint Submitted"
-      : minting
-        ? "Mint In Progress"
-        : canMint
-          ? "Mint Starting"
-          : "Mint Locked",
-  }[selectedGate];
-  const selectedGateTitleWords = selectedGateTitle.split(/\s+/).filter(Boolean);
-  const selectedGateStatus = {
-    wallet: account?.address
-      ? "Connected wallet is the live mint recipient."
-      : "Connect a Base wallet to begin the live path.",
-    eas: checkingAttestation
-      ? "Checking Coinbase EAS attestation."
-      : verification?.eligible
-        ? "Wallet has Coinbase Verified Account attestation."
-        : account?.address
-          ? "Open Coinbase EAS to connect verification to this wallet."
-          : "Wallet must be connected before EAS can verify.",
-    identity: hasIdentity
-      ? "Identity input has been confirmed for this session."
-      : "Enter the name that should match the human identity record.",
-    artifact: hasArtifact
-      ? `Artifact name locked as ${burnedArtifactName}.`
-      : "Choose the name burned into the NFT image. Leave it blank to use the public mark.",
-    location: hasLocation
-      ? "Verified birthplace is confirmed for the Engine."
-      : hasArtifact
-        ? "Choose a verified birthplace result so the Engine receives coordinates and timezone."
-        : "Artifact name must be locked before birth location can arm.",
-    time: hasTime
-      ? "DOB and birth time are confirmed for the Engine."
-      : "Enter DOB and exact birth time for whole-sign house calculation.",
-    terms: deedAccepted
-      ? "Agreement gates are complete."
-      : hasArtifact && hasLocation && hasTime
-        ? "Open the certificate and accept each required term."
-        : "Artifact, location, and birth time must be locked before terms can arm.",
-    payment: orderPaid
-      ? "Payment gate is clear for this environment."
-      : deedAccepted
-        ? directPaymentEnabled
-          ? "Prepare a Base USDC payment or refresh an existing order."
-          : directPaymentConfigured
-            ? "Direct Base payment is limited to approved test wallets."
-          : "Prepare checkout or refresh an existing order."
-        : "Terms must be agreed before payment can arm.",
-    mint: receipt
-      ? "Mint submitted. Receipt details are shown below."
-      : minting
-        ? "Mint is being submitted automatically."
-        : canMint
-          ? "Payment is clear. Mint submission is starting automatically."
-          : "Pass all gates to mint your token.",
-  }[selectedGate];
-  const selectedGateCompleteNotice = selectedGateReadout.complete
-    ? selectedGate === "mint"
-      ? "Mint submitted. Save the receipt details below for tracking."
-      : selectedGate === "payment"
-        ? "Payment recorded. Mint submission will start automatically."
-        : "Gate confirmed. If you edit earlier entries, review the later steps again."
-    : null;
+  const selectedGateTitle = getSelectedGateTitle({
+    accountAddress: account?.address,
+    canMint,
+    deedAccepted,
+    hasArtifact,
+    hasIdentity,
+    hasLocation,
+    hasReceipt: Boolean(receipt),
+    hasTime,
+    minting,
+    orderPaid,
+    selectedGate,
+    verification,
+  });
+  const selectedGateStatus = getSelectedGateStatus({
+    accountAddress: account?.address,
+    burnedArtifactName,
+    canMint,
+    checkingAttestation,
+    deedAccepted,
+    directPaymentConfigured,
+    directPaymentEnabled,
+    hasArtifact,
+    hasIdentity,
+    hasLocation,
+    hasReceipt: Boolean(receipt),
+    hasTime,
+    minting,
+    orderPaid,
+    selectedGate,
+    verification,
+  });
+  const selectedGateCompleteNotice = getSelectedGateCompleteNotice(
+    selectedGate,
+    selectedGateReadout,
+  );
   const activeGasReadoutGwei =
     PORTAL_GAS_READOUTS_GWEI[gasReadoutIndex] ?? PORTAL_GAS_READOUTS_GWEI[0];
   const activeGasReadoutUsd = formatPortalGasReadoutUsd(activeGasReadoutGwei);
   const activeGateFeedback =
     gateFeedback?.gate === selectedGate ? gateFeedback : null;
   const gateProcessing = activeGateFeedback?.phase === "processing";
-  const gateEnterEnabled = !gateProcessing && {
-    wallet: Boolean(account?.address) || (Boolean(thirdwebClient) && !isConnecting),
-    eas: Boolean(account?.address) && !checkingAttestation,
-    identity: identityInputReady && !hasIdentity,
-    artifact: artifactInputReady && !hasArtifact,
-    location: locationInputReady && !hasLocation,
-    time: timeInputReady && !hasTime,
-    terms: deedAccepted,
-    payment:
-      orderPaid ||
-      (checkoutPrerequisitesComplete && !orderBusy) ||
-      Boolean(activeOrder && !orderBusy),
-    mint: canMint,
-  }[selectedGate];
-  const gateEnterLabel = {
-    wallet: account?.address ? "Submit" : isConnecting ? "Connecting" : "Connect Wallet",
-    eas: checkingAttestation
-      ? "Checking"
-      : verification?.eligible
-        ? "Refresh EAS"
-        : verification
-          ? "Open EAS"
-          : "Check EAS",
-    identity: hasIdentity ? "Confirmed" : "Enter Identity",
-    artifact: hasArtifact ? "Locked" : "Lock Artifact",
-    location: hasLocation ? "Confirmed" : "Submit Location",
-    time: hasTime ? "Confirmed" : "Submit Time",
-    terms: deedAccepted ? "Submit" : "Read Terms",
-    payment: orderPaid ? "Continue" : activeOrder ? "Refresh Order" : "Enter Payment",
-    mint: minting
-      ? "Minting"
-      : receipt
-        ? "Mint Submitted"
-        : canMint
-          ? "Auto Mint"
-          : "Mint Locked",
-  }[selectedGate];
-  const primaryActionGates = (["identity", "artifact", "wallet", "eas"] as const)
-    .map((key) => gateReadouts.find((gate) => gate.key === key))
-    .filter((gate): gate is PortalGateReadout => Boolean(gate));
-  const secondaryActionGates = (["location", "time", "terms", "payment"] as const)
-    .map((key) => gateReadouts.find((gate) => gate.key === key))
-    .filter((gate): gate is PortalGateReadout => Boolean(gate));
-  const primaryActionEnabled =
-    selectedGate === "terms"
-      ? (hasArtifact && hasLocation && hasTime) || deedAccepted
-      : selectedGate === "mint"
-        ? canMint
-        : gateEnterEnabled;
-  const primaryActionState =
-    !selectedGateReadout.enabled
-      ? "locked"
-      : selectedGateReadout.stateClass.includes("console-key-button--entered")
-        ? "ready"
-        : "pending";
-  const primaryActionLabel =
-    selectedGate === "wallet" || selectedGate === "terms"
-      ? gateEnterLabel
-      : selectedGate === "mint"
-        ? "Mint"
-        : "Submit";
-  const primaryActionWords = primaryActionLabel.split(/\s+/).filter(Boolean);
+  const gateEnterEnabled = getGateEnterEnabled({
+    accountAddress: account?.address,
+    activeOrder,
+    artifactInputReady,
+    canMint,
+    checkingAttestation,
+    checkoutPrerequisitesComplete,
+    deedAccepted,
+    gateProcessing,
+    hasArtifact,
+    hasIdentity,
+    hasLocation,
+    hasTime,
+    identityInputReady,
+    isConnecting,
+    locationInputReady,
+    orderBusy,
+    orderPaid,
+    selectedGate,
+    thirdwebClientReady: Boolean(thirdwebClient),
+    timeInputReady,
+  });
+  const gateEnterLabel = getGateEnterLabel({
+    accountAddress: account?.address,
+    activeOrder,
+    canMint,
+    checkingAttestation,
+    deedAccepted,
+    hasArtifact,
+    hasIdentity,
+    hasLocation,
+    hasReceipt: Boolean(receipt),
+    hasTime,
+    isConnecting,
+    minting,
+    orderPaid,
+    selectedGate,
+    verification,
+  });
+  const primaryActionGates = pickPortalGates(
+    gateReadouts,
+    PRIMARY_ACTION_GATE_KEYS,
+  );
+  const secondaryActionGates = pickPortalGates(
+    gateReadouts,
+    SECONDARY_ACTION_GATE_KEYS,
+  );
+  const primaryActionEnabled = getPrimaryActionEnabled(
+    selectedGate,
+    gateEnterEnabled,
+    {
+      canMint,
+      deedAccepted,
+      hasArtifact,
+      hasLocation,
+      hasTime,
+    },
+  );
+  const primaryActionState = getPrimaryActionState(selectedGateReadout);
+  const primaryActionLabel = getPrimaryActionLabel(
+    selectedGate,
+    gateEnterLabel,
+  );
 
   function handlePrimaryGateAction() {
     if (selectedGate === "terms" && !deedAccepted) {
@@ -2355,42 +2075,16 @@ function PortalContent() {
                               <span />
                             </div>
                           </div>
-                          <div className="portal-gate-top-row">
-                            <button
-                              aria-controls="portal-mobile-select-drawer"
-                              aria-expanded={mobileGateDrawerOpen}
-                              aria-label={`Open mint controls for ${selectedGateTitle}`}
-                              className={`portal-command-title-tab portal-command-title-tab--attention portal-command-title-tab--${primaryActionState}`}
-                              onClick={() => {
-                                playPortalConsoleSound("commandTabMenu");
-                                setMobileGateDrawerOpen(true);
-                              }}
-                              ref={mobileGateTriggerRef}
-                              type="button"
-                            >
-                              <span
-                                className="portal-command-title-tab__label"
-                                data-word-count={selectedGateTitleWords.length}
-                              >
-                                {selectedGateTitleWords.map((word) => (
-                                  <span
-                                    className="portal-command-title-tab__word"
-                                    key={word}
-                                  >
-                                    {word}
-                                  </span>
-                                ))}
-                              </span>
-                              <span
-                                aria-hidden="true"
-                                className="portal-command-title-tab__chevrons"
-                              >
-                                <span />
-                                <span />
-                                <span />
-                              </span>
-                            </button>
-                          </div>
+                          <PortalCommandTitleTab
+                            isOpen={mobileGateDrawerOpen}
+                            onOpen={() => {
+                              playPortalConsoleSound("commandTabMenu");
+                              setMobileGateDrawerOpen(true);
+                            }}
+                            primaryActionState={primaryActionState}
+                            selectedGateTitle={selectedGateTitle}
+                            triggerRef={mobileGateTriggerRef}
+                          />
                           <div
                             className={`relative z-10 flex min-h-full flex-col ${
                               selectedGate === "terms" ? "gap-0" : "gap-4"
@@ -3053,115 +2747,21 @@ function PortalContent() {
                             )}
                           </div>
 
-                          <div
-                            className={`portal-gate-bottom-row ${
-                              selectedGate === "terms"
-                                ? "portal-gate-bottom-row--terms"
-                                : ""
-                            }`}
-                          >
-                            <div className="portal-gate-action-cell portal-gate-action-cell--submit">
-                              {selectedGate !== "mint" || canMint ? (
-                              <button
-                                aria-label={gateEnterLabel}
-                                className={`portal-console-enter ${
-                                  primaryActionState === "pending"
-                                    ? "portal-console-enter--pending"
-                                    : primaryActionState === "ready"
-                                      ? "portal-console-enter--ready"
-                                      : "portal-console-enter--locked"
-                                }`}
-                                disabled={!primaryActionEnabled}
-                                onClick={handlePrimaryGateAction}
-                                type="button"
-                              >
-                                <span
-                                  className={`portal-console-enter__label ${
-                                    primaryActionWords.length > 1
-                                      ? "portal-console-enter__label--stacked"
-                                      : ""
-                                  }`}
-                                >
-                                  {primaryActionWords.map((word, index) => (
-                                    <span key={`${word}-${index}`}>{word}</span>
-                                  ))}
-                                </span>
-                              </button>
-                              ) : (
-                                <span aria-hidden="true" className="portal-action-placeholder" />
-                              )}
-                            </div>
-
-                            <div className="portal-gate-action-cell portal-gate-action-cell--cluster">
-                              <div
-                                aria-label="Mint sequence status"
-                                className="portal-action-cluster portal-action-cluster--static"
-                                role="list"
-                              >
-                                <div className="portal-action-quad portal-action-quad--primary">
-                                  {primaryActionGates.map((gate) => (
-                                    <div key={gate.key} role="listitem">
-                                      <button
-                                        aria-disabled={!gate.enabled && !gate.complete}
-                                        aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
-                                        className={`portal-step-icon ${gateIconState(gate)}`}
-                                        onClick={() => {
-                                          if (!gate.enabled && !gate.complete) {
-                                            playPortalConsoleSound("notSelectable");
-                                            return;
-                                          }
-
-                                          playPortalConsoleSound("appDrawerButtons");
-                                          selectGate(gate.key);
-                                        }}
-                                        title={`${gate.label}: ${gate.value}`}
-                                        type="button"
-                                      >
-                                        <PortalGateIcon gate={gate.key} />
-                                        <span>{gate.label}</span>
-                                      </button>
-                                    </div>
-                                  ))}
-                                </div>
-                                <div className="portal-action-quad portal-action-quad--secondary">
-                                  {secondaryActionGates.map((gate) => (
-                                    <div key={gate.key} role="listitem">
-                                      <button
-                                        aria-disabled={!gate.enabled && !gate.complete}
-                                        aria-label={`Open ${gate.label} control. Current status: ${gate.value}.`}
-                                        className={`portal-step-icon ${gateIconState(gate)}`}
-                                        onClick={() => {
-                                          if (!gate.enabled && !gate.complete) {
-                                            playPortalConsoleSound("notSelectable");
-                                            return;
-                                          }
-
-                                          playPortalConsoleSound("appDrawerButtons");
-                                          selectGate(gate.key);
-                                        }}
-                                        title={`${gate.label}: ${gate.value}`}
-                                        type="button"
-                                      >
-                                        <PortalGateIcon gate={gate.key} />
-                                        <span>{gate.label}</span>
-                                      </button>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {(selectedGateStatus || selectedGateCompleteNotice) && (
-                            <div className="portal-gate-bottom-status">
-                              {selectedGateStatus && (
-                                <p className="portal-gate-bottom-status__text">{selectedGateStatus}</p>
-                              )}
-                              {selectedGateCompleteNotice && (
-                                <p className="portal-gate-bottom-status__notice">{selectedGateCompleteNotice}</p>
-                              )}
-                            </div>
-                          )}
+                          <PortalGateActionDeck
+                            canMint={canMint}
+                            gateEnterLabel={gateEnterLabel}
+                            onPlaySound={playPortalConsoleSound}
+                            onPrimaryAction={handlePrimaryGateAction}
+                            onSelectGate={selectGate}
+                            primaryActionEnabled={primaryActionEnabled}
+                            primaryActionGates={primaryActionGates}
+                            primaryActionLabel={primaryActionLabel}
+                            primaryActionState={primaryActionState}
+                            secondaryActionGates={secondaryActionGates}
+                            selectedGate={selectedGate}
+                            selectedGateCompleteNotice={selectedGateCompleteNotice}
+                            selectedGateStatus={selectedGateStatus}
+                          />
                         </div>
                       </div>
                       <div
