@@ -174,6 +174,20 @@ const heroSlides = [
       </>
     ),
   },
+  {
+    eyebrow: "Sovereign Forge / Beta Live",
+    title: ". . B e t a - L i v e ! . . .",
+    body: (
+      <>
+        The site is in beta, but the Forge is live. Current metadata is correct
+        for beta mints, and future imagery or display attributes can be updated
+        automatically for anyone who mints during beta. Final NFT imagery will
+        be locked after beta testing and community feedback. I am a solo
+        developer, an American from Hawaii currently building out of Utah, and I
+        appreciate every early supporter helping this Engine come online.
+      </>
+    ),
+  },
 ] as const;
 
 function getCountdownParts(milliseconds: number | null) {
@@ -430,7 +444,7 @@ export default function HomePage() {
                 href="/portal"
                 className="chamfer-hero-link chamfer-hero-link--primary home-hero-mobile-button home-hero-mint-link max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
               >
-                <span>$3 Mint</span>
+                <span>$5 Mint</span>
                 <small>Early Supporters</small>
               </Link>
               <Link
