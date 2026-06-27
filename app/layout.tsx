@@ -2,6 +2,7 @@ import "./globals.css";
 import React from "react";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { SiteBetaBadge } from "@/components/SiteBetaBadge";
 import {
   absoluteUrl,
   defaultOgImage,
@@ -123,6 +124,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           type="application/ld+json"
         />
+        <SiteBetaBadge />
         <div className="flex-grow">
           {children}
         </div>

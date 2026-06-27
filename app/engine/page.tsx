@@ -498,7 +498,7 @@ export default function EnginePage() {
               Return Home
             </Link>
             <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
-              Mint Portal
+              Forge
             </Link>
           </div>
           <span className="engine-nav-title text-[11px] tracking-[0.28em] text-cyan-100/72">Artifact Engine // Instance 01</span>

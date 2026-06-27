@@ -887,7 +887,7 @@ export function PortalMobileSelectDrawer({
             </section>
           </div>
           <nav
-            aria-label="Portal navigation"
+            aria-label="Forge navigation"
             className="command-room__drawer-actions portal-mobile-drawer-actions"
           >
             <Link

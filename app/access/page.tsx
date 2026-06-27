@@ -217,7 +217,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/whitepaper", label: "Litepaper", variant: "opposite" },
   { href: "/developer", label: "Developer" },
   { href: "/alliant", label: "Alliant" },
-  { href: "/portal", label: "Portal", variant: "primary" },
+  { href: "/portal", label: "Forge", variant: "primary" },
 ];
 
 export default function AccessPage() {

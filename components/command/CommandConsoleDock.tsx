@@ -8,7 +8,7 @@ const PAGE_LABELS_BY_PATH: Record<string, string> = {
   "/engine": "Engine",
   "/whitepaper": "Whitepaper",
   "/access": "Access",
-  "/portal": "Portal",
+  "/portal": "Forge",
   "/artifact": "Artifact",
   "/developer": "Developer",
   "/transporter": "Transporter",

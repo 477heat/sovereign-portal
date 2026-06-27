@@ -141,10 +141,10 @@ export const seoPages = {
   portal: {
     changeFrequency: "daily",
     description:
-      "Open the live Sovereign Engine mint path for the $3 first-100 Genesis Access offer with Vanguard Honor included.",
+      "Open the live Sovereign Engine Forge path for the $3 first-100 Genesis Access offer with Vanguard Honor included.",
     path: "/portal",
     priority: 0.92,
-    title: "Mint Path",
+    title: "Forge",
   },
   privacyPolicy: {
     changeFrequency: "monthly",

@@ -204,7 +204,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/access", label: "Access", variant: "opposite" },
   { href: "/whitepaper", label: "Litepaper" },
   { href: "/developer", label: "Developer" },
-  { href: "/portal", label: "Portal", variant: "primary" },
+  { href: "/portal", label: "Forge", variant: "primary" },
 ];
 
 export default function AlliantStoryboardPage() {

@@ -24,6 +24,45 @@ body {
   background-color: transparent;
 }
 
+.site-beta-version-badge {
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(5, 15, 19, 0.72), rgba(0, 0, 0, 0.5)),
+    rgba(0, 0, 0, 0.56);
+  border: 1px solid rgba(134, 239, 172, 0.42);
+  box-shadow:
+    0 0 22px rgba(34, 197, 94, 0.12),
+    0 12px 36px rgba(0, 0, 0, 0.34);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  color: rgba(240, 253, 244, 0.94);
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 800;
+  gap: 0.42rem;
+  left: 50%;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  padding: 0.34rem 0.75rem;
+  pointer-events: none;
+  position: fixed;
+  text-transform: uppercase;
+  top: max(0.55rem, env(safe-area-inset-top));
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 90;
+}
+
+.site-beta-version-badge__dot {
+  background: #22c55e;
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 2px rgba(34, 197, 94, 0.18),
+    0 0 16px rgba(34, 197, 94, 0.7);
+  display: inline-block;
+  height: 0.48rem;
+  width: 0.48rem;
+}
+
 .chamfer-nav-link {
   align-items: center;
   background: transparent;

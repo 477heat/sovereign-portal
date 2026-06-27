@@ -40,6 +40,52 @@ This repo does not own protected Engine truth. Do not recalculate zodiac stats,
 rewrite minted metadata rules, change Lambda image generation, or alter contract
 logic here unless the owner explicitly asks for that full-stack change.
 
+## Current Public Direction
+
+The homepage now frames Sovereign Engine first as a Deterministically Calculated
+character generator.
+
+Preserve this direction:
+
+- Lead with Sovereign Engine as a non-random character generator.
+- Explain that birth data becomes stable Soul Attributes and character stats.
+- Treat the Soul Deed as the Genesis Access artifact and verified origin layer,
+  not the whole product.
+- Explain `Actual Supply` as one verified Genesis source per participant, not
+  generic scarcity hype.
+- Future characters, items, creatures, and Progeny should be described as
+  branches that build from the Genesis source profile.
+- The public tone should be plain English, beginner-readable, confident, and
+  useful for users, tabletop/game creators, and developers.
+
+Do not drift back to copy that makes the site sound like only a novelty Soul
+Deed mint. The mint is the live access/origin path inside the larger character
+generator system.
+
+## Portal Structure Refactor Record
+
+The 2026-06-24 Portal structure refactor is complete and deployed:
+
+```text
+commit = 6a19331 Refactor portal gate UI structure
+deployment = dpl_HN8pw2h6qSw6tPAs41AVHuEz6ft1
+handoff = /Users/thebridge/Desktop/StarArtifactProgram/pm-handoff-portal-structure-refactor-progress-2026-06-24.md
+```
+
+The refactor added/split:
+
+```text
+app/portal/portal-constants.ts
+app/portal/portal-gates.ts
+app/portal/portal-utils.ts
+```
+
+`app/portal/page.tsx` should remain the coordinator for live state,
+side-effects, payment, EAS, order, and mint callbacks. Continue Portal cleanup
+in small slices. Extract Wallet and EAS panels before harder panels. Leave
+Payment and Mint extraction for last because they are closest to money, order
+state, and token submission.
+
 ## Command Shell Direction
 
 The Command Shell is the active visual system for Sovereign Engine pages.

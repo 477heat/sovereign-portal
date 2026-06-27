@@ -221,7 +221,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/whitepaper#vanguard", label: "Whitepaper" },
   { href: "/developer", label: "Developer" },
   { href: "/alliant", label: "Alliant" },
-  { href: "/portal", label: "Portal", variant: "primary" },
+  { href: "/portal", label: "Forge", variant: "primary" },
 ];
 
 export default function VanguardPrivilegesPage() {

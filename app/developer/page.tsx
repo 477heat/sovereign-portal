@@ -300,7 +300,7 @@ const drawerActions: CommandDrawerAction[] = [
   { href: "/vanguard", label: "Vanguard" },
   { href: "/developer", label: "Developer" },
   { href: "/alliant", label: "Alliant" },
-  { href: "/portal", label: "Portal", variant: "primary" },
+  { href: "/portal", label: "Forge", variant: "primary" },
 ];
 
 export default function DeveloperPage() {

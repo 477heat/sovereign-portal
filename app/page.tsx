@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 5, 30, 15, 0, 0);
+const dayOneLaunchAt = Date.UTC(2026, 6, 4, 15, 0, 0);
 const architectTokenMetadataUrl =
   "https://ipfs.io/ipfs/QmSoRCMUXLS9w5dBgfg3VsnxSQhfBJt3RLALyo8DB3DzH2";
 const architectTokenImageUrl =
@@ -69,14 +69,14 @@ const protocolCards = [
     title: "Character Generator",
     body: "Sovereign Engine is a Deterministically Calculated (DC) character generator. It turns birth-rooted zodiac signals into stable Soul Attributes and character stats for tabletop games, digital worlds, and future Engine creations.",
     href: "/portal",
-    destination: "Mint Path",
+    destination: "Forge",
   },
   {
     label: "Base-native",
     title: "Smart Contract Characters",
     body: "Smart contracts can connect each generated character sheet to its source wallet and origin record. For TTRPG Dungeon Masters and digital world creators, that helps show a character came from a fixed profile instead of endless rerolls, while letting developers set or raise creation limits to fit the world they are building.",
     href: "/portal",
-    destination: "Soul Registry Portal",
+    destination: "Forge",
   },
   {
     label: "Coinbase EAS",
@@ -88,7 +88,7 @@ const protocolCards = [
 ];
 
 const navLinks = [
-  ["Portal", "/portal"],
+  ["Forge", "/portal"],
   ["Alliant", "/alliant"],
   ["Vanguard", "/vanguard"],
   ["Access", "/access"],
@@ -319,10 +319,10 @@ export default function HomePage() {
             : "max-sm:translate-y-0 max-sm:opacity-100"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-3 max-sm:flex-nowrap max-sm:items-start md:px-8">
+        <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-3 px-5 py-3 md:px-8">
           <Link
             aria-current="page"
-            className="home-brand-link flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 sm:min-h-0"
+            className="home-brand-link flex min-w-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100"
             href="/"
           >
             <Image
@@ -333,43 +333,32 @@ export default function HomePage() {
               className="h-7 w-7 object-contain"
               priority
             />
-            <span>Sovereign Engine</span>
+            <span className="whitespace-nowrap">Sovereign Engine</span>
           </Link>
           <button
-            aria-controls="mobile-command-drawer"
+            aria-controls="home-command-drawer"
             aria-expanded={mobileMenuOpen}
-            className="chamfer-nav-link chamfer-nav-link--opposite ml-auto shrink-0 sm:hidden"
+            className="chamfer-nav-link chamfer-nav-link--opposite ml-auto shrink-0"
             onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
             type="button"
           >
             Menu
           </button>
-          <nav className="hidden flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/72 sm:flex md:gap-3 md:text-sm">
-            {navLinks.map(([label, href]) => (
-              <Link
-                className="chamfer-nav-link"
-                href={href}
-                key={href}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
         </div>
       </header>
 
       <button
-        aria-label="Close mobile navigation"
-        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 sm:hidden ${
+        aria-label="Close navigation"
+        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
           mobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={() => setMobileMenuOpen(false)}
         type="button"
       />
       <aside
-        aria-label="Mobile navigation"
-        id="mobile-command-drawer"
-        className={`mobile-command-drawer fixed bottom-0 right-0 top-0 z-50 w-[min(19rem,84vw)] border-l border-cyan-200/24 bg-black/92 px-5 py-5 shadow-[-22px_0_70px_rgba(0,0,0,0.62)] backdrop-blur-2xl transition duration-300 sm:hidden ${
+        aria-label="Site navigation"
+        id="home-command-drawer"
+        className={`mobile-command-drawer fixed bottom-0 right-0 top-0 z-50 w-[min(22rem,88vw)] border-l border-cyan-200/24 bg-black/92 px-5 py-5 shadow-[-22px_0_70px_rgba(0,0,0,0.62)] backdrop-blur-2xl transition duration-300 ${
           mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         }`}
       >
@@ -453,9 +442,9 @@ export default function HomePage() {
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
-                aria-label="Open Access page for Launch Day countdown timer"
+                aria-label="Open Forge page for Beta Live countdown timer"
                 className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
-                href="/access"
+                href="/portal"
               >
                 <div className="grid grid-cols-4 gap-1">
                   {dayOneCountdown.map(([value, label]) => (
@@ -474,15 +463,15 @@ export default function HomePage() {
                 </div>
               </Link>
               <Link
-                aria-label="Open Access page for Launch Day countdown details"
+                aria-label="Open Forge page for Beta Live details"
                 className="chamfer-countdown-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!px-2"
-                href="/access"
+                href="/portal"
               >
                 <div className="home-countdown-title text-[0.68rem] uppercase leading-4 tracking-[0.16em] text-neutral-950">
-                  Launch Day
+                  Beta Live
                 </div>
                 <div className="home-countdown-date mt-1 text-[0.58rem] uppercase tracking-[0.08em] text-neutral-900/85">
-                  30 Jun 2026 / 15:00 UTC
+                  04 Jul 2026 / 15:00 UTC
                 </div>
               </Link>
             </div>
@@ -692,7 +681,7 @@ export default function HomePage() {
                 Read Wording
               </Link>
               <Link className="chamfer-nav-link chamfer-nav-link--opposite" href="/portal">
-                Mint Path
+                Forge
               </Link>
             </div>
           </div>

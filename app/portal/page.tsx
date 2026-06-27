@@ -111,7 +111,7 @@ const thirdwebClient = thirdwebClientId
   : null;
 
 const portalAppMetadata = {
-  name: "Sovereign Portal",
+  name: "Sovereign Forge",
   url: siteUrl,
   description: "Sovereign Engine Genesis Access mint path on Base.",
   logoUrl: absoluteUrl("/brand/sovereign-engine-site-logo-512.png"),
@@ -2543,7 +2543,7 @@ function PortalContent() {
                                           amount={paymentAmount}
                                           chain={base}
                                           client={thirdwebClient}
-                                          description="Verified mint order for the Sovereign Portal deed."
+                                          description="Verified mint order for the Sovereign Forge deed."
                                           feePayer="seller"
                                           name="Certificate of Title for Spiritual Ownership"
                                           onSuccess={() => {

@@ -64,7 +64,7 @@ export default function ArtifactPage() {
             Return Home
           </Link>
           <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
-            Mainnet Portal
+            Forge
           </Link>
           <Link href="/engine" className="chamfer-nav-link chamfer-nav-link--compact">
             Artifact Engine
