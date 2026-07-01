@@ -134,14 +134,29 @@ const whyThisMatters = [
 
 const heroSlides = [
   {
-    eyebrow: "Sovereign Engine / UTAC System",
-    title: "User Tokenized Asset Creation",
+    eyebrow: "Sovereign Forge / Beta Live",
+    title: ". . B e t a - L i v e ! . . .",
     body: (
       <>
-        Sovereign Portal lets a verified user create a tokenized Genesis source
-        profile. Sovereign Engine then turns birth data into Deterministically
-        Calculated (DC) character stats and Soul Attributes for future
-        characters, items, and Progeny.
+        The site is in beta, but the Forge is live. Current metadata is correct
+        for beta mints, and future imagery or display attributes can be updated
+        automatically for anyone who mints during beta. Final UTAC imagery will
+        be locked after beta testing and community feedback. I am a solo
+        developer, an American from Hawaii currently building out of Utah, and I
+        appreciate every early supporter helping this Engine come online.
+      </>
+    ),
+  },
+  {
+    eyebrow: "Sovereign Engine / UTAC System",
+    title: "UTAC / User Tokenized Asset Creation",
+    body: (
+      <>
+        Sovereign Engine is a User Tokenized Asset Creation (UTAC) system first,
+        then a character generator. The Forge lets a verified user create a
+        tokenized Genesis source profile, and the Engine uses that source to
+        create characters, items, creatures, and future Progeny tied to the
+        user&apos;s wallet, origin record, and fixed attribute profile.
       </>
     ),
   },
@@ -176,20 +191,6 @@ const heroSlides = [
       </>
     ),
   },
-  {
-    eyebrow: "Sovereign Forge / Beta Live",
-    title: ". . B e t a - L i v e ! . . .",
-    body: (
-      <>
-        The site is in beta, but the Forge is live. Current metadata is correct
-        for beta mints, and future imagery or display attributes can be updated
-        automatically for anyone who mints during beta. Final UTAC imagery will
-        be locked after beta testing and community feedback. I am a solo
-        developer, an American from Hawaii currently building out of Utah, and I
-        appreciate every early supporter helping this Engine come online.
-      </>
-    ),
-  },
 ] as const;
 
 function getCountdownParts(milliseconds: number | null) {
@@ -221,7 +222,9 @@ export default function HomePage() {
   const mobileHeaderRevealTimer = useRef<number | null>(null);
   const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const [contractNoticeOpen, setContractNoticeOpen] = useState(false);
+  const [heroSlideExpanded, setHeroSlideExpanded] = useState(false);
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+  const [heroSlideManuallyPaused, setHeroSlideManuallyPaused] = useState(false);
   const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dayOneCountdown = getCountdownParts(dayOneRemaining);
@@ -253,6 +256,8 @@ export default function HomePage() {
 
   const selectHeroSlide = (nextIndex: number) => {
     setHeroSlideIndex(nextIndex);
+    setHeroSlideExpanded(false);
+    setHeroSlideManuallyPaused(true);
   };
 
   useEffect(() => {
@@ -267,12 +272,16 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    if (heroSlideExpanded || heroSlideManuallyPaused) {
+      return undefined;
+    }
+
     const interval = window.setInterval(() => {
       setHeroSlideIndex((currentIndex) => (currentIndex + 1) % heroSlides.length);
     }, 14000);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [heroSlideExpanded, heroSlideManuallyPaused]);
 
 
   useEffect(() => {
@@ -419,7 +428,20 @@ export default function HomePage() {
               {heroSlide.eyebrow}
             </p>
             <h1>{heroSlide.title}</h1>
-            <p>{heroSlide.body}</p>
+            <p
+              className="home-story-transmission__body"
+              data-expanded={heroSlideExpanded ? "true" : "false"}
+            >
+              {heroSlide.body}
+            </p>
+            <button
+              aria-expanded={heroSlideExpanded}
+              className="home-story-transmission__more"
+              onClick={() => setHeroSlideExpanded((isExpanded) => !isExpanded)}
+              type="button"
+            >
+              {heroSlideExpanded ? "Less" : "More..."}
+            </button>
             <div className="home-story-transmission__meta">
               <span>Sovereign Engine</span>
             </div>

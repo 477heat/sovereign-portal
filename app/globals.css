@@ -872,6 +872,37 @@ body {
   max-width: 31rem;
 }
 
+.home-story-transmission__body[data-expanded="false"] {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.home-story-transmission__more {
+  background: transparent;
+  border: 0;
+  color: rgba(165, 243, 252, 0.94);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  margin-top: 0.55rem;
+  padding: 0;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 10px rgba(103, 232, 249, 0.22),
+    0 0 18px rgba(103, 232, 249, 0.12);
+}
+
+.home-story-transmission__more:hover,
+.home-story-transmission__more:focus-visible {
+  color: rgba(254, 240, 138, 0.96);
+  outline: none;
+}
+
 .home-story-transmission__inline-link {
   color: rgba(165, 243, 252, 0.96);
   text-decoration: underline;
