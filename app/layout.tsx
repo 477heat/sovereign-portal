@@ -26,11 +26,12 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Sovereign Engine",
+    "UTAC",
+    "User Tokenized Asset Creation",
     "Soul Deed",
     "Genesis Access",
     "Base",
     "Coinbase",
-    "NFT",
     "Progeny",
     "Vanguard Honor",
     "Genesis Mint",

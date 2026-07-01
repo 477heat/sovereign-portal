@@ -92,7 +92,7 @@ export const glossary = {
   Indexer:
     "A service that organizes network records so apps can find them faster.",
   IPFS:
-    "A file storage network often used for NFT images and information.",
+    "A file storage network often used for tokenized asset images and information.",
   "Kindred Creature":
     "The first planned creature-style Progeny concept, intended to come from a user's Genesis profile rather than a random generic drop.",
   Lambda:
@@ -122,7 +122,7 @@ export const glossary = {
   Originality:
     "Something that comes from a real source instead of a copy. Here, it means the unique human starting point behind a Soul Mint and future creations.",
   Pinata:
-    "A service that helps keep NFT files available online.",
+    "A service that helps keep tokenized asset files available online.",
   "Placeholder URI":
     "A temporary token link used before the final information is ready.",
   "Platform Vault":
@@ -181,6 +181,10 @@ export const glossary = {
     "A setup that lets approved project owners update the contract code later.",
   UUPS:
     "A common upgrade setup for smart contracts.",
+  UTAC:
+    "Short for User Tokenized Asset Creation. Here, it means the Portal lets a verified user create a tokenized asset from their own source profile instead of receiving a random generic drop.",
+  "User Tokenized Asset Creation":
+    "The Sovereign Portal product category. A verified user creates a tokenized asset from their own source profile, and Sovereign Engine turns that source into stats, readouts, and future game-ready branches.",
   Vanguard:
     "The Initial Supporters status intended to carry forward into future project launches and benefits.",
   "Verified Account":

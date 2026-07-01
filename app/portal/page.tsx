@@ -2410,8 +2410,9 @@ function PortalContent() {
                                     </p>
                                     <p className="portal-artifact-engraving-copy text-xs font-semibold text-cyan-50/75">
                                       <span className="portal-type-on-readout portal-type-on-readout--artifact-copy">
-                                        The Engine customizes your NFT with a name
-                                        you choose to be etched into the minted image.
+                                        The Engine customizes your UTAC artifact with
+                                        a name you choose to be etched into the
+                                        minted image.
                                       </span>
                                     </p>
                                     <p className="portal-artifact-engraving-limit text-[10px] font-semibold uppercase tracking-[0.16em] text-yellow-100/80">

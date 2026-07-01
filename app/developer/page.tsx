@@ -239,7 +239,7 @@ const developerSections = [
     title: "Privacy And Metadata",
     body: [
       "Integrations use derived stats, lineage references, token IDs, wallet-linked ownership state, and approved metadata.",
-      "Raw personal intake data should stay out of public clients. The system should be useful to games without asking users to turn private details into public collectibles.",
+      "Raw personal intake data should stay out of public clients. The system should be useful to games without asking users to turn private details into public tokenized assets.",
       {
         label: "Public Surface",
         items: [

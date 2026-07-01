@@ -48,7 +48,7 @@ const labEntries: LabEntry[] = [
     status: "In Design",
     tone: "design",
     summary:
-      "A more collectible, game-native presentation layer for the Soul Deed. The goal is marketplace readability without changing the verified origin underneath.",
+      "A more game-native UTAC presentation layer for the Soul Deed. The goal is marketplace readability without changing the verified origin underneath.",
     nextStep:
       "Lock card layout, burner coordinates, thumbnail safety, and which visual updates apply to future metadata.",
     systems: ["Image burner", "Metadata", "Marketplace"],

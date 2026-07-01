@@ -58,6 +58,8 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
   "Soul Mint",
   "Title of Ownership",
   "TTRPG",
+  "UTAC",
+  "User Tokenized Asset Creation",
   "Vanguard",
   "Verified Human Soul",
   "Wallet",
@@ -66,22 +68,22 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
 const protocolCards = [
   {
     label: "Pre-Launch",
-    title: "Character Generator",
-    body: "Sovereign Engine is a Deterministically Calculated (DC) character generator. It turns birth-rooted zodiac signals into stable Soul Attributes and character stats for tabletop games, digital worlds, and future Engine creations.",
+    title: "UTAC System",
+    body: "Sovereign Portal is a User Tokenized Asset Creation (UTAC) system. It lets a verified user create a tokenized Genesis source profile, then Sovereign Engine turns that source into stable Soul Attributes and character stats.",
     href: "/portal",
     destination: "Forge",
   },
   {
     label: "Base-native",
-    title: "Smart Contract Characters",
-    body: "Smart contracts can connect each generated character sheet to its source wallet and origin record. For TTRPG Dungeon Masters and digital world creators, that helps show a character came from a fixed profile instead of endless rerolls, while letting developers set or raise creation limits to fit the world they are building.",
+    title: "Smart Contract Assets",
+    body: "Smart contracts can connect each user-created asset to its source wallet and origin record. For TTRPG Dungeon Masters and digital world creators, that helps show a character came from a fixed profile instead of endless rerolls, while letting developers set or raise creation limits to fit the world they are building.",
     href: "/portal",
     destination: "Forge",
   },
   {
     label: "Coinbase EAS",
-    title: "1 Soul, 1 Mint",
-    body: "Anyone can explore Engine-style outputs, but Genesis Access is the verified origin path. The Soul Deed marks one wallet-linked source profile so future characters, items, creatures, and Progeny can build from a single authenticated starting point.",
+    title: "1 User, 1 Origin",
+    body: "Anyone can explore Engine-style outputs, but Genesis Access is the verified UTAC origin path. The Soul Deed marks one wallet-linked source profile so future characters, items, creatures, and Progeny can build from a single authenticated starting point.",
     href: "/access",
     destination: "Access and Progeny",
   },
@@ -132,14 +134,14 @@ const whyThisMatters = [
 
 const heroSlides = [
   {
-    eyebrow: "Sovereign Engine / Character Generator",
-    title: "Non-Random Character Generator",
+    eyebrow: "Sovereign Engine / UTAC System",
+    title: "User Tokenized Asset Creation",
     body: (
       <>
-        Sovereign Engine turns your birth data into Deterministically Calculated
-        (DC) character stats and Soul Attributes. Genesis Access anchors your
-        verified origin so future characters, items, and Progeny can build from
-        one source profile.
+        Sovereign Portal lets a verified user create a tokenized Genesis source
+        profile. Sovereign Engine then turns birth data into Deterministically
+        Calculated (DC) character stats and Soul Attributes for future
+        characters, items, and Progeny.
       </>
     ),
   },
@@ -181,7 +183,7 @@ const heroSlides = [
       <>
         The site is in beta, but the Forge is live. Current metadata is correct
         for beta mints, and future imagery or display attributes can be updated
-        automatically for anyone who mints during beta. Final NFT imagery will
+        automatically for anyone who mints during beta. Final UTAC imagery will
         be locked after beta testing and community feedback. I am a solo
         developer, an American from Hawaii currently building out of Utah, and I
         appreciate every early supporter helping this Engine come online.
@@ -681,10 +683,11 @@ export default function HomePage() {
               </button>
             </div>
             <p className="mt-3 text-sm leading-6 text-white/70">
-              Read the ceremonial gag wording attached to the Soul Deed NFT before
-              entering the mint path. Because the Soul Deed is an access token,
-              the wording is meant to discourage selling it, though what you do
-              with your NFT is ultimately your choice.
+              Read the ceremonial gag wording attached to the Soul Deed UTAC
+              artifact before entering the mint path. Because the Soul Deed is
+              an access token, the wording is meant to discourage selling it,
+              though what you do with your tokenized asset is ultimately your
+              choice.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Link

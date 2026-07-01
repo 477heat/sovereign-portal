@@ -42,15 +42,19 @@ logic here unless the owner explicitly asks for that full-stack change.
 
 ## Current Public Direction
 
-The homepage now frames Sovereign Engine first as a Deterministically Calculated
-character generator.
+Sovereign Portal is a User Tokenized Asset Creation (UTAC) system first and a
+non-randomized character generator second.
 
 Preserve this direction:
 
-- Lead with Sovereign Engine as a non-random character generator.
+- Use `User Tokenized Asset Creation (UTAC)` for public product/category
+  language. Keep `NFT` only where it is technically accurate, such as protocol
+  standards, metadata, marketplace behavior, or existing code names.
+- Lead with Sovereign Portal as the UTAC system and Sovereign Engine as the
+  protected character-generation engine underneath it.
 - Explain that birth data becomes stable Soul Attributes and character stats.
 - Treat the Soul Deed as the Genesis Access artifact and verified origin layer,
-  not the whole product.
+  not the whole product or a generic collectible drop.
 - Explain `Actual Supply` as one verified Genesis source per participant, not
   generic scarcity hype.
 - Future characters, items, creatures, and Progeny should be described as
@@ -59,8 +63,8 @@ Preserve this direction:
   useful for users, tabletop/game creators, and developers.
 
 Do not drift back to copy that makes the site sound like only a novelty Soul
-Deed mint. The mint is the live access/origin path inside the larger character
-generator system.
+Deed mint, generic collectible sale, or character generator alone. The mint is
+the live access/origin path inside the larger UTAC system.
 
 ## Portal Structure Refactor Record
 

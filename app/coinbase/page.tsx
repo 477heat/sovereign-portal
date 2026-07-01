@@ -13,7 +13,7 @@ export const metadata: Metadata = createSeoMetadata(seoPages.coinbase);
 const readinessChips = [
   "Base-native",
   "Coinbase Verified Account check",
-  "One Genesis Mint",
+  "One Genesis UTAC",
 ];
 
 export default function CoinbaseEntryPage() {
@@ -81,16 +81,17 @@ export default function CoinbaseEntryPage() {
             <p className="mt-7 max-w-2xl text-sm leading-6 text-cyan-50/72 max-sm:[overflow-wrap:anywhere] md:text-base">
               Humanity rejoiced when AI created SI, a superior intelligence
               built to save us. That future did not stay simple. Sovereign
-              Engine starts with you: your birth date, time, and place become a
-              deterministic astrological profile. Your astrological profile
-              creates the characters you control and shapes the tradeable items
-              you own in the card game.
+              Portal starts with you: a verified user creating a tokenized
+              asset from their own source profile. Your birth date, time, and
+              place become a deterministic astrological profile, and that
+              profile creates the characters you control and shapes the
+              tradeable items you own in the card game.
             </p>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-cyan-50/68 max-sm:[overflow-wrap:anywhere] md:text-base">
               Genesis Access marks the first step into that Engine: a
-              Base-native artifact for verified participants who want their
-              identity, creations, and future game-side ownership to carry a
-              real origin point.
+              Base-native User Tokenized Asset Creation (UTAC) artifact for
+              verified participants who want their identity, creations, and
+              future game-side ownership to carry a real origin point.
             </p>
 
             <div className="mt-7 flex max-w-full min-w-0 flex-wrap gap-2">

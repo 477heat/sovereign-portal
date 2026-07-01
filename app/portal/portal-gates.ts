@@ -354,7 +354,7 @@ export function getSelectedGateStatus({
       : "Enter the name that should match the human identity record.",
     artifact: hasArtifact
       ? `Artifact name locked as ${burnedArtifactName}.`
-      : "Choose the name burned into the NFT image. Leave it blank to use the public mark.",
+      : "Choose the name burned into the UTAC artifact image. Leave it blank to use the public mark.",
     location: hasLocation
       ? "Verified birthplace is confirmed for the Engine."
       : hasArtifact

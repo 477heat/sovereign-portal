@@ -19,7 +19,7 @@ const privacyCards = [
   {
     label: "Storage",
     title: "What We Keep Small",
-    body: "Our goal is to keep only the minimum information needed to operate the account, verify eligibility, prevent duplicate claims, process orders, and maintain required records. Raw identity details should not be placed in public NFT metadata, public URLs, or public readouts.",
+    body: "Our goal is to keep only the minimum information needed to operate the account, verify eligibility, prevent duplicate claims, process orders, and maintain required records. Raw identity details should not be placed in public token metadata, public URLs, or public readouts.",
   },
   {
     label: "Wallets",
