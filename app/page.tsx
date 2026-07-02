@@ -121,14 +121,27 @@ const heroSlides = [
   },
   {
     eyebrow: "Sovereign Engine / UTAC System",
-    title: "UTAC / User Tokenized Asset Creation",
+    title: ". . ( T A C ) . . .",
     body: (
       <>
-        Sovereign Engine is a User Tokenized Asset Creation (UTAC) system first,
-        then a character generator. The Forge lets a verified user create a
-        tokenized Genesis source profile, and the Engine uses that source to
-        create characters, items, creatures, and future Progeny tied to the
-        user&apos;s wallet, origin record, and fixed attribute profile.
+        Tokenized Asset Creation. Sovereign Engine is a Tokenized Asset Creation
+        system first, then a character generator. The Forge lets a verified user
+        create a tokenized Genesis source profile, and the Engine uses that
+        source to create characters, items, creatures, and future Progeny tied
+        to the user&apos;s wallet, origin record, and fixed attribute profile.
+      </>
+    ),
+  },
+  {
+    eyebrow: "Sovereign Engine / NFTS",
+    title: ". . ( N F T S ) . . .",
+    body: (
+      <>
+        Node Function Trust System. Non-Fungible Tokens are not enough by
+        themselves. Sovereign Engine uses Node Functioning Token Signatures as
+        identity markers, not just assets, so your individual creations can
+        function as recognizable assets tied to you and imbued with unique
+        qualities through the Engine system.
       </>
     ),
   },
