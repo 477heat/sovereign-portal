@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Sovereign Engine",
-    "UTAC",
-    "User Tokenized Asset Creation",
+    "TAC",
+    "Tokenized Asset Creation",
     "Soul Deed",
     "Genesis Access",
     "Base",

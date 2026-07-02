@@ -30,8 +30,8 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
   "Soul Mint",
   "Title of Ownership",
   "TTRPG",
-  "UTAC",
-  "User Tokenized Asset Creation",
+  "TAC",
+  "Tokenized Asset Creation",
   "Vanguard",
   "Verified Human Soul",
   "Wallet",
@@ -40,8 +40,8 @@ const homeGlossaryTerms: GlossaryTermKey[] = [
 const protocolCards = [
   {
     label: "Pre-Launch",
-    title: "UTAC System",
-    body: "Sovereign Portal is a User Tokenized Asset Creation (UTAC) system. It lets a verified user create a tokenized Genesis source profile, then Sovereign Engine turns that source into stable Soul Attributes and character stats.",
+    title: "TAC System",
+    body: "Sovereign Portal is a Tokenized Asset Creation (TAC) system. It lets a verified user create a tokenized Genesis source profile, then Sovereign Engine turns that source into stable Soul Attributes and character stats.",
     href: "/portal",
     destination: "Forge",
   },
@@ -55,7 +55,7 @@ const protocolCards = [
   {
     label: "Coinbase EAS",
     title: "1 User, 1 Origin",
-    body: "Anyone can explore Engine-style outputs, but Genesis Access is the verified UTAC origin path. The Soul Deed marks one wallet-linked source profile so future characters, items, creatures, and Progeny can build from a single authenticated starting point.",
+    body: "Anyone can explore Engine-style outputs, but Genesis Access is the verified TAC origin path. The Soul Deed marks one wallet-linked source profile so future characters, items, creatures, and Progeny can build from a single authenticated starting point.",
     href: "/access",
     destination: "Access and Progeny",
   },
@@ -106,13 +106,13 @@ const whyThisMatters = [
 
 const heroSlides = [
   {
-    eyebrow: "Sovereign Forge / Beta Live",
+    eyebrow: "SOVEREIGN FORGE | Beta Live",
     title: ". . B e t a - L i v e ! . . .",
     body: (
       <>
         The site is in beta, but the Forge is live. Current metadata is correct
         for beta mints, and future imagery or display attributes can be updated
-        automatically for anyone who mints during beta. Final UTAC imagery will
+        automatically for anyone who mints during beta. Final TAC imagery will
         be locked after beta testing and community feedback. I am a solo
         developer, an American from Hawaii currently building out of Utah, and I
         appreciate every early supporter helping this Engine come online.
@@ -120,7 +120,7 @@ const heroSlides = [
     ),
   },
   {
-    eyebrow: "Sovereign Engine / UTAC System",
+    eyebrow: "SOVEREIGN ENGINE | Tokenized Asset Creation",
     title: ". . ( T A C ) . . .",
     body: (
       <>
@@ -133,11 +133,11 @@ const heroSlides = [
     ),
   },
   {
-    eyebrow: "Sovereign Engine / NFTS",
+    eyebrow: "SOVEREIGN ENGINE | Node Functioning Token Signatures",
     title: ". . ( N F T S ) . . .",
     body: (
       <>
-        Node Function Trust System. Non-Fungible Tokens are not enough by
+        Node Functioning Token Signatures. Non-Fungible Tokens are not enough by
         themselves. Sovereign Engine uses Node Functioning Token Signatures as
         identity markers, not just assets, so your individual creations can
         function as recognizable assets tied to you and imbued with unique
@@ -146,27 +146,20 @@ const heroSlides = [
     ),
   },
   {
-    eyebrow: "Quantum Tunnel / Game Development",
-    title: "Characters Built for Play",
+    eyebrow: "SOVEREIGN ENGINE | Access Passport",
+    title: ". . A C C E S S . . .",
     body: (
       <>
-        Characters created by the Engine are being developed for ongoing digital
-        and tabletop game projects, including Quantum Tunnel at{" "}
-        <a
-          className="home-story-transmission__inline-link"
-          href="https://alliantstudio.xyz/quantum-tunnel"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          alliantstudio.xyz/quantum-tunnel
-        </a>
-        . Engine creations belong to the user and are built for future game-side
-        ownership, trading, and sales.
+        Forget signing in with Google or the old Web2 version of inclusion.
+        NFTS like the Soul Deed act as your passport to Tokenized Asset
+        Creation. Users keep their creations, and the first NFTS is gated by
+        Proof of Humanhood through Coinbase so markets are not flooded by random
+        supply created on a whim.
       </>
     ),
   },
   {
-    eyebrow: "Sovereign Engine / Game Worlds",
+    eyebrow: "SOVEREIGN ENGINE | Built for Game Worlds",
     title: "Built for Game Worlds",
     body: (
       <>
@@ -608,7 +601,7 @@ export default function HomePage() {
               </button>
             </div>
             <p className="mt-3 text-sm leading-6 text-white/70">
-              Read the ceremonial gag wording attached to the Soul Deed UTAC
+              Read the ceremonial gag wording attached to the Soul Deed TAC
               artifact before entering the mint path. Because the Soul Deed is
               an access token, the wording is meant to discourage selling it,
               though what you do with your tokenized asset is ultimately your

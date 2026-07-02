@@ -13,7 +13,7 @@ export const metadata: Metadata = createSeoMetadata(seoPages.coinbase);
 const readinessChips = [
   "Base-native",
   "Coinbase Verified Account check",
-  "One Genesis UTAC",
+  "One Genesis TAC",
 ];
 
 export default function CoinbaseEntryPage() {
@@ -89,7 +89,7 @@ export default function CoinbaseEntryPage() {
             </p>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-cyan-50/68 max-sm:[overflow-wrap:anywhere] md:text-base">
               Genesis Access marks the first step into that Engine: a
-              Base-native User Tokenized Asset Creation (UTAC) artifact for
+              Base-native Tokenized Asset Creation (TAC) artifact for
               verified participants who want their identity, creations, and
               future game-side ownership to carry a real origin point.
             </p>

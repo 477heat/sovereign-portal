@@ -181,9 +181,9 @@ export const glossary = {
     "A setup that lets approved project owners update the contract code later.",
   UUPS:
     "A common upgrade setup for smart contracts.",
-  UTAC:
-    "Short for User Tokenized Asset Creation. Here, it means the Portal lets a verified user create a tokenized asset from their own source profile instead of receiving a random generic drop.",
-  "User Tokenized Asset Creation":
+  TAC:
+    "Short for Tokenized Asset Creation. Here, it means the Portal lets a verified user create a tokenized asset from their own source profile instead of receiving a random generic drop.",
+  "Tokenized Asset Creation":
     "The Sovereign Portal product category. A verified user creates a tokenized asset from their own source profile, and Sovereign Engine turns that source into stats, readouts, and future game-ready branches.",
   Vanguard:
     "The Initial Supporters status intended to carry forward into future project launches and benefits.",

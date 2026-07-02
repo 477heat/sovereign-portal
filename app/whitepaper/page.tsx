@@ -44,8 +44,8 @@ const originPanels: CommandPanel[] = [
     value: "Genesis",
     title: "Genesis Origin",
     body: [
-      "Sovereign Engine begins with a Genesis Access UTAC path. An eligible Base wallet passes Coinbase EAS, completes the mint path, receives generated metadata, and gets a Soul Deed artifact minted on Base.",
-      "Beta version note: the Engine is in Beta until game rules are solidified. Exact metadata numbers can still be corrected as rules are finalized, while the UTAC image, attributes, and presentation are refined. Anyone who mints during Beta will have their image and metadata updated automatically as final rules and art treatment are applied.",
+      "Sovereign Engine begins with a Genesis Access TAC path. An eligible Base wallet passes Coinbase EAS, completes the mint path, receives generated metadata, and gets a Soul Deed artifact minted on Base.",
+      "Beta version note: the Engine is in Beta until game rules are solidified. Exact metadata numbers can still be corrected as rules are finalized, while the TAC image, attributes, and presentation are refined. Anyone who mints during Beta will have their image and metadata updated automatically as final rules and art treatment are applied.",
       `The current public-facing pre-launch offer is ${preLaunchOfferSummary} The important idea is simple: one real participant starts one origin, and future Engine branches can build from that origin instead of starting over every time.`,
       {
         label: "Genesis Path",

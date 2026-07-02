@@ -7,7 +7,7 @@ export const siteUrl =
 export const siteName = "Sovereign Engine";
 
 export const siteDescription =
-  "Create a Base-native User Tokenized Asset Creation (UTAC) artifact from a verified source profile, with Vanguard Honor for early supporters and future Engine-driven creations.";
+  "Create a Base-native Tokenized Asset Creation (TAC) artifact from a verified source profile, with Vanguard Honor for early supporters and future Engine-driven creations.";
 
 export const defaultOgImage = {
   alt: "Sovereign Engine Genesis Access preview",
@@ -136,12 +136,12 @@ export const seoPages = {
     description: siteDescription,
     path: "/",
     priority: 0.95,
-    title: "UTAC System",
+    title: "TAC System",
   },
   portal: {
     changeFrequency: "daily",
     description:
-      "Open the live Sovereign Engine Forge path for the $3 first-100 Genesis Access UTAC offer with Vanguard Honor included.",
+      "Open the live Sovereign Engine Forge path for the $3 first-100 Genesis Access TAC offer with Vanguard Honor included.",
     path: "/portal",
     priority: 0.92,
     title: "Forge",
@@ -179,7 +179,7 @@ export const seoPages = {
   whitepaper: {
     changeFrequency: "monthly",
     description:
-      "Read the Sovereign Engine litepaper covering UTAC, Genesis Access, Coinbase EAS eligibility, mint flow, metadata, royalties, and future developer direction.",
+      "Read the Sovereign Engine litepaper covering TAC, Genesis Access, Coinbase EAS eligibility, mint flow, metadata, royalties, and future developer direction.",
     image: {
       alt: "Sovereign Engine Certificate of Title artifact",
       height: 1200,
