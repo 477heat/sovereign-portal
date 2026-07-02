@@ -7,34 +7,6 @@ import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
 const dayOneLaunchAt = Date.UTC(2026, 6, 4, 15, 0, 0);
-const architectTokenMetadataUrl =
-  "https://ipfs.io/ipfs/QmSoRCMUXLS9w5dBgfg3VsnxSQhfBJt3RLALyo8DB3DzH2";
-const architectTokenImageUrl =
-  "https://gateway.pinata.cloud/ipfs/QmVfRQWBT4Xk2MdQ7xHYaArutxLKdpPqTGXmULDPC342o6";
-const architectTokenTraits = [
-  ["*Token Type", "Genesis Access"],
-  ["*Mastery Rank", "Magister"],
-  ["*Alignment", "Mirrored"],
-  ["*Lineage", "Cautious"],
-  ["*Ordo Elementa", "(Earth + Earth)"],
-] as const;
-const architectStatTraits = [
-  ["01 Presence", "82"],
-  ["02 Wealth", "110"],
-  ["03 Fortitude", "108"],
-  ["04 Cunning", "83"],
-  ["05 Flair", "78"],
-  ["06 Vigor", "72"],
-  ["07 Kinship", "102"],
-  ["08 Potency", "92"],
-  ["09 Wisdom", "113"],
-  ["10 Prestige", "112"],
-  ["11 Influence", "94"],
-  ["12 Arcana", "108"],
-  ["xStat Total", "1154"],
-  ["xKarmic Debt", "55"],
-  ["xAge", "46"],
-] as const;
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
   "Actual Supply",
@@ -562,88 +534,6 @@ export default function HomePage() {
                 <GlossaryText terms={homeGlossaryTerms} text={item.body} />
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="relative z-10 mx-auto flex max-w-7xl items-start justify-start gap-4 px-5 pb-6 md:gap-6 md:px-8">
-        <Link
-          aria-label="Open Archive page for the Architect Genesis Access artifact"
-          className="home-deed-preview chamfer-panel chamfer-panel--all-corners block w-1/2 p-1.5 md:w-1/5"
-          href="/archive"
-        >
-          <Image
-            alt="Certificate of Title for Spiritual Ownership Genesis Access card for T. Bre"
-            className="block aspect-[5/7] w-full bg-black object-contain"
-            height={8064}
-            src={architectTokenImageUrl}
-            width={5881}
-          />
-        </Link>
-        <div className="home-architect-column w-[calc(50%-1rem)] md:w-[22rem]">
-          <div className="home-architect-artifact chamfer-panel chamfer-panel--readout chamfer-panel--all-corners px-3 py-3 md:px-5 md:py-4">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-[0.48rem] uppercase leading-none tracking-[0.22em] text-cyan-100/55 md:text-[0.62rem]">
-                  Token 0000
-                </p>
-                <h2 className="mt-1 text-[0.62rem] uppercase leading-tight tracking-[0.14em] text-white md:text-xs">
-                  T. Bre
-                </h2>
-              </div>
-              <span className="text-[0.45rem] uppercase tracking-[0.16em] text-yellow-100/75 md:text-[0.58rem]">
-                Genesis
-              </span>
-            </div>
-
-            <dl className="mt-2 grid gap-1 text-[0.48rem] uppercase leading-tight tracking-[0.08em] md:text-[0.62rem]">
-              {architectTokenTraits.map(([label, value]) => (
-                <div
-                  className="grid grid-cols-[minmax(0,0.68fr)_minmax(0,1fr)] gap-1 border-b border-cyan-100/10 pb-1"
-                  key={label}
-                >
-                  <dt className="truncate text-cyan-100/52">{label}</dt>
-                  <dd className="truncate text-white/78">{value}</dd>
-                </div>
-              ))}
-            </dl>
-
-            <dl className="mt-2 grid grid-cols-1 gap-0.5 text-[0.46rem] uppercase leading-tight tracking-[0.06em] text-white/64 md:grid-cols-2 md:gap-x-3 md:text-[0.58rem]">
-              {architectStatTraits.map(([label, value]) => (
-                <div
-                  className="grid grid-cols-[minmax(0,1fr)_3ch] gap-1"
-                  key={label}
-                >
-                  <dt className="truncate text-cyan-100/48">{label}</dt>
-                  <dd className="text-right text-yellow-100/78">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className="home-architect-actions mt-2 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">
-            <Link
-              className="chamfer-nav-link chamfer-nav-link--compact"
-              href="/archive"
-            >
-              Archive
-            </Link>
-            <a
-              className="chamfer-nav-link chamfer-nav-link--compact"
-              href={architectTokenMetadataUrl}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Metadata IPFS
-            </a>
-            <a
-              className="chamfer-nav-link chamfer-nav-link--compact"
-              href={architectTokenImageUrl}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Image IPFS
-            </a>
           </div>
         </div>
       </section>

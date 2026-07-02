@@ -12,6 +12,30 @@ const architectTokenImageUrl =
   "https://gateway.pinata.cloud/ipfs/QmVfRQWBT4Xk2MdQ7xHYaArutxLKdpPqTGXmULDPC342o6";
 const architectOpenSeaUrl =
   "https://opensea.io/item/base/0x2df9151c4e32082a05c686bd3092180134d17deb/0";
+const architectTokenTraits = [
+  ["*Token Type", "Genesis Access"],
+  ["*Mastery Rank", "Magister"],
+  ["*Alignment", "Mirrored"],
+  ["*Lineage", "Cautious"],
+  ["*Ordo Elementa", "(Earth + Earth)"],
+] as const;
+const architectStatTraits = [
+  ["01 Presence", "82"],
+  ["02 Wealth", "110"],
+  ["03 Fortitude", "108"],
+  ["04 Cunning", "83"],
+  ["05 Flair", "78"],
+  ["06 Vigor", "72"],
+  ["07 Kinship", "102"],
+  ["08 Potency", "92"],
+  ["09 Wisdom", "113"],
+  ["10 Prestige", "112"],
+  ["11 Influence", "94"],
+  ["12 Arcana", "108"],
+  ["xStat Total", "1154"],
+  ["xKarmic Debt", "55"],
+  ["xAge", "46"],
+] as const;
 
 export default function ArchivePage() {
   return (
@@ -61,6 +85,47 @@ export default function ArchivePage() {
               metadata carries the Genesis Access traits, contract terms link,
               and image URI.
             </p>
+
+            <div className="archive-attribute-card chamfer-panel chamfer-panel--readout chamfer-panel--all-corners mt-6 px-3 py-3 md:px-5 md:py-4">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-[0.52rem] uppercase leading-none tracking-[0.22em] text-cyan-100/55 md:text-[0.64rem]">
+                    Token 0000
+                  </p>
+                  <h2 className="mt-1 text-[0.72rem] uppercase leading-tight tracking-[0.14em] text-white md:text-sm">
+                    T. Bre
+                  </h2>
+                </div>
+                <span className="text-[0.5rem] uppercase tracking-[0.16em] text-yellow-100/75 md:text-[0.62rem]">
+                  Genesis
+                </span>
+              </div>
+
+              <dl className="mt-3 grid gap-1 text-[0.52rem] uppercase leading-tight tracking-[0.08em] md:text-[0.64rem]">
+                {architectTokenTraits.map(([label, value]) => (
+                  <div
+                    className="grid grid-cols-[minmax(0,0.68fr)_minmax(0,1fr)] gap-1 border-b border-cyan-100/10 pb-1"
+                    key={label}
+                  >
+                    <dt className="truncate text-cyan-100/52">{label}</dt>
+                    <dd className="truncate text-white/78">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <dl className="mt-3 grid grid-cols-1 gap-0.5 text-[0.5rem] uppercase leading-tight tracking-[0.06em] text-white/64 sm:grid-cols-2 sm:gap-x-3 md:text-[0.6rem]">
+                {architectStatTraits.map(([label, value]) => (
+                  <div
+                    className="grid grid-cols-[minmax(0,1fr)_3ch] gap-1"
+                    key={label}
+                  >
+                    <dt className="truncate text-cyan-100/48">{label}</dt>
+                    <dd className="text-right text-yellow-100/78">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
             <div className="mt-6 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em]">
               <a
                 className="chamfer-nav-link chamfer-nav-link--compact"

@@ -497,11 +497,13 @@ body {
   z-index: 5;
 }
 
-.home-architect-artifact::before {
+.home-architect-artifact::before,
+.archive-attribute-card::before {
   background: rgba(125, 211, 252, 0.42);
 }
 
-.home-architect-artifact::after {
+.home-architect-artifact::after,
+.archive-attribute-card::after {
   background:
     linear-gradient(135deg, rgba(56, 189, 248, 0.04), transparent 42%),
     rgba(0, 0, 0, 0.36);
