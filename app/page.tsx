@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { GlossaryText } from "@/components/GlossaryTerm";
 import type { GlossaryTermKey } from "@/lib/glossary";
 
-const dayOneLaunchAt = Date.UTC(2026, 6, 4, 15, 0, 0);
 const homeGlossaryTerms: GlossaryTermKey[] = [
   "Access Token",
   "Actual Supply",
@@ -163,49 +162,25 @@ const heroSlides = [
     title: "Built for Game Worlds",
     body: (
       <>
-        Sovereign Engine is designed for creators who need characters, items,
-        creatures, and future game assets tied to a real source profile instead
-        of random drops or endless rerolls.
+        Each creation is a unique character, creature, or item based on user
+        attributes determined during the initial NFTS mint. Those attributes
+        cannot be changed or altered, but they can be used to create new
+        characters with useful strengths, allowing for a market where uniqueness
+        matters more than mass-produced randomness.
       </>
     ),
   },
 ] as const;
 
-function getCountdownParts(milliseconds: number | null) {
-  if (milliseconds === null) {
-    return [
-      ["--", "D"],
-      ["--", "H"],
-      ["--", "M"],
-      ["--", "S"],
-    ] as const;
-  }
-
-  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return [
-    [String(days).padStart(2, "0"), "D"],
-    [String(hours).padStart(2, "0"), "H"],
-    [String(minutes).padStart(2, "0"), "M"],
-    [String(seconds).padStart(2, "0"), "S"],
-  ] as const;
-}
-
 export default function HomePage() {
   const lastScrollY = useRef(0);
   const mobileHeaderRevealTimer = useRef<number | null>(null);
-  const [dayOneRemaining, setDayOneRemaining] = useState<number | null>(null);
   const [contractNoticeOpen, setContractNoticeOpen] = useState(false);
   const [heroSlideExpanded, setHeroSlideExpanded] = useState(false);
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [heroSlideManuallyPaused, setHeroSlideManuallyPaused] = useState(false);
   const [mobileHeaderHidden, setMobileHeaderHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const dayOneCountdown = getCountdownParts(dayOneRemaining);
   const heroSlide = heroSlides[heroSlideIndex];
 
   useEffect(() => {
@@ -237,17 +212,6 @@ export default function HomePage() {
     setHeroSlideExpanded(false);
     setHeroSlideManuallyPaused(true);
   };
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      setDayOneRemaining(Math.max(0, dayOneLaunchAt - Date.now()));
-    };
-
-    updateCountdown();
-    const interval = window.setInterval(updateCountdown, 1000);
-
-    return () => window.clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (heroSlideExpanded || heroSlideManuallyPaused) {
@@ -458,24 +422,15 @@ export default function HomePage() {
             </div>
             <div className="home-hero-control-row grid grid-cols-2 gap-2.5 sm:grid-cols-[10.5rem_10.5rem] sm:gap-3">
               <Link
-                aria-label="Open Forge page for Beta Live countdown timer"
+                aria-label="Open Vanguard page for Tokenized Asset Creation"
                 className="chamfer-countdown-label-link home-hero-mobile-button max-sm:!max-w-none max-sm:!min-w-0 max-sm:!p-2"
-                href="/portal"
+                href="/vanguard"
               >
-                <div className="grid grid-cols-4 gap-1">
-                  {dayOneCountdown.map(([value, label]) => (
-                    <div
-                      className="chamfer-countdown-cell px-1 py-1.5 text-center backdrop-blur-sm"
-                      key={label}
-                    >
-                      <div className="home-countdown-value font-mono text-sm leading-none text-yellow-100">
-                        {value}
-                      </div>
-                      <div className="home-countdown-unit mt-1 text-[0.42rem] uppercase tracking-[0.06em] text-cyan-50/80">
-                        {label}
-                      </div>
-                    </div>
-                  ))}
+                <div className="home-countdown-title text-[0.8rem] uppercase leading-4 tracking-[0.26em] text-neutral-950">
+                  TAC
+                </div>
+                <div className="home-countdown-date mt-1 text-[0.5rem] uppercase tracking-[0.1em] text-neutral-900/85">
+                  Tokenized Asset Creation
                 </div>
               </Link>
               <Link
