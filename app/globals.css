@@ -10036,3 +10036,88 @@ body {
     width: 1rem;
   }
 }
+
+.engine-shell-page .engine-gate-view {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.engine-shell-page .engine-shell-grid {
+  align-items: stretch;
+  grid-template-columns: minmax(19rem, 0.82fr) minmax(0, 1.18fr);
+}
+
+.engine-shell-page .engine-active-entry,
+.engine-shell-page .engine-preview-screen {
+  min-height: 22rem;
+}
+
+.engine-shell-page .engine-preview-screen {
+  background:
+    linear-gradient(135deg, rgba(6, 182, 212, 0.035), rgba(250, 204, 21, 0.015)),
+    rgba(0, 0, 0, 0.26) !important;
+}
+
+.engine-shell-page .engine-step-row {
+  margin-top: auto;
+}
+
+.engine-shell-page .engine-console-dock {
+  margin-top: clamp(0.34rem, 0.9vw, 0.62rem);
+}
+
+.engine-shell-page .portal-mobile-select-grid.command-room__drawer-button-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .engine-shell-page .portal-console-shell {
+    height: calc(100svh - clamp(5rem, 10vh, 7rem));
+  }
+
+  @supports (height: 100dvh) {
+    .engine-shell-page .portal-console-shell {
+      height: calc(100dvh - clamp(5rem, 10vh, 7rem));
+    }
+  }
+}
+
+@media (max-width: 980px) {
+  .engine-shell-page .engine-shell-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .engine-shell-page .portal-console-shell {
+    height: auto;
+    min-height: calc(100svh - 4.5rem);
+  }
+
+  @supports (height: 100dvh) {
+    .engine-shell-page .portal-console-shell {
+      min-height: calc(100dvh - 4.5rem);
+    }
+  }
+
+  .engine-shell-page .engine-active-entry,
+  .engine-shell-page .engine-preview-screen {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .engine-shell-page .portal-quiet-nav {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .engine-shell-page .portal-quiet-nav span {
+    grid-column: 1 / -1;
+    order: -1;
+    text-align: center;
+  }
+
+  .engine-shell-page .engine-preview-screen h1 {
+    font-size: 1.35rem;
+  }
+}

@@ -119,10 +119,14 @@ function statsForLabels(
   });
 }
 
-export function buildEngineProfile(dob: string, mark: string): EngineProfile {
+export function buildEngineProfile(
+  dob: string,
+  mark: string,
+  seedContext = "",
+): EngineProfile {
   const normalizedDob = dob || "1988-08-08";
   const markLabel = titleCaseMark(mark);
-  const seed = foldSeed(`${normalizedDob}:${markLabel}`);
+  const seed = foldSeed(`${normalizedDob}:${markLabel}:${seedContext}`);
   const core = Object.fromEntries(
     baseStatLabels.map((label, index) => [label, scaled(seed, index)]),
   );

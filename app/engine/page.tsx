@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import type { RefObject } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import TunnelBackdrop from "@/components/TunnelBackdrop";
 import {
   buildEngineProfile,
@@ -10,124 +11,396 @@ import {
   type ReadoutMode,
 } from "./engineReadouts";
 
-const consoleLamps = [
-  "Profile Bus",
-  "Share Link",
-  "Chart Port",
-  "Sky Relay",
-  "Vault",
-];
+type EngineControl =
+  | "dob"
+  | "location"
+  | "time"
+  | "output"
+  | "preview";
 
-const telemetry = [
-  "Identity seed accepted",
-  "Mode translators synchronized",
-  "Future chart socket reserved",
-  "Public share shell armed",
-];
+type EngineOutputType = "astro" | "kindred" | "quantum";
 
-const MOCK_VANGUARD_WALLET = "7777";
-
-type ActiveConsoleField = "mark" | "dob" | "wallet" | "statType";
-
-const consoleFields: Array<{
-  id: ActiveConsoleField;
+const engineControls: Array<{
+  id: EngineControl;
   label: string;
-  shortLabel: string;
+  value: string;
 }> = [
-  { id: "mark", label: "Name", shortLabel: "Name" },
-  { id: "dob", label: "DOB", shortLabel: "DOB" },
-  { id: "wallet", label: "Wallet", shortLabel: "Wallet" },
-  { id: "statType", label: "Stat Type", shortLabel: "Stat" },
+  { id: "dob", label: "DOB", value: "Birth" },
+  { id: "location", label: "Location", value: "Place" },
+  { id: "time", label: "Time", value: "Birth" },
+  { id: "output", label: "Output", value: "Lane" },
+  { id: "preview", label: "Preview", value: "Readout" },
 ];
 
-const nativeMatrixLines = [
-  "Determining user aura",
-  "Measuring destiny voltage",
-  "Auditing cosmic paperwork",
-  "Inspecting wallet posture",
-  "Calibrating dramatic significance",
-  "Waiting for the Engine to stop being theatrical",
+const requiredControls: EngineControl[] = [
+  "dob",
+  "location",
+  "time",
+  "output",
 ];
 
-function NativeMatrixScanner({
+const outputTypes: Array<{
+  id: EngineOutputType;
+  label: string;
+  note: string;
+  mode: ReadoutMode;
+}> = [
+  {
+    id: "astro",
+    label: "Astro Stats",
+    note: "Birth signal readout",
+    mode: "sovereign",
+  },
+  {
+    id: "kindred",
+    label: "Kindred Creature",
+    note: "Creature test lane",
+    mode: "transit",
+  },
+  {
+    id: "quantum",
+    label: "Quantum Tunnel",
+    note: "Story/game lane",
+    mode: "metaverse",
+  },
+];
+
+const drawerActions = [
+  { href: "/", label: "Home" },
+  { href: "/portal", label: "Forge" },
+  { href: "/alliant", label: "Alliant" },
+  { href: "/vanguard", label: "Vanguard" },
+];
+
+function stackWords(label: string) {
+  return label.split(/\s+/).filter(Boolean);
+}
+
+function controlStatusLabel(complete: boolean, ready: boolean) {
+  if (complete) {
+    return "Stored";
+  }
+
+  if (ready) {
+    return "Ready";
+  }
+
+  return "Waiting";
+}
+
+function EngineCommandTitleTab({
   activeLabel,
-  allFieldsConfirmed,
-  readout,
-  revealed,
-  subject,
+  drawerOpen,
+  onOpen,
+  state,
+  triggerRef,
 }: {
   activeLabel: string;
-  allFieldsConfirmed: boolean;
-  readout: EngineReadout;
-  revealed: boolean;
-  subject: string;
+  drawerOpen: boolean;
+  onOpen: () => void;
+  state: "locked" | "pending" | "ready";
+  triggerRef: RefObject<HTMLButtonElement | null>;
+}) {
+  const words = stackWords(activeLabel);
+
+  return (
+    <div className="portal-gate-top-row">
+      <button
+        aria-controls="engine-select-drawer"
+        aria-expanded={drawerOpen}
+        aria-label={`Open Engine controls for ${activeLabel}`}
+        className={`portal-command-title-tab portal-command-title-tab--attention portal-command-title-tab--${state}`}
+        onClick={onOpen}
+        ref={triggerRef}
+        type="button"
+      >
+        <span
+          className="portal-command-title-tab__label"
+          data-word-count={words.length}
+        >
+          {words.map((word) => (
+            <span className="portal-command-title-tab__word" key={word}>
+              {word}
+            </span>
+          ))}
+        </span>
+        <span aria-hidden="true" className="portal-command-title-tab__chevrons">
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+    </div>
+  );
+}
+
+function EngineDrawer({
+  activeControl,
+  controlCompletion,
+  drawerOpen,
+  onClose,
+  onSelect,
+}: {
+  activeControl: EngineControl;
+  controlCompletion: Record<EngineControl, boolean>;
+  drawerOpen: boolean;
+  onClose: () => void;
+  onSelect: (control: EngineControl) => void;
+}) {
+  if (!drawerOpen) {
+    return null;
+  }
+
+  return (
+    <div className="portal-mobile-select-layer engine-select-layer">
+      <button
+        aria-label="Close Engine controls"
+        className="portal-mobile-select-backdrop"
+        onClick={onClose}
+        type="button"
+      />
+      <section
+        aria-label="Engine controls"
+        className="portal-mobile-select-drawer border border-yellow-300/35 p-4"
+        id="engine-select-drawer"
+      >
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.28em] text-yellow-100/70">
+              Engine Deck
+            </p>
+            <h2 className="mt-1 text-lg font-black uppercase tracking-[0.18em] text-white">
+              Controls
+            </h2>
+          </div>
+          <button
+            className="portal-mobile-select-close chamfer-nav-link chamfer-nav-link--compact"
+            onClick={onClose}
+            type="button"
+          >
+            Stow
+          </button>
+        </div>
+
+        <div className="portal-mobile-select-content grid gap-5">
+          <section>
+            <div className="text-[10px] font-black uppercase tracking-[0.24em] text-cyan-100/64">
+              Birth Inputs
+            </div>
+            <div className="portal-mobile-select-grid command-room__drawer-button-grid mt-2 grid grid-cols-2 gap-2">
+              {engineControls.slice(0, 3).map((control) => (
+                <EngineDrawerChip
+                  active={activeControl === control.id}
+                  complete={controlCompletion[control.id]}
+                  control={control}
+                  key={control.id}
+                  onSelect={onSelect}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <div className="text-[10px] font-black uppercase tracking-[0.24em] text-cyan-100/64">
+              Output Controls
+            </div>
+            <div className="portal-mobile-select-grid command-room__drawer-button-grid mt-2 grid grid-cols-2 gap-2">
+              {engineControls.slice(3).map((control) => (
+                <EngineDrawerChip
+                  active={activeControl === control.id}
+                  complete={controlCompletion[control.id]}
+                  control={control}
+                  key={control.id}
+                  onSelect={onSelect}
+                />
+              ))}
+            </div>
+          </section>
+
+          <nav
+            aria-label="Engine drawer page links"
+            className="portal-mobile-drawer-actions command-room__drawer-actions"
+          >
+            {drawerActions.map((action, index) => (
+              <Link
+                className={`portal-mobile-drawer-action chamfer-nav-link chamfer-nav-link--compact ${
+                  index % 2 === 1 ? "chamfer-nav-link--opposite" : ""
+                }`}
+                href={action.href}
+                key={action.href}
+              >
+                {action.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function EngineDrawerChip({
+  active,
+  complete,
+  control,
+  onSelect,
+}: {
+  active: boolean;
+  complete: boolean;
+  control: (typeof engineControls)[number];
+  onSelect: (control: EngineControl) => void;
 }) {
   return (
-    <section className="control-surface control-surface-large relative min-h-[34rem] overflow-hidden border border-cyan-200/30 bg-black/60 p-5 shadow-[0_0_90px_rgba(80,190,255,0.14)] md:p-6">
-      <div className="engine-screen-grid absolute inset-0 opacity-55" aria-hidden="true" />
-      <div className="engine-sweep absolute inset-x-0 top-0 h-28" aria-hidden="true" />
-      <div className="absolute inset-x-6 top-1/2 h-px bg-cyan-100/25 shadow-[0_0_24px_rgba(165,243,252,0.45)]" />
-      <div className="absolute left-1/2 top-6 h-[calc(100%-3rem)] w-px bg-cyan-100/10" />
+    <button
+      aria-pressed={active}
+      className={`portal-mobile-select-chip chamfer-hero-link console-key-button ${
+        active ? "portal-gate-button--selected" : ""
+      } ${complete ? "console-status-tile--entered" : ""}`}
+      onClick={() => onSelect(control.id)}
+      type="button"
+    >
+      <span>{control.label}</span>
+      <small>{controlStatusLabel(complete, active)}</small>
+    </button>
+  );
+}
 
-      <div className="relative z-10 flex min-h-[31rem] flex-col">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-cyan-100/10 pb-4">
+function EngineStepCluster({
+  activeControl,
+  controlCompletion,
+  onSelect,
+}: {
+  activeControl: EngineControl;
+  controlCompletion: Record<EngineControl, boolean>;
+  onSelect: (control: EngineControl) => void;
+}) {
+  return (
+    <div
+      aria-label="Engine sequence status"
+      className="portal-action-cluster portal-action-quad portal-action-cluster--static"
+      role="list"
+    >
+      {engineControls.slice(0, 6).map((control) => {
+        const stateClass = controlCompletion[control.id]
+          ? "portal-step-icon--complete"
+          : activeControl === control.id
+            ? "portal-step-icon--current"
+            : "portal-step-icon--available";
+
+        return (
+          <div key={control.id} role="listitem">
+            <button
+              aria-label={`Open ${control.label} engine control. Current status: ${control.value}.`}
+              className={`portal-step-icon ${stateClass}`}
+              onClick={() => onSelect(control.id)}
+              type="button"
+            >
+              <span>{control.label}</span>
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function EnginePreviewScreen({
+  birthLocation,
+  birthTime,
+  canPreview,
+  outputLabel,
+  previewVisible,
+  profileSignal,
+  readout,
+}: {
+  birthLocation: string;
+  birthTime: string;
+  canPreview: boolean;
+  outputLabel: string;
+  previewVisible: boolean;
+  profileSignal: string;
+  readout: EngineReadout;
+}) {
+  const displayTime = birthTime || "Awaiting time";
+  const displayLocation = birthLocation || "Awaiting location";
+
+  return (
+    <section className="engine-preview-screen control-surface-soft relative overflow-hidden border border-cyan-200/20 p-4">
+      <div className="engine-screen-grid absolute inset-0 opacity-45" aria-hidden="true" />
+      <div className="engine-sweep absolute inset-x-0 top-0 h-24" aria-hidden="true" />
+      <div className="relative z-10 grid gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/72">
-              Native Matrix
+            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-100/64">
+              View Screen
             </div>
-            <h1 className="mt-4 text-3xl font-light uppercase leading-tight tracking-[0.12em] text-cyan-50 md:text-5xl">
-              {revealed ? "Mock Stats" : "Scanning"}
+            <h1 className="mt-2 text-2xl font-black uppercase tracking-[0.14em] text-white md:text-4xl">
+              {previewVisible ? readout.title : "Input Pending"}
             </h1>
           </div>
-          <div className="control-surface-soft min-w-36 border border-cyan-100/20 bg-cyan-100/[0.05] p-3 text-right">
-            <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">
-              System
+          <div className="control-surface-soft border border-yellow-200/25 px-3 py-2 text-right">
+            <div className="text-[9px] font-black uppercase tracking-[0.24em] text-yellow-100/72">
+              Output
             </div>
-            <div className="mt-2 text-sm uppercase tracking-[0.18em] text-cyan-100">
-              {revealed ? "Revealed" : allFieldsConfirmed ? "Ready" : "Listening"}
+            <div className="mt-1 text-sm font-black uppercase tracking-[0.14em] text-white">
+              {outputLabel}
             </div>
           </div>
         </div>
 
-        {revealed ? (
-          <div className="grid flex-1 content-center gap-5 py-6">
-            <div className="control-surface-soft border border-cyan-100/20 bg-cyan-100/[0.05] p-4">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-                    Subject
-                  </div>
-                  <div className="mt-2 truncate text-xl uppercase tracking-[0.14em] text-cyan-50">
-                    {subject}
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/42">
-                    {readout.primaryLabel}
-                  </div>
-                  <div className="mt-1 text-2xl text-yellow-100">
-                    {readout.primaryValue}
-                  </div>
-                </div>
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="control-surface-soft border border-cyan-200/15 p-3">
+            <span className="text-[9px] font-black uppercase tracking-[0.24em] text-cyan-100/60">
+              Signal
+            </span>
+            <strong className="mt-2 block truncate text-sm uppercase tracking-[0.14em] text-white">
+              {profileSignal}
+            </strong>
+          </div>
+          <div className="control-surface-soft border border-cyan-200/15 p-3">
+            <span className="text-[9px] font-black uppercase tracking-[0.24em] text-cyan-100/60">
+              Birth Place
+            </span>
+            <strong className="mt-2 block truncate text-sm uppercase tracking-[0.14em] text-white">
+              {displayLocation}
+            </strong>
+          </div>
+          <div className="control-surface-soft border border-cyan-200/15 p-3">
+            <span className="text-[9px] font-black uppercase tracking-[0.24em] text-cyan-100/60">
+              Birth Time
+            </span>
+            <strong className="mt-2 block truncate text-sm uppercase tracking-[0.14em] text-white">
+              {displayTime}
+            </strong>
+          </div>
+        </div>
+
+        {previewVisible ? (
+          <div className="grid gap-3 md:grid-cols-[0.8fr_1.2fr]">
+            <div className="control-surface-soft border border-yellow-200/25 p-4">
+              <div className="text-[10px] font-black uppercase tracking-[0.24em] text-yellow-100/72">
+                {readout.primaryLabel}
               </div>
-              <p className="mt-4 text-sm leading-6 text-white/58">
+              <div className="mt-3 text-4xl font-black uppercase tracking-[0.12em] text-white">
+                {readout.primaryValue}
+              </div>
+              <p className="mt-4 text-sm font-semibold leading-6 text-white/76">
                 {readout.summary}
               </p>
             </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-2 sm:grid-cols-2">
               {readout.stats.slice(0, 8).map((stat) => (
                 <div
+                  className="control-surface-soft border border-cyan-200/15 p-3"
                   key={stat.label}
-                  className="control-surface-soft border border-white/10 bg-white/[0.025] p-3"
                 >
-                  <div className="flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.2em] text-white/52">
+                  <div className="flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-white/72">
                     <span>{stat.label}</span>
-                    <span className="text-cyan-100">{stat.value}</span>
+                    <span className="text-yellow-100">{stat.value}</span>
                   </div>
                   <div className="mt-2 h-1.5 border border-cyan-100/10 bg-black/70">
                     <div
-                      className="h-full bg-cyan-100/70 shadow-[0_0_12px_rgba(165,243,252,0.34)]"
+                      className="h-full bg-cyan-100/80 shadow-[0_0_12px_rgba(165,243,252,0.34)]"
                       style={{ width: `${Math.min(stat.value, 100)}%` }}
                     />
                   </div>
@@ -136,634 +409,436 @@ function NativeMatrixScanner({
             </div>
           </div>
         ) : (
-          <>
-            <div className="grid flex-1 content-center gap-5 py-8">
-              <div className="mx-auto aspect-square w-full max-w-[18rem] rounded-full border border-cyan-100/10 bg-[radial-gradient(circle,rgba(165,243,252,0.12),rgba(0,0,0,0)_62%)] opacity-80 shadow-[0_0_80px_rgba(80,190,255,0.16)]" />
-              <div className="mx-auto max-w-xl text-center">
-                <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-                  Subject
-                </div>
-                <div className="mt-2 truncate text-xl uppercase tracking-[0.14em] text-cyan-50">
-                  {subject}
-                </div>
-                <p className="mt-4 text-sm leading-6 text-white/54">
-                  Native Matrix panel intentionally withholds the stat reveal until the
-                  prototype sequence is confirmed.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              {nativeMatrixLines.map((line, index) => (
-                <div
-                  key={line}
-                  className="control-surface-soft border border-white/10 bg-white/[0.025] px-3 py-2"
-                >
-                  <div className="flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.2em] text-white/48">
-                    <span>{line}</span>
-                    <span className={index % 2 === 0 ? "text-cyan-100/70" : "text-yellow-100/60"}>
-                      {index === 0 ? activeLabel : "scan"}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="control-surface-soft border border-cyan-200/15 p-4">
+            <p className="max-w-3xl text-lg font-semibold leading-8 text-white/76">
+              This is the frontend Engine shell. Birth date, location, time,
+              and output lane are staged here before the real Astro Stats,
+              Kindred Creature, and Quantum Tunnel engine routes are wired in.
+            </p>
+            <p className="mt-3 text-sm font-semibold uppercase tracking-[0.18em] text-yellow-100/78">
+              {canPreview
+                ? "All inputs are stored. Preview can be generated."
+                : "Complete the inputs to arm the preview lane."}
+            </p>
+          </div>
         )}
       </div>
     </section>
   );
 }
 
-function ReadoutBus({ shareCode }: { shareCode: string }) {
-  return (
-    <section className="control-surface border border-white/10 bg-black/58 p-4 md:p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-          Readout Bus
-        </div>
-        <div className="text-[10px] uppercase tracking-[0.24em] text-yellow-100/72">
-          {shareCode}
-        </div>
-      </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        {telemetry.map((item, index) => (
-          <div
-            key={item}
-            className="control-surface-soft border border-white/10 bg-white/[0.03] p-3"
-          >
-            <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">
-              Lane 0{index + 1}
-            </div>
-            <div className="mt-3 text-xs uppercase tracking-[0.16em] text-white/68">
-              {item}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function StoredShape({
-  attestationConfirmed,
-  walletStatus,
+function EngineConsoleDock({
+  canPreview,
+  onClear,
+  onCycle,
+  onPreview,
 }: {
-  attestationConfirmed: boolean;
-  walletStatus: "undetermined" | "vanguard" | "nonVanguard";
-}) {
-  const walletStatusClass =
-    walletStatus === "vanguard"
-      ? "stored-shape-tile--confirmed"
-      : "stored-shape-tile--unconfirmed";
-  const walletStatusLabel =
-    walletStatus === "vanguard"
-      ? "Vanguard Confirmed"
-      : walletStatus === "nonVanguard"
-        ? "Non Vanguard"
-        : "Undetermined";
-
-  return (
-    <section className="control-surface border border-white/10 bg-black/58 p-4 md:p-5">
-      <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-        Stored Shape
-      </div>
-      <div className="mt-4 grid gap-3 text-sm md:grid-cols-3">
-        <div
-          className={`control-surface-soft border p-3 transition ${
-            attestationConfirmed
-              ? "stored-shape-tile--confirmed"
-              : "stored-shape-tile--unconfirmed"
-          }`}
-        >
-          <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
-            Mock Attestation Status
-          </div>
-          <div
-            className={`mt-2 uppercase tracking-[0.14em] ${
-              attestationConfirmed ? "text-cyan-100" : "text-cyan-50"
-            }`}
-          >
-            {attestationConfirmed ? "Name + Mock Wallet Entered" : "Awaiting Entry"}
-          </div>
-        </div>
-        <div
-          className={`control-surface-soft border p-3 transition ${walletStatusClass}`}
-        >
-          <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
-            Mock Vanguard Status
-          </div>
-          <div className="mt-2 uppercase tracking-[0.14em] text-cyan-100">
-            {walletStatusLabel}
-          </div>
-        </div>
-        <div className="control-surface-soft border border-white/10 bg-white/[0.03] p-3">
-          <div className="text-[10px] uppercase tracking-[0.22em] text-white/38">
-            Future Profile
-          </div>
-          <div className="mt-2 leading-6 text-white/62">
-            Chart memory and saved dossiers attach here.
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function SubjectSystems({
-  alignment,
-  profileMark,
-}: {
-  alignment: string;
-  profileMark: string;
+  canPreview: boolean;
+  onClear: () => void;
+  onCycle: (direction: "next" | "previous") => void;
+  onPreview: () => void;
 }) {
   return (
-    <aside className="control-surface grid content-start gap-4 border border-white/10 bg-black/58 p-4 backdrop-blur-[2px]">
-      <div className="control-surface-soft border border-cyan-100/20 bg-cyan-100/[0.07] p-4">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-cyan-100/65">
-          Viewscreen Subject
-        </div>
-        <div className="mt-4 text-2xl uppercase tracking-[0.16em] text-white">
-          {profileMark}
-        </div>
-        <div className="mt-3 text-sm uppercase tracking-[0.18em] text-white/52">
-          {alignment}
-        </div>
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-2">
-        {consoleLamps.map((lamp, index) => (
-          <div
-            key={lamp}
-            className="control-surface-soft flex min-h-12 items-center justify-between gap-3 border border-white/10 bg-white/[0.03] px-3"
-          >
-            <span className="text-[10px] uppercase tracking-[0.24em] text-white/48">
-              {lamp}
-            </span>
-            <span
-              className={`h-3 w-3 border ${
-                index < 2
-                  ? "border-cyan-100/65 bg-cyan-100 shadow-[0_0_18px_rgba(184,245,255,0.8)]"
-                  : "border-yellow-100/45 bg-yellow-100/35"
-              }`}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div className="control-surface-soft border border-white/10 p-4">
-        <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-          Long Arc
-        </div>
-        <p className="mt-4 text-sm leading-7 text-white/58">
-          This instance starts as a public scan console and becomes the profile
-          deck for saved charts, live sky motion, and shareable signal maps.
-        </p>
-      </div>
-    </aside>
+    <div className="portal-console-dock engine-console-dock">
+      <button
+        className="portal-console-dock-cell portal-console-dock-cell--action"
+        onClick={onClear}
+        type="button"
+      >
+        <span>Clear</span>
+        <strong>Form</strong>
+      </button>
+      <button
+        className="portal-console-dock-cell portal-console-dock-cell--action"
+        disabled={!canPreview}
+        onClick={onPreview}
+        type="button"
+      >
+        <span>Preview</span>
+        <strong>Stats</strong>
+      </button>
+      <button
+        aria-label="Previous Engine control"
+        className="portal-console-dock-cell portal-console-dock-cell--cycle"
+        onClick={() => onCycle("previous")}
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          className="portal-console-dock-icon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path d="M14.5 5.5 8 12l6.5 6.5" />
+        </svg>
+      </button>
+      <button
+        aria-label="Next Engine control"
+        className="portal-console-dock-cell portal-console-dock-cell--cycle"
+        onClick={() => onCycle("next")}
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          className="portal-console-dock-icon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
+        </svg>
+      </button>
+    </div>
   );
 }
 
 export default function EnginePage() {
+  const drawerTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const [activeControl, setActiveControl] = useState<EngineControl>("dob");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [dob, setDob] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [wallet, setWallet] = useState("");
-  const [mode, setMode] = useState<ReadoutMode>("sovereign");
-  const [activeField, setActiveField] = useState<ActiveConsoleField>("mark");
-  const [shareState, setShareState] = useState<"idle" | "copied">("idle");
-  const [mockWalletConnected, setMockWalletConnected] = useState(false);
-  const [confirmedSignatures, setConfirmedSignatures] = useState<Record<ActiveConsoleField, string>>({
-    mark: "",
-    dob: "",
-    wallet: "",
-    statType: "",
-  });
-  const [armedSignature, setArmedSignature] = useState("");
-  const fullName = useMemo(
-    () => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "),
-    [firstName, lastName],
+  const [birthLocation, setBirthLocation] = useState("");
+  const [birthTime, setBirthTime] = useState("");
+  const [outputType, setOutputType] = useState<EngineOutputType>("astro");
+  const [confirmedSignatures, setConfirmedSignatures] = useState<
+    Partial<Record<EngineControl, string>>
+  >({});
+  const [previewSignature, setPreviewSignature] = useState("");
+
+  const activeOutput = useMemo(
+    () =>
+      outputTypes.find((output) => output.id === outputType) ?? outputTypes[0],
+    [outputType],
   );
-  const profile = useMemo(() => buildEngineProfile(dob, fullName), [dob, fullName]);
+  const seedContext = useMemo(
+    () => `${birthLocation.trim()}|${birthTime.trim()}|${outputType}`,
+    [birthLocation, birthTime, outputType],
+  );
+  const profile = useMemo(
+    () => buildEngineProfile(dob, activeOutput.label, seedContext),
+    [activeOutput.label, dob, seedContext],
+  );
   const readouts = useMemo(() => buildReadouts(profile), [profile]);
-  const activeReadout = readouts.find((readout) => readout.id === mode) ?? readouts[0];
-  const fieldCompletion: Record<ActiveConsoleField, boolean> = {
-    mark: firstName.trim().length > 0 && lastName.trim().length > 0,
-    dob: dob.trim().length > 0,
-    wallet: mockWalletConnected && wallet.trim().length > 0,
-    statType: Boolean(mode),
-  };
-  const trimmedWallet = wallet.trim();
-  const walletDisplay = trimmedWallet
-    ? trimmedWallet.length > 12
-      ? `${trimmedWallet.slice(0, 6)}...${trimmedWallet.slice(-4)}`
-      : trimmedWallet
-    : "Unassigned";
-  const activeFieldLabel =
-    consoleFields.find((field) => field.id === activeField)?.label ?? "Console";
-  const currentConsoleSignature = `${firstName.trim()}|${lastName.trim()}|${dob.trim()}|${wallet.trim()}|${mode}`;
-  const fieldSignatures: Record<ActiveConsoleField, string> = {
-    mark: `${firstName.trim()}|${lastName.trim()}`,
+  const activeReadout =
+    readouts.find((readout) => readout.id === activeOutput.mode) ?? readouts[0];
+
+  const signatures: Record<EngineControl, string> = {
     dob: dob.trim(),
-    wallet: wallet.trim(),
-    statType: mode,
+    location: birthLocation.trim(),
+    time: birthTime.trim(),
+    output: outputType,
+    preview: `${dob.trim()}|${seedContext}`,
   };
-  const fieldConfirmed: Record<ActiveConsoleField, boolean> = {
-    mark: fieldCompletion.mark && confirmedSignatures.mark === fieldSignatures.mark,
-    dob: fieldCompletion.dob && confirmedSignatures.dob === fieldSignatures.dob,
-    wallet: fieldCompletion.wallet && confirmedSignatures.wallet === fieldSignatures.wallet,
-    statType: fieldCompletion.statType && confirmedSignatures.statType === fieldSignatures.statType,
+  const hasInput: Record<EngineControl, boolean> = {
+    dob: dob.trim().length > 0,
+    location: birthLocation.trim().length > 0,
+    time: birthTime.trim().length > 0,
+    output: Boolean(outputType),
+    preview: requiredControls.every(
+      (control) => confirmedSignatures[control] === signatures[control],
+    ),
   };
-  const walletStatus =
-    !fieldConfirmed.wallet
-      ? "undetermined"
-      : trimmedWallet.toLowerCase() === MOCK_VANGUARD_WALLET
-        ? "vanguard"
-        : "nonVanguard";
-  const activeFieldHasInput = fieldCompletion[activeField];
-  const activeFieldConfirmed = fieldConfirmed[activeField];
-  const allConsoleFieldsConfirmed = Object.values(fieldConfirmed).every(Boolean);
-  const previewArmed = armedSignature === currentConsoleSignature;
+  const controlCompletion: Record<EngineControl, boolean> = {
+    dob: hasInput.dob && confirmedSignatures.dob === signatures.dob,
+    location:
+      hasInput.location && confirmedSignatures.location === signatures.location,
+    time: hasInput.time && confirmedSignatures.time === signatures.time,
+    output: hasInput.output && confirmedSignatures.output === signatures.output,
+    preview: hasInput.preview && previewSignature === signatures.preview,
+  };
+  const canPreview = requiredControls.every(
+    (control) => controlCompletion[control],
+  );
+  const previewVisible = canPreview && previewSignature === signatures.preview;
+  const activeControlMeta =
+    engineControls.find((control) => control.id === activeControl) ??
+    engineControls[0];
+  const activeReady = hasInput[activeControl];
+  const activeComplete = controlCompletion[activeControl];
+  const titleState = activeComplete ? "ready" : activeReady ? "pending" : "locked";
+
+  function selectControl(control: EngineControl) {
+    setActiveControl(control);
+    setDrawerOpen(false);
+  }
+
+  function cycleControl(direction: "next" | "previous") {
+    const currentIndex = engineControls.findIndex(
+      (control) => control.id === activeControl,
+    );
+    const nextIndex =
+      direction === "next"
+        ? (currentIndex + 1) % engineControls.length
+        : (currentIndex - 1 + engineControls.length) % engineControls.length;
+
+    setActiveControl(engineControls[nextIndex].id);
+  }
+
+  function confirmActiveControl() {
+    if (activeControl === "preview") {
+      if (canPreview) {
+        setPreviewSignature(signatures.preview);
+      }
+      return;
+    }
+
+    if (!hasInput[activeControl]) {
+      return;
+    }
+
+    setConfirmedSignatures((current) => ({
+      ...current,
+      [activeControl]: signatures[activeControl],
+    }));
+    cycleControl("next");
+  }
+
+  function clearForm() {
+    setDob("");
+    setBirthLocation("");
+    setBirthTime("");
+    setOutputType("astro");
+    setConfirmedSignatures({});
+    setPreviewSignature("");
+    setActiveControl("dob");
+  }
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      const params = new URLSearchParams(window.location.search);
-      const urlFirstName = params.get("firstName");
-      const urlLastName = params.get("lastName");
-      const legacyMark = params.get("mark");
-
-      setDob(params.get("dob") ?? "");
-      const urlWallet = params.get("wallet") ?? "";
-      setWallet(urlWallet);
-      setMockWalletConnected(Boolean(urlWallet));
-
-      if (urlFirstName !== null || urlLastName !== null) {
-        setFirstName(urlFirstName ?? "");
-        setLastName(urlLastName ?? "");
-      } else if (legacyMark) {
-        const [legacyFirstName = "", ...legacyLastNameParts] = legacyMark
-          .trim()
-          .split(/\s+/);
-        setFirstName(legacyFirstName);
-        setLastName(legacyLastNameParts.join(" "));
-      }
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  async function copyShareLink() {
-    const params = new URLSearchParams();
-
-    if (dob) params.set("dob", dob);
-    if (firstName) params.set("firstName", firstName);
-    if (lastName) params.set("lastName", lastName);
-    if (wallet) params.set("wallet", wallet);
-
-    const nextUrl = `${window.location.origin}/engine${params.size ? `?${params}` : ""}`;
-    await navigator.clipboard.writeText(nextUrl);
-    setShareState("copied");
-    window.setTimeout(() => setShareState("idle"), 1800);
-  }
-
-  function armPreview() {
-    setArmedSignature(currentConsoleSignature);
-  }
-
-  function confirmActiveField() {
-    if (activeField === "wallet" && !mockWalletConnected) {
+    if (!drawerOpen) {
       return;
     }
 
-    setConfirmedSignatures((current) => ({
-      ...current,
-      [activeField]: fieldSignatures[activeField],
-    }));
-  }
+    const scrollY = window.scrollY;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyPosition = document.body.style.position;
+    const previousBodyTop = document.body.style.top;
+    const previousBodyWidth = document.body.style.width;
 
-  function connectMockWallet() {
-    setMockWalletConnected(true);
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
 
-    if (!wallet.trim()) {
-      setWallet(MOCK_VANGUARD_WALLET);
-    }
-
-    setConfirmedSignatures((current) => ({
-      ...current,
-      wallet: "",
-    }));
-    setArmedSignature("");
-  }
-
-  function resetConfirmedField(field: ActiveConsoleField) {
-    setActiveField(field);
-
-    if (!fieldConfirmed[field]) {
-      return;
-    }
-
-    if (field === "mark") {
-      setFirstName("");
-      setLastName("");
-    }
-
-    if (field === "dob") {
-      setDob("");
-    }
-
-    if (field === "wallet") {
-      setWallet("");
-      setMockWalletConnected(false);
-    }
-
-    if (field === "statType") {
-      setMode("sovereign");
-    }
-
-    setConfirmedSignatures((current) => ({
-      ...current,
-      [field]: "",
-    }));
-    setArmedSignature("");
-  }
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.position = previousBodyPosition;
+      document.body.style.top = previousBodyTop;
+      document.body.style.width = previousBodyWidth;
+      window.scrollTo(0, scrollY);
+    };
+  }, [drawerOpen]);
 
   return (
-    <main className="info-control-page relative isolate min-h-screen overflow-x-hidden bg-black text-white">
-      <TunnelBackdrop layer="page" variant="diffused" />
+    <main className="info-control-page portal-control-page engine-shell-page relative isolate min-h-screen overflow-x-hidden bg-black text-white">
+      <TunnelBackdrop intensity="faint" layer="page" variant="diffused" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col px-4 py-5 md:px-8">
-        <nav className="engine-top-nav control-surface flex flex-wrap items-center justify-between gap-4 border-b border-cyan-200/15 bg-black/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl md:text-sm">
-          <div className="engine-nav-links flex flex-wrap gap-4">
-            <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
-              Return Home
-            </Link>
-            <Link href="/portal" className="chamfer-nav-link chamfer-nav-link--compact">
-              Forge
-            </Link>
-          </div>
-          <span className="engine-nav-title text-[11px] tracking-[0.28em] text-cyan-100/72">Artifact Engine // Instance 01</span>
+      <EngineDrawer
+        activeControl={activeControl}
+        controlCompletion={controlCompletion}
+        drawerOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSelect={selectControl}
+      />
+
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-[96rem] flex-col px-3 py-4 md:px-8">
+        <nav className="portal-quiet-nav control-surface mb-4 flex items-center justify-between gap-3 border border-cyan-200/10 px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-white/72">
+          <Link href="/" className="chamfer-nav-link chamfer-nav-link--compact">
+            Home
+          </Link>
+          <span className="text-cyan-100/72">Engine Room // Kindred Preview</span>
+          <Link
+            href="/portal"
+            className="chamfer-nav-link chamfer-nav-link--compact chamfer-nav-link--opposite"
+          >
+            Forge
+          </Link>
         </nav>
 
-        <section className="engine-two-column-layout grid flex-1 gap-5 py-5">
-          <div className="grid gap-5">
-          <section className="control-surface control-surface-large border border-cyan-200/20 bg-black/58 p-4 shadow-[0_0_70px_rgba(72,220,255,0.09)] md:p-5">
-            <div className="grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)] xl:items-stretch">
-              <div className="grid gap-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.34em] text-cyan-100/65">
-                      Engine Room
+        <section className="portal-console-shell portal-console-border-shell engine-console-shell flex-1">
+          <div className="control-surface-soft portal-gate-view portal-gate-view--matrix engine-gate-view border border-cyan-200/25">
+            <EngineCommandTitleTab
+              activeLabel={activeControlMeta.label}
+              drawerOpen={drawerOpen}
+              onOpen={() => setDrawerOpen(true)}
+              state={titleState}
+              triggerRef={drawerTriggerRef}
+            />
+
+            <div className="relative z-10 grid min-h-0 gap-4 px-4 pb-4 pt-6 md:px-6 md:pb-5">
+              <div className="engine-shell-grid grid min-h-0 gap-4">
+                <section className="control-surface-soft engine-active-entry border border-yellow-200/25 p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-yellow-100/72">
+                        Active Entry
+                      </div>
+                      <h1 className="mt-2 text-xl font-black uppercase tracking-[0.16em] text-white">
+                        {activeControlMeta.label}
+                      </h1>
                     </div>
-                    <h1 className="mt-3 text-xl font-light uppercase tracking-[0.14em] text-white md:text-2xl">
-                      Mock Input Console
-                    </h1>
+                    <div className="text-right text-[10px] font-black uppercase tracking-[0.22em] text-cyan-100/70">
+                      {controlStatusLabel(activeComplete, activeReady)}
+                    </div>
                   </div>
+
+                  <div className="mt-4">
+                    {activeControl === "dob" ? (
+                      <label className="block">
+                        <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.24em] text-white/62">
+                          Date Of Birth
+                        </span>
+                        <input
+                          autoFocus
+                          className="control-input-surface w-full border border-cyan-100/20 px-3 text-white outline-none transition focus:border-cyan-100/65"
+                          onChange={(event) => {
+                            setDob(event.target.value);
+                            setPreviewSignature("");
+                          }}
+                          type="date"
+                          value={dob}
+                        />
+                      </label>
+                    ) : null}
+
+                    {activeControl === "location" ? (
+                      <label className="block">
+                        <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.24em] text-white/62">
+                          Birth Location
+                        </span>
+                        <input
+                          autoFocus
+                          className="control-input-surface w-full border border-cyan-100/20 px-3 text-white outline-none transition focus:border-cyan-100/65"
+                          maxLength={80}
+                          onChange={(event) => {
+                            setBirthLocation(event.target.value);
+                            setPreviewSignature("");
+                          }}
+                          placeholder="City, State, Country"
+                          value={birthLocation}
+                        />
+                      </label>
+                    ) : null}
+
+                    {activeControl === "time" ? (
+                      <label className="block">
+                        <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.24em] text-white/62">
+                          Birth Time
+                        </span>
+                        <input
+                          autoFocus
+                          className="control-input-surface w-full border border-cyan-100/20 px-3 text-white outline-none transition focus:border-cyan-100/65"
+                          onChange={(event) => {
+                            setBirthTime(event.target.value);
+                            setPreviewSignature("");
+                          }}
+                          type="time"
+                          value={birthTime}
+                        />
+                      </label>
+                    ) : null}
+
+                    {activeControl === "output" ? (
+                      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                        {outputTypes.map((output) => (
+                          <button
+                            className={`console-key-button w-full ${
+                              outputType === output.id
+                                ? "console-key-button--active"
+                                : ""
+                            }`}
+                            key={output.id}
+                            onClick={() => {
+                              setOutputType(output.id);
+                              setPreviewSignature("");
+                            }}
+                            type="button"
+                          >
+                            <span className="block">{output.label}</span>
+                            <small className="mt-1 block text-[9px] tracking-[0.18em] text-white/58">
+                              {output.note}
+                            </small>
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {activeControl === "preview" ? (
+                      <div className="control-surface-soft border border-cyan-200/15 p-4">
+                        <p className="text-sm font-semibold leading-6 text-white/78">
+                          Preview gathers the stored inputs and displays the
+                          temporary frontend readout. The live Kindred Creature
+                          result still belongs to the Engine backend.
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+
                   <button
-                    onClick={copyShareLink}
-                    className="console-key-button console-key-button--gold"
+                    className={`portal-console-enter mt-5 ${
+                      activeControl === "preview" && canPreview
+                        ? "portal-console-enter--ready"
+                        : activeReady
+                          ? "portal-console-enter--ready"
+                          : "portal-console-enter--locked"
+                    }`}
+                    disabled={activeControl === "preview" ? !canPreview : !activeReady}
+                    onClick={confirmActiveControl}
                     type="button"
                   >
-                    {shareState === "copied" ? "Copied" : "Share"}
-                  </button>
-                </div>
-
-                <div className="engine-field-button-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {consoleFields.map((field) => (
-                    <button
-                      key={field.id}
-                      onClick={() => resetConfirmedField(field.id)}
-                      className={`console-key-button console-key-button--field w-full ${
-                        activeField === field.id ? "console-key-button--active" : ""
-                      } ${fieldConfirmed[field.id] ? "console-key-button--entered" : ""}`}
-                      type="button"
-                    >
-                      <span className="mr-2 inline-block h-1.5 w-1.5 bg-current shadow-[0_0_10px_currentColor]" />
-                      {field.shortLabel}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className={`control-surface control-surface-strong border border-cyan-100/20 bg-black/55 p-4 ${activeFieldConfirmed ? "console-active-field--entered" : ""}`}>
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.3em] text-white/42">
-                      Active Input
-                    </div>
-                    <div className="mt-2 text-sm uppercase tracking-[0.2em] text-cyan-50">
-                      {activeFieldLabel}
-                    </div>
-                  </div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-yellow-100/70">
-                    {activeFieldConfirmed
-                      ? "Signal Stored"
-                      : activeFieldHasInput
-                        ? "Ready To Enter"
-                        : "Awaiting Input"}
-                  </div>
-                </div>
-
-                {activeField === "mark" && (
-                  <div className="grid gap-3">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <label className="block">
-                        <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                          First Name
-                        </span>
-                        <input
-                          value={firstName}
-                          onChange={(event) => setFirstName(event.target.value)}
-                          autoFocus
-                          maxLength={32}
-                          placeholder="First"
-                          className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
-                        />
-                      </label>
-                      <label className="block">
-                        <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                          Last Name
-                        </span>
-                        <input
-                          value={lastName}
-                          onChange={(event) => setLastName(event.target.value)}
-                          maxLength={32}
-                          placeholder="Last"
-                          className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
-                        />
-                      </label>
-                    </div>
-                    <div className="console-field-note">
-                      Prototype identity details. Real Portal fields should match Coinbase/EAS records.
-                    </div>
-                  </div>
-                )}
-
-                {activeField === "dob" && (
-                  <label className="block">
-                    <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                      Date Of Birth
+                    <span className="portal-console-enter__label">
+                      {activeControl === "preview" ? "Preview" : "Enter"}
                     </span>
-                    <input
-                      value={dob}
-                      onChange={(event) => setDob(event.target.value)}
-                      type="date"
-                      autoFocus
-                      className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition focus:border-cyan-100/65"
-                    />
-                  </label>
-                )}
+                  </button>
+                </section>
 
-                {activeField === "wallet" && (
-                  <div className="grid gap-3">
-                    <label className="block">
-                      <span className="mb-2 block text-[10px] uppercase tracking-[0.24em] text-white/45">
-                        Wallet Marker
-                        <span className="ml-2 text-[9px] tracking-[0.16em] text-cyan-100/42">
-                          mock only
-                        </span>
-                      </span>
-                      <input
-                        value={wallet}
-                        onChange={(event) => setWallet(event.target.value)}
-                        autoFocus
-                        disabled={!mockWalletConnected}
-                        placeholder="7777"
-                        className="control-input-surface min-h-12 w-full border border-cyan-100/20 bg-black/80 px-3 text-sm text-white outline-none transition disabled:cursor-not-allowed disabled:opacity-45 focus:border-cyan-100/65"
-                      />
-                    </label>
-                    <button
-                      className={`console-key-button w-full ${
-                        mockWalletConnected ? "console-key-button--active" : "console-key-button--gold"
-                      }`}
-                      onClick={connectMockWallet}
-                      type="button"
-                    >
-                      {mockWalletConnected ? "Mock Wallet Connected" : "Connect Mock Wallet"}
-                    </button>
-                    <div className="console-field-note console-field-note--warning">
-                      Mock marker only. Real Portal uses connected wallet + Coinbase EAS. Vanguard marker: 7777.
-                    </div>
+                <EnginePreviewScreen
+                  birthLocation={birthLocation}
+                  birthTime={birthTime}
+                  canPreview={canPreview}
+                  outputLabel={activeOutput.label}
+                  previewVisible={previewVisible}
+                  profileSignal={profile.shareCode}
+                  readout={activeReadout}
+                />
+              </div>
+
+              <div className="portal-gate-bottom-row engine-step-row">
+                <div className="portal-gate-action-cell portal-gate-action-cell--submit">
+                  <div className="control-surface-soft border border-cyan-200/15 p-3">
+                    <span className="text-[9px] font-black uppercase tracking-[0.24em] text-cyan-100/68">
+                      Completion
+                    </span>
+                    <strong className="mt-1 block text-lg font-black uppercase tracking-[0.14em] text-white">
+                      {
+                        requiredControls.filter(
+                          (control) => controlCompletion[control],
+                        ).length
+                      }
+                      /{requiredControls.length}
+                    </strong>
                   </div>
-                )}
-
-                {activeField === "statType" && (
-                  <div className="grid gap-3">
-                    <div className="console-field-note">
-                      Prototype categories. Future asset types are not wired.
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-5">
-                      <button
-                        className="console-key-button console-key-button--category-selected w-full"
-                        disabled
-                        type="button"
-                      >
-                        Character
-                      </button>
-                      {["Armor", "Weapons", "Transports", "Paths"].map((category) => (
-                        <button
-                          key={category}
-                          className="console-key-button console-key-button--disabled w-full"
-                          disabled
-                          type="button"
-                        >
-                          {category}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-5">
-                      {readouts.map((readout) => (
-                        <button
-                          key={readout.id}
-                          onClick={() => setMode(readout.id)}
-                          className={`console-key-button w-full ${
-                            mode === readout.id ? "console-key-button--active" : ""
-                          }`}
-                          type="button"
-                        >
-                          {readout.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-4">
-                  {allConsoleFieldsConfirmed ? (
-                    <button
-                      className="console-launch-button w-full"
-                      onClick={armPreview}
-                      type="button"
-                    >
-                      {previewArmed ? "Mock Mint Armed" : "Mock Mint"}
-                    </button>
-                  ) : (
-                    activeFieldHasInput &&
-                    !activeFieldConfirmed && (
-                      <button
-                        className="console-enter-button w-full"
-                        onClick={confirmActiveField}
-                        type="button"
-                      >
-                        Enter
-                      </button>
-                    )
-                  )}
+                </div>
+                <div className="portal-gate-action-cell portal-gate-action-cell--cluster">
+                  <EngineStepCluster
+                    activeControl={activeControl}
+                    controlCompletion={controlCompletion}
+                    onSelect={setActiveControl}
+                  />
                 </div>
               </div>
             </div>
-
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-              <div className={`control-surface-soft min-h-[4rem] border border-cyan-200/20 bg-cyan-200/[0.035] px-3 py-2 ${fieldConfirmed.mark ? "console-status-tile--entered" : ""}`}>
-                <div className="text-[9px] uppercase tracking-[0.22em] text-cyan-100/48">
-                  Name
-                </div>
-                <div className="mt-1 truncate text-xs uppercase tracking-[0.14em] text-cyan-50">
-                  {profile.mark}
-                </div>
-              </div>
-              <div className={`control-surface-soft min-h-[4rem] border border-yellow-200/20 bg-yellow-200/[0.035] px-3 py-2 ${fieldConfirmed.dob ? "console-status-tile--entered" : ""}`}>
-                <div className="text-[9px] uppercase tracking-[0.22em] text-yellow-100/48">
-                  DOB
-                </div>
-                <div className="mt-1 truncate text-xs uppercase tracking-[0.14em] text-cyan-50">
-                  {dob || "1988-08-08"}
-                </div>
-              </div>
-              <div className={`control-surface-soft min-h-[4rem] border border-fuchsia-200/20 bg-fuchsia-200/[0.035] px-3 py-2 ${fieldConfirmed.wallet ? "console-status-tile--entered" : ""}`}>
-                <div className="text-[9px] uppercase tracking-[0.22em] text-fuchsia-100/48">
-                  Wallet
-                </div>
-                <div className="mt-1 truncate text-xs uppercase tracking-[0.14em] text-cyan-50">
-                  {walletDisplay}
-                </div>
-              </div>
-              <div className={`control-surface-soft min-h-[4rem] border border-lime-200/20 bg-lime-200/[0.035] px-3 py-2 ${fieldConfirmed.statType ? "console-status-tile--entered" : ""}`}>
-                <div className="text-[9px] uppercase tracking-[0.22em] text-lime-100/48">
-                  Stat Type
-                </div>
-                <div className="mt-1 truncate text-xs uppercase tracking-[0.14em] text-cyan-50">
-                  {activeReadout.label}
-                </div>
-              </div>
-            </div>
-          </section>
-            <StoredShape
-              attestationConfirmed={fieldConfirmed.mark && fieldConfirmed.wallet}
-              walletStatus={walletStatus}
-            />
-            <SubjectSystems alignment={profile.alignment} profileMark={profile.mark} />
           </div>
 
-          <div className="grid gap-5">
-            <NativeMatrixScanner
-              activeLabel={activeFieldLabel}
-              allFieldsConfirmed={allConsoleFieldsConfirmed}
-              readout={activeReadout}
-              revealed={previewArmed}
-              subject={profile.mark}
-            />
-            <ReadoutBus shareCode={profile.shareCode} />
-          </div>
+          <EngineConsoleDock
+            canPreview={canPreview}
+            onClear={clearForm}
+            onCycle={cycleControl}
+            onPreview={() => {
+              if (canPreview) {
+                setPreviewSignature(signatures.preview);
+                setActiveControl("preview");
+              }
+            }}
+          />
         </section>
       </div>
     </main>
