@@ -62,6 +62,7 @@ const protocolCards = [
 
 const navLinks = [
   ["Forge", "/portal"],
+  ["Wallet", "/wallet-setup"],
   ["Alliant", "/alliant"],
   ["Vanguard", "/vanguard"],
   ["Access", "/access"],
@@ -149,11 +150,11 @@ const heroSlides = [
     title: ". . A C C E S S . . .",
     body: (
       <>
-        Forget signing in with Google or the old Web2 version of inclusion.
-        NFTS like the Soul Deed act as your passport to Tokenized Asset
-        Creation. Users keep their creations, and the first NFTS is gated by
-        Proof of Humanhood through Coinbase so markets are not flooded by random
-        supply created on a whim.
+        Modern wallet tools make Web3 access easier than it used to be. NFTS
+        like the Soul Deed act as your passport to Tokenized Asset Creation.
+        Users keep their creations, and the first NFTS is gated by Proof of
+        Humanhood through Coinbase so markets are not flooded by random supply
+        created on a whim.
       </>
     ),
   },
@@ -451,6 +452,36 @@ export default function HomePage() {
       </section>
 
       <section className="home-lower-clickables home-protocol-section relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-3 md:px-8 md:pt-6">
+        <div className="home-wallet-setup-callout chamfer-panel chamfer-panel--all-corners mb-5 grid gap-4 px-5 py-5 md:grid-cols-[1fr_auto] md:items-center md:px-6">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.3em] text-cyan-200/70">
+              New to wallets?
+            </div>
+            <h2 className="mt-3 text-xl uppercase tracking-[0.14em] text-white md:text-2xl">
+              Don&apos;t have a wallet? Don&apos;t worry.
+            </h2>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-white/68">
+              <GlossaryText
+                terms={homeGlossaryTerms}
+                text="Modern Web3 tools make setup simple, and Sovereign Engine will help you create or connect a Base-ready wallet when you're ready."
+              />
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            <Link
+              className="chamfer-hero-link chamfer-hero-link--primary home-wallet-setup-button"
+              href="/wallet-setup"
+            >
+              Wallet Setup
+            </Link>
+            <Link
+              className="chamfer-hero-link chamfer-hero-link--secondary chamfer-hero-link--opposite home-wallet-setup-button"
+              href="/portal"
+            >
+              Enter Forge
+            </Link>
+          </div>
+        </div>
         <div className="grid gap-4 md:grid-cols-3">
           {protocolCards.map((card) => (
             <Link
@@ -516,6 +547,9 @@ export default function HomePage() {
           </Link>
           <Link href="/contract-terms" className="chamfer-nav-link">
             Terms
+          </Link>
+          <Link href="/wallet-setup" className="chamfer-nav-link">
+            Wallet
           </Link>
           <Link href="/engine" className="chamfer-nav-link">
             Engine

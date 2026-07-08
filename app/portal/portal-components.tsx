@@ -108,14 +108,12 @@ export function PortalEasGatePanel({
           >
             Open EAS
           </a>
-          <a
+          <Link
             className="portal-eas-mini-action"
-            href="https://www.coinbase.com/wallet/getting-started-mobile"
-            rel="noreferrer"
-            target="_blank"
+            href="/wallet-setup"
           >
-            Get Wallet
-          </a>
+            Wallet Setup
+          </Link>
         </div>
       </div>
       {verification?.mode === "mock" && (

@@ -6441,6 +6441,69 @@ body {
   inset: 0;
 }
 
+.home-wallet-setup-callout {
+  box-shadow:
+    inset 0 0 0 1px rgba(254, 240, 138, 0.1),
+    0 0 28px rgba(103, 232, 249, 0.045);
+}
+
+.home-wallet-setup-callout::before {
+  background: rgba(254, 240, 138, 0.34);
+}
+
+.home-wallet-setup-callout::after {
+  background:
+    linear-gradient(135deg, rgba(254, 240, 138, 0.045), rgba(56, 189, 248, 0.035)),
+    rgba(0, 0, 0, 0.58);
+}
+
+.home-wallet-setup-button {
+  max-width: 12rem;
+  min-width: 11.25rem;
+}
+
+.wallet-setup-page .wallet-setup-hero::before,
+.wallet-setup-page .wallet-setup-status::before,
+.wallet-setup-page .wallet-setup-step::before {
+  background: rgba(125, 211, 252, 0.42);
+}
+
+.wallet-setup-page .wallet-setup-hero::after {
+  background:
+    linear-gradient(135deg, rgba(254, 240, 138, 0.034), rgba(56, 189, 248, 0.045)),
+    rgba(0, 0, 0, 0.64);
+}
+
+.wallet-setup-page .wallet-setup-status::after,
+.wallet-setup-page .wallet-setup-step::after {
+  background:
+    linear-gradient(135deg, rgba(56, 189, 248, 0.04), rgba(254, 240, 138, 0.018)),
+    rgba(0, 0, 0, 0.72);
+}
+
+.wallet-setup-connect-button {
+  cursor: pointer;
+  max-width: 13rem;
+  min-width: 12rem;
+}
+
+.wallet-setup-connect-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+@media (max-width: 640px) {
+  .home-wallet-setup-callout {
+    margin-bottom: 1rem !important;
+  }
+
+  .home-wallet-setup-button,
+  .wallet-setup-connect-button {
+    max-width: none !important;
+    min-width: min(100%, 12rem) !important;
+  }
+}
+
 @keyframes hash-fall {
   0% {
     transform: translateY(-6%);

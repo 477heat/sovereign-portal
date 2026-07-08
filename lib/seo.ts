@@ -176,6 +176,14 @@ export const seoPages = {
     priority: 0.78,
     title: "Vanguard Status",
   },
+  walletSetup: {
+    changeFrequency: "weekly",
+    description:
+      "Create or connect a Base-ready wallet at your own pace before entering the Sovereign Engine Forge.",
+    path: "/wallet-setup",
+    priority: 0.82,
+    title: "Wallet Setup",
+  },
   whitepaper: {
     changeFrequency: "monthly",
     description:
@@ -195,6 +203,7 @@ export const seoPages = {
 export const publicSeoPages: readonly SeoPage[] = [
   seoPages.coinbase,
   seoPages.home,
+  seoPages.walletSetup,
   seoPages.portal,
   seoPages.vanguard,
   seoPages.access,
